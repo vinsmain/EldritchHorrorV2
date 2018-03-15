@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_edit_expansion"
+        android:icon="@drawable/filter_white"
+        android:title="@string/edit_expansion"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_clear"
+        android:icon="@drawable/clear_white"
+        android:title="@string/cleanDialogMessage"
+        android:visible="false"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_random"
+        android:icon="@drawable/random"
+        android:title="@string/random_button_header"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/checked_white"
+        android:title="@string/saveResult"
+        app:showAsAction="always|collapseActionView" />
+</menu>
