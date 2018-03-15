@@ -13,7 +13,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public void addGame() {
-        getViewState().showMessage(R.string.donate);
+        getViewState().intentToPager();
     }
 
 

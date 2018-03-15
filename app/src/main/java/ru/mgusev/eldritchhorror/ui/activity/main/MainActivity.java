@@ -1,5 +1,6 @@
 package ru.mgusev.eldritchhorror.ui.activity.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
@@ -32,8 +33,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, View
     }
 
     @Override
-    public void showMessage(int message) {
-        startMessageTV.setText(message);
+    public void intentToPager() {
+        Intent pagerIntent = new Intent(this, PagerActivity.class);
+        startActivity(pagerIntent);
     }
 
     @Override
