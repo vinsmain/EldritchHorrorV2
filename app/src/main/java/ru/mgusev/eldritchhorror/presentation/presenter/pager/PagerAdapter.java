@@ -1,41 +1,43 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.ui.activity.main.PagerActivity;
+import ru.mgusev.eldritchhorror.ui.fragment.InvestigatorChoiceFragment;
+import ru.mgusev.eldritchhorror.ui.fragment.ResultGameFragment;
 import ru.mgusev.eldritchhorror.ui.fragment.StartingDataFragment;
 
-public class PagerAdapter  extends FragmentPagerAdapter {
+public class PagerAdapter extends FragmentPagerAdapter {
 
-    private StartingDataFragment startingDataFragment;
-    //private InvestigatorsChoiceFragment investigatorsChoiceFragment;
-    //private ResultGameFragment resultGameFragment;
     private String[] titleArray;
 
-    public PagerAdapter(Context context, FragmentManager fm//, PassMeLinkOnObject activity
-                         ) {
+    public PagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         titleArray = new String[]{context.getString(R.string.activity_add_party_header), context.getString(R.string.activity_investigators_choice_header), context.getString(R.string.gameResult)};
-        //startingDataFragment = StartingDataFragment.newInstance(0);
-        //investigatorsChoiceFragment = InvestigatorsChoiceFragment.newInstance(1, activity);
-        //resultGameFragment = ResultGameFragment.newInstance(2, activity);
     }
 
     @Override
     public Fragment getItem(int position) {
-        //if (position == 0)
-            return StartingDataFragment.newInstance(0);
-        //else if (position == 1) return investigatorsChoiceFragment;
-        //else return resultGameFragment;
+        switch (position) {
+            case 0:
+                return StartingDataFragment.newInstance(position);
+            case 1:
+                return InvestigatorChoiceFragment.newInstance(position);
+            case 2:
+                return ResultGameFragment.newInstance(position);
+            default:
+                break;
+        }
+        return null;
     }
 
     @Override
     public int getCount() {
-        return 1;
+        return 3;
     }
 
     @Override

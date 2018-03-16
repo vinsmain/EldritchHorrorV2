@@ -1,13 +1,15 @@
-package ru.mgusev.eldritchhorror.ui.activity.main;
+package ru.mgusev.eldritchhorror.ui.activity.pager;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.presentation.AndroidBug5497Workaround;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerAdapter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
@@ -25,11 +27,19 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games_pager);
 
+        AndroidBug5497Workaround.assistActivity(this);
         pager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
-        pager.setOffscreenPageLimit(2);
+        //pager.setOffscreenPageLimit(2);
         pager.setAdapter(pagerAdapter);
 
+        /*pager.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pager.setCurrentItem(0, false);
+                pagerAdapter.notifyDataSetChanged();
+            }
+        }, 100);*/
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override

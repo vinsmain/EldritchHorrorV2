@@ -12,6 +12,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
+import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView, View.OnClickListener {
 

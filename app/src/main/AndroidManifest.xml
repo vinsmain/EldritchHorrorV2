@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.main.PagerActivity">
+        <activity android:name=".ui.activity.pager.PagerActivity">
         </activity>
     </application>
 
