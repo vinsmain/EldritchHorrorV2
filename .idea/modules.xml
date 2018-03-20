@@ -4,10 +4,8 @@
     <modules>
       <module fileurl="file://D:\Develop\EldritchHorrorV2.git\EldritchHorrorV2.iml" filepath="D:\Develop\EldritchHorrorV2.git\EldritchHorrorV2.iml" />
       <module fileurl="file://$PROJECT_DIR$/EldritchHorrorV2.git.iml" filepath="$PROJECT_DIR$/EldritchHorrorV2.git.iml" />
-      <module fileurl="file://E:\MailCloud\Develop\EldritchHorrorV2.git\EldritchHorrorV2.git.iml" filepath="E:\MailCloud\Develop\EldritchHorrorV2.git\EldritchHorrorV2.git.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://D:\Develop\EldritchHorrorV2.git\app\app.iml" filepath="D:\Develop\EldritchHorrorV2.git\app\app.iml" />
-      <module fileurl="file://E:\MailCloud\Develop\EldritchHorrorV2.git\app\app.iml" filepath="E:\MailCloud\Develop\EldritchHorrorV2.git\app\app.iml" />
     </modules>
   </component>
 </project>

@@ -1,6 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
-import android.app.Application;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.ui.fragment.InvestigatorChoiceFragment;
 import ru.mgusev.eldritchhorror.ui.fragment.ResultGameFragment;
-import ru.mgusev.eldritchhorror.ui.fragment.StartingDataFragment;
+import ru.mgusev.eldritchhorror.ui.fragment.StartDataFragment;
 
 public class PagerAdapter extends FragmentPagerAdapter {
 
@@ -24,15 +23,14 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return StartingDataFragment.newInstance(position);
+                return StartDataFragment.newInstance(position);
             case 1:
                 return InvestigatorChoiceFragment.newInstance(position);
             case 2:
                 return ResultGameFragment.newInstance(position);
             default:
-                break;
+                return null;
         }
-        return null;
     }
 
     @Override
