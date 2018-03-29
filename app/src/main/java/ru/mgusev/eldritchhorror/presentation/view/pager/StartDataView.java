@@ -5,6 +5,7 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import java.util.Calendar;
+import java.util.List;
 
 public interface StartDataView extends MvpView {
 
@@ -15,5 +16,14 @@ public interface StartDataView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void dismissDatePicker();
+
+    void initPlayersCountSpinner(String[] playersCountArray);
+
+    void initAncientOneSpinner(List<String> ancientOneList);
+
+    void initPreludeSpinner(List<String> preludeList);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setSpinnerPosition(int ancientOnePosition, int preludePosition, int playersCountPosition);
 
 }

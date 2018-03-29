@@ -103,7 +103,7 @@
                         android:textSize="14sp" />
 
                     <Spinner
-                        android:id="@+id/ancientOneSpinner"
+                        android:id="@+id/start_data_ancient_one_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_span="2"
@@ -135,7 +135,7 @@
                         android:textSize="14sp" />
 
                     <Spinner
-                        android:id="@+id/preludeSpinner"
+                        android:id="@+id/start_data_prelude_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_span="2"
@@ -167,7 +167,7 @@
                         android:textSize="14sp" />
 
                     <Spinner
-                        android:id="@+id/playersCountSpinner"
+                        android:id="@+id/start_data_players_count_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_span="2"
