@@ -26,14 +26,16 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     private int preludeCurrentPosition;
 
     public StartDataPresenter() {
-        date = Calendar.getInstance();
-        ancientOneList = new ArrayList<>();
-        preludeList = new ArrayList<>();
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
+        date = Calendar.getInstance();
+        setDateToField();
+
+        ancientOneList = new ArrayList<>();
+        preludeList = new ArrayList<>();
         playersCountArray = App.getContext().getResources().getStringArray(R.array.playersCountArray);
         try {
             ancientOneList.addAll(HelperFactory.getStaticHelper().getAncientOneDAO().getAncientOneNameList());

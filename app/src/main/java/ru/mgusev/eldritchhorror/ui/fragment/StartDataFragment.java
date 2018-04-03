@@ -4,22 +4,25 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter;
@@ -27,10 +30,12 @@ import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class StartDataFragment extends MvpAppCompatFragment implements StartDataView, View.OnClickListener, DatePickerDialog.OnDateSetListener, DatePickerDialog.OnDismissListener {
+public class StartDataFragment extends MvpAppCompatFragment implements StartDataView, View.OnClickListener, DatePickerDialog.OnDateSetListener, DatePickerDialog.OnDismissListener, CompoundButton.OnCheckedChangeListener {
 
     @InjectPresenter
     StartDataPresenter startDataPresenter;
+
+    public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
     private ImageView dateButton;
     private TextView dateTV;
@@ -38,6 +43,9 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     private Spinner playersCountSpinner;
     private Spinner ancientOneSpinner;
     private Spinner preludeSpinner;
+    private Switch easyMythosSwitch;
+    private Switch normalMythosSwitch;
+    private Switch hardMythosSwitch;
 
     public static StartDataFragment newInstance(int page) {
         StartDataFragment pageFragment = new StartDataFragment();
@@ -60,14 +68,25 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         View view = inflater.inflate(R.layout.fragment_start_data, null);
         dateButton = view.findViewById(R.id.start_data_date_button);
         dateTV = view.findViewById(R.id.start_data_date_tv);
-        dateButton.setOnClickListener(this);
 
         playersCountSpinner = view.findViewById(R.id.start_data_players_count_spinner);
         ancientOneSpinner = view.findViewById(R.id.start_data_ancient_one_spinner);
         preludeSpinner = view.findViewById(R.id.start_data_prelude_spinner);
 
+        easyMythosSwitch = view.findViewById(R.id.start_data_easy_mythos);
+        normalMythosSwitch = view.findViewById(R.id.start_data_normal_mythos);
+        hardMythosSwitch = view.findViewById(R.id.start_data_hard_mythos);
+
+        initListeners();
         startDataPresenter.setSpinnerPosition();
         return view;
+    }
+
+    private void initListeners() {
+        dateButton.setOnClickListener(this);
+        easyMythosSwitch.setOnCheckedChangeListener(this);
+        normalMythosSwitch.setOnCheckedChangeListener(this);
+        hardMythosSwitch.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -80,7 +99,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Override
     public void setDateToField(Calendar date) {
-        dateTV.setText(DateUtils.formatDateTime(getContext(), date.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_TIME));
+        dateTV.setText(formatter.format(date.getTime()));
     }
 
     @Override
@@ -213,5 +232,22 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
             }
         });
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()) {
+            case R.id.start_data_easy_mythos:
+                if (!b && !normalMythosSwitch.isChecked() && !hardMythosSwitch.isChecked()) normalMythosSwitch.setChecked(true);
+                break;
+            case R.id.start_data_normal_mythos:
+                if (!b && !easyMythosSwitch.isChecked() && !hardMythosSwitch.isChecked()) easyMythosSwitch.setChecked(true);
+                break;
+            case R.id.start_data_hard_mythos:
+                if (!b && !easyMythosSwitch.isChecked() && !normalMythosSwitch.isChecked()) easyMythosSwitch.setChecked(true);
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -12,10 +12,9 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/invRecycleView"
+            android:id="@+id/inv_choice_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
             android:clipToPadding="false"
             android:padding="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
