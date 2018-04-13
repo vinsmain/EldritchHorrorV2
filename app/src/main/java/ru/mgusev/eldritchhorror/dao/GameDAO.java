@@ -82,14 +82,14 @@ public class GameDAO extends BaseDaoImpl {
 
     public boolean hasGame(Game game) throws SQLException {
         QueryBuilder<Game, Integer> qb = this.queryBuilder();
-        qb.where().eq(Game.GAME_FIELD_ID, game.id);
+        qb.where().eq(Game.GAME_FIELD_ID, game.getId());
         return qb.query().size() != 0;
     }
 
     public void clearTable() throws SQLException {
         for (Game game : getGamesSortScoreUp()) {
-            if (game.userID != null) {
-                HelperFactory.getHelper().getInvestigatorDAO().deleteInvestigatorsByGameID(game.id);
+            if (game.getUserID() != null) {
+                HelperFactory.getHelper().getInvestigatorDAO().deleteInvestigatorsByGameID(game.getId());
                 delete(game);
             }
         }
@@ -97,7 +97,7 @@ public class GameDAO extends BaseDaoImpl {
 
     public Game getGameByID(Game game) throws SQLException {
         QueryBuilder<Game, Integer> qb = this.queryBuilder();
-        qb.where().eq(Game.GAME_FIELD_ID, game.id);
+        qb.where().eq(Game.GAME_FIELD_ID, game.getId());
         return qb.queryForFirst();
     }
 

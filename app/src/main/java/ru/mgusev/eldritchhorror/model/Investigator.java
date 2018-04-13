@@ -27,43 +27,43 @@ public class Investigator implements Parcelable {
     public static final String INVESTIGATOR_FIELD_SPECIALIZATION_ID = "specialization_id";
 
     @DatabaseField(id = true, dataType = DataType.LONG, columnName = INVESTIGATOR_FIELD_ID)
-    public long id;
+    private long id;
 
     @DatabaseField(dataType = DataType.LONG, columnName = INVESTIGATOR_FIELD_GAME_ID)
-    public long gameId;
+    private long gameId;
 
     @DatabaseField(dataType = DataType.STRING, columnName = INVESTIGATOR_FIELD_IMAGE_RESOURCE)
-    public String imageResource;
+    private String imageResource;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = INVESTIGATOR_FIELD_IS_MALE)
-    public boolean isMale;
+    private boolean isMale;
 
     @DatabaseField(dataType = DataType.STRING, columnName = INVESTIGATOR_FIELD_NAME_EN)
-    public String nameEN;
+    private String nameEN;
 
     @DatabaseField(dataType = DataType.STRING, columnName = INVESTIGATOR_FIELD_NAME_RU)
-    public String nameRU;
+    private String nameRU;
 
     @DatabaseField(dataType = DataType.STRING, columnName = INVESTIGATOR_FIELD_OCCUPATION_EN)
-    public String occupationEN;
+    private String occupationEN;
 
     @DatabaseField(dataType = DataType.STRING, columnName = INVESTIGATOR_FIELD_OCCUPATION_RU)
-    public String occupationRU;
+    private String occupationRU;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = INVESTIGATOR_FIELD_IS_STARTING)
-    public boolean isStarting;
+    private boolean isStarting;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = INVESTIGATOR_FIELD_IS_REPLACEMENT)
-    public boolean isReplacement;
+    private boolean isReplacement;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = INVESTIGATOR_FIELD_IS_DEAD)
-    public boolean isDead;
+    private boolean isDead;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = INVESTIGATOR_FIELD_EXPANSION_ID)
-    public int expansionID;
+    private int expansionID;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = INVESTIGATOR_FIELD_SPECIALIZATION_ID)
-    public int specialization;
+    private int specialization;
 
     public Investigator() {
     }
@@ -118,6 +118,10 @@ public class Investigator implements Parcelable {
         parcel.writeInt(specialization);
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getName() {
         if (Localization.getInstance().isRusLocale()) return nameRU;
         else return nameEN;
@@ -126,5 +130,33 @@ public class Investigator implements Parcelable {
     public String getOccupation() {
         if (Localization.getInstance().isRusLocale()) return occupationRU;
         else return occupationEN;
+    }
+
+    public String getImageResource() {
+        return imageResource;
+    }
+
+    public boolean isMale() {
+        return isMale;
+    }
+
+    public boolean isStarting() {
+        return isStarting;
+    }
+
+    public boolean isReplacement() {
+        return isReplacement;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public int getExpansionID() {
+        return expansionID;
+    }
+
+    public int getSpecialization() {
+        return specialization;
     }
 }

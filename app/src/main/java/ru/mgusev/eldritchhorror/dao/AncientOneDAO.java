@@ -29,7 +29,7 @@ public class AncientOneDAO  extends BaseDaoImpl {
         List<AncientOne> ancientOneList = qb.query();
         List<String> nameList = new ArrayList<>();
         for (AncientOne ancientOne : ancientOneList) {
-            if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(ancientOne.expansionID)) nameList.add(ancientOne.getName());
+            if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(ancientOne.getExpansionID())) nameList.add(ancientOne.getName());
         }
         return nameList;
     }
@@ -39,7 +39,7 @@ public class AncientOneDAO  extends BaseDaoImpl {
         QueryBuilder<AncientOne, Integer> qb = this.queryBuilder();
         if (Localization.getInstance().isRusLocale()) qb.where().eq(AncientOne.ANCIENT_ONE_FIELD_NAME_RU, name);
         else qb.where().eq(AncientOne.ANCIENT_ONE_FIELD_NAME_EN, name);
-        return qb.queryForFirst().id;
+        return qb.queryForFirst().getId();
     }
 
     public String getAncientOneNameByID(int id) throws SQLException {
@@ -51,13 +51,13 @@ public class AncientOneDAO  extends BaseDaoImpl {
     public String getAncientOneImageResourceByID(int id) throws SQLException {
         QueryBuilder<AncientOne, Integer> qb = this.queryBuilder();
         qb.where().eq(AncientOne.ANCIENT_ONE_FIELD_ID, id);
-        return qb.queryForFirst().imageResource;
+        return qb.queryForFirst().getImageResource();
     }
 
     public int getExpansionID(int ancientOneID) throws SQLException {
         QueryBuilder<AncientOne, Integer> qb = this.queryBuilder();
         qb.where().eq(AncientOne.ANCIENT_ONE_FIELD_ID, ancientOneID);
-        return qb.queryForFirst().expansionID;
+        return qb.queryForFirst().getExpansionID();
     }
 
     public AncientOne getAncienOneByID(int ID) throws SQLException {

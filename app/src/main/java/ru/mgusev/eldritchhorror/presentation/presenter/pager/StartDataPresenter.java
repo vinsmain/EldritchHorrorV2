@@ -3,49 +3,40 @@ package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.database.HelperFactory;
-import ru.mgusev.eldritchhorror.presentation.App;
+import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
+import ru.mgusev.eldritchhorror.repository.Repository;
 
 @InjectViewState
 public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     public static final String ARGUMENT_PAGE_NUMBER = "arg_page_number";
     private Calendar date;
-    private String[] playersCountArray;
+    private List<String> playersCountList;
     private List<String> ancientOneList;
     private List<String> preludeList;
-    private int currentPlayersCountPosition;
-    private int ancientOneCurrentPosition;
-    private int preludeCurrentPosition;
 
     public StartDataPresenter() {
+        date = Calendar.getInstance();
+        ancientOneList = Repository.getInstance().getAncientOneNameList();
+        preludeList = Repository.getInstance().getPreludeNameList();
+        playersCountList = Repository.getInstance().getPlayersCountArray();
+
+        date.setTimeInMillis(Repository.getInstance().getGame().getDate());
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        date = Calendar.getInstance();
         setDateToField();
-
-        ancientOneList = new ArrayList<>();
-        preludeList = new ArrayList<>();
-        playersCountArray = App.getContext().getResources().getStringArray(R.array.playersCountArray);
-        try {
-            ancientOneList.addAll(HelperFactory.getStaticHelper().getAncientOneDAO().getAncientOneNameList());
-            preludeList.addAll(HelperFactory.getStaticHelper().getPreludeDAO().getPreludeNameList());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         getViewState().initAncientOneSpinner(ancientOneList);
         getViewState().initPreludeSpinner(preludeList);
-        getViewState().initPlayersCountSpinner(playersCountArray);
+        getViewState().initPlayersCountSpinner(playersCountList);
+        setSpinnerPosition();
+        setSwitchValue();
         System.out.println("FIRST ATTACH");
     }
 
@@ -57,6 +48,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         date.set(Calendar.YEAR, year);
         date.set(Calendar.MONTH, month);
         date.set(Calendar.DAY_OF_MONTH, day);
+        Repository.getInstance().getGame().setDate(date.getTimeInMillis());
     }
 
     public void setDateToField() {
@@ -67,19 +59,42 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         getViewState().dismissDatePicker();
     }
 
-    public void setCurrentPlayersCountPosition(int position) {
-        currentPlayersCountPosition = position;
+    public void setPlayersCountCurrentPosition(String value) {
+        Repository.getInstance().getGame().setPlayersCount(Integer.parseInt(value));
     }
 
-    public void setCurrentAncientOnePosition(int position) {
-        ancientOneCurrentPosition = position;
+    public void setCurrentAncientOnePosition(String value) {
+        Repository.getInstance().setAncientOneId(Repository.getInstance().getAncientOneByName(value).getId());
     }
 
-    public void setCurrentPreludePosition(int position) {
-        preludeCurrentPosition = position;
+    public void setCurrentPreludePosition(String value) {
+        Repository.getInstance().getGame().setPreludeID(Repository.getInstance().getPreludeByName(value).getId());
     }
 
     public void setSpinnerPosition() {
-        getViewState().setSpinnerPosition(ancientOneCurrentPosition, preludeCurrentPosition, currentPlayersCountPosition);
+        int ancientOnePosition = 0;
+        if (Repository.getInstance().getGame().getAncientOneID() != -1)
+            ancientOnePosition = ancientOneList.indexOf(Repository.getInstance().getAncientOneNameByID(Repository.getInstance().getGame().getAncientOneID()));
+        getViewState().setSpinnerPosition(ancientOnePosition,
+                preludeList.indexOf(Repository.getInstance().getPreludeNameByID(Repository.getInstance().getGame().getPreludeID())),
+                playersCountList.indexOf(String.valueOf(Repository.getInstance().getGame().getPlayersCount())));
+    }
+
+    public void setSwitchValue() {
+        Game game = Repository.getInstance().getGame();
+        getViewState().setSwitchValue(game.isSimpleMyths(), game.isNormalMyths(), game.isHardMyths(), game.isStartingRumor());
+    }
+
+    public void setSwitchValueToGame(boolean easyMythosValue, boolean normalMythosValue, boolean hardMythosValue, boolean startingRumorValue) {
+        Repository.getInstance().getGame().setSimpleMyths(easyMythosValue);
+        Repository.getInstance().getGame().setNormalMyths(normalMythosValue);
+        Repository.getInstance().getGame().setHardMyths(hardMythosValue);
+        Repository.getInstance().getGame().setStartingRumor(startingRumorValue);
+    }
+
+    @Override
+    public void onDestroy() {
+        Repository.getInstance().clearGame();
+        super.onDestroy();
     }
 }

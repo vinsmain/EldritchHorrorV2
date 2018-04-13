@@ -5,6 +5,10 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TableLayout;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -15,10 +19,15 @@ import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class ResultGameFragment extends MvpAppCompatFragment implements ResultGameView {
+public class ResultGameFragment extends MvpAppCompatFragment implements ResultGameView, CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener {
 
     @InjectPresenter
     ResultGamePresenter resultGamePresenter;
+
+    private Switch resultSwitch;
+    private TableLayout victoryTable;
+    private TableLayout defeatTable;
+    private RadioGroup mysteriesRadioGroup;
 
     public static ResultGameFragment newInstance(int page) {
         ResultGameFragment pageFragment = new ResultGameFragment();
@@ -34,10 +43,63 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         //pageNumber = getArguments().getInt(ARGUMENT_PAGE_NUMBER);
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_result_game, null);
+        View view = inflater.inflate(R.layout.fragment_result_game, null);
+        resultSwitch = view.findViewById(R.id.result_game_result_switch);
+        resultSwitch.setOnCheckedChangeListener(this);
+
+        victoryTable = view.findViewById(R.id.result_game_victory_table);
+        defeatTable = view.findViewById(R.id.result_game_defeat_table);
+
+        mysteriesRadioGroup = view.findViewById(R.id.result_game_mysteries_radio_group);
+        mysteriesRadioGroup.setOnCheckedChangeListener(this);
+        return view;
+    }
+
+    @Override
+    public void setResultSwitchText(boolean value) {
+        if (value) resultSwitch.setText(R.string.win_header);
+        else resultSwitch.setText(R.string.defeat_header);
+    }
+
+    @Override
+    public void setResultSwitchChecked(boolean value) {
+        resultSwitch.setChecked(value);
+        showResultTable(value);
+    }
+
+    @Override
+    public void showResultTable(boolean value) {
+        if (value) {
+            victoryTable.setVisibility(View.VISIBLE);
+            defeatTable.setVisibility(View.GONE);
+        } else {
+            victoryTable.setVisibility(View.GONE);
+            defeatTable.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()) {
+            case R.id.result_game_result_switch:
+                resultGamePresenter.setResultSwitchText(b);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        switch (radioGroup.getCheckedRadioButtonId()) {
+            case R.id.result_game_result_switch:
+                //resultGamePresenter.setResultSwitchText(b);
+                break;
+            default:
+                break;
+        }
     }
 }

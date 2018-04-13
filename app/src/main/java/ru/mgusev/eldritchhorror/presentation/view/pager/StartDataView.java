@@ -17,7 +17,7 @@ public interface StartDataView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void dismissDatePicker();
 
-    void initPlayersCountSpinner(String[] playersCountArray);
+    void initPlayersCountSpinner(List<String> playersCountList);
 
     void initAncientOneSpinner(List<String> ancientOneList);
 
@@ -25,5 +25,8 @@ public interface StartDataView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setSpinnerPosition(int ancientOnePosition, int preludePosition, int playersCountPosition);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setSwitchValue(boolean easyMythosValue, boolean normalMythosValue, boolean hardMythosValue, boolean startingRumorValue);
 
 }

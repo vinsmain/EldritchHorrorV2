@@ -25,7 +25,7 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
     static class InvestigatorViewHolder extends RecyclerView.ViewHolder {
         CardView invCardView;
         ImageView invPhoto;
-        ImageView invExpansionImage;
+        ImageView invExpansion;
         ImageView invDead;
         TextView invName;
         TextView invOccupation;
@@ -34,7 +34,7 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
             super(itemView);
             invCardView = itemView.findViewById(R.id.item_inv_card_view);
             invPhoto = itemView.findViewById(R.id.item_inv_photo);
-            invExpansionImage = itemView.findViewById(R.id.item_inv_expansion);
+            invExpansion = itemView.findViewById(R.id.item_inv_expansion);
             invDead = itemView.findViewById(R.id.item_inv_dead);
             invName = itemView.findViewById(R.id.item_inv_name);
             invOccupation = itemView.findViewById(R.id.item_inv_occupation);
@@ -59,27 +59,27 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
     @Override
     public void onBindViewHolder(final InvestigatorViewHolder holder, int position) {
         Resources resources = context.getResources();
-        int resourceId = resources.getIdentifier(listStorage.get(position).imageResource, "drawable", context.getPackageName());
+        int resourceId = resources.getIdentifier(listStorage.get(position).getImageResource(), "drawable", context.getPackageName());
         holder.invPhoto.setImageResource(resourceId);
         holder.invName.setText(listStorage.get(position).getName());
         holder.invOccupation.setText(listStorage.get(position).getOccupation());
 
         try {
-            String expansionResource = HelperFactory.getStaticHelper().getExpansionDAO().getImageResourceByID(listStorage.get(position).expansionID);
+            String expansionResource = HelperFactory.getStaticHelper().getExpansionDAO().getImageResourceByID(listStorage.get(position).getExpansionID());
             if (expansionResource != null) {
                 resourceId = resources.getIdentifier(expansionResource, "drawable", context.getPackageName());
-                holder.invExpansionImage.setImageResource(resourceId);
-                holder.invExpansionImage.setVisibility(View.VISIBLE);
-            } else holder.invExpansionImage.setVisibility(View.GONE);
+                holder.invExpansion.setImageResource(resourceId);
+                holder.invExpansion.setVisibility(View.VISIBLE);
+            } else holder.invExpansion.setVisibility(View.GONE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if (listStorage.get(position).isStarting) {
+        if (listStorage.get(position).isStarting()) {
             holder.invCardView.setBackgroundColor(ContextCompat.getColor(context, R.color.color_starting_investigator));
             holder.invName.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryText));
             holder.invOccupation.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryText));
-        } else if (listStorage.get(position).isReplacement) {
+        } else if (listStorage.get(position).isReplacement()) {
             holder.invCardView.setBackgroundColor(ContextCompat.getColor(context, R.color.color_replacement_investigator));
             holder.invName.setTextColor(ContextCompat.getColor(context, R.color.colorText));
             holder.invOccupation.setTextColor(ContextCompat.getColor(context, R.color.colorText));
@@ -89,7 +89,7 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
             holder.invOccupation.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
         }
 
-        if (listStorage.get(position).isDead) {
+        if (listStorage.get(position).isDead()) {
             holder.invDead.setVisibility(View.VISIBLE);
         } else holder.invDead.setVisibility(View.INVISIBLE);
 

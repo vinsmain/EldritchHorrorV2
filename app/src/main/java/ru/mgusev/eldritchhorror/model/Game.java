@@ -43,81 +43,81 @@ public class Game implements Parcelable {
     public static final String GAME_FIELD_ADVENTURE_ID = "adventure_id";
 
     @DatabaseField(id = true, dataType = DataType.LONG, columnName = GAME_FIELD_ID)
-    public long id;
+    private long id;
 
     @DatabaseField(dataType = DataType.LONG, columnName = GAME_FIELD_DATE)
-    public long date;
+    private long date;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_ANCIENT_ONE_ID)
-    public int ancientOneID;
+    private int ancientOneID;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_PLAYERS_COUNT)
-    public int playersCount;
+    private int playersCount;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_SIMPLE_MYTHS)
-    public boolean isSimpleMyths;
+    private boolean isSimpleMyths;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_NORMAL_MYTHS)
-    public boolean isNormalMyths;
+    private boolean isNormalMyths;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_HARD_MYTHS)
-    public boolean isHardMyths;
+    private boolean isHardMyths;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_STARTING_RUMOR)
-    public boolean isStartingRumor;
+    private boolean isStartingRumor;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_WIN_GAME)
-    public boolean isWinGame;
+    private boolean isWinGame;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_DEFEAT_BY_ELIMINATION)
-    public boolean isDefeatByElimination;
+    private boolean isDefeatByElimination;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_DEFEAT_BY_MYTHOS_DEPLETION)
-    public boolean isDefeatByMythosDepletion;
+    private boolean isDefeatByMythosDepletion;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_DEFEAT_BY_AWAKENED_ANCIENT_ONE)
-    public boolean isDefeatByAwakenedAncientOne;
+    private boolean isDefeatByAwakenedAncientOne;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_GATES_COUNT)
-    public int gatesCount;
+    private int gatesCount;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_MONSTERS_COUNT)
-    public int monstersCount;
+    private int monstersCount;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_CURSE_COUNT)
-    public int curseCount;
+    private int curseCount;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_RUMORS_COUNT)
-    public int rumorsCount;
+    private int rumorsCount;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_CLUES_COUNT)
-    public int cluesCount;
+    private int cluesCount;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_BLESSED_COUNT)
-    public int blessedCount;
+    private int blessedCount;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_DOOM_COUNT)
-    public int doomCount;
+    private int doomCount;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_SCORE)
-    public int score;
+    private int score;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_PRELUDE_ID)
-    public int preludeID;
+    private int preludeID;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_SOLVED_MYSTERIES_COUNT)
-    public int solvedMysteriesCount;
+    private int solvedMysteriesCount;
 
     @DatabaseField(dataType = DataType.STRING, columnName = GAME_FIELD_USER_ID)
-    public String userID;
+    private String userID;
 
     @DatabaseField(dataType = DataType.LONG, columnName = GAME_FIELD_LAST_MODIFIED)
-    public long lastModified;
+    private long lastModified;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_ADVENTURE_ID)
-    public int adventureID;
+    private int adventureID;
 
-    public List<Investigator> invList;
+    private List<Investigator> invList;
 
     public Game() {
         id = -1;
@@ -128,7 +128,7 @@ public class Game implements Parcelable {
         isNormalMyths = true;
         isHardMyths = true;
         isStartingRumor = false;
-        isWinGame = true;
+        isWinGame = false;
         isDefeatByElimination = false;
         isDefeatByMythosDepletion = false;
         isDefeatByAwakenedAncientOne = true;
@@ -148,7 +148,7 @@ public class Game implements Parcelable {
         invList = new ArrayList<>();
     }
 
-    protected Game(Parcel in) {
+    private Game(Parcel in) {
         id = in.readLong();
         date = in.readLong();
         ancientOneID = in.readInt();
@@ -222,5 +222,213 @@ public class Game implements Parcelable {
         parcel.writeLong(lastModified);
         parcel.writeInt(adventureID);
         parcel.writeTypedList(invList);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    public int getAncientOneID() {
+        return ancientOneID;
+    }
+
+    public void setAncientOneID(int ancientOneID) {
+        this.ancientOneID = ancientOneID;
+    }
+
+    public int getPlayersCount() {
+        return playersCount;
+    }
+
+    public void setPlayersCount(int playersCount) {
+        this.playersCount = playersCount;
+    }
+
+    public boolean isSimpleMyths() {
+        return isSimpleMyths;
+    }
+
+    public void setSimpleMyths(boolean simpleMyths) {
+        isSimpleMyths = simpleMyths;
+    }
+
+    public boolean isNormalMyths() {
+        return isNormalMyths;
+    }
+
+    public void setNormalMyths(boolean normalMyths) {
+        isNormalMyths = normalMyths;
+    }
+
+    public boolean isHardMyths() {
+        return isHardMyths;
+    }
+
+    public void setHardMyths(boolean hardMyths) {
+        isHardMyths = hardMyths;
+    }
+
+    public boolean isStartingRumor() {
+        return isStartingRumor;
+    }
+
+    public void setStartingRumor(boolean startingRumor) {
+        isStartingRumor = startingRumor;
+    }
+
+    public boolean isWinGame() {
+        return isWinGame;
+    }
+
+    public void setWinGame(boolean winGame) {
+        isWinGame = winGame;
+    }
+
+    public boolean isDefeatByElimination() {
+        return isDefeatByElimination;
+    }
+
+    public void setDefeatByElimination(boolean defeatByElimination) {
+        isDefeatByElimination = defeatByElimination;
+    }
+
+    public boolean isDefeatByMythosDepletion() {
+        return isDefeatByMythosDepletion;
+    }
+
+    public void setDefeatByMythosDepletion(boolean defeatByMythosDepletion) {
+        isDefeatByMythosDepletion = defeatByMythosDepletion;
+    }
+
+    public boolean isDefeatByAwakenedAncientOne() {
+        return isDefeatByAwakenedAncientOne;
+    }
+
+    public void setDefeatByAwakenedAncientOne(boolean defeatByAwakenedAncientOne) {
+        isDefeatByAwakenedAncientOne = defeatByAwakenedAncientOne;
+    }
+
+    public int getGatesCount() {
+        return gatesCount;
+    }
+
+    public void setGatesCount(int gatesCount) {
+        this.gatesCount = gatesCount;
+    }
+
+    public int getMonstersCount() {
+        return monstersCount;
+    }
+
+    public void setMonstersCount(int monstersCount) {
+        this.monstersCount = monstersCount;
+    }
+
+    public int getCurseCount() {
+        return curseCount;
+    }
+
+    public void setCurseCount(int curseCount) {
+        this.curseCount = curseCount;
+    }
+
+    public int getRumorsCount() {
+        return rumorsCount;
+    }
+
+    public void setRumorsCount(int rumorsCount) {
+        this.rumorsCount = rumorsCount;
+    }
+
+    public int getCluesCount() {
+        return cluesCount;
+    }
+
+    public void setCluesCount(int cluesCount) {
+        this.cluesCount = cluesCount;
+    }
+
+    public int getBlessedCount() {
+        return blessedCount;
+    }
+
+    public void setBlessedCount(int blessedCount) {
+        this.blessedCount = blessedCount;
+    }
+
+    public int getDoomCount() {
+        return doomCount;
+    }
+
+    public void setDoomCount(int doomCount) {
+        this.doomCount = doomCount;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getPreludeID() {
+        return preludeID;
+    }
+
+    public void setPreludeID(int preludeID) {
+        this.preludeID = preludeID;
+    }
+
+    public int getSolvedMysteriesCount() {
+        return solvedMysteriesCount;
+    }
+
+    public void setSolvedMysteriesCount(int solvedMysteriesCount) {
+        this.solvedMysteriesCount = solvedMysteriesCount;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public long getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public int getAdventureID() {
+        return adventureID;
+    }
+
+    public void setAdventureID(int adventureID) {
+        this.adventureID = adventureID;
+    }
+
+    public List<Investigator> getInvList() {
+        return invList;
+    }
+
+    public void setInvList(List<Investigator> invList) {
+        this.invList = invList;
     }
 }

@@ -351,8 +351,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 helper.getInvestigatorDAO().executeRaw("ALTER TABLE '" + Investigator.INVESTIGATOR_TABLE_NAME + "' ADD COLUMN " + Investigator.INVESTIGATOR_FIELD_SPECIALIZATION_ID + " INTEGER DEFAULT 0;");
                 List<Investigator> invList = HelperFactory.getStaticHelper().getInvestigatorDAO().getAllInvestigatorsLocal();
                 for (Investigator investigator : invList) {
-                    helper.getInvestigatorDAO().executeRaw("UPDATE '" + Investigator.INVESTIGATOR_TABLE_NAME + "' SET " + Investigator.INVESTIGATOR_FIELD_SPECIALIZATION_ID + " = " + investigator.specialization +
-                            " WHERE " + Investigator.INVESTIGATOR_FIELD_ID + " = " + investigator.id + ";");
+                    helper.getInvestigatorDAO().executeRaw("UPDATE '" + Investigator.INVESTIGATOR_TABLE_NAME + "' SET " + Investigator.INVESTIGATOR_FIELD_SPECIALIZATION_ID + " = " + investigator.getSpecialization() +
+                            " WHERE " + Investigator.INVESTIGATOR_FIELD_ID + " = " + investigator.getId() + ";");
                 }
                 Log.e(TAG, "Finish update 8 - 9");
             }
@@ -361,11 +361,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 Log.e(TAG, "Update 9 - 12");
                 List<Game> gameList = helper.getGameDAO().getGamesSortDateUp();
                 for (Game game : gameList) {
-                    if (!game.isDefeatByAwakenedAncientOne && !game.isDefeatByMythosDepletion && !game.isDefeatByElimination) {
-                        game.isDefeatByAwakenedAncientOne = true;
-                        game.invList = HelperFactory.getHelper().getInvestigatorDAO().getInvestigatorsListByGameID(game.id);
-                        game.lastModified = (new Date()).getTime();
-                        game.userID = null;
+                    if (!game.isDefeatByAwakenedAncientOne() && !game.isDefeatByMythosDepletion() && !game.isDefeatByElimination()) {
+                        game.setDefeatByAwakenedAncientOne(true);
+                        game.setInvList(HelperFactory.getHelper().getInvestigatorDAO().getInvestigatorsListByGameID(game.getId()));
+                        game.setLastModified((new Date()).getTime());
+                        game.setUserID(null);
 
                         //FirebaseHelper.addGame(game);
                         HelperFactory.getHelper().getGameDAO().writeGameToDB(game);

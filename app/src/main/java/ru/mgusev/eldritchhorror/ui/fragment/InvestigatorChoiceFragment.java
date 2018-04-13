@@ -36,7 +36,6 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     private InvestigatorChoiceAdapter adapter;
 
     private int columnsCount = 3;
-    private List<Investigator> investigatorList;
 
     public static InvestigatorChoiceFragment newInstance(int page) {
         InvestigatorChoiceFragment pageFragment = new InvestigatorChoiceFragment();
@@ -66,9 +65,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
         invRecycleView.setLayoutManager(gridLayoutManager);
         invRecycleView.setHasFixedSize(true);
 
-        initInvestigatorList();
-
-        adapter = new InvestigatorChoiceAdapter(App.getContext(), investigatorList);
+        adapter = new InvestigatorChoiceAdapter(App.getContext(), investigatorChoicePresenter.getInvestigatorList());
         invRecycleView.setAdapter(adapter);
         adapter.setOnClick(this);
 
@@ -76,7 +73,9 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     }
 
     public void initInvestigatorList() {
-        try {
+
+
+        /*try {
             if (investigatorList == null) {
                 investigatorList = new ArrayList<>();
             }
@@ -94,10 +93,10 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
                     }
                     if (!investigatorList.contains(invSavedList.get(i))) investigatorList.add(invSavedList.get(i));
                 }
-            }*/
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
         //sortList();
     }
 

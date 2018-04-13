@@ -14,25 +14,37 @@ public class Expansion {
     public static final String EXPANSION_FIELD_IS_ENABLE = "is_enable";
 
     @DatabaseField(dataType = DataType.INTEGER, generatedId = true, columnName = EXPANSION_FIELD_ID)
-    public int id;
+    private int id;
 
     @DatabaseField(dataType = DataType.STRING, columnName = EXPANSION_FIELD_IMAGE_RESOURCE)
-    public String imageResource;
+    private String imageResource;
 
     @DatabaseField(dataType = DataType.STRING, columnName = EXPANSION_FIELD_NAME_EN)
-    public String nameEN;
+    private String nameEN;
 
     @DatabaseField(dataType = DataType.STRING, columnName = EXPANSION_FIELD_NAME_RU)
-    public String nameRU;
+    private String nameRU;
 
     @DatabaseField(dataType = DataType.BOOLEAN, columnName = EXPANSION_FIELD_IS_ENABLE)
-    public boolean isEnable;
+    private boolean isEnable;
 
     public Expansion() {
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
         if (Localization.getInstance().isRusLocale()) return nameRU;
         else return nameEN;
+    }
+
+    public String getImageResource() {
+        return imageResource;
+    }
+
+    public boolean isEnable() {
+        return isEnable;
     }
 }

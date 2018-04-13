@@ -29,7 +29,7 @@ public class InvestigatorDAO extends BaseDaoImpl {
         List<Investigator> list = qb.query();
         List<Investigator> investigatorList = new ArrayList<>();
         for (Investigator investigator : list) {
-            if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(investigator.expansionID)) investigatorList.add(investigator);
+            if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(investigator.getExpansionID())) investigatorList.add(investigator);
         }
         return investigatorList;
     }

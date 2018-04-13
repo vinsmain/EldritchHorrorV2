@@ -31,7 +31,7 @@ public class PreludeDAO extends BaseDaoImpl {
         List<Prelude> preludeList = qb.query();
         List<String> nameList = new ArrayList<>();
         for (Prelude prelude : preludeList) {
-            if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(prelude.expansionID)) nameList.add(prelude.getName());
+            if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(prelude.getExpansionID())) nameList.add(prelude.getName());
         }
         return nameList;
     }
@@ -47,7 +47,7 @@ public class PreludeDAO extends BaseDaoImpl {
         QueryBuilder<Prelude, Integer> qb = this.queryBuilder();
         if (Localization.getInstance().isRusLocale()) qb.where().eq(Prelude.PRELUDE_FIELD_NAME_RU, name);
         else qb.where().eq(Prelude.PRELUDE_FIELD_NAME_EN, name);
-        return qb.queryForFirst().id;
+        return qb.queryForFirst().getId();
     }
 
     public Prelude getPreludeByName(String name) throws SQLException {

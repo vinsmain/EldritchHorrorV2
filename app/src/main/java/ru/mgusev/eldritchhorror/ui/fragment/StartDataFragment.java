@@ -46,6 +46,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     private Switch easyMythosSwitch;
     private Switch normalMythosSwitch;
     private Switch hardMythosSwitch;
+    private Switch startingRumorSwitch;
 
     public static StartDataFragment newInstance(int page) {
         StartDataFragment pageFragment = new StartDataFragment();
@@ -76,9 +77,10 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         easyMythosSwitch = view.findViewById(R.id.start_data_easy_mythos);
         normalMythosSwitch = view.findViewById(R.id.start_data_normal_mythos);
         hardMythosSwitch = view.findViewById(R.id.start_data_hard_mythos);
+        startingRumorSwitch = view.findViewById(R.id.start_data_starting_rumor);
 
         initListeners();
-        startDataPresenter.setSpinnerPosition();
+        //startDataPresenter.setSpinnerPosition();
         return view;
     }
 
@@ -87,6 +89,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         easyMythosSwitch.setOnCheckedChangeListener(this);
         normalMythosSwitch.setOnCheckedChangeListener(this);
         hardMythosSwitch.setOnCheckedChangeListener(this);
+        startingRumorSwitch.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -145,30 +148,18 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     }
 
     @Override
-    public void initPlayersCountSpinner(String[] playersCountArray) {
-        ArrayAdapter<String> playersCountAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner, playersCountArray);
-        playersCountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        playersCountSpinner.setAdapter(playersCountAdapter);
-
-        playersCountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                startDataPresenter.setCurrentPlayersCountPosition(i);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+    public void setSpinnerPosition(int ancientOnePosition, int preludePosition, int playersCountPosition) {
+        ancientOneSpinner.setSelection(ancientOnePosition, false);
+        preludeSpinner.setSelection(preludePosition, false);
+        playersCountSpinner.setSelection(playersCountPosition, false);
     }
 
     @Override
-    public void setSpinnerPosition(int ancientOnePosition, int preludePosition, int playersCountPosition) {
-        ancientOneSpinner.setSelection(ancientOnePosition);
-        preludeSpinner.setSelection(preludePosition);
-        playersCountSpinner.setSelection(playersCountPosition);
+    public void setSwitchValue(boolean easyMythosValue, boolean normalMythosValue, boolean hardMythosValue, boolean startingRumorValue) {
+        easyMythosSwitch.setChecked(easyMythosValue);
+        normalMythosSwitch.setChecked(normalMythosValue);
+        hardMythosSwitch.setChecked(hardMythosValue);
+        startingRumorSwitch.setChecked(startingRumorValue);
     }
 
     @Override
@@ -181,7 +172,8 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         ancientOneSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                startDataPresenter.setCurrentAncientOnePosition(i);
+                startDataPresenter.setCurrentAncientOnePosition((String) ancientOneSpinner.getSelectedItem());
+                startDataPresenter.setSpinnerPosition();
                 /*int resourceId;
                 AncientOne selectedAncientOne;
                 Resources resources = getResources();
@@ -221,10 +213,32 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         preludeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                startDataPresenter.setCurrentPreludePosition(i);
+                startDataPresenter.setCurrentPreludePosition((String) preludeSpinner.getSelectedItem());
+                startDataPresenter.setSpinnerPosition();
                 /*addDataToGame();
                 initPreludeArray();
                 preludeAdapter.notifyDataSetChanged();*/
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    @Override
+    public void initPlayersCountSpinner(List<String> playersCountList) {
+        ArrayAdapter<String> playersCountAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner, playersCountList);
+        playersCountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        playersCountSpinner.setAdapter(playersCountAdapter);
+
+        playersCountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                startDataPresenter.setPlayersCountCurrentPosition((String) playersCountSpinner.getSelectedItem());
+                startDataPresenter.setSpinnerPosition();
             }
 
             @Override
@@ -249,5 +263,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
             default:
                 break;
         }
+        startDataPresenter.setSwitchValueToGame(easyMythosSwitch.isChecked(), normalMythosSwitch.isChecked(), hardMythosSwitch.isChecked(), startingRumorSwitch.isChecked());
+        startDataPresenter.setSwitchValue();
     }
 }

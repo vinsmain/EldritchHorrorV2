@@ -2,25 +2,30 @@ package ru.mgusev.eldritchhorror.ui.activity.pager;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.AndroidBug5497Workaround;
-import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerAdapter;
+import ru.mgusev.eldritchhorror.adapter.PagerAdapter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
+import ru.mgusev.eldritchhorror.repository.Repository;
 
 public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @InjectPresenter
     PagerPresenter pagerPresenter;
 
-    ViewPager pager;
-    PagerAdapter pagerAdapter;
+    private ViewPager pager;
+    private PagerAdapter pagerAdapter;
+    private ImageView headBackground;
+    private ImageView expansionIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +33,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         setContentView(R.layout.activity_games_pager);
 
         AndroidBug5497Workaround.assistActivity(this);
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = findViewById(R.id.pager);
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
         //pager.setOffscreenPageLimit(2);
         pager.setAdapter(pagerAdapter);
@@ -56,7 +61,28 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             public void onPageScrollStateChanged(int state) {
             }
         });
-        //AndroidBug5497Workaround.assistActivity(this);
+
+        headBackground = findViewById(R.id.games_pager_head_background);
+        expansionIcon = findViewById(R.id.games_pager_expansion_icon);
+
+    }
+
+    @Override
+    public void setHeadBackground(AncientOne ancientOne) {
+        headBackground.setImageResource(getResources().getIdentifier(ancientOne.getImageResource(), "drawable", getPackageName()));
+        setExpansionIcon(ancientOne.getId());
+    }
+
+    private void setExpansionIcon(int ancientOneId) {
+        String resourceName = Repository.getInstance().getExpansionIconNameByAncientOneId(ancientOneId);
+        if (resourceName != null) {
+            expansionIcon.setImageResource(getResources().getIdentifier(resourceName, "drawable", getPackageName()));
+            expansionIcon.setVisibility(View.VISIBLE);
+        } else expansionIcon.setVisibility(View.GONE);
+    }
+
+
+    //AndroidBug5497Workaround.assistActivity(this);
         //https://github.com/chenxiruanhai/AndroidBugFix/blob/master/bug-5497/AndroidBug5497Workaround.java
 
         //currentPosition = (int) getIntent().getIntExtra("setPosition", 0);
@@ -123,6 +149,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             public void onPageScrollStateChanged(int state) {
             }
         });*/
-    }
+
 
 }

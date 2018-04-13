@@ -15,28 +15,44 @@ public class AncientOne {
     public static final String ANCIENT_ONE_MAX_MYSTERIES = "max_mysteries";
 
     @DatabaseField(dataType = DataType.INTEGER, generatedId = true, columnName = ANCIENT_ONE_FIELD_ID)
-    public int id;
+    private int id;
 
     @DatabaseField(dataType = DataType.STRING, columnName = ANCIENT_ONE_FIELD_IMAGE_RESOURCE)
-    public String imageResource;
+    private String imageResource;
 
     @DatabaseField(dataType = DataType.STRING, columnName = ANCIENT_ONE_FIELD_NAME_EN)
-    public String nameEN;
+    private String nameEN;
 
     @DatabaseField(dataType = DataType.STRING, columnName = ANCIENT_ONE_FIELD_NAME_RU)
-    public String nameRU;
+    private String nameRU;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = ANCIENT_ONE_EXPANSION_ID)
-    public int expansionID;
+    private int expansionID;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = ANCIENT_ONE_MAX_MYSTERIES)
-    public int maxMysteries;
+    private int maxMysteries;
 
     public AncientOne() {
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
         if (Localization.getInstance().isRusLocale()) return nameRU;
         else return nameEN;
+    }
+
+    public String getImageResource() {
+        return imageResource;
+    }
+
+    public int getExpansionID() {
+        return expansionID;
+    }
+
+    public int getMaxMysteries() {
+        return maxMysteries;
     }
 }

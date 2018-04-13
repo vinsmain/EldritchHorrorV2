@@ -20,13 +20,13 @@ public class ExpansionDAO extends BaseDaoImpl {
         int expansionID = HelperFactory.getStaticHelper().getAncientOneDAO().getExpansionID(ancientOneID);
         QueryBuilder<Expansion, Integer> qb = this.queryBuilder();
         qb.where().eq(Expansion.EXPANSION_FIELD_ID, expansionID);
-        return qb.queryForFirst().imageResource;
+        return qb.queryForFirst().getImageResource();
     }
 
     public String getImageResourceByID(int expansionID) throws SQLException {
         QueryBuilder<Expansion, Integer> qb = this.queryBuilder();
         qb.where().eq(Expansion.EXPANSION_FIELD_ID, expansionID);
-        return qb.queryForFirst().imageResource;
+        return qb.queryForFirst().getImageResource();
     }
 
     public List<Expansion> getAllExpansion() throws SQLException{
@@ -38,7 +38,7 @@ public class ExpansionDAO extends BaseDaoImpl {
     public boolean isEnableByID(int expansionID) throws SQLException {
         QueryBuilder<Expansion, Integer> qb = this.queryBuilder();
         qb.where().eq(Expansion.EXPANSION_FIELD_ID, expansionID);
-        return qb.queryForFirst().isEnable;
+        return qb.queryForFirst().isEnable();
     }
 
     public void writeExpansionToDB(Expansion expansion) throws SQLException {

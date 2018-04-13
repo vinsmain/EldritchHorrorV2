@@ -13,22 +13,30 @@ public class Prelude {
     public static final String PRELUDE_FIELD_EXPANSION_ID = "expansion_id";
 
     @DatabaseField(dataType = DataType.INTEGER, generatedId = true, columnName = PRELUDE_FIELD_ID)
-    public int id;
+    private int id;
 
     @DatabaseField(dataType = DataType.STRING, columnName = PRELUDE_FIELD_NAME_EN)
-    public String nameEN;
+    private String nameEN;
 
     @DatabaseField(dataType = DataType.STRING, columnName = PRELUDE_FIELD_NAME_RU)
-    public String nameRU;
+    private String nameRU;
 
     @DatabaseField(dataType = DataType.INTEGER, columnName = PRELUDE_FIELD_EXPANSION_ID)
-    public int expansionID;
+    private int expansionID;
 
     public Prelude() {
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
         if (Localization.getInstance().isRusLocale()) return nameRU;
         else return nameEN;
+    }
+
+    public int getExpansionID() {
+        return expansionID;
     }
 }
