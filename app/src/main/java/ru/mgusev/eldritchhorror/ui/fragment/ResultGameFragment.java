@@ -14,6 +14,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ResultGamePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 
@@ -55,6 +56,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
 
         mysteriesRadioGroup = view.findViewById(R.id.result_game_mysteries_radio_group);
         mysteriesRadioGroup.setOnCheckedChangeListener(this);
+
         return view;
     }
 
@@ -93,7 +95,16 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     }
 
     @Override
+    public void showMysteriesRadioGroup(AncientOne ancientOne) {
+        for (int i = 0; i < mysteriesRadioGroup.getChildCount(); i++) {
+            if (i <= ancientOne.getMaxMysteries()) mysteriesRadioGroup.getChildAt(i).setVisibility(View.VISIBLE);
+            else mysteriesRadioGroup.getChildAt(i).setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        System.out.println(radioGroup.getFocusedChild());
         switch (radioGroup.getCheckedRadioButtonId()) {
             case R.id.result_game_result_switch:
                 //resultGamePresenter.setResultSwitchText(b);

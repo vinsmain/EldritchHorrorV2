@@ -35,7 +35,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         AndroidBug5497Workaround.assistActivity(this);
         pager = findViewById(R.id.pager);
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
-        //pager.setOffscreenPageLimit(2);
+        pager.setOffscreenPageLimit(2);
         pager.setAdapter(pagerAdapter);
 
         /*pager.postDelayed(new Runnable() {
