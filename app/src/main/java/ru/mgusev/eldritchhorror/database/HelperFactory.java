@@ -2,31 +2,24 @@ package ru.mgusev.eldritchhorror.database;
 
 import android.content.Context;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import javax.inject.Inject;
 
 public class HelperFactory {
-    private static DatabaseHelper databaseHelper;
-    private static DatabaseLocalHelper databaseLocalHelper;
+    private DatabaseHelper databaseHelper;
+    private DatabaseLocalHelper databaseLocalHelper;
 
-    public static DatabaseHelper getHelper(){
-        return databaseHelper;
-    }
-
-    public static DatabaseLocalHelper getStaticHelper(){
-        return databaseLocalHelper;
-    }
-
-    public static void setHelper(Context context){
+    @Inject
+    public HelperFactory(Context context) {
         databaseHelper = DatabaseHelper.getHelper(context);
-    }
-
-    public static void setStaticHelper(Context context){
         databaseLocalHelper = DatabaseLocalHelper.getHelper(context);
     }
 
-    public static void releaseHelper(){
-        OpenHelperManager.releaseHelper();
-        databaseHelper = null;
-        databaseLocalHelper = null;
+    public DatabaseHelper getHelper(){
+        return databaseHelper;
+    }
+
+    public DatabaseLocalHelper getStaticHelper(){
+        return databaseLocalHelper;
     }
 }

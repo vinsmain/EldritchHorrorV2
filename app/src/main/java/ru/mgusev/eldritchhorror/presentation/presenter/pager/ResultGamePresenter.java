@@ -3,26 +3,40 @@ package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import ru.mgusev.eldritchhorror.model.AncientOne;
+import javax.inject.Inject;
+
+import io.reactivex.disposables.CompositeDisposable;
+import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
 @InjectViewState
 public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
+    @Inject
+    Repository repository;
+    private CompositeDisposable subscribe;
 
     public ResultGamePresenter() {
-        Repository.getInstance().getObservableAncientOne().subscribe(ancientOne ->  getViewState().showMysteriesRadioGroup(ancientOne));
+        App.getComponent().inject(this);
+        subscribe = new CompositeDisposable();
+        subscribe.add(repository.getObservableAncientOne().subscribe(ancientOne ->  getViewState().showMysteriesRadioGroup(ancientOne)));
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getViewState().setResultSwitchChecked(Repository.getInstance().getGame().isWinGame());
+        getViewState().setResultSwitchChecked(repository.getGame().isWinGame());
     }
 
     public void setResultSwitchText(boolean value) {
-        Repository.getInstance().getGame().setWinGame(value);
+        repository.getGame().setWinGame(value);
         getViewState().setResultSwitchText(value);
         getViewState().showResultTable(value);
+    }
+
+    @Override
+    public void onDestroy() {
+        subscribe.dispose();
+        super.onDestroy();
     }
 }

@@ -29,7 +29,7 @@ public class InvestigatorDAO extends BaseDaoImpl {
         List<Investigator> list = qb.query();
         List<Investigator> investigatorList = new ArrayList<>();
         for (Investigator investigator : list) {
-            if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(investigator.getExpansionID())) investigatorList.add(investigator);
+            //if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(investigator.getExpansionID())) investigatorList.add(investigator);
         }
         return investigatorList;
     }
@@ -46,7 +46,7 @@ public class InvestigatorDAO extends BaseDaoImpl {
         db.delete();
     }
 
-    public GenericRawResults<String[]> getInvestigatorsCount(int ancientOneID) throws SQLException {
+   /* public GenericRawResults<String[]> getInvestigatorsCount(int ancientOneID) throws SQLException {
         String field;
         if (Localization.getInstance().isRusLocale()) field = Investigator.INVESTIGATOR_FIELD_NAME_RU;
         else field = Investigator.INVESTIGATOR_FIELD_NAME_EN;
@@ -62,7 +62,7 @@ public class InvestigatorDAO extends BaseDaoImpl {
         qb.groupBy(field);
         qb.orderByRaw("COUNT (" + field + ") DESC");
         return qb.queryRaw();
-    }
+    }*/
 
     public Investigator getInvestigatorByName(String name) throws SQLException {
         if (name.contains("'")) name = name.replace("'", "''");

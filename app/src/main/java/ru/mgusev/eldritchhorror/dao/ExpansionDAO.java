@@ -17,10 +17,10 @@ public class ExpansionDAO extends BaseDaoImpl {
     }
 
     public String getImageResourceByAncientOneID(int ancientOneID) throws SQLException {
-        int expansionID = HelperFactory.getStaticHelper().getAncientOneDAO().getExpansionID(ancientOneID);
+        /*int expansionID = HelperFactory.getStaticHelper().getAncientOneDAO().getExpansionID(ancientOneID);
         QueryBuilder<Expansion, Integer> qb = this.queryBuilder();
-        qb.where().eq(Expansion.EXPANSION_FIELD_ID, expansionID);
-        return qb.queryForFirst().getImageResource();
+        qb.where().eq(Expansion.EXPANSION_FIELD_ID, expansionID);*/
+        return "null";
     }
 
     public String getImageResourceByID(int expansionID) throws SQLException {

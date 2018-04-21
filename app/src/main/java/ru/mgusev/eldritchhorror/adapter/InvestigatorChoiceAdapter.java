@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.mgusev.eldritchhorror.R;
@@ -43,29 +44,34 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
 
     private OnItemClicked onClick;
     private List<Investigator> listStorage;
-    private Context context;
 
-    public InvestigatorChoiceAdapter(Context context, List<Investigator> listStorage) {
-        this.context = context;
-        this.listStorage = listStorage;
+    public InvestigatorChoiceAdapter() {
+        this.listStorage = new ArrayList<>();
     }
+
+    public void setListStorage(List<Investigator> listStorage) {
+        this.listStorage = listStorage;
+        notifyItemRangeInserted(0, listStorage.size());
+    }
+
 
     @Override
     public InvestigatorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_investigator, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_investigator, parent, false);
         return new InvestigatorViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final InvestigatorViewHolder holder, int position) {
-        Resources resources = context.getResources();
-        int resourceId = resources.getIdentifier(listStorage.get(position).getImageResource(), "drawable", context.getPackageName());
+        Context context = holder.itemView.getContext();
+        Resources resources = holder.itemView.getResources();
+        int resourceId = resources.getIdentifier(listStorage.get(position).getImageResource(), "drawable", holder.itemView.getContext().getPackageName());
         holder.invPhoto.setImageResource(resourceId);
         holder.invName.setText(listStorage.get(position).getName());
         holder.invOccupation.setText(listStorage.get(position).getOccupation());
 
         try {
-            String expansionResource = HelperFactory.getStaticHelper().getExpansionDAO().getImageResourceByID(listStorage.get(position).getExpansionID());
+            String expansionResource = new HelperFactory(context).getStaticHelper().getExpansionDAO().getImageResourceByID(listStorage.get(position).getExpansionID());
             if (expansionResource != null) {
                 resourceId = resources.getIdentifier(expansionResource, "drawable", context.getPackageName());
                 holder.invExpansion.setImageResource(resourceId);

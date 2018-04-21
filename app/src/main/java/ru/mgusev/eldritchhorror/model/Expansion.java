@@ -1,10 +1,10 @@
 package ru.mgusev.eldritchhorror.model;
 
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
-@DatabaseTable(tableName = "expansions")
+@Entity(tableName = "expansions")
 public class Expansion {
 
     public static final String EXPANSION_FIELD_ID = "_id";
@@ -13,19 +13,20 @@ public class Expansion {
     public static final String EXPANSION_FIELD_NAME_RU = "name_ru";
     public static final String EXPANSION_FIELD_IS_ENABLE = "is_enable";
 
-    @DatabaseField(dataType = DataType.INTEGER, generatedId = true, columnName = EXPANSION_FIELD_ID)
+    @PrimaryKey
+    @ColumnInfo(name = EXPANSION_FIELD_ID)
     private int id;
 
-    @DatabaseField(dataType = DataType.STRING, columnName = EXPANSION_FIELD_IMAGE_RESOURCE)
+    @ColumnInfo(name = EXPANSION_FIELD_IMAGE_RESOURCE)
     private String imageResource;
 
-    @DatabaseField(dataType = DataType.STRING, columnName = EXPANSION_FIELD_NAME_EN)
+    @ColumnInfo(name = EXPANSION_FIELD_NAME_EN)
     private String nameEN;
 
-    @DatabaseField(dataType = DataType.STRING, columnName = EXPANSION_FIELD_NAME_RU)
+    @ColumnInfo(name = EXPANSION_FIELD_NAME_RU)
     private String nameRU;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = EXPANSION_FIELD_IS_ENABLE)
+    @ColumnInfo(name = EXPANSION_FIELD_IS_ENABLE)
     private boolean isEnable;
 
     public Expansion() {
@@ -35,16 +36,44 @@ public class Expansion {
         return id;
     }
 
-    public String getName() {
-        if (Localization.getInstance().isRusLocale()) return nameRU;
-        else return nameEN;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getImageResource() {
         return imageResource;
     }
 
+    public void setImageResource(String imageResource) {
+        this.imageResource = imageResource;
+    }
+
+    public String getNameEN() {
+        return nameEN;
+    }
+
+    public void setNameEN(String nameEN) {
+        this.nameEN = nameEN;
+    }
+
+    public String getNameRU() {
+        return nameRU;
+    }
+
+    public void setNameRU(String nameRU) {
+        this.nameRU = nameRU;
+    }
+
     public boolean isEnable() {
         return isEnable;
+    }
+
+    public void setEnable(boolean enable) {
+        isEnable = enable;
+    }
+
+    public String getName() {
+        if (Localization.getInstance().isRusLocale()) return nameRU;
+        else return nameEN;
     }
 }

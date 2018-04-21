@@ -12,16 +12,13 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
-import ru.mgusev.eldritchhorror.database.HelperFactory;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
+import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Investigator;
-import ru.mgusev.eldritchhorror.presentation.App;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorChoicePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorChoiceView;
 
@@ -65,7 +62,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
         invRecycleView.setLayoutManager(gridLayoutManager);
         invRecycleView.setHasFixedSize(true);
 
-        adapter = new InvestigatorChoiceAdapter(App.getContext(), investigatorChoicePresenter.getInvestigatorList());
+        adapter = new InvestigatorChoiceAdapter();
         invRecycleView.setAdapter(adapter);
         adapter.setOnClick(this);
 
@@ -113,5 +110,10 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     @Override
     public void onDeleteClick(int position) {
 
+    }
+
+    @Override
+    public void showItems(List<Investigator> list) {
+        adapter.setListStorage(list);
     }
 }

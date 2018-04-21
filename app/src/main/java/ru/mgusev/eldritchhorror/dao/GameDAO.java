@@ -86,14 +86,14 @@ public class GameDAO extends BaseDaoImpl {
         return qb.query().size() != 0;
     }
 
-    public void clearTable() throws SQLException {
+    /*public void clearTable() throws SQLException {
         for (Game game : getGamesSortScoreUp()) {
             if (game.getUserID() != null) {
                 HelperFactory.getHelper().getInvestigatorDAO().deleteInvestigatorsByGameID(game.getId());
                 delete(game);
             }
         }
-    }
+    }*/
 
     public Game getGameByID(Game game) throws SQLException {
         QueryBuilder<Game, Integer> qb = this.queryBuilder();
@@ -101,12 +101,12 @@ public class GameDAO extends BaseDaoImpl {
         return qb.queryForFirst();
     }
 
-    public List<Game> getGamesByAncientOne(String ancientOneName) throws SQLException{
+    /*public List<Game> getGamesByAncientOne(String ancientOneName) throws SQLException{
         int ancientOneID = HelperFactory.getStaticHelper().getAncientOneDAO().getAncientOneIDByName(ancientOneName);
         QueryBuilder<Game, Integer> qb = this.queryBuilder();
         qb.where().eq(Game.GAME_FIELD_ANCIENT_ONE_ID, ancientOneID);
         return qb.query();
-    }
+    }*/
 
     public GenericRawResults<String[]> getAncientOneCount() throws SQLException {
         QueryBuilder<Game, Integer> qb = this.queryBuilder();

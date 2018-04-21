@@ -1,17 +1,17 @@
 package ru.mgusev.eldritchhorror.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@DatabaseTable(tableName = "games")
+@Entity(tableName = "games")
 public class Game implements Parcelable {
 
     public static final String GAME_TABLE_NAME = "games";
@@ -42,81 +42,83 @@ public class Game implements Parcelable {
     public static final String GAME_FIELD_LAST_MODIFIED = "last_modified";
     public static final String GAME_FIELD_ADVENTURE_ID = "adventure_id";
 
-    @DatabaseField(id = true, dataType = DataType.LONG, columnName = GAME_FIELD_ID)
+    @PrimaryKey
+    @ColumnInfo(name = GAME_FIELD_ID)
     private long id;
 
-    @DatabaseField(dataType = DataType.LONG, columnName = GAME_FIELD_DATE)
+    @ColumnInfo(name = GAME_FIELD_DATE)
     private long date;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_ANCIENT_ONE_ID)
+    @ColumnInfo(name = GAME_FIELD_ANCIENT_ONE_ID)
     private int ancientOneID;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_PLAYERS_COUNT)
+    @ColumnInfo(name = GAME_FIELD_PLAYERS_COUNT)
     private int playersCount;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_SIMPLE_MYTHS)
+    @ColumnInfo(name = GAME_FIELD_SIMPLE_MYTHS)
     private boolean isSimpleMyths;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_NORMAL_MYTHS)
+    @ColumnInfo(name = GAME_FIELD_NORMAL_MYTHS)
     private boolean isNormalMyths;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_HARD_MYTHS)
+    @ColumnInfo(name = GAME_FIELD_HARD_MYTHS)
     private boolean isHardMyths;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_STARTING_RUMOR)
+    @ColumnInfo(name = GAME_FIELD_STARTING_RUMOR)
     private boolean isStartingRumor;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_WIN_GAME)
+    @ColumnInfo(name = GAME_FIELD_WIN_GAME)
     private boolean isWinGame;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_DEFEAT_BY_ELIMINATION)
+    @ColumnInfo(name = GAME_FIELD_DEFEAT_BY_ELIMINATION)
     private boolean isDefeatByElimination;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_DEFEAT_BY_MYTHOS_DEPLETION)
+    @ColumnInfo(name = GAME_FIELD_DEFEAT_BY_MYTHOS_DEPLETION)
     private boolean isDefeatByMythosDepletion;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = GAME_FIELD_DEFEAT_BY_AWAKENED_ANCIENT_ONE)
+    @ColumnInfo(name = GAME_FIELD_DEFEAT_BY_AWAKENED_ANCIENT_ONE)
     private boolean isDefeatByAwakenedAncientOne;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_GATES_COUNT)
+    @ColumnInfo(name = GAME_FIELD_GATES_COUNT)
     private int gatesCount;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_MONSTERS_COUNT)
+    @ColumnInfo(name = GAME_FIELD_MONSTERS_COUNT)
     private int monstersCount;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_CURSE_COUNT)
+    @ColumnInfo(name = GAME_FIELD_CURSE_COUNT)
     private int curseCount;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_RUMORS_COUNT)
+    @ColumnInfo(name = GAME_FIELD_RUMORS_COUNT)
     private int rumorsCount;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_CLUES_COUNT)
+    @ColumnInfo(name = GAME_FIELD_CLUES_COUNT)
     private int cluesCount;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_BLESSED_COUNT)
+    @ColumnInfo(name = GAME_FIELD_BLESSED_COUNT)
     private int blessedCount;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_DOOM_COUNT)
+    @ColumnInfo(name = GAME_FIELD_DOOM_COUNT)
     private int doomCount;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_SCORE)
+    @ColumnInfo(name = GAME_FIELD_SCORE)
     private int score;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_PRELUDE_ID)
+    @ColumnInfo(name = GAME_FIELD_PRELUDE_ID)
     private int preludeID;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_SOLVED_MYSTERIES_COUNT)
+    @ColumnInfo(name = GAME_FIELD_SOLVED_MYSTERIES_COUNT)
     private int solvedMysteriesCount;
 
-    @DatabaseField(dataType = DataType.STRING, columnName = GAME_FIELD_USER_ID)
+    @ColumnInfo(name = GAME_FIELD_USER_ID)
     private String userID;
 
-    @DatabaseField(dataType = DataType.LONG, columnName = GAME_FIELD_LAST_MODIFIED)
+    @ColumnInfo(name = GAME_FIELD_LAST_MODIFIED)
     private long lastModified;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = GAME_FIELD_ADVENTURE_ID)
+    @ColumnInfo(name = GAME_FIELD_ADVENTURE_ID)
     private int adventureID;
 
+    @Ignore
     private List<Investigator> invList;
 
     public Game() {

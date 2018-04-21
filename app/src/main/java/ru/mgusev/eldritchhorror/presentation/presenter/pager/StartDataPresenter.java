@@ -6,6 +6,9 @@ import com.arellomobile.mvp.MvpPresenter;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
 import ru.mgusev.eldritchhorror.repository.Repository;
@@ -14,18 +17,22 @@ import ru.mgusev.eldritchhorror.repository.Repository;
 public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     public static final String ARGUMENT_PAGE_NUMBER = "arg_page_number";
+    @Inject
+    Repository repository;
     private Calendar date;
     private List<String> playersCountList;
     private List<String> ancientOneList;
     private List<String> preludeList;
 
     public StartDataPresenter() {
+        App.getComponent().inject(this);
+        
         date = Calendar.getInstance();
-        ancientOneList = Repository.getInstance().getAncientOneNameList();
-        preludeList = Repository.getInstance().getPreludeNameList();
-        playersCountList = Repository.getInstance().getPlayersCountArray();
+        ancientOneList = repository.getAncientOneNameList();
+        preludeList = repository.getPreludeNameList();
+        playersCountList = repository.getPlayersCountArray();
 
-        date.setTimeInMillis(Repository.getInstance().getGame().getDate());
+        date.setTimeInMillis(repository.getGame().getDate());
     }
 
     @Override
@@ -48,7 +55,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         date.set(Calendar.YEAR, year);
         date.set(Calendar.MONTH, month);
         date.set(Calendar.DAY_OF_MONTH, day);
-        Repository.getInstance().getGame().setDate(date.getTimeInMillis());
+        repository.getGame().setDate(date.getTimeInMillis());
     }
 
     public void setDateToField() {
@@ -60,41 +67,41 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     }
 
     public void setPlayersCountCurrentPosition(String value) {
-        Repository.getInstance().getGame().setPlayersCount(Integer.parseInt(value));
+        repository.getGame().setPlayersCount(Integer.parseInt(value));
     }
 
     public void setCurrentAncientOnePosition(String value) {
-        Repository.getInstance().setAncientOneId(Repository.getInstance().getAncientOneByName(value).getId());
+        repository.setAncientOneId(repository.getAncientOneByName(value).getId());
     }
 
     public void setCurrentPreludePosition(String value) {
-        Repository.getInstance().getGame().setPreludeID(Repository.getInstance().getPreludeByName(value).getId());
+        repository.getGame().setPreludeID(repository.getPreludeByName(value).getId());
     }
 
     public void setSpinnerPosition() {
         int ancientOnePosition = 0;
-        if (Repository.getInstance().getGame().getAncientOneID() != -1)
-            ancientOnePosition = ancientOneList.indexOf(Repository.getInstance().getAncientOneNameByID(Repository.getInstance().getGame().getAncientOneID()));
+        if (repository.getGame().getAncientOneID() != -1)
+            ancientOnePosition = ancientOneList.indexOf(repository.getAncientOneNameByID(repository.getGame().getAncientOneID()));
         getViewState().setSpinnerPosition(ancientOnePosition,
-                preludeList.indexOf(Repository.getInstance().getPreludeNameByID(Repository.getInstance().getGame().getPreludeID())),
-                playersCountList.indexOf(String.valueOf(Repository.getInstance().getGame().getPlayersCount())));
+                preludeList.indexOf(repository.getPreludeNameByID(repository.getGame().getPreludeID())),
+                playersCountList.indexOf(String.valueOf(repository.getGame().getPlayersCount())));
     }
 
     public void setSwitchValue() {
-        Game game = Repository.getInstance().getGame();
+        Game game = repository.getGame();
         getViewState().setSwitchValue(game.isSimpleMyths(), game.isNormalMyths(), game.isHardMyths(), game.isStartingRumor());
     }
 
     public void setSwitchValueToGame(boolean easyMythosValue, boolean normalMythosValue, boolean hardMythosValue, boolean startingRumorValue) {
-        Repository.getInstance().getGame().setSimpleMyths(easyMythosValue);
-        Repository.getInstance().getGame().setNormalMyths(normalMythosValue);
-        Repository.getInstance().getGame().setHardMyths(hardMythosValue);
-        Repository.getInstance().getGame().setStartingRumor(startingRumorValue);
+        repository.getGame().setSimpleMyths(easyMythosValue);
+        repository.getGame().setNormalMyths(normalMythosValue);
+        repository.getGame().setHardMyths(hardMythosValue);
+        repository.getGame().setStartingRumor(startingRumorValue);
     }
 
     @Override
     public void onDestroy() {
-        Repository.getInstance().clearGame();
+        repository.clearGame();
         super.onDestroy();
     }
 }

@@ -11,11 +11,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.AncientOne;
-import ru.mgusev.eldritchhorror.presentation.AndroidBug5497Workaround;
+import ru.mgusev.eldritchhorror.support.AndroidBug5497Workaround;
 import ru.mgusev.eldritchhorror.adapter.PagerAdapter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
-import ru.mgusev.eldritchhorror.repository.Repository;
 
 public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
@@ -74,7 +73,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     private void setExpansionIcon(int ancientOneId) {
-        String resourceName = Repository.getInstance().getExpansionIconNameByAncientOneId(ancientOneId);
+        String resourceName = pagerPresenter.getRepository().getExpansionIconNameByAncientOneId(ancientOneId);
         if (resourceName != null) {
             expansionIcon.setImageResource(getResources().getIdentifier(resourceName, "drawable", getPackageName()));
             expansionIcon.setVisibility(View.VISIBLE);

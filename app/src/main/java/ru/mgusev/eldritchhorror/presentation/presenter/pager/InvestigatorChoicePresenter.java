@@ -6,6 +6,9 @@ import com.arellomobile.mvp.MvpPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorChoiceView;
 import ru.mgusev.eldritchhorror.repository.Repository;
@@ -13,9 +16,11 @@ import ru.mgusev.eldritchhorror.repository.Repository;
 @InjectViewState
 public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoiceView> {
 
-    private List<Investigator> investigatorList;
+    @Inject
+    Repository repository;
 
     public InvestigatorChoicePresenter() {
+        App.getComponent().inject(this);
         setInvestigatorListFromRepository();
     }
 
@@ -26,12 +31,7 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
     }
 
     private void setInvestigatorListFromRepository() {
-        investigatorList = Repository.getInstance().getInvestigatorList();
-        System.out.println("0000 " + investigatorList);
-    }
+        getViewState().showItems(repository.getInvestigatorList());
 
-    public List<Investigator> getInvestigatorList() {
-        System.out.println("1111 " + investigatorList);
-        return investigatorList;
     }
 }

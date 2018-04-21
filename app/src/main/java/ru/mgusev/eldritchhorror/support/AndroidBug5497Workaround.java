@@ -1,4 +1,4 @@
-package ru.mgusev.eldritchhorror.presentation;
+package ru.mgusev.eldritchhorror.support;
 
 import android.app.Activity;
 import android.content.Context;

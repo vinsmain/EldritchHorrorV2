@@ -1,13 +1,12 @@
 package ru.mgusev.eldritchhorror.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-@DatabaseTable(tableName = "investigators")
+@Entity(tableName = "investigators")
 public class Investigator implements Parcelable {
 
     public static final String INVESTIGATOR_TABLE_NAME = "investigators";
@@ -26,43 +25,44 @@ public class Investigator implements Parcelable {
     public static final String INVESTIGATOR_FIELD_EXPANSION_ID = "expansion_id";
     public static final String INVESTIGATOR_FIELD_SPECIALIZATION_ID = "specialization_id";
 
-    @DatabaseField(id = true, dataType = DataType.LONG, columnName = INVESTIGATOR_FIELD_ID)
+    @PrimaryKey
+    @ColumnInfo(name = INVESTIGATOR_FIELD_ID)
     private long id;
 
-    @DatabaseField(dataType = DataType.LONG, columnName = INVESTIGATOR_FIELD_GAME_ID)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_GAME_ID)
     private long gameId;
 
-    @DatabaseField(dataType = DataType.STRING, columnName = INVESTIGATOR_FIELD_IMAGE_RESOURCE)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_IMAGE_RESOURCE)
     private String imageResource;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = INVESTIGATOR_FIELD_IS_MALE)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_IS_MALE)
     private boolean isMale;
 
-    @DatabaseField(dataType = DataType.STRING, columnName = INVESTIGATOR_FIELD_NAME_EN)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_NAME_EN)
     private String nameEN;
 
-    @DatabaseField(dataType = DataType.STRING, columnName = INVESTIGATOR_FIELD_NAME_RU)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_NAME_RU)
     private String nameRU;
 
-    @DatabaseField(dataType = DataType.STRING, columnName = INVESTIGATOR_FIELD_OCCUPATION_EN)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_OCCUPATION_EN)
     private String occupationEN;
 
-    @DatabaseField(dataType = DataType.STRING, columnName = INVESTIGATOR_FIELD_OCCUPATION_RU)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_OCCUPATION_RU)
     private String occupationRU;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = INVESTIGATOR_FIELD_IS_STARTING)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_IS_STARTING)
     private boolean isStarting;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = INVESTIGATOR_FIELD_IS_REPLACEMENT)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_IS_REPLACEMENT)
     private boolean isReplacement;
 
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = INVESTIGATOR_FIELD_IS_DEAD)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_IS_DEAD)
     private boolean isDead;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = INVESTIGATOR_FIELD_EXPANSION_ID)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_EXPANSION_ID)
     private int expansionID;
 
-    @DatabaseField(dataType = DataType.INTEGER, columnName = INVESTIGATOR_FIELD_SPECIALIZATION_ID)
+    @ColumnInfo(name = INVESTIGATOR_FIELD_SPECIALIZATION_ID)
     private int specialization;
 
     public Investigator() {
@@ -122,6 +122,106 @@ public class Investigator implements Parcelable {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(long gameId) {
+        this.gameId = gameId;
+    }
+
+    public String getImageResource() {
+        return imageResource;
+    }
+
+    public void setImageResource(String imageResource) {
+        this.imageResource = imageResource;
+    }
+
+    public boolean isMale() {
+        return isMale;
+    }
+
+    public void setMale(boolean male) {
+        isMale = male;
+    }
+
+    public String getNameEN() {
+        return nameEN;
+    }
+
+    public void setNameEN(String nameEN) {
+        this.nameEN = nameEN;
+    }
+
+    public String getNameRU() {
+        return nameRU;
+    }
+
+    public void setNameRU(String nameRU) {
+        this.nameRU = nameRU;
+    }
+
+    public String getOccupationEN() {
+        return occupationEN;
+    }
+
+    public void setOccupationEN(String occupationEN) {
+        this.occupationEN = occupationEN;
+    }
+
+    public String getOccupationRU() {
+        return occupationRU;
+    }
+
+    public void setOccupationRU(String occupationRU) {
+        this.occupationRU = occupationRU;
+    }
+
+    public boolean isStarting() {
+        return isStarting;
+    }
+
+    public void setStarting(boolean starting) {
+        isStarting = starting;
+    }
+
+    public boolean isReplacement() {
+        return isReplacement;
+    }
+
+    public void setReplacement(boolean replacement) {
+        isReplacement = replacement;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+
+    public int getExpansionID() {
+        return expansionID;
+    }
+
+    public void setExpansionID(int expansionID) {
+        this.expansionID = expansionID;
+    }
+
+    public int getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(int specialization) {
+        this.specialization = specialization;
+    }
+
     public String getName() {
         if (Localization.getInstance().isRusLocale()) return nameRU;
         else return nameEN;
@@ -130,33 +230,5 @@ public class Investigator implements Parcelable {
     public String getOccupation() {
         if (Localization.getInstance().isRusLocale()) return occupationRU;
         else return occupationEN;
-    }
-
-    public String getImageResource() {
-        return imageResource;
-    }
-
-    public boolean isMale() {
-        return isMale;
-    }
-
-    public boolean isStarting() {
-        return isStarting;
-    }
-
-    public boolean isReplacement() {
-        return isReplacement;
-    }
-
-    public boolean isDead() {
-        return isDead;
-    }
-
-    public int getExpansionID() {
-        return expansionID;
-    }
-
-    public int getSpecialization() {
-        return specialization;
     }
 }

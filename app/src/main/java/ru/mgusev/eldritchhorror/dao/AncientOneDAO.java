@@ -29,7 +29,7 @@ public class AncientOneDAO  extends BaseDaoImpl {
         List<AncientOne> ancientOneList = qb.query();
         List<String> nameList = new ArrayList<>();
         for (AncientOne ancientOne : ancientOneList) {
-            if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(ancientOne.getExpansionID())) nameList.add(ancientOne.getName());
+            //if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(ancientOne.getExpansionID())) nameList.add(ancientOne.getName());
         }
         return nameList;
     }

@@ -37,7 +37,7 @@ public class DatabaseLocalHelper extends OrmLiteSqliteOpenHelper {
 
     public DatabaseLocalHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        new LocalDBAssetHelper(context).getWritableDatabase();
+        //new LocalDBAssetHelper(context).getWritableDatabase();
     }
 
     public static synchronized DatabaseLocalHelper getHelper(Context context) {

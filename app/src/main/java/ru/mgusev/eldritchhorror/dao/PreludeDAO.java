@@ -31,7 +31,7 @@ public class PreludeDAO extends BaseDaoImpl {
         List<Prelude> preludeList = qb.query();
         List<String> nameList = new ArrayList<>();
         for (Prelude prelude : preludeList) {
-            if (HelperFactory.getStaticHelper().getExpansionDAO().isEnableByID(prelude.getExpansionID())) nameList.add(prelude.getName());
+            //if (new HelperFactory().getStaticHelper().getExpansionDAO().isEnableByID(prelude.getExpansionID())) nameList.add(prelude.getName());
         }
         return nameList;
     }
