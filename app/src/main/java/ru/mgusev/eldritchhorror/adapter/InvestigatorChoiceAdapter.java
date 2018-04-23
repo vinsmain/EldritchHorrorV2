@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.database.HelperFactory;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Investigator;
 
@@ -70,7 +69,7 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
         holder.invName.setText(listStorage.get(position).getName());
         holder.invOccupation.setText(listStorage.get(position).getOccupation());
 
-        try {
+       /*try {
             String expansionResource = new HelperFactory(context).getStaticHelper().getExpansionDAO().getImageResourceByID(listStorage.get(position).getExpansionID());
             if (expansionResource != null) {
                 resourceId = resources.getIdentifier(expansionResource, "drawable", context.getPackageName());
@@ -79,7 +78,7 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
             } else holder.invExpansion.setVisibility(View.GONE);
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
 
         if (listStorage.get(position).isStarting()) {
             holder.invCardView.setBackgroundColor(ContextCompat.getColor(context, R.color.color_starting_investigator));

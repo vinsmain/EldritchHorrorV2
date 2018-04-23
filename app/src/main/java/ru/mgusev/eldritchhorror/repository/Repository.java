@@ -5,6 +5,7 @@ import android.content.Context;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,7 +14,7 @@ import dagger.Module;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.database.HelperFactory;
+import ru.mgusev.eldritchhorror.database.StaticDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
@@ -27,12 +28,12 @@ public class Repository {
     private Game game;
     private final PublishSubject<AncientOne> ancientOne;
 
-    private final HelperFactory helperFactory;
+    private final StaticDataDB staticDataDB;
 
     @Inject
-    public Repository(Context context, HelperFactory helperFactory) {
+    public Repository(Context context, StaticDataDB staticDataDB) {
         this.context = context;
-        this.helperFactory = helperFactory;
+        this.staticDataDB = staticDataDB;
         ancientOne = PublishSubject.create();
         //game = new Game();
     }
@@ -47,8 +48,8 @@ public class Repository {
     }
 
     private AncientOne getCurrentAncientOne() {
-        AncientOne currentAncientOne = getAncientOneByName(getAncientOneNameList().get(0));
-        if (getGame().getAncientOneID() != -1) currentAncientOne = getAncientOneByID(getGame().getAncientOneID());
+        AncientOne currentAncientOne = getAncientOne(getAncientOneNameList().get(0));
+        if (getGame().getAncientOneID() != -1) currentAncientOne = getAncientOne(getGame().getAncientOneID());
         return currentAncientOne;
     }
 
@@ -61,24 +62,12 @@ public class Repository {
         ancientOne.onNext(getCurrentAncientOne());
     }
 
-    private AncientOne getAncientOneByID(int id) {
-        AncientOne ancientOne = new AncientOne();
-        try {
-            ancientOne = helperFactory.getStaticHelper().getAncientOneDAO().getAncienOneByID(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return ancientOne;
+    public AncientOne getAncientOne(int id) {
+        return staticDataDB.ancientOneDAO().getAncientOneByID(id);
     }
 
     public String getExpansionIconNameByAncientOneId(int id) {
-        String name = null;
-        try {
-            name = helperFactory.getStaticHelper().getExpansionDAO().getImageResourceByAncientOneID(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return name;
+        return staticDataDB.expansionDAO().getExpansionByID(getAncientOne(id).getExpansionID()).getImageResource();
     }
 
     // StartDataFragment
@@ -89,73 +78,39 @@ public class Repository {
 
     public List<String> getAncientOneNameList() {
         List<String> ancientOneNameList = new ArrayList<>();
-        try {
-            ancientOneNameList.addAll(helperFactory.getStaticHelper().getAncientOneDAO().getAncientOneNameList());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<AncientOne> ancientOneList = staticDataDB.ancientOneDAO().getAll();
+        for (AncientOne ancientOne : ancientOneList) {
+            ancientOneNameList.add(ancientOne.getName());
         }
+        Collections.sort(ancientOneNameList);
         return ancientOneNameList;
     }
 
     public List<String> getPreludeNameList() {
         List<String> preludeNameList = new ArrayList<>();
-        try {
-            preludeNameList.addAll(helperFactory.getStaticHelper().getPreludeDAO().getPreludeNameList());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<Prelude> preludeList = staticDataDB.preludeDAO().getAll();
+        for (Prelude prelude : preludeList) {
+            preludeNameList.add(prelude.getName());
         }
+        Collections.sort(preludeNameList);
         return preludeNameList;
     }
 
-    public String getAncientOneNameByID(int id) {
-        String name = null;
-        try {
-            name = helperFactory.getStaticHelper().getAncientOneDAO().getAncientOneNameByID(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return name;
+    public Prelude getPrelude(int id) {
+        return staticDataDB.preludeDAO().getPreludeByID(id);
     }
 
-    public String getPreludeNameByID(int id) {
-        String name = null;
-        try {
-            name = helperFactory.getStaticHelper().getPreludeDAO().getPreludeNameByID(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return name;
+    public AncientOne getAncientOne(String name) {
+        return staticDataDB.ancientOneDAO().getAncientOneByName(name);
     }
 
-    public AncientOne getAncientOneByName(String name) {
-        AncientOne ancientOne = new AncientOne();
-        try {
-            ancientOne = helperFactory.getStaticHelper().getAncientOneDAO().getAncientOneByName(name);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return ancientOne;
-    }
-
-    public Prelude getPreludeByName(String name) {
-        Prelude prelude = new Prelude();
-        try {
-            prelude = helperFactory.getStaticHelper().getPreludeDAO().getPreludeByName(name);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return prelude;
+    public Prelude getPrelude(String name) {
+        return staticDataDB.preludeDAO().getPreludeByName(name);
     }
 
     // InvestigatorChoiceFragment
 
     public List<Investigator> getInvestigatorList() {
-        List<Investigator> investigatorsList = new ArrayList<>();
-        try {
-            investigatorsList.addAll(helperFactory.getStaticHelper().getInvestigatorDAO().getAllInvestigatorsLocal());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return investigatorsList;
+        return staticDataDB.investigatorDAO().getAll();
     }
 }

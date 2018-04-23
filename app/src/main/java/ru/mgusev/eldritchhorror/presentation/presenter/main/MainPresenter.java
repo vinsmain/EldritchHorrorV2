@@ -3,8 +3,6 @@ package ru.mgusev.eldritchhorror.presentation.presenter.main;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.database.HelperFactory;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
 
 @InjectViewState

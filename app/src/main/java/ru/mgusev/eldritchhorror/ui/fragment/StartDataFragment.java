@@ -178,7 +178,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
                 AncientOne selectedAncientOne;
                 Resources resources = getResources();
                 try {
-                    selectedAncientOne = HelperFactory.getStaticHelper().getAncientOneDAO().getAncientOneByName(ancientOneArray.get(i));
+                    selectedAncientOne = HelperFactory.getStaticHelper().getAncientOneDAO().getAncientOne(ancientOneArray.get(i));
                     resourceId = resources.getIdentifier(selectedAncientOne.imageResource, "drawable", getActivity().getPackageName());
                     ((ImageView)getActivity().findViewById(R.id.background_pager)).setImageResource(resourceId);
                     String resourceName = HelperFactory.getStaticHelper().getExpansionDAO().getImageResourceByID(selectedAncientOne.expansionID);

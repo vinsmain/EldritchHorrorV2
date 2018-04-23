@@ -1,10 +1,14 @@
 package ru.mgusev.eldritchhorror.app;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
+
+import com.fstyle.library.helper.AssetSQLiteOpenHelperFactory;
+
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
-import ru.mgusev.eldritchhorror.database.HelperFactory;
+import ru.mgusev.eldritchhorror.database.StaticDataDB;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
 @Module
@@ -24,13 +28,17 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Repository provideRepository(Context context, HelperFactory helperFactory){
-        return new Repository(context, helperFactory);
+    public Repository provideRepository(Context context, StaticDataDB staticDataDB){
+        return new Repository(context, staticDataDB);
     }
 
     @Provides
     @Singleton
-    public HelperFactory provideHelperFactory(Context context) {
-        return new HelperFactory(context);
+    public StaticDataDB provideStaticDataDB(Context context) {
+        return Room.databaseBuilder(context,
+                StaticDataDB.class, "EHLocalDB.db")
+                .openHelperFactory(new AssetSQLiteOpenHelperFactory())
+                .allowMainThreadQueries()
+                .build();
     }
 }

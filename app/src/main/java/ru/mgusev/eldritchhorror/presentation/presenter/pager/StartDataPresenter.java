@@ -71,19 +71,19 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     }
 
     public void setCurrentAncientOnePosition(String value) {
-        repository.setAncientOneId(repository.getAncientOneByName(value).getId());
+        repository.setAncientOneId(repository.getAncientOne(value).getId());
     }
 
     public void setCurrentPreludePosition(String value) {
-        repository.getGame().setPreludeID(repository.getPreludeByName(value).getId());
+        repository.getGame().setPreludeID(repository.getPrelude(value).getId());
     }
 
     public void setSpinnerPosition() {
         int ancientOnePosition = 0;
         if (repository.getGame().getAncientOneID() != -1)
-            ancientOnePosition = ancientOneList.indexOf(repository.getAncientOneNameByID(repository.getGame().getAncientOneID()));
+            ancientOnePosition = ancientOneList.indexOf(repository.getAncientOne(repository.getGame().getAncientOneID()).getName());
         getViewState().setSpinnerPosition(ancientOnePosition,
-                preludeList.indexOf(repository.getPreludeNameByID(repository.getGame().getPreludeID())),
+                preludeList.indexOf(repository.getPrelude(repository.getGame().getPreludeID()).getName()),
                 playersCountList.indexOf(String.valueOf(repository.getGame().getPlayersCount())));
     }
 

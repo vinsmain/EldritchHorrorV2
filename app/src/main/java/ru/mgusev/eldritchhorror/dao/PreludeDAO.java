@@ -1,60 +1,21 @@
 package ru.mgusev.eldritchhorror.dao;
 
-import com.j256.ormlite.dao.BaseDaoImpl;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.support.ConnectionSource;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Query;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import ru.mgusev.eldritchhorror.database.HelperFactory;
-import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.model.Prelude;
 
-public class PreludeDAO extends BaseDaoImpl {
+@Dao
+public interface PreludeDAO {
 
-    public PreludeDAO(ConnectionSource connectionSource, Class dataClass) throws SQLException {
-        super(connectionSource, dataClass);
-    }
+    @Query("SELECT * FROM preludes")
+    List<Prelude> getAll();
 
-    public List<Prelude> getAllExpansion() throws SQLException{
-        QueryBuilder<Prelude, Integer> qb = this.queryBuilder();
-        return qb.query();
-    }
+    @Query("SELECT * FROM preludes WHERE _id IS :id")
+    Prelude getPreludeByID(int id);
 
-    public List<String> getPreludeNameList() throws SQLException {
-        QueryBuilder<Prelude, Integer> qb = this.queryBuilder();
-        if (Locale.getDefault().getLanguage().equals("ru")) qb.orderBy(Prelude.PRELUDE_FIELD_NAME_RU, true);
-        else qb.orderBy(Prelude.PRELUDE_FIELD_NAME_EN, true);
-        List<Prelude> preludeList = qb.query();
-        List<String> nameList = new ArrayList<>();
-        for (Prelude prelude : preludeList) {
-            //if (new HelperFactory().getStaticHelper().getExpansionDAO().isEnableByID(prelude.getExpansionID())) nameList.add(prelude.getName());
-        }
-        return nameList;
-    }
-
-    public String getPreludeNameByID(int id) throws SQLException {
-        QueryBuilder<Prelude, Integer> qb = this.queryBuilder();
-        qb.where().eq(Prelude.PRELUDE_FIELD_ID, id);
-        return qb.queryForFirst().getName();
-    }
-
-    public int getPreludeIDByName(String name) throws SQLException {
-        if (name.contains("'")) name = name.replace("'", "''");
-        QueryBuilder<Prelude, Integer> qb = this.queryBuilder();
-        if (Localization.getInstance().isRusLocale()) qb.where().eq(Prelude.PRELUDE_FIELD_NAME_RU, name);
-        else qb.where().eq(Prelude.PRELUDE_FIELD_NAME_EN, name);
-        return qb.queryForFirst().getId();
-    }
-
-    public Prelude getPreludeByName(String name) throws SQLException {
-        if (name.contains("'")) name = name.replace("'", "''");
-        QueryBuilder<Prelude, Integer> qb = this.queryBuilder();
-        if (Localization.getInstance().isRusLocale()) qb.where().eq(Prelude.PRELUDE_FIELD_NAME_RU, name);
-        else qb.where().eq(Prelude.PRELUDE_FIELD_NAME_EN, name);
-        return qb.queryForFirst();
-    }
+    @Query("SELECT * FROM preludes WHERE name_en IS :name OR name_ru IS :name")
+    Prelude getPreludeByName(String name);
 }
