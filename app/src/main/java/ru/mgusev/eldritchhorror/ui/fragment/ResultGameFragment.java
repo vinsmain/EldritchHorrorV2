@@ -2,13 +2,17 @@ package ru.mgusev.eldritchhorror.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -20,7 +24,7 @@ import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class ResultGameFragment extends MvpAppCompatFragment implements ResultGameView, CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener {
+public class ResultGameFragment extends MvpAppCompatFragment implements ResultGameView, CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener, TextWatcher {
 
     @InjectPresenter
     ResultGamePresenter resultGamePresenter;
@@ -29,6 +33,13 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     private TableLayout victoryTable;
     private TableLayout defeatTable;
     private RadioGroup mysteriesRadioGroup;
+    private EditText gatesCountTV;
+    private EditText monstersCountTV;
+    private EditText curseCountTV;
+    private EditText rumorsCountTV;
+    private EditText cluesCountTV;
+    private EditText blessedCountTV;
+    private EditText doomCountTV;
 
     public static ResultGameFragment newInstance(int page) {
         ResultGameFragment pageFragment = new ResultGameFragment();
@@ -48,16 +59,35 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result_game, null);
-        resultSwitch = view.findViewById(R.id.result_game_result_switch);
-        resultSwitch.setOnCheckedChangeListener(this);
+        initView(view);
+        initListeners();
+        return view;
+    }
 
+    private void initView(View view) {
+        resultSwitch = view.findViewById(R.id.result_game_result_switch);
         victoryTable = view.findViewById(R.id.result_game_victory_table);
         defeatTable = view.findViewById(R.id.result_game_defeat_table);
-
         mysteriesRadioGroup = view.findViewById(R.id.result_game_mysteries_radio_group);
-        mysteriesRadioGroup.setOnCheckedChangeListener(this);
+        gatesCountTV = view.findViewById(R.id.result_game_gates_count);
+        monstersCountTV = view.findViewById(R.id.result_game_monsters_count);
+        curseCountTV = view.findViewById(R.id.result_game_curse_count);
+        rumorsCountTV = view.findViewById(R.id.result_game_rumors_count);
+        cluesCountTV = view.findViewById(R.id.result_game_clues_count);
+        blessedCountTV = view.findViewById(R.id.result_game_blessed_count);
+        doomCountTV = view.findViewById(R.id.result_game_doom_count);
+    }
 
-        return view;
+    private void initListeners() {
+        resultSwitch.setOnCheckedChangeListener(this);
+        mysteriesRadioGroup.setOnCheckedChangeListener(this);
+        gatesCountTV.addTextChangedListener(this);
+        monstersCountTV.addTextChangedListener(this);
+        curseCountTV.addTextChangedListener(this);
+        rumorsCountTV.addTextChangedListener(this);
+        cluesCountTV.addTextChangedListener(this);
+        blessedCountTV.addTextChangedListener(this);
+        doomCountTV.addTextChangedListener(this);
     }
 
     @Override
@@ -112,5 +142,26 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
             default:
                 break;
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        resultGamePresenter.setResult(getResultFromField(gatesCountTV), getResultFromField(monstersCountTV), getResultFromField(curseCountTV), getResultFromField(rumorsCountTV),
+                getResultFromField(cluesCountTV), getResultFromField(blessedCountTV), getResultFromField(doomCountTV));
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
+
+    private int getResultFromField(EditText editText) {
+        if (editText.getText().toString().equals("")) return 0;
+        else return Integer.parseInt(editText.getText().toString());
     }
 }

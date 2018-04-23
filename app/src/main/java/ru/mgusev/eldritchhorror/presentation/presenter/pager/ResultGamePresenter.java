@@ -26,6 +26,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         getViewState().setResultSwitchChecked(repository.getGame().isWinGame());
+        repository.scoreOnNext(); //устанавливаем счет при первом запуске
     }
 
     public void setResultSwitchText(boolean value) {
@@ -38,5 +39,9 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     public void onDestroy() {
         subscribe.dispose();
         super.onDestroy();
+    }
+
+    public void setResult(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount) {
+        repository.setResult(gatesCount, monstersCount, curseCount, rumorsCount, cluesCount, blessedCount, doomCount);
     }
 }

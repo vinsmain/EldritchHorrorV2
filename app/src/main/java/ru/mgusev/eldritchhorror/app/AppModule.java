@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.mgusev.eldritchhorror.database.StaticDataDB;
+import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
 @Module
@@ -28,8 +29,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Repository provideRepository(Context context, StaticDataDB staticDataDB){
-        return new Repository(context, staticDataDB);
+    public Repository provideRepository(Context context, StaticDataDB staticDataDB, Game game){
+        return new Repository(context, staticDataDB, game);
     }
 
     @Provides
@@ -40,5 +41,10 @@ public class AppModule {
                 .openHelperFactory(new AssetSQLiteOpenHelperFactory())
                 .allowMainThreadQueries()
                 .build();
+    }
+
+    @Provides
+    public Game provideGame() {
+        return new Game();
     }
 }

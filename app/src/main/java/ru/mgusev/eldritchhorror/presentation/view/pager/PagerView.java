@@ -10,4 +10,7 @@ public interface PagerView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setHeadBackground(AncientOne ancientOne);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setScore(int score);
 }

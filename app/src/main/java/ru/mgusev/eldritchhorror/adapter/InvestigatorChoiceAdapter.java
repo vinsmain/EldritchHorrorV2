@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
+import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
 
 public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<InvestigatorChoiceAdapter.InvestigatorViewHolder> {
@@ -42,15 +42,17 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
     }
 
     private OnItemClicked onClick;
-    private List<Investigator> listStorage;
+    private List<Investigator> investigatorList;
+    private List<Expansion> expansionList;
 
     public InvestigatorChoiceAdapter() {
-        this.listStorage = new ArrayList<>();
+        this.investigatorList = new ArrayList<>();
     }
 
-    public void setListStorage(List<Investigator> listStorage) {
-        this.listStorage = listStorage;
-        notifyItemRangeInserted(0, listStorage.size());
+    public void setListStorage(List<Investigator> investigatorList, List<Expansion> expansionList) {
+        this.investigatorList = investigatorList;
+        this.expansionList = expansionList;
+        notifyItemRangeInserted(0, investigatorList.size());
     }
 
 
@@ -64,56 +66,54 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
     public void onBindViewHolder(final InvestigatorViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
         Resources resources = holder.itemView.getResources();
-        int resourceId = resources.getIdentifier(listStorage.get(position).getImageResource(), "drawable", holder.itemView.getContext().getPackageName());
+        int resourceId = resources.getIdentifier(investigatorList.get(position).getImageResource(), "drawable", context.getPackageName());
         holder.invPhoto.setImageResource(resourceId);
-        holder.invName.setText(listStorage.get(position).getName());
-        holder.invOccupation.setText(listStorage.get(position).getOccupation());
+        holder.invName.setText(investigatorList.get(position).getName());
+        holder.invOccupation.setText(investigatorList.get(position).getOccupation());
 
-       /*try {
-            String expansionResource = new HelperFactory(context).getStaticHelper().getExpansionDAO().getImageResourceByID(listStorage.get(position).getExpansionID());
-            if (expansionResource != null) {
-                resourceId = resources.getIdentifier(expansionResource, "drawable", context.getPackageName());
-                holder.invExpansion.setImageResource(resourceId);
-                holder.invExpansion.setVisibility(View.VISIBLE);
-            } else holder.invExpansion.setVisibility(View.GONE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
-
-        if (listStorage.get(position).isStarting()) {
-            holder.invCardView.setBackgroundColor(ContextCompat.getColor(context, R.color.color_starting_investigator));
-            holder.invName.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryText));
-            holder.invOccupation.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryText));
-        } else if (listStorage.get(position).isReplacement()) {
-            holder.invCardView.setBackgroundColor(ContextCompat.getColor(context, R.color.color_replacement_investigator));
-            holder.invName.setTextColor(ContextCompat.getColor(context, R.color.colorText));
-            holder.invOccupation.setTextColor(ContextCompat.getColor(context, R.color.colorText));
-        } else {
-            holder.invCardView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorText));
-            holder.invName.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryText));
-            holder.invOccupation.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
+        String expansionResource = null;
+        for (Expansion expansion : expansionList) {
+            if (expansion.getId() == investigatorList.get(position).getExpansionID()) {
+                expansionResource = expansion.getImageResource();
+                break;
+            }
         }
 
-        if (listStorage.get(position).isDead()) {
+        if (expansionResource != null) {
+            resourceId = resources.getIdentifier(expansionResource, "drawable", context.getPackageName());
+            holder.invExpansion.setImageResource(resourceId);
+            holder.invExpansion.setVisibility(View.VISIBLE);
+        } else holder.invExpansion.setVisibility(View.GONE);
+
+        if (investigatorList.get(position).isStarting()) {
+            decorateInvestigatorCard(holder, R.color.color_starting_investigator, R.color.colorPrimaryText, R.color.colorPrimaryText);
+        } else if (investigatorList.get(position).isReplacement()) {
+            decorateInvestigatorCard(holder, R.color.color_replacement_investigator, R.color.colorText, R.color.colorText);
+        } else {
+            decorateInvestigatorCard(holder, R.color.colorText, R.color.colorPrimaryText, R.color.colorSecondaryText);
+        }
+
+        if (investigatorList.get(position).isDead()) {
             holder.invDead.setVisibility(View.VISIBLE);
         } else holder.invDead.setVisibility(View.INVISIBLE);
 
-        holder.invCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClick.onItemClick(holder.getAdapterPosition());
-            }
-        });
+        holder.invCardView.setOnClickListener(v -> onClick.onItemClick(holder.getAdapterPosition()));
     }
 
     @Override
     public int getItemCount() {
-        return listStorage.size();
+        return investigatorList.size();
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    private void decorateInvestigatorCard(final InvestigatorViewHolder holder, int cardColor, int nameColor, int occupationColor) {
+        holder.invCardView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), cardColor));
+        holder.invName.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), nameColor));
+        holder.invOccupation.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), occupationColor));
     }
 
     public void setOnClick(OnItemClicked onClick) {

@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -25,6 +26,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private PagerAdapter pagerAdapter;
     private ImageView headBackground;
     private ImageView expansionIcon;
+    private TextView scoreTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
         headBackground = findViewById(R.id.games_pager_head_background);
         expansionIcon = findViewById(R.id.games_pager_expansion_icon);
+        scoreTV = findViewById(R.id.games_pager_score);
 
     }
 
@@ -78,6 +81,12 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             expansionIcon.setImageResource(getResources().getIdentifier(resourceName, "drawable", getPackageName()));
             expansionIcon.setVisibility(View.VISIBLE);
         } else expansionIcon.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setScore(int score) {
+        System.out.println("SCORE " + score);
+        scoreTV.setText(String.valueOf(score));
     }
 
 

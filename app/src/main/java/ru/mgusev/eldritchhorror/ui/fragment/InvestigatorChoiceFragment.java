@@ -17,7 +17,7 @@ import java.util.List;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorChoicePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorChoiceView;
@@ -113,7 +113,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     }
 
     @Override
-    public void showItems(List<Investigator> list) {
-        adapter.setListStorage(list);
+    public void showItems(List<Investigator> investigatorList, List<Expansion> expansionList) {
+        adapter.setListStorage(investigatorList, expansionList);
     }
 }

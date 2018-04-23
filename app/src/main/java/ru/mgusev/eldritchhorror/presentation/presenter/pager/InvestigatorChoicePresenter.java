@@ -31,7 +31,7 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
     }
 
     private void setInvestigatorListFromRepository() {
-        getViewState().showItems(repository.getInvestigatorList());
+        getViewState().showItems(repository.getInvestigatorList(), repository.getExpansionList());
 
     }
 }

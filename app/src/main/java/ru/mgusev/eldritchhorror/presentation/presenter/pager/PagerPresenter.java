@@ -15,12 +15,16 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     @Inject
     Repository repository;
-    private CompositeDisposable subscribe;
+    private CompositeDisposable ancientOneSubscribe;
+    private CompositeDisposable scoreSubscribe;
 
     public PagerPresenter() {
         App.getComponent().inject(this);
-        subscribe = new CompositeDisposable();
-        subscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne)));
+        ancientOneSubscribe = new CompositeDisposable();
+        ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne)));
+
+        scoreSubscribe = new CompositeDisposable();
+        scoreSubscribe.add(repository.getObservableScore().subscribe(score -> getViewState().setScore(score)));
     }
 
     public Repository getRepository() {
@@ -29,7 +33,8 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     @Override
     public void onDestroy() {
-        subscribe.dispose();
+        ancientOneSubscribe.dispose();
+        scoreSubscribe.dispose();
         super.onDestroy();
     }
 }

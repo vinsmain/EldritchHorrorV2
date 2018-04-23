@@ -2,7 +2,6 @@ package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +15,7 @@ import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.database.StaticDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.Prelude;
@@ -25,17 +25,20 @@ import ru.mgusev.eldritchhorror.app.AppModule;
 public class Repository {
 
     private final Context context;
-    private Game game;
     private final PublishSubject<AncientOne> ancientOne;
-
+    private final PublishSubject<Integer> score;
     private final StaticDataDB staticDataDB;
 
+    private Game game;
+
     @Inject
-    public Repository(Context context, StaticDataDB staticDataDB) {
+    public Repository(Context context, StaticDataDB staticDataDB, Game game) {
         this.context = context;
         this.staticDataDB = staticDataDB;
+        this.game = game;
+        System.out.println(game);
         ancientOne = PublishSubject.create();
-        //game = new Game();
+        score = PublishSubject.create();
     }
 
     public Game getGame() {
@@ -60,6 +63,26 @@ public class Repository {
     public void setAncientOneId(int id) {
         game.setAncientOneID(id);
         ancientOne.onNext(getCurrentAncientOne());
+    }
+
+    public Observable<Integer> getObservableScore() {
+        return score;
+    }
+
+    public void setResult(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount) {
+        game.setGatesCount(gatesCount);
+        game.setMonstersCount(monstersCount);
+        game.setCurseCount(curseCount);
+        game.setRumorsCount(rumorsCount);
+        game.setCluesCount(cluesCount);
+        game.setBlessedCount(blessedCount);
+        game.setDoomCount(doomCount);
+        game.setScore(gatesCount + (int)Math.ceil(monstersCount / 3.0f) + curseCount + rumorsCount * 3 - (int)Math.ceil(cluesCount / 3.0f) - blessedCount - doomCount);
+        scoreOnNext();
+    }
+
+    public void scoreOnNext() {
+        score.onNext(game.getScore());
     }
 
     public AncientOne getAncientOne(int id) {
@@ -112,5 +135,9 @@ public class Repository {
 
     public List<Investigator> getInvestigatorList() {
         return staticDataDB.investigatorDAO().getAll();
+    }
+
+    public List<Expansion> getExpansionList() {
+        return staticDataDB.expansionDAO().getAll();
     }
 }

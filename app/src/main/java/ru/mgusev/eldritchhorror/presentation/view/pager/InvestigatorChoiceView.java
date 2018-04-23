@@ -4,9 +4,10 @@ import com.arellomobile.mvp.MvpView;
 
 import java.util.List;
 
+import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
 
 public interface InvestigatorChoiceView extends MvpView {
 
-    void showItems(List<Investigator> list);
+    void showItems(List<Investigator> investigatorList, List<Expansion> expansionList);
 }
