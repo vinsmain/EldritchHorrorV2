@@ -26,6 +26,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private PagerAdapter pagerAdapter;
     private ImageView headBackground;
     private ImageView expansionIcon;
+    private ImageView winIcon;
     private TextView scoreTV;
 
     @Override
@@ -65,6 +66,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
         headBackground = findViewById(R.id.games_pager_head_background);
         expansionIcon = findViewById(R.id.games_pager_expansion_icon);
+        winIcon = findViewById(R.id.games_pager_win_icon);
         scoreTV = findViewById(R.id.games_pager_score);
 
     }
@@ -85,8 +87,37 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     public void setScore(int score) {
-        System.out.println("SCORE " + score);
         scoreTV.setText(String.valueOf(score));
+    }
+
+    @Override
+    public void setWinIcon() {
+        winIcon.setImageDrawable(getResources().getDrawable(R.drawable.stars));
+    }
+
+    @Override
+    public void setDefeatByEliminationIcon() {
+        winIcon.setImageDrawable(getResources().getDrawable(R.drawable.inestigators_out));
+    }
+
+    @Override
+    public void setDefeatByMythosDepletionIcon() {
+        winIcon.setImageDrawable(getResources().getDrawable(R.drawable.mythos_empty));
+    }
+
+    @Override
+    public void setDefeatByAwakenedAncientOneIcon() {
+        winIcon.setImageDrawable(getResources().getDrawable(R.drawable.skull));
+    }
+
+    @Override
+    public void showScore() {
+        scoreTV.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideScore() {
+        scoreTV.setVisibility(View.GONE);
     }
 
 

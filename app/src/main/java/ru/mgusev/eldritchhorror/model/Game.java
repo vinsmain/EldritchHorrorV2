@@ -132,7 +132,7 @@ public class Game implements Parcelable {
         isNormalMyths = true;
         isHardMyths = true;
         isStartingRumor = false;
-        isWinGame = true;
+        isWinGame = false;
         isDefeatByElimination = false;
         isDefeatByMythosDepletion = false;
         isDefeatByAwakenedAncientOne = true;

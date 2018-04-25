@@ -1,5 +1,6 @@
 package ru.mgusev.eldritchhorror.ui.fragment;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorChoicePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorChoiceView;
+import ru.mgusev.eldritchhorror.ui.activity.pager.InvestigatorActivity;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
@@ -99,7 +101,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
 
     @Override
     public void onItemClick(int position) {
-
+        investigatorChoicePresenter.itemClick(position);
     }
 
     @Override
@@ -115,5 +117,11 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     @Override
     public void showItems(List<Investigator> investigatorList, List<Expansion> expansionList) {
         adapter.setListStorage(investigatorList, expansionList);
+    }
+
+    @Override
+    public void showInvestigatorActivity() {
+        Intent intent = new Intent(this.getContext(), InvestigatorActivity.class);
+        startActivity(intent);
     }
 }

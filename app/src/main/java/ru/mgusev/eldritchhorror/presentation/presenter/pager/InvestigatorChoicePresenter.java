@@ -18,9 +18,11 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
 
     @Inject
     Repository repository;
+    private List<Investigator> investigatorList;
 
     public InvestigatorChoicePresenter() {
         App.getComponent().inject(this);
+        investigatorList = repository.getInvestigatorList();
         setInvestigatorListFromRepository();
     }
 
@@ -31,7 +33,12 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
     }
 
     private void setInvestigatorListFromRepository() {
-        getViewState().showItems(repository.getInvestigatorList(), repository.getExpansionList());
+        getViewState().showItems(investigatorList, repository.getExpansionList());
 
+    }
+
+    public void itemClick(int position) {
+        repository.setCurrentInvestigator(investigatorList.get(position));
+        getViewState().showInvestigatorActivity();
     }
 }

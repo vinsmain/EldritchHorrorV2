@@ -27,7 +27,10 @@ public class Repository {
     private final Context context;
     private final PublishSubject<AncientOne> ancientOne;
     private final PublishSubject<Integer> score;
+    private final PublishSubject<Boolean> isWin;
     private final StaticDataDB staticDataDB;
+
+    private Investigator currentInvestigator;
 
     private Game game;
 
@@ -36,9 +39,9 @@ public class Repository {
         this.context = context;
         this.staticDataDB = staticDataDB;
         this.game = game;
-        System.out.println(game);
         ancientOne = PublishSubject.create();
         score = PublishSubject.create();
+        isWin = PublishSubject.create();
     }
 
     public Game getGame() {
@@ -83,6 +86,14 @@ public class Repository {
 
     public void scoreOnNext() {
         score.onNext(game.getScore());
+    }
+
+    public Observable<Boolean> getObservableIsWin() {
+        return isWin;
+    }
+
+    public void isWinOnNext() {
+        isWin.onNext(game.isWinGame());
     }
 
     public AncientOne getAncientOne(int id) {
@@ -139,5 +150,13 @@ public class Repository {
 
     public List<Expansion> getExpansionList() {
         return staticDataDB.expansionDAO().getAll();
+    }
+
+    public Investigator getCurrentInvestigator() {
+        return currentInvestigator;
+    }
+
+    public void setCurrentInvestigator(Investigator currentInvestigator) {
+        this.currentInvestigator = currentInvestigator;
     }
 }

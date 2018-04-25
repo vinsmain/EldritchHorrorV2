@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TableLayout;
-import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -30,6 +29,9 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     ResultGamePresenter resultGamePresenter;
 
     private Switch resultSwitch;
+    private Switch defeatByEliminationSwitch;
+    private Switch defeatByMythosDepletionSwitch;
+    private Switch defeatByAwakenedAncientOneSwitch;
     private TableLayout victoryTable;
     private TableLayout defeatTable;
     private RadioGroup mysteriesRadioGroup;
@@ -40,6 +42,9 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     private EditText cluesCountTV;
     private EditText blessedCountTV;
     private EditText doomCountTV;
+
+    private Switch[] switchArray;
+    private int[] idArray;
 
     public static ResultGameFragment newInstance(int page) {
         ResultGameFragment pageFragment = new ResultGameFragment();
@@ -61,11 +66,16 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         View view = inflater.inflate(R.layout.fragment_result_game, null);
         initView(view);
         initListeners();
+        switchArray = new Switch[]{defeatByEliminationSwitch, defeatByMythosDepletionSwitch, defeatByAwakenedAncientOneSwitch};
+        idArray = new int[]{R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch};
         return view;
     }
 
     private void initView(View view) {
         resultSwitch = view.findViewById(R.id.result_game_result_switch);
+        defeatByEliminationSwitch = view.findViewById(R.id.result_game_defeat_by_elimination_switch);
+        defeatByMythosDepletionSwitch = view.findViewById(R.id.result_game_defeat_by_mythos_deplition_switch);
+        defeatByAwakenedAncientOneSwitch = view.findViewById(R.id.result_game_defeat_by_awakened_ancient_one_switch);
         victoryTable = view.findViewById(R.id.result_game_victory_table);
         defeatTable = view.findViewById(R.id.result_game_defeat_table);
         mysteriesRadioGroup = view.findViewById(R.id.result_game_mysteries_radio_group);
@@ -80,6 +90,9 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
 
     private void initListeners() {
         resultSwitch.setOnCheckedChangeListener(this);
+        defeatByEliminationSwitch.setOnCheckedChangeListener(this);
+        defeatByMythosDepletionSwitch.setOnCheckedChangeListener(this);
+        defeatByAwakenedAncientOneSwitch.setOnCheckedChangeListener(this);
         mysteriesRadioGroup.setOnCheckedChangeListener(this);
         gatesCountTV.addTextChangedListener(this);
         monstersCountTV.addTextChangedListener(this);
@@ -91,37 +104,61 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     }
 
     @Override
-    public void setResultSwitchText(boolean value) {
-        if (value) resultSwitch.setText(R.string.win_header);
-        else resultSwitch.setText(R.string.defeat_header);
-    }
-
-    @Override
     public void setResultSwitchChecked(boolean value) {
         resultSwitch.setChecked(value);
-        showResultTable(value);
     }
 
     @Override
-    public void showResultTable(boolean value) {
-        if (value) {
-            victoryTable.setVisibility(View.VISIBLE);
-            defeatTable.setVisibility(View.GONE);
-        } else {
-            victoryTable.setVisibility(View.GONE);
-            defeatTable.setVisibility(View.VISIBLE);
-        }
+    public void showVictoryTable() {
+        victoryTable.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideVictoryTable() {
+        victoryTable.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showDefeatTable() {
+        defeatTable.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideDefeatTable() {
+        defeatTable.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setVictorySwitchText() {
+        resultSwitch.setText(R.string.win_header);
+    }
+
+    @Override
+    public void setDefeatSwitchText() {
+        resultSwitch.setText(R.string.defeat_header);
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.result_game_result_switch:
-                resultGamePresenter.setResultSwitchText(b);
+                resultGamePresenter.setResultSwitch(b);
                 break;
             default:
+                if (b) setDefeatReasonSwitchesChecked(compoundButton.getId());
                 break;
         }
+    }
+
+    private void setDefeatReasonSwitchesChecked(int currentId) {
+        for (int i = 0; i < idArray.length; i++) {
+            if (idArray[i] == currentId) switchArray[i].setClickable(false);
+            else {
+                switchArray[i].setClickable(true);
+                switchArray[i].setChecked(false);
+            }
+        }
+        resultGamePresenter.setDefeatReasons(defeatByEliminationSwitch.isChecked(), defeatByMythosDepletionSwitch.isChecked(), defeatByAwakenedAncientOneSwitch.isChecked());
     }
 
     @Override
@@ -130,6 +167,13 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
             if (i <= ancientOne.getMaxMysteries()) mysteriesRadioGroup.getChildAt(i).setVisibility(View.VISIBLE);
             else mysteriesRadioGroup.getChildAt(i).setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3) {
+        defeatByEliminationSwitch.setChecked(v1);
+        defeatByMythosDepletionSwitch.setChecked(v2);
+        defeatByAwakenedAncientOneSwitch.setChecked(v3);
     }
 
     @Override

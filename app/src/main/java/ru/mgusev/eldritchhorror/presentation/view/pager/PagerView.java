@@ -13,4 +13,22 @@ public interface PagerView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setScore(int score);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setWinIcon();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setDefeatByEliminationIcon();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setDefeatByMythosDepletionIcon();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setDefeatByAwakenedAncientOneIcon();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showScore();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void hideScore();
 }

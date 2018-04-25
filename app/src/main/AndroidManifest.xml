@@ -25,6 +25,10 @@
 
         <activity android:name=".ui.activity.pager.PagerActivity">
         </activity>
+
+        <activity android:name=".ui.activity.pager.InvestigatorActivity"
+            android:theme="@style/Animation.AppCompat.Dialog">
+        </activity>
     </application>
 
 </manifest>

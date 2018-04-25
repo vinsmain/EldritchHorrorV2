@@ -17,6 +17,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     Repository repository;
     private CompositeDisposable ancientOneSubscribe;
     private CompositeDisposable scoreSubscribe;
+    private CompositeDisposable isWinSubscribe;
 
     public PagerPresenter() {
         App.getComponent().inject(this);
@@ -25,16 +26,32 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
         scoreSubscribe = new CompositeDisposable();
         scoreSubscribe.add(repository.getObservableScore().subscribe(score -> getViewState().setScore(score)));
+
+        isWinSubscribe = new CompositeDisposable();
+        isWinSubscribe.add(repository.getObservableIsWin().subscribe(this::setResultIcon));
     }
 
     public Repository getRepository() {
         return repository;
     }
 
+    private void setResultIcon(boolean isWin) {
+        if (isWin) {
+            getViewState().showScore();
+            getViewState().setWinIcon();
+        } else {
+            getViewState().hideScore();
+            if (repository.getGame().isDefeatByElimination()) getViewState().setDefeatByEliminationIcon();
+            else if (repository.getGame().isDefeatByMythosDepletion()) getViewState().setDefeatByMythosDepletionIcon();
+            else getViewState().setDefeatByAwakenedAncientOneIcon();
+        }
+    }
+
     @Override
     public void onDestroy() {
         ancientOneSubscribe.dispose();
         scoreSubscribe.dispose();
+        isWinSubscribe.dispose();
         super.onDestroy();
     }
 }
