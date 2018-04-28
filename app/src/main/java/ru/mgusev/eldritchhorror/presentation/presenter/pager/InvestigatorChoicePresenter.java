@@ -3,11 +3,11 @@ package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorChoiceView;
@@ -19,11 +19,14 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
     @Inject
     Repository repository;
     private List<Investigator> investigatorList;
+    private CompositeDisposable investigatorSubscribe;
 
     public InvestigatorChoicePresenter() {
         App.getComponent().inject(this);
         investigatorList = repository.getInvestigatorList();
         setInvestigatorListFromRepository();
+        investigatorSubscribe = new CompositeDisposable();
+        investigatorSubscribe.add(repository.getInvestigatorPublish().subscribe(this::refreshInvestigatorList));
     }
 
     @Override
@@ -32,13 +35,31 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
 
     }
 
+    private void refreshInvestigatorList(Investigator currentInvestigator) {
+        int position = 0;
+        for (int i = 0; i < investigatorList.size(); i++) {
+            if (investigatorList.get(i).getId() == currentInvestigator.getId()) {
+                position = i;
+                break;
+            }
+        }
+        investigatorList.set(position, currentInvestigator);
+        setInvestigatorListFromRepository();
+    }
+
     private void setInvestigatorListFromRepository() {
         getViewState().showItems(investigatorList, repository.getExpansionList());
 
     }
 
     public void itemClick(int position) {
-        repository.setCurrentInvestigator(investigatorList.get(position));
+        repository.setInvestigator(investigatorList.get(position));
         getViewState().showInvestigatorActivity();
+    }
+
+    @Override
+    public void onDestroy() {
+        investigatorSubscribe.dispose();
+        super.onDestroy();
     }
 }

@@ -5,11 +5,12 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.model.Expansion;
 
 public interface PagerView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void setHeadBackground(AncientOne ancientOne);
+    void setHeadBackground(AncientOne ancientOne, Expansion expansion);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setScore(int score);

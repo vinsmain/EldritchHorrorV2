@@ -1,9 +1,7 @@
 package ru.mgusev.eldritchhorror.ui.activity.pager;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -11,8 +9,6 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-
-import java.sql.SQLException;
 
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.Investigator;
@@ -24,45 +20,71 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
     @InjectPresenter
     InvestigatorPresenter investigatorPresenter;
 
-    Investigator investigator;
-    ImageView invPhotoDialog;
-    ImageView invExpansionDialog;
-    TextView invNameDialog;
-    TextView invOccupationDialog;
-    Switch switchStartingGame;
-    Switch switchReplacement;
-    Switch switchDead;
+    private ImageView photoImage;
+    private ImageView expansionIcon;
+    private TextView nameTV;
+    private TextView occupationTV;
+    private Switch startingGameSwitch;
+    private Switch replacementSwitch;
+    private Switch deadSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_investigator);
 
-        investigator = (Investigator) getIntent().getParcelableExtra("investigator");
-
-        invPhotoDialog = (ImageView) findViewById(R.id.invPhotoDialog);
-        invExpansionDialog = (ImageView) findViewById(R.id.invExpansionDialog);
-        invNameDialog = (TextView) findViewById(R.id.invNameDialog);
-        invOccupationDialog = (TextView) findViewById(R.id.invOccupationDialog);
-        switchStartingGame = (Switch) findViewById(R.id.switchStartingGame);
-        switchReplacement = (Switch) findViewById(R.id.switchReplacement);
-        switchDead = (Switch) findViewById(R.id.switchDead);
+        photoImage = findViewById(R.id.investigator_photo);
+        expansionIcon = findViewById(R.id.investigator_expansion_icon);
+        nameTV = findViewById(R.id.investigator_name);
+        occupationTV = findViewById(R.id.investigator_occupation);
+        startingGameSwitch = findViewById(R.id.investigator_starting_game_switch);
+        replacementSwitch = findViewById(R.id.investigator_replacement_switch);
+        deadSwitch = findViewById(R.id.investigator_dead_switch);
 
         setListeners();
-        //initInvestigator();
     }
 
     private void setListeners() {
-        switchStartingGame.setOnCheckedChangeListener(this);
-        switchReplacement.setOnCheckedChangeListener(this);
-        switchDead.setOnCheckedChangeListener(this);
+        startingGameSwitch.setOnCheckedChangeListener(this);
+        replacementSwitch.setOnCheckedChangeListener(this);
+        deadSwitch.setOnCheckedChangeListener(this);
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
+        switch (compoundButton.getId()) {
+            case R.id.investigator_starting_game_switch:
+                if (b) replacementSwitch.setChecked(false);
+                break;
+            case R.id.investigator_replacement_switch:
+                if (b) startingGameSwitch.setChecked(false);
+                break;
+            default:
+                break;
+        }
+        saveInvestigatorChange();
     }
-/*
+
+    private void saveInvestigatorChange() {
+        investigatorPresenter.setInvestigator(startingGameSwitch.isChecked(), replacementSwitch.isChecked(), deadSwitch.isChecked());
+    }
+
+    @Override
+    public void showInvestigatorCard(Investigator investigator) {
+        photoImage.setImageResource(getResources().getIdentifier(investigator.getImageResource(), "drawable", getPackageName()));
+        nameTV.setText(investigator.getName());
+        occupationTV.setText(investigator.getOccupation());
+        startingGameSwitch.setChecked(investigator.isStarting());
+        replacementSwitch.setChecked(investigator.isReplacement());
+        deadSwitch.setChecked(investigator.isDead());
+    }
+
+    @Override
+    public void showExpansionIcon(String iconName) {
+        expansionIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", getPackageName()));
+    }
+
+    /*
     private void initInvestigator() {
         Resources resources = this.getResources();
         int resourceId = resources.getIdentifier(investigator.imageResource, "drawable", this.getPackageName());

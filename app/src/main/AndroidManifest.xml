@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".app.App">
-        <activity android:name=".ui.activity.main.MainActivity">
+        <activity android:name=".ui.activity.main.MainActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +28,7 @@
         </activity>
 
         <activity android:name=".ui.activity.pager.InvestigatorActivity"
-            android:theme="@style/Animation.AppCompat.Dialog">
+            android:theme="@style/DialogTheme">
         </activity>
     </application>
 

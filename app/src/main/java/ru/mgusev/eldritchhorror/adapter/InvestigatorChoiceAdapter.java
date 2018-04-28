@@ -50,9 +50,14 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
     }
 
     public void setListStorage(List<Investigator> investigatorList, List<Expansion> expansionList) {
+        //notifyItemRangeRemoved(0, this.investigatorList.size());
+        boolean b = false;
+        if (this.investigatorList.size() != 0) b = true;
         this.investigatorList = investigatorList;
         this.expansionList = expansionList;
-        notifyItemRangeInserted(0, investigatorList.size());
+        if (!b) notifyItemRangeInserted(0, investigatorList.size());
+        else notifyItemRangeChanged(0, 4);
+        System.out.println("NOTIFY ADAPTER");
     }
 
 

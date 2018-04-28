@@ -25,12 +25,13 @@ import ru.mgusev.eldritchhorror.app.AppModule;
 public class Repository {
 
     private final Context context;
-    private final PublishSubject<AncientOne> ancientOne;
-    private final PublishSubject<Integer> score;
-    private final PublishSubject<Boolean> isWin;
+    private final PublishSubject<AncientOne> ancientOnePublish;
+    private final PublishSubject<Integer> scorePublish;
+    private final PublishSubject<Boolean> isWinPublish;
     private final StaticDataDB staticDataDB;
 
-    private Investigator currentInvestigator;
+    private Investigator investigator;
+    private PublishSubject<Investigator> investigatorPublish;
 
     private Game game;
 
@@ -39,9 +40,10 @@ public class Repository {
         this.context = context;
         this.staticDataDB = staticDataDB;
         this.game = game;
-        ancientOne = PublishSubject.create();
-        score = PublishSubject.create();
-        isWin = PublishSubject.create();
+        ancientOnePublish = PublishSubject.create();
+        scorePublish = PublishSubject.create();
+        isWinPublish = PublishSubject.create();
+        investigatorPublish = PublishSubject.create();
     }
 
     public Game getGame() {
@@ -60,16 +62,16 @@ public class Repository {
     }
 
     public Observable<AncientOne> getObservableAncientOne() {
-        return ancientOne;
+        return ancientOnePublish;
     }
 
     public void setAncientOneId(int id) {
         game.setAncientOneID(id);
-        ancientOne.onNext(getCurrentAncientOne());
+        ancientOnePublish.onNext(getCurrentAncientOne());
     }
 
     public Observable<Integer> getObservableScore() {
-        return score;
+        return scorePublish;
     }
 
     public void setResult(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount) {
@@ -85,23 +87,19 @@ public class Repository {
     }
 
     public void scoreOnNext() {
-        score.onNext(game.getScore());
+        scorePublish.onNext(game.getScore());
     }
 
     public Observable<Boolean> getObservableIsWin() {
-        return isWin;
+        return isWinPublish;
     }
 
     public void isWinOnNext() {
-        isWin.onNext(game.isWinGame());
+        isWinPublish.onNext(game.isWinGame());
     }
 
     public AncientOne getAncientOne(int id) {
         return staticDataDB.ancientOneDAO().getAncientOneByID(id);
-    }
-
-    public String getExpansionIconNameByAncientOneId(int id) {
-        return staticDataDB.expansionDAO().getExpansionByID(getAncientOne(id).getExpansionID()).getImageResource();
     }
 
     // StartDataFragment
@@ -152,11 +150,23 @@ public class Repository {
         return staticDataDB.expansionDAO().getAll();
     }
 
-    public Investigator getCurrentInvestigator() {
-        return currentInvestigator;
+    public Expansion getExpansion(int id) {
+        return staticDataDB.expansionDAO().getExpansionByID(id);
     }
 
-    public void setCurrentInvestigator(Investigator currentInvestigator) {
-        this.currentInvestigator = currentInvestigator;
+    public PublishSubject<Investigator> getInvestigatorPublish() {
+        return investigatorPublish;
+    }
+
+    public void investigatotOnNext() {
+        investigatorPublish.onNext(investigator);
+    }
+
+    public Investigator getInvestigator() {
+        return investigator;
+    }
+
+    public void setInvestigator(Investigator investigator) {
+        this.investigator = investigator;
     }
 }

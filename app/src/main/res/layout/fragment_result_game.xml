@@ -60,24 +60,13 @@
                             android:paddingEnd="16dp"
                             android:paddingStart="16dp">
 
-                            <android.support.constraint.ConstraintLayout
+                            <Switch
+                                android:id="@+id/result_game_result_switch"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1">
-
-                                <Switch
-                                    android:id="@+id/result_game_result_switch"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:checked="true"
-                                    android:paddingStart="2dp"
-                                    android:text="@string/win_header"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-
-                            </android.support.constraint.ConstraintLayout>
+                                android:layout_weight="1"
+                                android:checked="false"
+                                android:text="@string/win_header" />
 
                         </TableRow>
 

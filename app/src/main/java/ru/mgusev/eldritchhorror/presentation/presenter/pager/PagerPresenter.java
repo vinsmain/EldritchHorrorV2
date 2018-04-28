@@ -22,7 +22,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     public PagerPresenter() {
         App.getComponent().inject(this);
         ancientOneSubscribe = new CompositeDisposable();
-        ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne)));
+        ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne, getRepository().getExpansion(ancientOne.getExpansionID()))));
 
         scoreSubscribe = new CompositeDisposable();
         scoreSubscribe.add(repository.getObservableScore().subscribe(score -> getViewState().setScore(score)));

@@ -3,6 +3,7 @@ package ru.mgusev.eldritchhorror.ui.activity.pager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.support.AndroidBug5497Workaround;
 import ru.mgusev.eldritchhorror.adapter.PagerAdapter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
@@ -72,17 +74,15 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     @Override
-    public void setHeadBackground(AncientOne ancientOne) {
-        headBackground.setImageResource(getResources().getIdentifier(ancientOne.getImageResource(), "drawable", getPackageName()));
-        setExpansionIcon(ancientOne.getId());
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_games_pager_activity, menu);
+        return true;
     }
 
-    private void setExpansionIcon(int ancientOneId) {
-        String resourceName = pagerPresenter.getRepository().getExpansionIconNameByAncientOneId(ancientOneId);
-        if (resourceName != null) {
-            expansionIcon.setImageResource(getResources().getIdentifier(resourceName, "drawable", getPackageName()));
-            expansionIcon.setVisibility(View.VISIBLE);
-        } else expansionIcon.setVisibility(View.GONE);
+    @Override
+    public void setHeadBackground(AncientOne ancientOne, Expansion expansion) {
+        headBackground.setImageResource(getResources().getIdentifier(ancientOne.getImageResource(), "drawable", getPackageName()));
+        expansionIcon.setImageResource(getResources().getIdentifier(expansion.getImageResource(), "drawable", getPackageName()));
     }
 
     @Override
