@@ -17,10 +17,13 @@ public interface StartDataView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void dismissDatePicker();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void initPlayersCountSpinner(List<String> playersCountList);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void initAncientOneSpinner(List<String> ancientOneList);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void initPreludeSpinner(List<String> preludeList);
 
     @StateStrategyType(AddToEndSingleStrategy.class)

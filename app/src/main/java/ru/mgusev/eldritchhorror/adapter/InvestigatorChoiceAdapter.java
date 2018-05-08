@@ -3,6 +3,7 @@ package ru.mgusev.eldritchhorror.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -61,16 +62,17 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
     }
 
 
+    @NonNull
     @Override
-    public InvestigatorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public InvestigatorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_investigator, parent, false);
         return new InvestigatorViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final InvestigatorViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final InvestigatorViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
-        Resources resources = holder.itemView.getResources();
+        Resources resources = context.getResources();
         int resourceId = resources.getIdentifier(investigatorList.get(position).getImageResource(), "drawable", context.getPackageName());
         holder.invPhoto.setImageResource(resourceId);
         holder.invName.setText(investigatorList.get(position).getName());
@@ -111,7 +113,7 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 

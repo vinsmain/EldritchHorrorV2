@@ -30,6 +30,7 @@
         <activity android:name=".ui.activity.pager.InvestigatorActivity"
             android:theme="@style/DialogTheme">
         </activity>
+        <activity android:name=".ui.activity.pager.ExpansionChoiceActivity" android:theme="@style/DialogTheme"/>
     </application>
 
 </manifest>

@@ -32,6 +32,7 @@ public class Repository {
 
     private Investigator investigator;
     private PublishSubject<Investigator> investigatorPublish;
+    private PublishSubject<List<Expansion>> expansionPublish;
 
     private Game game;
 
@@ -44,6 +45,7 @@ public class Repository {
         scorePublish = PublishSubject.create();
         isWinPublish = PublishSubject.create();
         investigatorPublish = PublishSubject.create();
+        expansionPublish = PublishSubject.create();
     }
 
     public Game getGame() {
@@ -74,18 +76,6 @@ public class Repository {
         return scorePublish;
     }
 
-    public void setResult(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount) {
-        game.setGatesCount(gatesCount);
-        game.setMonstersCount(monstersCount);
-        game.setCurseCount(curseCount);
-        game.setRumorsCount(rumorsCount);
-        game.setCluesCount(cluesCount);
-        game.setBlessedCount(blessedCount);
-        game.setDoomCount(doomCount);
-        game.setScore(gatesCount + (int)Math.ceil(monstersCount / 3.0f) + curseCount + rumorsCount * 3 - (int)Math.ceil(cluesCount / 3.0f) - blessedCount - doomCount);
-        scoreOnNext();
-    }
-
     public void scoreOnNext() {
         scorePublish.onNext(game.getScore());
     }
@@ -108,24 +98,23 @@ public class Repository {
         return Arrays.asList(context.getResources().getStringArray(R.array.playersCountArray));
     }
 
-    public List<String> getAncientOneNameList() {
+    private List<String> getAncientOneNameList() {
         List<String> ancientOneNameList = new ArrayList<>();
         List<AncientOne> ancientOneList = staticDataDB.ancientOneDAO().getAll();
         for (AncientOne ancientOne : ancientOneList) {
-            ancientOneNameList.add(ancientOne.getName());
+            if (staticDataDB.expansionDAO().getExpansionByID(ancientOne.getExpansionID()).isEnable())
+                ancientOneNameList.add(ancientOne.getName());
         }
         Collections.sort(ancientOneNameList);
         return ancientOneNameList;
     }
 
-    public List<String> getPreludeNameList() {
-        List<String> preludeNameList = new ArrayList<>();
-        List<Prelude> preludeList = staticDataDB.preludeDAO().getAll();
-        for (Prelude prelude : preludeList) {
-            preludeNameList.add(prelude.getName());
-        }
-        Collections.sort(preludeNameList);
-        return preludeNameList;
+    public List<AncientOne> getAncientOneList() {
+        return staticDataDB.ancientOneDAO().getAll();
+    }
+
+    public List<Prelude> getPreludeList() {
+        return staticDataDB.preludeDAO().getAll();
     }
 
     public Prelude getPrelude(int id) {
@@ -147,7 +136,9 @@ public class Repository {
     }
 
     public List<Expansion> getExpansionList() {
-        return staticDataDB.expansionDAO().getAll();
+        List<Expansion> list = staticDataDB.expansionDAO().getAll();
+        //list.remove(0); //remove Core expansion
+        return list;
     }
 
     public Expansion getExpansion(int id) {
@@ -158,7 +149,7 @@ public class Repository {
         return investigatorPublish;
     }
 
-    public void investigatotOnNext() {
+    public void investigatorOnNext() {
         investigatorPublish.onNext(investigator);
     }
 
@@ -168,5 +159,21 @@ public class Repository {
 
     public void setInvestigator(Investigator investigator) {
         this.investigator = investigator;
+    }
+
+    // ExpansionChoiceActivity
+
+    public void saveExpansionList(List<Expansion> list) {
+        for (Expansion expansion : list) {
+            staticDataDB.expansionDAO().updateExpansion(expansion);
+        }
+    }
+
+    public PublishSubject<List<Expansion>> getExpansionPublish() {
+        return expansionPublish;
+    }
+
+    public void expansionOnNext() {
+        expansionPublish.onNext(getExpansionList());
     }
 }

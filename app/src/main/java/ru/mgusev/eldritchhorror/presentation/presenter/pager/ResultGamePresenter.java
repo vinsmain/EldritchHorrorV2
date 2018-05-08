@@ -60,7 +60,15 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     }
 
     public void setResult(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount) {
-        repository.setResult(gatesCount, monstersCount, curseCount, rumorsCount, cluesCount, blessedCount, doomCount);
+        repository.getGame().setGatesCount(gatesCount);
+        repository.getGame().setMonstersCount(monstersCount);
+        repository.getGame().setCurseCount(curseCount);
+        repository.getGame().setRumorsCount(rumorsCount);
+        repository.getGame().setCluesCount(cluesCount);
+        repository.getGame().setBlessedCount(blessedCount);
+        repository.getGame().setDoomCount(doomCount);
+        repository.getGame().setScore(gatesCount + (int)Math.ceil(monstersCount / 3.0f) + curseCount + rumorsCount * 3 - (int)Math.ceil(cluesCount / 3.0f) - blessedCount - doomCount);
+        repository.scoreOnNext();
     }
 
     public void setDefeatReasons(boolean v1, boolean v2, boolean v3) {

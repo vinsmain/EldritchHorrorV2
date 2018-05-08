@@ -1,15 +1,20 @@
 package ru.mgusev.eldritchhorror.ui.activity.pager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import java.util.Objects;
 
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -30,6 +35,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private ImageView expansionIcon;
     private ImageView winIcon;
     private TextView scoreTV;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +43,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         setContentView(R.layout.activity_games_pager);
 
         AndroidBug5497Workaround.assistActivity(this);
-        pager = findViewById(R.id.pager);
+        pager = findViewById(R.id.games_pager_viewpager);
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
         pager.setOffscreenPageLimit(2);
         pager.setAdapter(pagerAdapter);
@@ -70,13 +76,59 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         expansionIcon = findViewById(R.id.games_pager_expansion_icon);
         winIcon = findViewById(R.id.games_pager_win_icon);
         scoreTV = findViewById(R.id.games_pager_score);
+        toolbar = findViewById(R.id.games_pager_toolbar);
+        initToolbar();
 
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.add_new_game);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        /*toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishDialog();
+            }
+        });*/
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_games_pager_activity, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                /*if (((InvestigatorsChoiceFragment)pagerAdapter.getItem(1)).isStartingInvCountCorrect()) {
+                    addDataToGame();
+                    writeGameToDB();
+                } else ((InvestigatorsChoiceFragment)pagerAdapter.getItem(1)).showStartingInvCountAlert();*/
+                return true;
+            case R.id.action_clear:
+                /*isAlert = true;
+                ((InvestigatorsChoiceFragment)pagerAdapter.getItem(1)).cleanDialog();*/
+                return true;
+            case R.id.action_random:
+                /*if (currentPosition == 1) ((InvestigatorsChoiceFragment) pagerAdapter.getItem(1)).selectRandomInvestigators();
+                else if (currentPosition == 0) {
+                    ((StartingDataFragment) pagerAdapter.getItem(0)).selectRandomAncientOne();
+                    ((StartingDataFragment) pagerAdapter.getItem(0)).selectRandomPrelude();
+                }*/
+                return true;
+            case R.id.action_edit_expansion:
+                Intent intent = new Intent(this, ExpansionChoiceActivity.class);
+                startActivity(intent);
+                //startActivityForResult(intent, REQUEST_CODE_EXPANSION);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

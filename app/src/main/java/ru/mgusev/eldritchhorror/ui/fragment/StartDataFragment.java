@@ -30,7 +30,8 @@ import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class StartDataFragment extends MvpAppCompatFragment implements StartDataView, View.OnClickListener, DatePickerDialog.OnDateSetListener, DatePickerDialog.OnDismissListener, CompoundButton.OnCheckedChangeListener {
+public class StartDataFragment extends MvpAppCompatFragment implements StartDataView, View.OnClickListener, DatePickerDialog.OnDateSetListener,
+        DatePickerDialog.OnDismissListener, CompoundButton.OnCheckedChangeListener, AdapterView.OnItemSelectedListener {
 
     @InjectPresenter
     StartDataPresenter startDataPresenter;
@@ -47,6 +48,10 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     private Switch normalMythosSwitch;
     private Switch hardMythosSwitch;
     private Switch startingRumorSwitch;
+
+    private ArrayAdapter<String> ancientOneAdapter;
+    private ArrayAdapter<String> preludeAdapter;
+    private ArrayAdapter<String> playersCountAdapter;
 
     public static StartDataFragment newInstance(int page) {
         StartDataFragment pageFragment = new StartDataFragment();
@@ -79,6 +84,18 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         hardMythosSwitch = view.findViewById(R.id.start_data_hard_mythos);
         startingRumorSwitch = view.findViewById(R.id.start_data_starting_rumor);
 
+        ancientOneAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner);
+        ancientOneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ancientOneSpinner.setAdapter(ancientOneAdapter);
+
+        preludeAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner);
+        preludeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        preludeSpinner.setAdapter(preludeAdapter);
+
+        playersCountAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner);
+        playersCountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        playersCountSpinner.setAdapter(playersCountAdapter);
+
         initListeners();
         //startDataPresenter.setSpinnerPosition();
         return view;
@@ -90,6 +107,9 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         normalMythosSwitch.setOnCheckedChangeListener(this);
         hardMythosSwitch.setOnCheckedChangeListener(this);
         startingRumorSwitch.setOnCheckedChangeListener(this);
+        ancientOneSpinner.setOnItemSelectedListener(this);
+        preludeSpinner.setOnItemSelectedListener(this);
+        playersCountSpinner.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -137,7 +157,6 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
             datePickerDialog.setOnDismissListener(null);
             datePickerDialog.dismiss();
         }
-
         super.onDestroy();
     }
 
@@ -164,88 +183,37 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Override
     public void initAncientOneSpinner(List<String> ancientOneList) {
-        ArrayAdapter<String> ancientOneAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner, ancientOneList);
-        ancientOneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        ancientOneSpinner.setAdapter(ancientOneAdapter);
-
-        ancientOneSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                startDataPresenter.setCurrentAncientOnePosition((String) ancientOneSpinner.getSelectedItem());
-                startDataPresenter.setSpinnerPosition();
-                /*int resourceId;
-                AncientOne selectedAncientOne;
-                Resources resources = getResources();
-                try {
-                    selectedAncientOne = HelperFactory.getStaticHelper().getAncientOneDAO().getAncientOne(ancientOneArray.get(i));
-                    resourceId = resources.getIdentifier(selectedAncientOne.imageResource, "drawable", getActivity().getPackageName());
-                    ((ImageView)getActivity().findViewById(R.id.background_pager)).setImageResource(resourceId);
-                    String resourceName = HelperFactory.getStaticHelper().getExpansionDAO().getImageResourceByID(selectedAncientOne.expansionID);
-                    if (resourceName != null) {
-                        resourceId = resources.getIdentifier(resourceName, "drawable", getContext().getPackageName());
-                        expansionImage.setImageResource(resourceId);
-                        expansionImage.setVisibility(View.VISIBLE);
-                    } else expansionImage.setVisibility(View.GONE);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                addDataToGame();
-                initAncientOneArray();
-                ancientOneAdapter.notifyDataSetChanged();
-                ((ResultGameFragment)activity.getPagerAdapter().getItem(2)).setVisibilityRadioButtons();*/
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        ancientOneAdapter.clear();
+        ancientOneAdapter.addAll(ancientOneList);
+        ancientOneAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void initPreludeSpinner(List<String> preludeList) {
-        ArrayAdapter<String> preludeAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner, preludeList);
-        preludeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        preludeSpinner.setAdapter(preludeAdapter);
-
-        preludeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                startDataPresenter.setCurrentPreludePosition((String) preludeSpinner.getSelectedItem());
-                startDataPresenter.setSpinnerPosition();
-                /*addDataToGame();
-                initPreludeArray();
-                preludeAdapter.notifyDataSetChanged();*/
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        preludeAdapter.clear();
+        preludeAdapter.addAll(preludeList);
+        preludeAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void initPlayersCountSpinner(List<String> playersCountList) {
-        ArrayAdapter<String> playersCountAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner, playersCountList);
-        playersCountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        playersCountAdapter.clear();
+        playersCountAdapter.addAll(playersCountList);
+        playersCountAdapter.notifyDataSetChanged();
+    }
 
-        playersCountSpinner.setAdapter(playersCountAdapter);
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        System.out.println("ONITEMSELECTED");
+        startDataPresenter.setCurrentAncientOne((String) ancientOneSpinner.getSelectedItem());
+        startDataPresenter.setCurrentPrelude((String) preludeSpinner.getSelectedItem());
+        startDataPresenter.setCurrentPlayersCount((String) playersCountSpinner.getSelectedItem());
+        startDataPresenter.setSpinnerPosition();
+    }
 
-        playersCountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                startDataPresenter.setPlayersCountCurrentPosition((String) playersCountSpinner.getSelectedItem());
-                startDataPresenter.setSpinnerPosition();
-            }
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
     }
 
     @Override

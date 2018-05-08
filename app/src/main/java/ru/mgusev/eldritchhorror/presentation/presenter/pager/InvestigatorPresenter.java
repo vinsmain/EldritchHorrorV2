@@ -39,7 +39,7 @@ public class InvestigatorPresenter extends MvpPresenter<InvestigatorView> {
     @Override
     public void onDestroy() {
         repository.setInvestigator(investigator);
-        repository.investigatotOnNext();
+        repository.investigatorOnNext();
         super.onDestroy();
     }
 }
