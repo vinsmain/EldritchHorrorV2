@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
@@ -26,8 +27,6 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     Repository repository;
     private Calendar date;
     private List<String> playersCountList;
-    //private List<String> ancientOneNameList;
-    //private List<String> preludeNameList;
     private CompositeDisposable expansionSubscribe;
 
     private AncientOne currentAncientOne;
@@ -41,51 +40,51 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     public StartDataPresenter() {
         App.getComponent().inject(this);
 
-        //expansionSubscribe = new CompositeDisposable();
-        //expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners));
-        //repository.expansionOnNext();
+        expansionSubscribe = new CompositeDisposable();
+        expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners));
         date = Calendar.getInstance();
         playersCountList = repository.getPlayersCountArray();
         ancientOneList = repository.getAncientOneList();
         preludeList = repository.getPreludeList();
 
+        initCurrentValues();
+
         date.setTimeInMillis(repository.getGame().getDate());
     }
 
-    /*private void initSpinners(List<Expansion> expansionList) {
-        ancientOneNameList = repository.getAncientOneNameList();
-        preludeNameList = repository.getPreludeNameList();
-        getViewState().initAncientOneSpinner(ancientOneNameList);
-        getViewState().initPreludeSpinner(preludeNameList);
+    private void initCurrentValues() {
+        currentAncientOne = repository.getAncientOne(repository.getGame().getAncientOneID());
+        currentPrelude = repository.getPrelude(repository.getGame().getPreludeID());
+        currentPlayersCount = repository.getGame().getPlayersCount();
+    }
+
+    private void initSpinners(List<Expansion> expansionList) {
         setSpinnerPosition();
-    }*/
+    }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         setDateToField();
-        getViewState().initAncientOneSpinner(getAncientOneNameList());
-        getViewState().initPreludeSpinner(getPreludeNameList());
-        getViewState().initPlayersCountSpinner(playersCountList);
         setSpinnerPosition();
         setSwitchValue();
-        System.out.println("FIRST ATTACH");
     }
 
     private List<String> getAncientOneNameList() {
         List<String> list = new ArrayList<>();
         for (AncientOne ancientOne : ancientOneList) {
-            if (repository.getExpansion(ancientOne.getExpansionID()).isEnable())
+            if (repository.getExpansion(ancientOne.getExpansionID()).isEnable() || (currentAncientOne != null && ancientOne.getId() == currentAncientOne.getId()))
                 list.add(ancientOne.getName());
         }
         Collections.sort(list);
+        if (currentAncientOne == null) currentAncientOne = repository.getAncientOne(list.get(0));
         return list;
     }
 
     private List<String> getPreludeNameList() {
         List<String> list = new ArrayList<>();
         for (Prelude prelude : preludeList) {
-            if (repository.getExpansion(prelude.getExpansionID()).isEnable())
+            if (repository.getExpansion(prelude.getExpansionID()).isEnable() || prelude.getId() == currentPrelude.getId())
                 list.add(prelude.getName());
         }
         Collections.sort(list);
@@ -117,6 +116,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     public void setCurrentAncientOne(String value) {
         currentAncientOne = repository.getAncientOne(value);
+        repository.ancientOneOnNext(currentAncientOne);
     }
 
     public void setCurrentPrelude(String value) {
@@ -124,12 +124,11 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     }
 
     public void setSpinnerPosition() {
-        int ancientOnePosition = 0;
-        if (repository.getGame().getAncientOneID() != -1)
-            ancientOnePosition = getAncientOneNameList().indexOf(repository.getAncientOne(repository.getGame().getAncientOneID()).getName());
-        getViewState().setSpinnerPosition(ancientOnePosition,
-                getPreludeNameList().indexOf(repository.getPrelude(repository.getGame().getPreludeID()).getName()),
-                playersCountList.indexOf(String.valueOf(repository.getGame().getPlayersCount())));
+        getViewState().initAncientOneSpinner(getAncientOneNameList());
+        getViewState().initPreludeSpinner(getPreludeNameList());
+        getViewState().initPlayersCountSpinner(playersCountList);
+        getViewState().setSpinnerPosition(getAncientOneNameList().indexOf(currentAncientOne.getName()),
+                getPreludeNameList().indexOf(currentPrelude.getName()), playersCountList.indexOf(String.valueOf(currentPlayersCount)));
     }
 
     public void setSwitchValue() {
@@ -150,6 +149,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         repository.getGame().setAncientOneID(currentAncientOne.getId());
         repository.getGame().setPreludeID(currentPrelude.getId());
         //repository.clearGame();
+        expansionSubscribe.dispose();
         super.onDestroy();
     }
 }

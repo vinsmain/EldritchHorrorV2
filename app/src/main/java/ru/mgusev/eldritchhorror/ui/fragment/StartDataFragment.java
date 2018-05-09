@@ -97,7 +97,6 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         playersCountSpinner.setAdapter(playersCountAdapter);
 
         initListeners();
-        //startDataPresenter.setSpinnerPosition();
         return view;
     }
 
@@ -204,7 +203,6 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        System.out.println("ONITEMSELECTED");
         startDataPresenter.setCurrentAncientOne((String) ancientOneSpinner.getSelectedItem());
         startDataPresenter.setCurrentPrelude((String) preludeSpinner.getSelectedItem());
         startDataPresenter.setCurrentPlayersCount((String) playersCountSpinner.getSelectedItem());

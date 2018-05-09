@@ -57,19 +57,12 @@ public class Repository {
         game = null;
     }
 
-    private AncientOne getCurrentAncientOne() {
-        AncientOne currentAncientOne = getAncientOne(getAncientOneNameList().get(0));
-        if (getGame().getAncientOneID() != -1) currentAncientOne = getAncientOne(getGame().getAncientOneID());
-        return currentAncientOne;
-    }
-
     public Observable<AncientOne> getObservableAncientOne() {
         return ancientOnePublish;
     }
 
-    public void setAncientOneId(int id) {
-        game.setAncientOneID(id);
-        ancientOnePublish.onNext(getCurrentAncientOne());
+    public void ancientOneOnNext(AncientOne ancientOne) {
+        ancientOnePublish.onNext(ancientOne);
     }
 
     public Observable<Integer> getObservableScore() {
@@ -96,17 +89,6 @@ public class Repository {
 
     public List<String> getPlayersCountArray() {
         return Arrays.asList(context.getResources().getStringArray(R.array.playersCountArray));
-    }
-
-    private List<String> getAncientOneNameList() {
-        List<String> ancientOneNameList = new ArrayList<>();
-        List<AncientOne> ancientOneList = staticDataDB.ancientOneDAO().getAll();
-        for (AncientOne ancientOne : ancientOneList) {
-            if (staticDataDB.expansionDAO().getExpansionByID(ancientOne.getExpansionID()).isEnable())
-                ancientOneNameList.add(ancientOne.getName());
-        }
-        Collections.sort(ancientOneNameList);
-        return ancientOneNameList;
     }
 
     public List<AncientOne> getAncientOneList() {
