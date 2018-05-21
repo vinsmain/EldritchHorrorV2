@@ -76,4 +76,11 @@ public class Expansion {
         if (Localization.getInstance().isRusLocale()) return nameRU;
         else return nameEN;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) return true;
+        Expansion expansion = (Expansion) obj;
+        return expansion.id == id && expansion.isEnable == isEnable;
+    }
 }

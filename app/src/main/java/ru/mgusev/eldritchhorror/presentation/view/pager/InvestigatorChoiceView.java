@@ -12,8 +12,8 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 
 public interface InvestigatorChoiceView extends MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
-    void showItems(List<Investigator> investigatorList, List<Expansion> expansionList);
+    //@StateStrategyType(AddToEndSingleStrategy.class)
+    void showItems(List<Investigator> investigatorList, List<Expansion> expansionList, int i);
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void showInvestigatorActivity();

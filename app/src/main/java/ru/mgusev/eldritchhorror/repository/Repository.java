@@ -118,9 +118,7 @@ public class Repository {
     }
 
     public List<Expansion> getExpansionList() {
-        List<Expansion> list = staticDataDB.expansionDAO().getAll();
-        //list.remove(0); //remove Core expansion
-        return list;
+        return staticDataDB.expansionDAO().getAll();
     }
 
     public Expansion getExpansion(int id) {

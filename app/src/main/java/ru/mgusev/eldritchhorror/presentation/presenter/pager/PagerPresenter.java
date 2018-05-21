@@ -1,7 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
-import android.content.Intent;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
@@ -11,7 +9,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
 import ru.mgusev.eldritchhorror.repository.Repository;
-import ru.mgusev.eldritchhorror.ui.activity.pager.ExpansionChoiceActivity;
 
 @InjectViewState
 public class PagerPresenter extends MvpPresenter<PagerView> {
@@ -48,10 +45,6 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
             else if (repository.getGame().isDefeatByMythosDepletion()) getViewState().setDefeatByMythosDepletionIcon();
             else getViewState().setDefeatByAwakenedAncientOneIcon();
         }
-    }
-
-    public void showExpansionChoiceActivity() {
-        //Intent expansionChoisIntent = new Intent(ExpansionChoiceActivity.class);
     }
 
     @Override

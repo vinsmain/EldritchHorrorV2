@@ -231,4 +231,11 @@ public class Investigator implements Parcelable {
         if (Localization.getInstance().isRusLocale()) return occupationRU;
         else return occupationEN;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) return true;
+        Investigator investigator = (Investigator) obj;
+        return investigator.id == id;
+    }
 }

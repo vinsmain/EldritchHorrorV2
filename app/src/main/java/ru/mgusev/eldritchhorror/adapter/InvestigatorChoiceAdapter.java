@@ -51,16 +51,23 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
     }
 
     public void setListStorage(List<Investigator> investigatorList, List<Expansion> expansionList) {
-        //notifyItemRangeRemoved(0, this.investigatorList.size());
-        boolean b = false;
-        if (this.investigatorList.size() != 0) b = true;
-        this.investigatorList = investigatorList;
-        this.expansionList = expansionList;
-        if (!b) notifyItemRangeInserted(0, investigatorList.size());
-        else notifyItemRangeChanged(0, 4);
-        System.out.println("NOTIFY ADAPTER");
+        if (!expansionList.equals(this.expansionList)) {
+            notifyItemRangeRemoved(0, getItemCount());
+            this.investigatorList = investigatorList;
+            this.expansionList = expansionList;
+            notifyItemRangeInserted(0, getItemCount());
+        } else {
+            this.investigatorList = investigatorList;
+            notifyItemRangeChanged(0, getItemCount());
+        }
     }
 
+    public void removeInvCard(int pos) {
+        System.out.println("REMOVE " + pos);
+        investigatorList.remove(pos);
+        notifyItemRemoved(pos);
+        notifyItemRangeChanged(pos, getItemCount());
+    }
 
     @NonNull
     @Override

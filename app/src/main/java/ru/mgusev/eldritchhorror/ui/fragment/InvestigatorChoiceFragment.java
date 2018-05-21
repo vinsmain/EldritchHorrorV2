@@ -116,8 +116,9 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     }
 
     @Override
-    public void showItems(List<Investigator> investigatorList, List<Expansion> expansionList) {
-        adapter.setListStorage(investigatorList, expansionList);
+    public void showItems(List<Investigator> investigatorList, List<Expansion> expansionList, int i) {
+        if (i == -1) adapter.setListStorage(investigatorList, expansionList);
+        else adapter.removeInvCard(i);
     }
 
     @Override

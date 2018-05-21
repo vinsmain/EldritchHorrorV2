@@ -3,6 +3,7 @@ package ru.mgusev.eldritchhorror.ui.fragment;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter;
@@ -70,7 +72,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_start_data, null);
         dateButton = view.findViewById(R.id.start_data_date_button);
         dateTV = view.findViewById(R.id.start_data_date_tv);
@@ -113,7 +115,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Override
     public void showDatePicker(Calendar date) {
-        datePickerDialog = new DatePickerDialog(getContext(), this, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), this, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.setOnDismissListener(this);
         datePickerDialog.show();
         System.out.println("SHOW");
@@ -126,7 +128,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Override
     public void dismissDatePicker() {
-        if (datePickerDialog != null) datePickerDialog.cancel();
+        if (datePickerDialog != null) datePickerDialog.dismiss();
     }
 
     @Override

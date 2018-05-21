@@ -124,7 +124,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             case R.id.action_edit_expansion:
                 Intent intent = new Intent(this, ExpansionChoiceActivity.class);
                 startActivity(intent);
-                //startActivityForResult(intent, REQUEST_CODE_EXPANSION);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
