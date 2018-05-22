@@ -29,6 +29,8 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @InjectPresenter
     PagerPresenter pagerPresenter;
 
+    private int currentPosition = 0;
+
     private ViewPager pager;
     private PagerAdapter pagerAdapter;
     private ImageView headBackground;
@@ -60,7 +62,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             @Override
             public void onPageSelected(int position) {
                 Log.d("PAGER", "onPageSelected, position = " + position);
-
+                currentPosition = position;
             }
 
             @Override
@@ -115,11 +117,13 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 ((InvestigatorsChoiceFragment)pagerAdapter.getItem(1)).cleanDialog();*/
                 return true;
             case R.id.action_random:
-                /*if (currentPosition == 1) ((InvestigatorsChoiceFragment) pagerAdapter.getItem(1)).selectRandomInvestigators();
-                else if (currentPosition == 0) {
-                    ((StartingDataFragment) pagerAdapter.getItem(0)).selectRandomAncientOne();
-                    ((StartingDataFragment) pagerAdapter.getItem(0)).selectRandomPrelude();
-                }*/
+                if (currentPosition == 1) {
+                    //((InvestigatorsChoiceFragment) pagerAdapter.getItem(1)).selectRandomInvestigators();
+                } else if (currentPosition == 0) {
+                    pagerPresenter.actionRandom(currentPosition);
+                    //((StartingDataFragment) pagerAdapter.getItem(0)).selectRandomAncientOne();
+                    //((StartingDataFragment) pagerAdapter.getItem(0)).selectRandomPrelude();
+                }
                 return true;
             case R.id.action_edit_expansion:
                 Intent intent = new Intent(this, ExpansionChoiceActivity.class);

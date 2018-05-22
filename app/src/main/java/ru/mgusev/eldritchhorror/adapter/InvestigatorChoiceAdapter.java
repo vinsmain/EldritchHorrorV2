@@ -1,6 +1,5 @@
 package ru.mgusev.eldritchhorror.adapter;
 
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
@@ -16,7 +15,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
@@ -42,31 +44,32 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
         }
     }
 
+    @Inject
+    List<Expansion> expansionList;
     private OnItemClicked onClick;
     private List<Investigator> investigatorList;
-    private List<Expansion> expansionList;
+
 
     public InvestigatorChoiceAdapter() {
+        App.getComponent().inject(this);
         this.investigatorList = new ArrayList<>();
     }
 
-    public void setListStorage(List<Investigator> investigatorList, List<Expansion> expansionList) {
-        if (!expansionList.equals(this.expansionList)) {
-            notifyItemRangeRemoved(0, getItemCount());
-            this.investigatorList = investigatorList;
-            this.expansionList = expansionList;
-            notifyItemRangeInserted(0, getItemCount());
-        } else {
-            this.investigatorList = investigatorList;
-            notifyItemRangeChanged(0, getItemCount());
-        }
+    public void updateAllInvCards(List<Investigator> investigatorList) {
+        notifyItemRangeRemoved(0, getItemCount());
+        this.investigatorList = investigatorList;
+        notifyItemRangeInserted(0, getItemCount());
     }
 
     public void removeInvCard(int pos, List<Investigator> list) {
-        System.out.println("REMOVE " + pos);
         investigatorList = list;
         notifyItemRemoved(pos);
         notifyItemRangeChanged(pos, getItemCount());
+    }
+
+    public void updateInvCard(int pos, List<Investigator> list) {
+        investigatorList = list;
+        notifyItemChanged(pos);
     }
 
     @NonNull

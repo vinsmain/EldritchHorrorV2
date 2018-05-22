@@ -47,6 +47,10 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         }
     }
 
+    public void actionRandom(int position) {
+        repository.randomOnNext(position);
+    }
+
     @Override
     public void onDestroy() {
         ancientOneSubscribe.dispose();

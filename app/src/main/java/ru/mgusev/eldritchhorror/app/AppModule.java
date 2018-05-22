@@ -7,11 +7,14 @@ import android.content.Context;
 
 import com.fstyle.library.helper.AssetSQLiteOpenHelperFactory;
 
+import java.util.List;
+
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.mgusev.eldritchhorror.database.Migrations;
 import ru.mgusev.eldritchhorror.database.StaticDataDB;
+import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
@@ -50,5 +53,10 @@ public class AppModule {
     @Provides
     public Game provideGame() {
         return new Game();
+    }
+
+    @Provides
+    public List<Expansion> provideExpansionList(Repository repository) {
+        return repository.getExpansionList();
     }
 }

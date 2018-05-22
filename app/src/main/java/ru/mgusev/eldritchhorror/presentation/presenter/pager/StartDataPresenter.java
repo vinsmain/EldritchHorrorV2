@@ -5,8 +5,8 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -28,6 +28,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     private Calendar date;
     private List<String> playersCountList;
     private CompositeDisposable expansionSubscribe;
+    private CompositeDisposable randomSubscribe;
 
     private AncientOne currentAncientOne;
     private Prelude currentPrelude;
@@ -42,6 +43,8 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
         expansionSubscribe = new CompositeDisposable();
         expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners));
+        randomSubscribe = new CompositeDisposable();
+        randomSubscribe.add(repository.getRandomPublish().subscribe(this::setRandomValues));
         date = Calendar.getInstance();
         playersCountList = repository.getPlayersCountArray();
         ancientOneList = repository.getAncientOneList();
@@ -62,6 +65,30 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         setSpinnerPosition();
     }
 
+    private void setRandomValues(int position) {
+        if (position == 0) {
+            getRandomAncientOne();
+            getRandomPrelude();
+            setSpinnerPosition();
+        }
+    }
+
+    private void getRandomAncientOne() {
+        String randomName;
+        do {
+            randomName = getAncientOneNameList().get(new Random().nextInt(getAncientOneNameList().size()));
+        } while (repository.getAncientOne(randomName).getId() == currentAncientOne.getId());
+        currentAncientOne = repository.getAncientOne(randomName);
+    }
+
+    private void getRandomPrelude() {
+        String randomName;
+        do {
+            randomName = getPreludeNameList().get(new Random().nextInt(getPreludeNameList().size()));
+        } while (getPreludeNameList().size() != 1 && repository.getPrelude(randomName).getId() == currentPrelude.getId());
+        currentPrelude = repository.getPrelude(randomName);
+    }
+
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
@@ -76,7 +103,6 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
             if (repository.getExpansion(ancientOne.getExpansionID()).isEnable() || (currentAncientOne != null && ancientOne.getId() == currentAncientOne.getId()))
                 list.add(ancientOne.getName());
         }
-        Collections.sort(list);
         if (currentAncientOne == null) currentAncientOne = repository.getAncientOne(list.get(0));
         return list;
     }
@@ -87,7 +113,6 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
             if (repository.getExpansion(prelude.getExpansionID()).isEnable() || prelude.getId() == currentPrelude.getId())
                 list.add(prelude.getName());
         }
-        Collections.sort(list);
         return list;
     }
 
@@ -150,6 +175,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         repository.getGame().setPreludeID(currentPrelude.getId());
         //repository.clearGame();
         expansionSubscribe.dispose();
+        randomSubscribe.dispose();
         super.onDestroy();
     }
 }

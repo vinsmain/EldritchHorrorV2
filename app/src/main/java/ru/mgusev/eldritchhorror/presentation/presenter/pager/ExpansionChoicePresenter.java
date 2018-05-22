@@ -27,7 +27,7 @@ public class ExpansionChoicePresenter extends MvpPresenter<ExpansionChoiceView> 
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         tempList = repository.getExpansionList();
-        tempList.remove(0); //Удаляем из списка базовую игру
+        tempList.remove(0); //Удаляем из списка Core expansion
         getViewState().initExpansionList(tempList);
     }
 

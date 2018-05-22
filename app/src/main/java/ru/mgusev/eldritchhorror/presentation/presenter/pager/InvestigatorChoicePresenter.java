@@ -31,7 +31,6 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
         expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::updateInvListByExpansion));
         investigatorList = repository.getInvestigatorList();
         updateInvListByExpansion(repository.getExpansionList());
-        refreshInvList(-1);
         investigatorSubscribe = new CompositeDisposable();
         investigatorSubscribe.add(repository.getInvestigatorPublish().subscribe(this::updateInvListByCurrentInv));
     }
@@ -39,23 +38,25 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-
     }
 
     private void updateInvListByExpansion(List<Expansion> list) {
-        expansionList = list;
-        List<Investigator> tempList = new ArrayList<>();
-        List<Investigator> allList = repository.getInvestigatorList();
+        if (!list.equals(expansionList)) {
+            expansionList = list;
+            List<Investigator> tempList = new ArrayList<>();
+            List<Investigator> allList = repository.getInvestigatorList();
 
-        for (Investigator inv : investigatorList) {
-            allList.set(allList.indexOf(inv), inv);
-        }
+            for (Investigator inv : investigatorList) {
+                allList.set(allList.indexOf(inv), inv);
+            }
 
-        for (Investigator investigator : allList) {
-            if (investigator.isStarting() || investigator.isReplacement() || isActiveInv(investigator)) tempList.add(investigator);
+            for (Investigator investigator : allList) {
+                if (investigator.isStarting() || investigator.isReplacement() || isActiveInv(investigator))
+                    tempList.add(investigator);
+            }
+            investigatorList = tempList;
+            getViewState().updateAllItems(investigatorList);
         }
-        investigatorList = tempList;
-        refreshInvList(-1);
     }
 
     private boolean isActiveInv(Investigator inv) {
@@ -64,6 +65,11 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
         }
         return false;
     }
+
+    /*private void sortList() {
+        List<Investigator> sortedList = new ArrayList<>();
+        for (Investigator investigator)
+    }*/
 
     private void updateInvListByCurrentInv(Investigator currentInvestigator) {
         //investigatorList.set(investigatorList.indexOf(currentInvestigator), currentInvestigator);
@@ -78,18 +84,11 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
         }
         if (currentInvestigator.isStarting() || currentInvestigator.isReplacement() || isActiveInv(currentInvestigator)) {
             investigatorList.set(position, currentInvestigator);
-            refreshInvList(-1);
+            getViewState().updateItem(position, investigatorList);
         } else {
             investigatorList.remove(position);
-            refreshInvList(position);
+            getViewState().removeItem(position, investigatorList);
         }
-
-        //refreshInvList(-1);
-    }
-
-    private void refreshInvList(int i) {
-        getViewState().showItems(investigatorList, repository.getExpansionList(), i);
-
     }
 
     public void itemClick(int position) {

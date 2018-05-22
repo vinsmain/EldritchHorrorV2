@@ -10,6 +10,9 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 @Dao
 public interface InvestigatorDAO {
 
-    @Query("SELECT * FROM investigators")
-    List<Investigator> getAll();
+    @Query("SELECT * FROM investigators ORDER BY expansion_id, name_en")
+    List<Investigator> getAllEN();
+
+    @Query("SELECT * FROM investigators ORDER BY expansion_id, name_ru")
+    List<Investigator> getAllRU();
 }

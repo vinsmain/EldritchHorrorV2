@@ -10,8 +10,11 @@ import ru.mgusev.eldritchhorror.model.AncientOne;
 @Dao
 public interface AncientOneDAO {
 
-    @Query("SELECT * FROM ancient_ones")
-    List<AncientOne> getAll();
+    @Query("SELECT * FROM ancient_ones ORDER BY name_ru")
+    List<AncientOne> getAllRU();
+
+    @Query("SELECT * FROM ancient_ones ORDER BY name_ru")
+    List<AncientOne> getAllEN();
 
     @Query("SELECT * FROM ancient_ones WHERE _id IS :id")
     AncientOne getAncientOneByID(int id);

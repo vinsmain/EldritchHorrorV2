@@ -72,34 +72,6 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
         return view;
     }
 
-    public void initInvestigatorList() {
-
-
-        /*try {
-            if (investigatorList == null) {
-                investigatorList = new ArrayList<>();
-            }
-
-            investigatorList.clear();
-            investigatorList.addAll(HelperFactory.getStaticHelper().getInvestigatorDAO().getAllInvestigatorsLocal());
-            /*invSavedList = activity.getGame().invList;
-            if (invSavedList != null) {
-                for (int i = 0; i < invSavedList.size(); i++) {
-                    for (int j = 0; j < investigatorList.size(); j++) {
-                        if (investigatorList.get(j).getName().equals(invSavedList.get(i).getName())) {
-                            investigatorList.set(j, invSavedList.get(i));
-                            break;
-                        }
-                    }
-                    if (!investigatorList.contains(invSavedList.get(i))) investigatorList.add(invSavedList.get(i));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
-        //sortList();
-    }
-
     @Override
     public void onItemClick(int position) {
         investigatorChoicePresenter.itemClick(position);
@@ -116,9 +88,17 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     }
 
     @Override
-    public void showItems(List<Investigator> investigatorList, List<Expansion> expansionList, int i) {
-        if (i == -1) adapter.setListStorage(investigatorList, expansionList);
-        else adapter.removeInvCard(i, investigatorList);
+    public void updateAllItems(List<Investigator> investigatorList) {
+        adapter.updateAllInvCards(investigatorList);
+    }
+    @Override
+    public void updateItem(int position, List<Investigator> investigatorList) {
+        adapter.updateInvCard(position, investigatorList);
+    }
+
+    @Override
+    public void removeItem(int position, List<Investigator> investigatorList) {
+        adapter.removeInvCard(position, investigatorList);
     }
 
     @Override

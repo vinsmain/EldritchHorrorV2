@@ -2,9 +2,7 @@ package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,6 +16,7 @@ import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
+import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.app.AppModule;
 
@@ -33,6 +32,7 @@ public class Repository {
     private Investigator investigator;
     private PublishSubject<Investigator> investigatorPublish;
     private PublishSubject<List<Expansion>> expansionPublish;
+    private PublishSubject<Integer> randomPublish;
 
     private Game game;
 
@@ -46,6 +46,7 @@ public class Repository {
         isWinPublish = PublishSubject.create();
         investigatorPublish = PublishSubject.create();
         expansionPublish = PublishSubject.create();
+        randomPublish = PublishSubject.create();
     }
 
     public Game getGame() {
@@ -73,6 +74,14 @@ public class Repository {
         scorePublish.onNext(game.getScore());
     }
 
+    public Observable<Integer> getRandomPublish() {
+        return randomPublish;
+    }
+
+    public void randomOnNext(int position) {
+        randomPublish.onNext(position);
+    }
+
     public Observable<Boolean> getObservableIsWin() {
         return isWinPublish;
     }
@@ -92,11 +101,13 @@ public class Repository {
     }
 
     public List<AncientOne> getAncientOneList() {
-        return staticDataDB.ancientOneDAO().getAll();
+        if (Localization.getInstance().isRusLocale()) return staticDataDB.ancientOneDAO().getAllRU();
+        else return staticDataDB.ancientOneDAO().getAllEN();
     }
 
     public List<Prelude> getPreludeList() {
-        return staticDataDB.preludeDAO().getAll();
+        if (Localization.getInstance().isRusLocale()) return staticDataDB.preludeDAO().getAllRU();
+        else return staticDataDB.preludeDAO().getAllEN();
     }
 
     public Prelude getPrelude(int id) {
@@ -114,7 +125,8 @@ public class Repository {
     // InvestigatorChoiceFragment
 
     public List<Investigator> getInvestigatorList() {
-        return staticDataDB.investigatorDAO().getAll();
+        if (Localization.getInstance().isRusLocale()) return staticDataDB.investigatorDAO().getAllRU();
+        else return staticDataDB.investigatorDAO().getAllEN();
     }
 
     public List<Expansion> getExpansionList() {
