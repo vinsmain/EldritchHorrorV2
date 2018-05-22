@@ -62,9 +62,9 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
         }
     }
 
-    public void removeInvCard(int pos) {
+    public void removeInvCard(int pos, List<Investigator> list) {
         System.out.println("REMOVE " + pos);
-        investigatorList.remove(pos);
+        investigatorList = list;
         notifyItemRemoved(pos);
         notifyItemRangeChanged(pos, getItemCount());
     }
