@@ -67,6 +67,12 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
         notifyItemRangeChanged(pos, getItemCount());
     }
 
+    public void moveInvCard(int posNew, int posOld, List<Investigator> list) {
+        investigatorList = list;
+        notifyItemMoved(posOld, posNew);
+        notifyItemChanged(posNew);
+    }
+
     public void updateInvCard(int pos, List<Investigator> list) {
         investigatorList = list;
         notifyItemChanged(pos);

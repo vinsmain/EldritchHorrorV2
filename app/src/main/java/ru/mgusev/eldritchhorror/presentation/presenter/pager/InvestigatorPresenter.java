@@ -20,7 +20,9 @@ public class InvestigatorPresenter extends MvpPresenter<InvestigatorView> {
 
     public InvestigatorPresenter() {
         App.getComponent().inject(this);
-        investigator = repository.getInvestigator();
+
+        //Clone current investigator
+        investigator = new Investigator(repository.getInvestigator());
     }
 
     @Override
@@ -28,6 +30,7 @@ public class InvestigatorPresenter extends MvpPresenter<InvestigatorView> {
         super.onFirstViewAttach();
         getViewState().showInvestigatorCard(investigator);
         getViewState().showExpansionIcon(repository.getExpansion(investigator.getExpansionID()).getImageResource());
+        getViewState().setMaleOrFemale(investigator.isMale());
     }
 
     public void setInvestigator(boolean isStarting, boolean isReplacement, boolean isDead) {

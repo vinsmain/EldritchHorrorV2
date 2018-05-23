@@ -30,6 +30,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         getViewState().setResultSwitchChecked(repository.getGame().isWinGame());
+        getViewState().setMysteryValue(repository.getGame().getSolvedMysteriesCount());
         repository.scoreOnNext(); //устанавливаем счет при первом запуске
         getViewState().setDefeatReasonSwitchChecked(repository.getGame().isDefeatByElimination(), repository.getGame().isDefeatByMythosDepletion(), repository.getGame().isDefeatByAwakenedAncientOne());
     }

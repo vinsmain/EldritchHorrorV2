@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TableLayout;
@@ -165,7 +166,10 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     public void showMysteriesRadioGroup(AncientOne ancientOne) {
         for (int i = 0; i < mysteriesRadioGroup.getChildCount(); i++) {
             if (i <= ancientOne.getMaxMysteries()) mysteriesRadioGroup.getChildAt(i).setVisibility(View.VISIBLE);
-            else mysteriesRadioGroup.getChildAt(i).setVisibility(View.GONE);
+            else {
+                if (((RadioButton)mysteriesRadioGroup.getChildAt(i)).isChecked()) ((RadioButton)mysteriesRadioGroup.getChildAt(0)).setChecked(true);
+                mysteriesRadioGroup.getChildAt(i).setVisibility(View.GONE);
+            }
         }
     }
 
@@ -186,6 +190,11 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
             default:
                 break;
         }
+    }
+
+    @Override
+    public void setMysteryValue(int i) {
+        ((RadioButton)mysteriesRadioGroup.getChildAt(i)).setChecked(true);
     }
 
     @Override

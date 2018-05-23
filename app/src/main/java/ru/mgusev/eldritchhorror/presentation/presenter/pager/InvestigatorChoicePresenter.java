@@ -83,7 +83,8 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
             }
         }
         if (currentInvestigator.isStarting() || currentInvestigator.isReplacement() || isActiveInv(currentInvestigator)) {
-            investigatorList.set(position, currentInvestigator);
+            investigatorList.add(0, currentInvestigator);
+            investigatorList.remove (position + 1);
             getViewState().updateItem(position, investigatorList);
         } else {
             investigatorList.remove(position);

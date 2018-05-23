@@ -93,7 +93,8 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     }
     @Override
     public void updateItem(int position, List<Investigator> investigatorList) {
-        adapter.updateInvCard(position, investigatorList);
+        //adapter.updateInvCard(position, investigatorList);
+        adapter.moveInvCard(0, position, investigatorList);
     }
 
     @Override

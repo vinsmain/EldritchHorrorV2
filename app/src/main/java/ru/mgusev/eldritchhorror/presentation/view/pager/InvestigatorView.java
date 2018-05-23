@@ -13,4 +13,7 @@ public interface InvestigatorView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void showExpansionIcon(String iconName);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setMaleOrFemale(boolean isMale);
 }

@@ -68,6 +68,22 @@ public class Investigator implements Parcelable {
     public Investigator() {
     }
 
+    public Investigator(Investigator investigator) {
+        this.id = investigator.id;
+        this.gameId = investigator.gameId;
+        this.imageResource = investigator.imageResource;
+        this.isMale = investigator.isMale;
+        this.nameEN = investigator.nameEN;
+        this.nameRU = investigator.nameRU;
+        this.occupationEN = investigator.occupationEN;
+        this.occupationRU = investigator.occupationRU;
+        this.isStarting = investigator.isStarting;
+        this.isReplacement = investigator.isReplacement;
+        this.isDead = investigator.isDead;
+        this.expansionID = investigator.expansionID;
+        this.specialization = investigator.specialization;
+    }
+
     protected Investigator(Parcel in) {
         id = in.readLong();
         gameId = in.readLong();

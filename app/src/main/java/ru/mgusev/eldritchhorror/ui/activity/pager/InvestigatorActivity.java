@@ -50,6 +50,19 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
     }
 
     @Override
+    public void setMaleOrFemale(boolean isMale) {
+        if (isMale) {
+            startingGameSwitch.setText(R.string.starting_game);
+            replacementSwitch.setText(R.string.replacement);
+            deadSwitch.setText(R.string.dead);
+        } else {
+            startingGameSwitch.setText(R.string.starting_game_female);
+            replacementSwitch.setText(R.string.replacement_female);
+            deadSwitch.setText(R.string.dead_female);
+        }
+    }
+
+    @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.investigator_starting_game_switch:
