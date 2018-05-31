@@ -137,6 +137,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     public void setCurrentPlayersCount(String value) {
         currentPlayersCount = Integer.parseInt(value);
+        repository.getGame().setPlayersCount(currentPlayersCount);
     }
 
     public void setCurrentAncientOne(String value) {

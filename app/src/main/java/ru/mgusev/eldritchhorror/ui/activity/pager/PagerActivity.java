@@ -38,13 +38,23 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private ImageView winIcon;
     private TextView scoreTV;
     private Toolbar toolbar;
+    private MenuItem actionRandom;
+    private MenuItem actionClear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games_pager);
-
+        //https://github.com/chenxiruanhai/AndroidBugFix/blob/master/bug-5497/AndroidBug5497Workaround.java
         AndroidBug5497Workaround.assistActivity(this);
+
+        headBackground = findViewById(R.id.games_pager_head_background);
+        expansionIcon = findViewById(R.id.games_pager_expansion_icon);
+        winIcon = findViewById(R.id.games_pager_win_icon);
+        scoreTV = findViewById(R.id.games_pager_score);
+        toolbar = findViewById(R.id.games_pager_toolbar);
+        initToolbar();
+
         pager = findViewById(R.id.games_pager_viewpager);
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
         pager.setOffscreenPageLimit(2);
@@ -63,6 +73,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             public void onPageSelected(int position) {
                 Log.d("PAGER", "onPageSelected, position = " + position);
                 currentPosition = position;
+                showMenuItem();
             }
 
             @Override
@@ -73,14 +84,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             public void onPageScrollStateChanged(int state) {
             }
         });
-
-        headBackground = findViewById(R.id.games_pager_head_background);
-        expansionIcon = findViewById(R.id.games_pager_expansion_icon);
-        winIcon = findViewById(R.id.games_pager_win_icon);
-        scoreTV = findViewById(R.id.games_pager_score);
-        toolbar = findViewById(R.id.games_pager_toolbar);
-        initToolbar();
-
     }
 
     private void initToolbar() {
@@ -100,7 +103,21 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_games_pager_activity, menu);
+        actionRandom = menu.findItem(R.id.action_random);
+        actionClear = menu.findItem(R.id.action_clear);
+        showMenuItem();
         return true;
+    }
+
+    private void showMenuItem() {
+        if (actionRandom != null) {
+            if (currentPosition == 2) actionRandom.setVisible(false);
+            else actionRandom.setVisible(true);
+        }
+        if (actionClear != null) {
+            if (currentPosition == 1) actionClear.setVisible(true);
+            else actionClear.setVisible(false);
+        }
     }
 
     @Override
@@ -113,17 +130,10 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 } else ((InvestigatorsChoiceFragment)pagerAdapter.getItem(1)).showStartingInvCountAlert();*/
                 return true;
             case R.id.action_clear:
-                /*isAlert = true;
-                ((InvestigatorsChoiceFragment)pagerAdapter.getItem(1)).cleanDialog();*/
+                pagerPresenter.actionClear(currentPosition);
                 return true;
             case R.id.action_random:
-                if (currentPosition == 1) {
-                    //((InvestigatorsChoiceFragment) pagerAdapter.getItem(1)).selectRandomInvestigators();
-                } else if (currentPosition == 0) {
-                    pagerPresenter.actionRandom(currentPosition);
-                    //((StartingDataFragment) pagerAdapter.getItem(0)).selectRandomAncientOne();
-                    //((StartingDataFragment) pagerAdapter.getItem(0)).selectRandomPrelude();
-                }
+                pagerPresenter.actionRandom(currentPosition);
                 return true;
             case R.id.action_edit_expansion:
                 Intent intent = new Intent(this, ExpansionChoiceActivity.class);

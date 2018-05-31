@@ -1,25 +1,28 @@
 package ru.mgusev.eldritchhorror.ui.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.List;
+import java.util.Objects;
 
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
-import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorChoicePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorChoiceView;
@@ -34,6 +37,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
 
     private RecyclerView invRecycleView;
     private InvestigatorChoiceAdapter adapter;
+    private DialogInterface dialog;
 
     private int columnsCount = 3;
 
@@ -91,10 +95,15 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     public void updateAllItems(List<Investigator> investigatorList) {
         adapter.updateAllInvCards(investigatorList);
     }
+
     @Override
     public void updateItem(int position, List<Investigator> investigatorList) {
-        //adapter.updateInvCard(position, investigatorList);
-        adapter.moveInvCard(0, position, investigatorList);
+        adapter.updateInvCard(position, investigatorList);
+    }
+
+    @Override
+    public void moveItem(int oldPosition, int newPosition, List<Investigator> investigatorList) {
+        adapter.moveInvCard(oldPosition, newPosition, investigatorList);
     }
 
     @Override
@@ -106,5 +115,29 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     public void showInvestigatorActivity() {
         Intent intent = new Intent(this.getContext(), InvestigatorActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void showError() {
+        Toast.makeText(getContext(), R.string.alert_investigators_limit, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        builder.setCancelable(false);
+        builder.setTitle(R.string.dialogAlert);
+        builder.setMessage(R.string.cleanDialogMessage);
+        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+            investigatorChoicePresenter.clearInvestigatorList();
+            investigatorChoicePresenter.dismissDialog();
+        });
+        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> investigatorChoicePresenter.dismissDialog());
+        builder.show();
+    }
+
+    @Override
+    public void hideDialog() {
+        //Delete showDialog() from currentState with DismissDialogStrategy
     }
 }

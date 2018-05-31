@@ -49,15 +49,14 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
     private OnItemClicked onClick;
     private List<Investigator> investigatorList;
 
-
     public InvestigatorChoiceAdapter() {
         App.getComponent().inject(this);
         this.investigatorList = new ArrayList<>();
     }
 
-    public void updateAllInvCards(List<Investigator> investigatorList) {
+    public void updateAllInvCards(List<Investigator> list) {
         notifyItemRangeRemoved(0, getItemCount());
-        this.investigatorList = investigatorList;
+        this.investigatorList = list;
         notifyItemRangeInserted(0, getItemCount());
     }
 
@@ -67,10 +66,10 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
         notifyItemRangeChanged(pos, getItemCount());
     }
 
-    public void moveInvCard(int posNew, int posOld, List<Investigator> list) {
+    public void moveInvCard(int oldPosition, int newPosition, List<Investigator> list) {
         investigatorList = list;
-        notifyItemMoved(posOld, posNew);
-        notifyItemChanged(posNew);
+        notifyItemMoved(oldPosition, newPosition);
+        notifyItemChanged(newPosition);
     }
 
     public void updateInvCard(int pos, List<Investigator> list) {
@@ -125,7 +124,7 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
 
     @Override
     public int getItemCount() {
-        return investigatorList.size();
+        return this.investigatorList.size();
     }
 
     @Override

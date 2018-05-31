@@ -31,6 +31,7 @@ public class InvestigatorPresenter extends MvpPresenter<InvestigatorView> {
         getViewState().showInvestigatorCard(investigator);
         getViewState().showExpansionIcon(repository.getExpansion(investigator.getExpansionID()).getImageResource());
         getViewState().setMaleOrFemale(investigator.isMale());
+        getViewState().setListeners();
     }
 
     public void setInvestigator(boolean isStarting, boolean isReplacement, boolean isDead) {

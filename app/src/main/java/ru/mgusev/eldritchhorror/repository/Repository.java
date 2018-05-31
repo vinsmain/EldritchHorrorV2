@@ -33,6 +33,7 @@ public class Repository {
     private PublishSubject<Investigator> investigatorPublish;
     private PublishSubject<List<Expansion>> expansionPublish;
     private PublishSubject<Integer> randomPublish;
+    private PublishSubject<Integer> clearPublish;
 
     private Game game;
 
@@ -47,11 +48,16 @@ public class Repository {
         investigatorPublish = PublishSubject.create();
         expansionPublish = PublishSubject.create();
         randomPublish = PublishSubject.create();
+        clearPublish = PublishSubject.create();
     }
 
     public Game getGame() {
         if (game == null) game = new Game();
         return game;
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     public void clearGame() {
@@ -80,6 +86,14 @@ public class Repository {
 
     public void randomOnNext(int position) {
         randomPublish.onNext(position);
+    }
+
+    public Observable<Integer> getClearPublish() {
+        return clearPublish;
+    }
+
+    public void clearOnNext(int position) {
+        clearPublish.onNext(position);
     }
 
     public Observable<Boolean> getObservableIsWin() {

@@ -4,8 +4,8 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -27,145 +27,168 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
     private List<Expansion> expansionList;
     private CompositeDisposable investigatorSubscribe;
     private CompositeDisposable expansionSubscribe;
+    private CompositeDisposable randomSubscribe;
+    private CompositeDisposable clearSubscribe;
 
     public InvestigatorChoicePresenter() {
         App.getComponent().inject(this);
         expansionSubscribe = new CompositeDisposable();
         expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::updateInvListByExpansion));
         activeInvestigatorList = new ArrayList<>();
-        investigatorList = repository.getInvestigatorList();
+        investigatorList = new ArrayList<>();
         updateInvListByExpansion(repository.getExpansionList());
         investigatorSubscribe = new CompositeDisposable();
         investigatorSubscribe.add(repository.getInvestigatorPublish().subscribe(this::updateInvListByCurrentInv));
-    }
-
-    @Override
-    protected void onFirstViewAttach() {
-        super.onFirstViewAttach();
+        randomSubscribe = new CompositeDisposable();
+        randomSubscribe.add(repository.getRandomPublish().subscribe(this::setRandomValues));
+        clearSubscribe = new CompositeDisposable();
+        clearSubscribe.add(repository.getClearPublish().subscribe(this::clearValues));
     }
 
     private void updateInvListByExpansion(List<Expansion> list) {
         if (!list.equals(expansionList)) {
             expansionList = list;
-            /*List<Investigator> tempList = new ArrayList<>();
-            List<Investigator> allList = repository.getInvestigatorList();
 
-            for (Investigator inv : investigatorList) {
-                allList.set(allList.indexOf(inv), inv);
-            }
-
-            for (Investigator investigator : allList) {
-                if (investigator.isStarting() || investigator.isReplacement() || isActiveInv(investigator))
-                    tempList.add(investigator);
-            }
-            investigatorList = tempList;
-            getViewState().updateAllItems(investigatorList);*/
-
-            updateAllInv();
-            investigatorList.clear();
-            investigatorList.addAll(activeInvestigatorList);
-            investigatorList.addAll(allInvestigatorList);
+            updateAllInvestigatorList();
+            updateInvestigatorList();
             getViewState().updateAllItems(investigatorList);
         }
     }
 
-    private boolean isActiveInv(Investigator inv) {
+    private boolean isActiveInvestigator(Investigator inv) {
         for (Expansion expansion : expansionList) {
             if (expansion.getId() == inv.getExpansionID()) return expansion.isEnable();
         }
         return false;
     }
 
-    /*private void sortList() {
-        List<Investigator> sortedList = new ArrayList<>();
-        for (Investigator investigator)
-    }*/
+    private int getCountStartingInv() {
+        int countStartingInv = 0;
+        for (Investigator investigator : activeInvestigatorList) {
+            if (investigator.isStarting()) countStartingInv++;
+        }
+        return countStartingInv;
+    }
 
     private void updateInvListByCurrentInv(Investigator currentInvestigator) {
-        //investigatorList.set(investigatorList.indexOf(currentInvestigator), currentInvestigator);
-        //updateInvListByExpansion(expansionList);
-
-        /*int position = 0;
-        for (int i = 0; i < investigatorList.size(); i++) {
-            if (investigatorList.get(i).getId() == currentInvestigator.getId()) {
-                position = i;
-                break;
-            }
+        //Проверка на превышение числи стартовых сыщиков
+        if (currentInvestigator.isStarting() && getCountStartingInv() == repository.getGame().getPlayersCount()
+                && (!activeInvestigatorList.contains(currentInvestigator) || !activeInvestigatorList.get(activeInvestigatorList.indexOf(currentInvestigator)).isStarting())) {
+            getViewState().showError();
         }
-        if (currentInvestigator.isStarting() || currentInvestigator.isReplacement() || isActiveInv(currentInvestigator)) {
-            investigatorList.add(0, currentInvestigator);
-            investigatorList.remove (position + 1);
-            getViewState().updateItem(position, investigatorList);
-        } else {
-            investigatorList.remove(position);
-            getViewState().removeItem(position, investigatorList);
-        }*/
-
-        int position = 0;
-        if (currentInvestigator.isStarting() || currentInvestigator.isReplacement()) {
+        //Сыщик стал активным
+        else if (currentInvestigator.isStarting() || currentInvestigator.isReplacement()) {
+            //Был активным ранее
             if (activeInvestigatorList.contains(currentInvestigator)) {
-                position = activeInvestigatorList.indexOf(currentInvestigator);
-                activeInvestigatorList.remove(currentInvestigator);
-                activeInvestigatorList.add(0, currentInvestigator);
+                int position = activeInvestigatorList.indexOf(currentInvestigator);
+                activeInvestigatorList.set(position, currentInvestigator);
+                updateInvestigatorList();
+                getViewState().updateItem(position, investigatorList);
+            //Не был активным ранее
             } else {
-                position = allInvestigatorList.indexOf(currentInvestigator) + activeInvestigatorList.size();
+                int positionOld = allInvestigatorList.indexOf(currentInvestigator);
+                allInvestigatorList.remove(currentInvestigator);
                 activeInvestigatorList.add(0, currentInvestigator);
+                updateInvestigatorList();
+                getViewState().moveItem(positionOld + activeInvestigatorList.size() - 1, 0, investigatorList);
             }
-            getViewState().removeItem(position, investigatorList);
-
-            //getViewState().updateItem(position, investigatorList);
+        //Сыщик стал неактивным
         } else {
-            if (activeInvestigatorList.contains(currentInvestigator)) {
-                position = activeInvestigatorList.indexOf(currentInvestigator);
+            //Был активным ранее и принадлежит к выбранным дополнениям
+            if (activeInvestigatorList.contains(currentInvestigator) && isActiveInvestigator(currentInvestigator)) {
+                int positionOld = activeInvestigatorList.indexOf(currentInvestigator);
                 activeInvestigatorList.remove(currentInvestigator);
-                
-                activeInvestigatorList.add(0, currentInvestigator);
-            } else {
-                position = allInvestigatorList.indexOf(currentInvestigator) + activeInvestigatorList.size();
-                activeInvestigatorList.add(0, currentInvestigator);
+                updateAllInvestigatorList();
+                updateInvestigatorList();
+                int position = investigatorList.indexOf(currentInvestigator);
+                getViewState().moveItem(positionOld, position, investigatorList);
+            //Был активным ранее и не принадлежит к выбранным дополнениям
+            } else if (activeInvestigatorList.contains(currentInvestigator) && !isActiveInvestigator(currentInvestigator)) {
+                int position = activeInvestigatorList.indexOf(currentInvestigator);
+                activeInvestigatorList.remove(currentInvestigator);
+                updateAllInvestigatorList();
+                updateInvestigatorList();
+                getViewState().removeItem(position, investigatorList);
             }
-            getViewState().removeItem(position, investigatorList);
-
-
-
-
-            investigatorList.remove(position);
-            getViewState().removeItem(position, investigatorList);
         }
     }
 
+    private void setRandomValues(int position) {
+        if (position == 1) {
+            choiceRandomInvestigators();
+        }
+    }
 
+    public void clearInvestigatorList() {
+        activeInvestigatorList = new ArrayList<>();
+        updateAllInvestigatorList();
+        updateInvestigatorList();
+        getViewState().updateAllItems(investigatorList);
+    }
 
-    private void updateAllInv() {
+    private void choiceRandomInvestigators() {
+        clearInvestigatorList();
+
+        Random random = new Random();
+        for (int i = 0; i < repository.getGame().getPlayersCount(); i++) {
+            Investigator inv;
+            do {
+                int index = random.nextInt(allInvestigatorList.size());
+                inv = allInvestigatorList.get(index);
+            } while (isRepeatSpecialization(inv) && activeInvestigatorList.size() < 7);
+            inv.setStarting(true);
+            updateInvListByCurrentInv(inv);
+        }
+    }
+
+    private boolean isRepeatSpecialization(Investigator inv) {
+        for (Investigator investigator : activeInvestigatorList) {
+            if (investigator.getSpecialization() == inv.getSpecialization()) return true;
+        }
+        return false;
+    }
+
+    private void updateInvestigatorList() {
+        investigatorList = new ArrayList<>();
+        investigatorList.addAll(activeInvestigatorList);
+        investigatorList.addAll(allInvestigatorList);
+    }
+
+    private void updateAllInvestigatorList() {
         allInvestigatorList = repository.getInvestigatorList();
         for (int i = 0; i < activeInvestigatorList.size(); i++) {
-            int index = allInvestigatorList.indexOf(activeInvestigatorList.get(i));
-            allInvestigatorList.remove(index);
+            allInvestigatorList.remove(activeInvestigatorList.get(i));
         }
-        allInvestigatorList = deleteDisableInv(allInvestigatorList);
-    }
 
-    private List<Investigator> deleteDisableInv(List<Investigator> list) {
         List<Investigator> tempList = new ArrayList<>();
-        for (Investigator investigator : list) {
-            if (isActiveInv(investigator)) tempList.add(investigator);
+        for (Investigator investigator : allInvestigatorList) {
+            if (isActiveInvestigator(investigator)) tempList.add(investigator);
         }
-        return tempList;
+        allInvestigatorList = tempList;
     }
 
+    private void clearValues(int position) {
+        if (position == 1) {
+            getViewState().showDialog();
+        }
+    }
 
-
-
+    public void dismissDialog() {
+        getViewState().hideDialog();
+    }
 
     public void itemClick(int position) {
         repository.setInvestigator(investigatorList.get(position));
         getViewState().showInvestigatorActivity();
     }
 
+
     @Override
     public void onDestroy() {
         investigatorSubscribe.dispose();
         expansionSubscribe.dispose();
+        randomSubscribe.dispose();
+        clearSubscribe.dispose();
         super.onDestroy();
     }
 }

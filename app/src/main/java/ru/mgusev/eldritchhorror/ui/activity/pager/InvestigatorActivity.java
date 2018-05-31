@@ -39,11 +39,10 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
         startingGameSwitch = findViewById(R.id.investigator_starting_game_switch);
         replacementSwitch = findViewById(R.id.investigator_replacement_switch);
         deadSwitch = findViewById(R.id.investigator_dead_switch);
-
-        setListeners();
     }
 
-    private void setListeners() {
+    @Override
+    public void setListeners() {
         startingGameSwitch.setOnCheckedChangeListener(this);
         replacementSwitch.setOnCheckedChangeListener(this);
         deadSwitch.setOnCheckedChangeListener(this);
