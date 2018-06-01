@@ -6,8 +6,11 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
+import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 
 public interface PagerView extends MvpView {
+
+    String BACK_DIALOG_TAG = "backDialog";
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setHeadBackground(AncientOne ancientOne, Expansion expansion);
@@ -32,4 +35,10 @@ public interface PagerView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void hideScore();
+
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = BACK_DIALOG_TAG)
+    void showBackDialog();
+
+    @StateStrategyType(value = DismissDialogStrategy.class, tag = BACK_DIALOG_TAG)
+    void hideBackDialog();
 }

@@ -55,6 +55,14 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         repository.clearOnNext(position);
     }
 
+    public void showBackDialog() {
+        getViewState().showBackDialog();
+    }
+
+    public void dismissBackDialog() {
+        getViewState().hideBackDialog();
+    }
+
     @Override
     public void onDestroy() {
         ancientOneSubscribe.dispose();

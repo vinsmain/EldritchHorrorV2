@@ -13,7 +13,7 @@ import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 
 public interface InvestigatorChoiceView extends MvpView {
 
-    String DIALOG_TAG = "dialog";
+    String DIALOG_TAG = "clearInvListDialog";
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void updateAllItems(List<Investigator> investigatorList);
@@ -31,10 +31,10 @@ public interface InvestigatorChoiceView extends MvpView {
     void showInvestigatorActivity();
 
     @StateStrategyType(value = AddToEndSingleStrategy.class, tag = DIALOG_TAG)
-    void showDialog();
+    void showClearInvListDialog();
 
     @StateStrategyType(value = DismissDialogStrategy.class, tag = DIALOG_TAG)
-    void hideDialog();
+    void hideClearInvListDialog();
 
     @StateStrategyType(SkipStrategy.class)
     void showError();

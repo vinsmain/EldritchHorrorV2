@@ -20,6 +20,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
@@ -35,9 +38,10 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     @InjectPresenter
     InvestigatorChoicePresenter investigatorChoicePresenter;
 
-    private RecyclerView invRecycleView;
-    private InvestigatorChoiceAdapter adapter;
+    @BindView(R.id.inv_choice_recycler_view) RecyclerView invRecycleView;
 
+    private Unbinder unbinder;
+    private InvestigatorChoiceAdapter adapter;
     private int columnsCount = 3;
 
     public static InvestigatorChoiceFragment newInstance(int page) {
@@ -60,9 +64,10 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_investigator_choice, null);
 
-        invRecycleView = view.findViewById(R.id.inv_choice_recycler_view);
+        unbinder = ButterKnife.bind(this, view);
 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 5;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            columnsCount = 5;
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), columnsCount);
         invRecycleView.setLayoutManager(gridLayoutManager);
@@ -71,7 +76,6 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
         adapter = new InvestigatorChoiceAdapter();
         invRecycleView.setAdapter(adapter);
         adapter.setOnClick(this);
-
         return view;
     }
 
@@ -122,11 +126,12 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     }
 
     @Override
-    public void showDialog() {
+    public void showClearInvListDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setCancelable(false);
         builder.setTitle(R.string.dialogAlert);
         builder.setMessage(R.string.cleanDialogMessage);
+        builder.setIcon(R.drawable.clear);
         builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
             investigatorChoicePresenter.clearInvestigatorList();
             investigatorChoicePresenter.dismissDialog();
@@ -136,7 +141,13 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     }
 
     @Override
-    public void hideDialog() {
+    public void hideClearInvListDialog() {
         //Delete showDialog() from currentState with DismissDialogStrategy
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

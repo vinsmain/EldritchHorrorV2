@@ -1,13 +1,17 @@
 package ru.mgusev.eldritchhorror.ui.activity.pager;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,28 +20,30 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.adapter.PagerAdapter;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
-import ru.mgusev.eldritchhorror.support.AndroidBug5497Workaround;
-import ru.mgusev.eldritchhorror.adapter.PagerAdapter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
+import ru.mgusev.eldritchhorror.support.AndroidBug5497Workaround;
 
 public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @InjectPresenter
     PagerPresenter pagerPresenter;
 
-    private int currentPosition = 0;
+    @BindView(R.id.games_pager_head_background) ImageView headBackground;
+    @BindView(R.id.games_pager_expansion_icon) ImageView expansionIcon;
+    @BindView(R.id.games_pager_score) TextView scoreTV;
+    @BindView(R.id.games_pager_win_icon) ImageView winIcon;
+    @BindView(R.id.games_pager_toolbar) Toolbar toolbar;
+    @BindView(R.id.games_pager_viewpager) ViewPager pager;
 
-    private ViewPager pager;
+    private int currentPosition = 0;
     private PagerAdapter pagerAdapter;
-    private ImageView headBackground;
-    private ImageView expansionIcon;
-    private ImageView winIcon;
-    private TextView scoreTV;
-    private Toolbar toolbar;
     private MenuItem actionRandom;
     private MenuItem actionClear;
 
@@ -45,17 +51,10 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games_pager);
-        //https://github.com/chenxiruanhai/AndroidBugFix/blob/master/bug-5497/AndroidBug5497Workaround.java
+        ButterKnife.bind(this);
         AndroidBug5497Workaround.assistActivity(this);
 
-        headBackground = findViewById(R.id.games_pager_head_background);
-        expansionIcon = findViewById(R.id.games_pager_expansion_icon);
-        winIcon = findViewById(R.id.games_pager_win_icon);
-        scoreTV = findViewById(R.id.games_pager_score);
-        toolbar = findViewById(R.id.games_pager_toolbar);
         initToolbar();
-
-        pager = findViewById(R.id.games_pager_viewpager);
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
         pager.setOffscreenPageLimit(2);
         pager.setAdapter(pagerAdapter);
@@ -74,6 +73,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 Log.d("PAGER", "onPageSelected, position = " + position);
                 currentPosition = position;
                 showMenuItem();
+                hideKeyboard();
             }
 
             @Override
@@ -92,12 +92,31 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        /*toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finishDialog();
-            }
-        });*/
+        toolbar.setNavigationOnClickListener(v -> pagerPresenter.showBackDialog());
+    }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (currentPosition != 2 && view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public void showBackDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle(R.string.dialogBackAlert);
+        builder.setMessage(R.string.backDialogMessage);
+        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> finish());
+        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
+        builder.show();
+    }
+
+    @Override
+    public void hideBackDialog() {
+        //Delete showBackDialog() from currentState with DismissDialogStrategy
     }
 
     @Override
@@ -185,11 +204,15 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         scoreTV.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onBackPressed() {
+        pagerPresenter.showBackDialog();
+    }
 
     //AndroidBug5497Workaround.assistActivity(this);
-        //https://github.com/chenxiruanhai/AndroidBugFix/blob/master/bug-5497/AndroidBug5497Workaround.java
+    //https://github.com/chenxiruanhai/AndroidBugFix/blob/master/bug-5497/AndroidBug5497Workaround.java
 
-        //currentPosition = (int) getIntent().getIntExtra("setPosition", 0);
+    //currentPosition = (int) getIntent().getIntExtra("setPosition", 0);
 
         /*if (savedInstanceState!= null) {
             currentPosition = savedInstanceState.getInt("position", 0);

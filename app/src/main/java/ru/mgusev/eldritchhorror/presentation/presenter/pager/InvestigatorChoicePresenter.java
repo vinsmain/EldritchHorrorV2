@@ -169,12 +169,12 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
 
     private void clearValues(int position) {
         if (position == 1) {
-            getViewState().showDialog();
+            getViewState().showClearInvListDialog();
         }
     }
 
     public void dismissDialog() {
-        getViewState().hideDialog();
+        getViewState().hideClearInvListDialog();
     }
 
     public void itemClick(int position) {

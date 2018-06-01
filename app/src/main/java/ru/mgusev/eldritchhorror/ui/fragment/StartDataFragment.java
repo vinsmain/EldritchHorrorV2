@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -26,31 +25,36 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
+import butterknife.OnItemSelected;
+import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class StartDataFragment extends MvpAppCompatFragment implements StartDataView, View.OnClickListener, DatePickerDialog.OnDateSetListener,
-        DatePickerDialog.OnDismissListener, CompoundButton.OnCheckedChangeListener, AdapterView.OnItemSelectedListener {
+public class StartDataFragment extends MvpAppCompatFragment implements StartDataView, DatePickerDialog.OnDateSetListener,
+        DatePickerDialog.OnDismissListener {
 
     @InjectPresenter
     StartDataPresenter startDataPresenter;
 
+    @BindView(R.id.start_data_date_tv) TextView dateTV;
+    @BindView(R.id.start_data_ancient_one_spinner) Spinner ancientOneSpinner;
+    @BindView(R.id.start_data_prelude_spinner) Spinner preludeSpinner;
+    @BindView(R.id.start_data_players_count_spinner) Spinner playersCountSpinner;
+    @BindView(R.id.start_data_easy_mythos) Switch easyMythosSwitch;
+    @BindView(R.id.start_data_normal_mythos) Switch normalMythosSwitch;
+    @BindView(R.id.start_data_hard_mythos) Switch hardMythosSwitch;
+    @BindView(R.id.start_data_starting_rumor) Switch startingRumorSwitch;
+
     public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-    private ImageView dateButton;
-    private TextView dateTV;
+    private Unbinder unbinder;
     private DatePickerDialog datePickerDialog;
-    private Spinner playersCountSpinner;
-    private Spinner ancientOneSpinner;
-    private Spinner preludeSpinner;
-    private Switch easyMythosSwitch;
-    private Switch normalMythosSwitch;
-    private Switch hardMythosSwitch;
-    private Switch startingRumorSwitch;
-
     private ArrayAdapter<String> ancientOneAdapter;
     private ArrayAdapter<String> preludeAdapter;
     private ArrayAdapter<String> playersCountAdapter;
@@ -74,43 +78,19 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_start_data, null);
-        dateButton = view.findViewById(R.id.start_data_date_button);
-        dateTV = view.findViewById(R.id.start_data_date_tv);
-
-        playersCountSpinner = view.findViewById(R.id.start_data_players_count_spinner);
-        ancientOneSpinner = view.findViewById(R.id.start_data_ancient_one_spinner);
-        preludeSpinner = view.findViewById(R.id.start_data_prelude_spinner);
-
-        easyMythosSwitch = view.findViewById(R.id.start_data_easy_mythos);
-        normalMythosSwitch = view.findViewById(R.id.start_data_normal_mythos);
-        hardMythosSwitch = view.findViewById(R.id.start_data_hard_mythos);
-        startingRumorSwitch = view.findViewById(R.id.start_data_starting_rumor);
+        unbinder = ButterKnife.bind(this, view);
 
         ancientOneAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.spinner);
         ancientOneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ancientOneSpinner.setAdapter(ancientOneAdapter);
-
         preludeAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner);
         preludeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         preludeSpinner.setAdapter(preludeAdapter);
-
         playersCountAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner);
         playersCountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         playersCountSpinner.setAdapter(playersCountAdapter);
 
-        initListeners();
         return view;
-    }
-
-    private void initListeners() {
-        dateButton.setOnClickListener(this);
-        easyMythosSwitch.setOnCheckedChangeListener(this);
-        normalMythosSwitch.setOnCheckedChangeListener(this);
-        hardMythosSwitch.setOnCheckedChangeListener(this);
-        startingRumorSwitch.setOnCheckedChangeListener(this);
-        ancientOneSpinner.setOnItemSelectedListener(this);
-        preludeSpinner.setOnItemSelectedListener(this);
-        playersCountSpinner.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -128,17 +108,6 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     @Override
     public void dismissDatePicker() {
         //if (datePickerDialog != null) datePickerDialog.dismiss();
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.start_data_date_button:
-                startDataPresenter.showDatePicker();
-                break;
-            default:
-                break;
-        }
     }
 
     @Override
@@ -190,7 +159,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         playersCountAdapter.notifyDataSetChanged();
     }
 
-    @Override
+    @OnItemSelected({R.id.start_data_ancient_one_spinner, R.id.start_data_prelude_spinner, R.id.start_data_players_count_spinner})
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         startDataPresenter.setCurrentAncientOne((String) ancientOneSpinner.getSelectedItem());
         startDataPresenter.setCurrentPrelude((String) preludeSpinner.getSelectedItem());
@@ -198,27 +167,49 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         startDataPresenter.setSpinnerPosition();
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
+    @OnClick({R.id.date_row, R.id.ancient_one_row, R.id.prelude_row, R.id.players_count_row})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.date_row:
+                startDataPresenter.showDatePicker();
+                break;
+            case R.id.ancient_one_row:
+                ancientOneSpinner.performClick();
+                break;
+            case R.id.prelude_row:
+                preludeSpinner.performClick();
+                break;
+            case R.id.players_count_row:
+                playersCountSpinner.performClick();
+                break;
+        }
     }
 
-    @Override
+    @OnCheckedChanged ({R.id.start_data_easy_mythos, R.id.start_data_normal_mythos, R.id.start_data_hard_mythos})
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.start_data_easy_mythos:
-                if (!b && !normalMythosSwitch.isChecked() && !hardMythosSwitch.isChecked()) normalMythosSwitch.setChecked(true);
+                if (!b && !normalMythosSwitch.isChecked() && !hardMythosSwitch.isChecked())
+                    normalMythosSwitch.setChecked(true);
                 break;
             case R.id.start_data_normal_mythos:
-                if (!b && !easyMythosSwitch.isChecked() && !hardMythosSwitch.isChecked()) easyMythosSwitch.setChecked(true);
+                if (!b && !easyMythosSwitch.isChecked() && !hardMythosSwitch.isChecked())
+                    easyMythosSwitch.setChecked(true);
                 break;
             case R.id.start_data_hard_mythos:
-                if (!b && !easyMythosSwitch.isChecked() && !normalMythosSwitch.isChecked()) easyMythosSwitch.setChecked(true);
+                if (!b && !easyMythosSwitch.isChecked() && !normalMythosSwitch.isChecked())
+                    easyMythosSwitch.setChecked(true);
                 break;
             default:
                 break;
         }
         startDataPresenter.setSwitchValueToGame(easyMythosSwitch.isChecked(), normalMythosSwitch.isChecked(), hardMythosSwitch.isChecked(), startingRumorSwitch.isChecked());
         startDataPresenter.setSwitchValue();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }
