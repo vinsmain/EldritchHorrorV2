@@ -7,14 +7,17 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import java.util.Calendar;
 import java.util.List;
 
+import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
+
 public interface StartDataView extends MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = "date")
     void showDatePicker(Calendar date);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setDateToField(Calendar date);
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
+    @StateStrategyType(value = DismissDialogStrategy.class, tag = "date")
     void dismissDatePicker();
 
     @StateStrategyType(AddToEndSingleStrategy.class)

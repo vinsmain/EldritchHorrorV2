@@ -86,7 +86,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         hardMythosSwitch = view.findViewById(R.id.start_data_hard_mythos);
         startingRumorSwitch = view.findViewById(R.id.start_data_starting_rumor);
 
-        ancientOneAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner);
+        ancientOneAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.spinner);
         ancientOneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ancientOneSpinner.setAdapter(ancientOneAdapter);
 
@@ -118,7 +118,6 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), this, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.setOnDismissListener(this);
         datePickerDialog.show();
-        System.out.println("SHOW");
     }
 
     @Override
@@ -128,7 +127,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Override
     public void dismissDatePicker() {
-        if (datePickerDialog != null) datePickerDialog.dismiss();
+        //if (datePickerDialog != null) datePickerDialog.dismiss();
     }
 
     @Override
@@ -147,18 +146,6 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         System.out.println("DATE SET");
         startDataPresenter.setDate(year, monthOfYear, dayOfMonth);
         startDataPresenter.setDateToField();
-    }
-
-    @Override
-    public void onDestroy() {
-        System.out.println("DESTROY 1234");
-        if (datePickerDialog != null && datePickerDialog.isShowing()) {
-            System.out.println("DESTROY");
-            //startDataPresenter.setDate(datePickerDialog.getDatePicker().getYear(), datePickerDialog.getDatePicker().getMonth(), datePickerDialog.getDatePicker().getDayOfMonth());
-            datePickerDialog.setOnDismissListener(null);
-            datePickerDialog.dismiss();
-        }
-        super.onDestroy();
     }
 
     @Override

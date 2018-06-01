@@ -37,7 +37,6 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
 
     private RecyclerView invRecycleView;
     private InvestigatorChoiceAdapter adapter;
-    private DialogInterface dialog;
 
     private int columnsCount = 3;
 

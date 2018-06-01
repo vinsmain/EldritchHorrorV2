@@ -1,4 +1,4 @@
-package ru.mgusev.eldritchhorror.support;
+package ru.mgusev.eldritchhorror.strategy;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.ViewCommand;

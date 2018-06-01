@@ -9,7 +9,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import java.util.List;
 
 import ru.mgusev.eldritchhorror.model.Investigator;
-import ru.mgusev.eldritchhorror.support.DismissDialogStrategy;
+import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 
 public interface InvestigatorChoiceView extends MvpView {
 
