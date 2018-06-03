@@ -11,13 +11,15 @@ import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 
 public interface StartDataView extends MvpView {
 
-    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = "date")
+    String DATE_PICKER_DIALOG_TAG = "datePickerDialog";
+
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = DATE_PICKER_DIALOG_TAG)
     void showDatePicker(Calendar date);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setDateToField(Calendar date);
 
-    @StateStrategyType(value = DismissDialogStrategy.class, tag = "date")
+    @StateStrategyType(value = DismissDialogStrategy.class, tag = DATE_PICKER_DIALOG_TAG)
     void dismissDatePicker();
 
     @StateStrategyType(AddToEndSingleStrategy.class)

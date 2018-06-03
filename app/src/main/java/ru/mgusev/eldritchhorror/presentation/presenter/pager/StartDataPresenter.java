@@ -26,6 +26,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     @Inject
     Repository repository;
     private Calendar date;
+    private Calendar tempDate;
     private List<String> playersCountList;
     private CompositeDisposable expansionSubscribe;
     private CompositeDisposable randomSubscribe;
@@ -95,6 +96,21 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         setDateToField();
         setSpinnerPosition();
         setSwitchValue();
+    }
+
+    public void setTempDate(int year, int month, int day) {
+        tempDate = Calendar.getInstance();
+        tempDate.set(Calendar.YEAR, year);
+        tempDate.set(Calendar.MONTH, month);
+        tempDate.set(Calendar.DAY_OF_MONTH, day);
+    }
+
+    public Calendar getTempDate() {
+        return tempDate;
+    }
+
+    public void clearTempDate() {
+        tempDate = null;
     }
 
     private List<String> getAncientOneNameList() {

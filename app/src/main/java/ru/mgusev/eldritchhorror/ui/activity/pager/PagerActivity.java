@@ -109,6 +109,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         builder.setCancelable(false);
         builder.setTitle(R.string.dialogBackAlert);
         builder.setMessage(R.string.backDialogMessage);
+        builder.setIcon(R.drawable.back_icon);
         builder.setPositiveButton(R.string.messageOK, (dialog, which) -> finish());
         builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
         builder.show();

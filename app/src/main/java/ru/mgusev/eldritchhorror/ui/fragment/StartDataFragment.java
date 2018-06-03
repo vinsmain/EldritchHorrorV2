@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -37,8 +36,7 @@ import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class StartDataFragment extends MvpAppCompatFragment implements StartDataView, DatePickerDialog.OnDateSetListener,
-        DatePickerDialog.OnDismissListener {
+public class StartDataFragment extends MvpAppCompatFragment implements StartDataView, DatePickerDialog.OnDateSetListener, DatePickerDialog.OnCancelListener {
 
     @InjectPresenter
     StartDataPresenter startDataPresenter;
@@ -95,8 +93,12 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Override
     public void showDatePicker(Calendar date) {
-        datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), this, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.setOnDismissListener(this);
+        Calendar currentDate;
+        if (startDataPresenter.getTempDate() != null) currentDate = startDataPresenter.getTempDate();
+        else currentDate = date;
+        datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), this, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setOnCancelListener(this);
+        datePickerDialog.setCancelable(false);
         datePickerDialog.show();
     }
 
@@ -107,19 +109,20 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Override
     public void dismissDatePicker() {
-        //if (datePickerDialog != null) datePickerDialog.dismiss();
+        datePickerDialog = null;
+        startDataPresenter.clearTempDate();
+        //Delete showDatePicker() from currentState with DismissDialogStrategy
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-        System.out.println("DATE SET");
         startDataPresenter.setDate(year, monthOfYear, dayOfMonth);
         startDataPresenter.setDateToField();
+        datePickerDialog.cancel();
     }
 
     @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        System.out.println("CANCEL " + datePickerDialog.isShowing());
+    public void onCancel(DialogInterface dialogInterface) {
         startDataPresenter.dismissDatePicker();
     }
 
@@ -160,7 +163,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     }
 
     @OnItemSelected({R.id.start_data_ancient_one_spinner, R.id.start_data_prelude_spinner, R.id.start_data_players_count_spinner})
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemSelected() {
         startDataPresenter.setCurrentAncientOne((String) ancientOneSpinner.getSelectedItem());
         startDataPresenter.setCurrentPrelude((String) preludeSpinner.getSelectedItem());
         startDataPresenter.setCurrentPlayersCount((String) playersCountSpinner.getSelectedItem());
@@ -210,6 +213,10 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (datePickerDialog != null) {
+            startDataPresenter.setTempDate(datePickerDialog.getDatePicker().getYear(), datePickerDialog.getDatePicker().getMonth(), datePickerDialog.getDatePicker().getDayOfMonth());
+            datePickerDialog.dismiss();
+        }
         unbinder.unbind();
     }
 }
