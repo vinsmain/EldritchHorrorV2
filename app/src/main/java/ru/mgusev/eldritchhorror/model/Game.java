@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-
 @Entity(tableName = "games")
 public class Game implements Parcelable {
 
@@ -124,7 +122,7 @@ public class Game implements Parcelable {
     private List<Investigator> invList;
 
     public Game() {
-        id = -1;
+        id = new Date().getTime();
         date = new Date().getTime();
         ancientOneID = -1;
         playersCount = 1;
@@ -132,7 +130,7 @@ public class Game implements Parcelable {
         isNormalMyths = true;
         isHardMyths = true;
         isStartingRumor = false;
-        isWinGame = false;
+        isWinGame = true;
         isDefeatByElimination = false;
         isDefeatByMythosDepletion = false;
         isDefeatByAwakenedAncientOne = true;

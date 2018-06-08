@@ -1,4 +1,4 @@
-package ru.mgusev.eldritchhorror.database;
+package ru.mgusev.eldritchhorror.database.staticDB;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.migration.Migration;

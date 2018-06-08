@@ -6,6 +6,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Objects;
+
 @Entity(tableName = "investigators")
 public class Investigator implements Parcelable {
 
@@ -251,7 +253,8 @@ public class Investigator implements Parcelable {
     @Override
     public boolean equals(Object obj) {
         if(obj == this) return true;
-        Investigator investigator = (Investigator) obj;
-        return investigator.id == id;
+        Investigator investigator = new Investigator();
+        if(obj instanceof Investigator) investigator = (Investigator) obj;
+        return investigator.getNameEN().equals(getNameEN());
     }
 }

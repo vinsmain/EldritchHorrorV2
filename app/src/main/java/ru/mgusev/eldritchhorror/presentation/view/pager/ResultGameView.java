@@ -34,6 +34,9 @@ public interface ResultGameView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void showMysteriesRadioGroup(AncientOne ancientOne);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setResultValues(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount);
+
     @StateStrategyType(SkipStrategy.class)
     void setMysteryValue(int i);
 

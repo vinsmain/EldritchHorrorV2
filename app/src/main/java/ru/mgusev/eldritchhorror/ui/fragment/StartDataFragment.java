@@ -188,7 +188,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         }
     }
 
-    @OnCheckedChanged ({R.id.start_data_easy_mythos, R.id.start_data_normal_mythos, R.id.start_data_hard_mythos})
+    @OnCheckedChanged ({R.id.start_data_easy_mythos, R.id.start_data_normal_mythos, R.id.start_data_hard_mythos, R.id.start_data_starting_rumor})
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.start_data_easy_mythos:

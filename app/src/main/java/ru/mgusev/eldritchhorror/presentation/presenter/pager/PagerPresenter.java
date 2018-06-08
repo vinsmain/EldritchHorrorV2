@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
@@ -55,6 +56,38 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         repository.clearOnNext(position);
     }
 
+    public void actionSave() {
+        if (isCorrectActiveInvestigatorsCount()) {
+            clearResultValuesIfDefeat();
+            repository.insertGame(repository.getGame());
+            repository.clearGame();
+            repository.gameListOnNext();
+            getViewState().finishActivity();
+        }
+        else getViewState().showError();
+    }
+
+    private boolean isCorrectActiveInvestigatorsCount() {
+        int invCount = 0;
+        for (Investigator inv : repository.getGame().getInvList()) {
+            if (inv.isStarting()) invCount++;
+        }
+        return repository.getGame().getPlayersCount() >= invCount;
+    }
+
+    private void clearResultValuesIfDefeat() {
+        if (!repository.getGame().isWinGame()) {
+            repository.getGame().setGatesCount(0);
+            repository.getGame().setMonstersCount(0);
+            repository.getGame().setCurseCount(0);
+            repository.getGame().setRumorsCount(0);
+            repository.getGame().setCluesCount(0);
+            repository.getGame().setBlessedCount(0);
+            repository.getGame().setDoomCount(0);
+            repository.getGame().setScore(0);
+        }
+    }
+
     public void showBackDialog() {
         getViewState().showBackDialog();
     }
@@ -68,6 +101,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         ancientOneSubscribe.dispose();
         scoreSubscribe.dispose();
         isWinSubscribe.dispose();
+        repository.clearGame();
         super.onDestroy();
     }
 }

@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.presentation.view.pager;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -35,6 +36,12 @@ public interface PagerView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void hideScore();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void finishActivity();
+
+    @StateStrategyType(SkipStrategy.class)
+    void showError();
 
     @StateStrategyType(value = AddToEndSingleStrategy.class, tag = BACK_DIALOG_TAG)
     void showBackDialog();

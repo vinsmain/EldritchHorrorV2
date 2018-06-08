@@ -1,4 +1,4 @@
-package ru.mgusev.eldritchhorror.presentation.view.main;
+package ru.mgusev.eldritchhorror.presentation.view.details;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
@@ -7,17 +7,12 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import java.util.List;
 
-import ru.mgusev.eldritchhorror.model.AncientOne;
-import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 
-public interface MainView extends MvpView {
+public interface DetailsView extends MvpView {
 
-    @StateStrategyType(SkipStrategy.class)
+    /*@StateStrategyType(SkipStrategy.class)
     void intentToPager();
-
-    @StateStrategyType(SkipStrategy.class)
-    void intentToDetails();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setDataToAdapter(List<Game> gameList);
@@ -29,5 +24,5 @@ public interface MainView extends MvpView {
     void hideEmptyListMessage();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void deleteGame(int position, List<Game> gameList);
+    void deleteGame(int position, List<Game> gameList);*/
 }

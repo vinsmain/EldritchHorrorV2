@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
@@ -31,8 +32,14 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         super.onFirstViewAttach();
         getViewState().setResultSwitchChecked(repository.getGame().isWinGame());
         getViewState().setMysteryValue(repository.getGame().getSolvedMysteriesCount());
+        setResultValues();
         repository.scoreOnNext(); //устанавливаем счет при первом запуске
         getViewState().setDefeatReasonSwitchChecked(repository.getGame().isDefeatByElimination(), repository.getGame().isDefeatByMythosDepletion(), repository.getGame().isDefeatByAwakenedAncientOne());
+    }
+
+    private void setResultValues() {
+        Game game = repository.getGame();
+        getViewState().setResultValues(game.getGatesCount(), game.getMonstersCount(), game.getCurseCount(), game.getRumorsCount(), game.getCluesCount(), game.getBlessedCount(), game.getDoomCount());
     }
 
     public void setResultSwitch(boolean value) {
@@ -77,5 +84,9 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         repository.getGame().setDefeatByMythosDepletion(v2);
         repository.getGame().setDefeatByAwakenedAncientOne(v3);
         repository.isWinOnNext();
+    }
+
+    public void setSolvedMysteriesCount(int mysteryCount) {
+        repository.getGame().setSolvedMysteriesCount(mysteryCount);
     }
 }

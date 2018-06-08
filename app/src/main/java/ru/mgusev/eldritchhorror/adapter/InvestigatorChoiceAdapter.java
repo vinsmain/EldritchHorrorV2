@@ -17,6 +17,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
@@ -26,21 +28,16 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<InvestigatorChoiceAdapter.InvestigatorViewHolder> {
 
     static class InvestigatorViewHolder extends RecyclerView.ViewHolder {
-        CardView invCardView;
-        ImageView invPhoto;
-        ImageView invExpansion;
-        ImageView invDead;
-        TextView invName;
-        TextView invOccupation;
+        @BindView(R.id.item_inv_card_view) CardView invCardView;
+        @BindView(R.id.item_inv_photo) ImageView invPhoto;
+        @BindView(R.id.item_inv_expansion) ImageView invExpansion;
+        @BindView(R.id.item_inv_dead) ImageView invDead;
+        @BindView(R.id.item_inv_name) TextView invName;
+        @BindView(R.id.item_inv_occupation) TextView invOccupation;
 
         InvestigatorViewHolder(View itemView) {
             super(itemView);
-            invCardView = itemView.findViewById(R.id.item_inv_card_view);
-            invPhoto = itemView.findViewById(R.id.item_inv_photo);
-            invExpansion = itemView.findViewById(R.id.item_inv_expansion);
-            invDead = itemView.findViewById(R.id.item_inv_dead);
-            invName = itemView.findViewById(R.id.item_inv_name);
-            invOccupation = itemView.findViewById(R.id.item_inv_occupation);
+            ButterKnife.bind(this, itemView);
         }
     }
 
@@ -125,11 +122,6 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
     @Override
     public int getItemCount() {
         return this.investigatorList.size();
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
     }
 
     private void decorateInvestigatorCard(final InvestigatorViewHolder holder, int cardColor, int nameColor, int occupationColor) {

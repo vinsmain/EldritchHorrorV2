@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -110,9 +111,19 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         builder.setTitle(R.string.dialogBackAlert);
         builder.setMessage(R.string.backDialogMessage);
         builder.setIcon(R.drawable.back_icon);
-        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> finish());
+        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> finishActivity());
         builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
         builder.show();
+    }
+
+    @Override
+    public void finishActivity() {
+        finish();
+    }
+
+    @Override
+    public void showError() {
+        Toast.makeText(this, R.string.alert_investigators_limit, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -144,10 +155,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                /*if (((InvestigatorsChoiceFragment)pagerAdapter.getItem(1)).isStartingInvCountCorrect()) {
-                    addDataToGame();
-                    writeGameToDB();
-                } else ((InvestigatorsChoiceFragment)pagerAdapter.getItem(1)).showStartingInvCountAlert();*/
+                pagerPresenter.actionSave();
                 return true;
             case R.id.action_clear:
                 pagerPresenter.actionClear(currentPosition);

@@ -52,7 +52,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @BindView(R.id.result_game_doom_count) EditText doomCountTV;
     @BindView(R.id.result_game_victory_table) TableLayout victoryTable;
 
-    private static final int EDIT_TEXT_INDEX = 1; //Индекс EditText в строке
+    private static final int EDIT_TEXT_INDEX = 1; //Индекс EditText в строке TableRow
     private Unbinder unbinder;
     private Switch[] switchArray;
     private int[] idArray;
@@ -79,6 +79,16 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         switchArray = new Switch[]{defeatByEliminationSwitch, defeatByMythosDepletionSwitch, defeatByAwakenedAncientOneSwitch};
         idArray = new int[]{R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch};
         return view;
+    }
+
+    public void setResultValues(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount) {
+        if (gatesCount != 0) gatesCountTV.setText(String.valueOf(gatesCount));
+        if (monstersCount != 0) monstersCountTV.setText(String.valueOf(monstersCount));
+        if (curseCount != 0) curseCountTV.setText(String.valueOf(curseCount));
+        if (rumorsCount != 0) rumorsCountTV.setText(String.valueOf(rumorsCount));
+        if (cluesCount != 0) cluesCountTV.setText(String.valueOf(cluesCount));
+        if (blessedCount != 0) blessedCountTV.setText(String.valueOf(blessedCount));
+        if (doomCount != 0) doomCountTV.setText(String.valueOf(doomCount));
     }
 
     @Override
@@ -153,6 +163,11 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         }
     }
 
+    @OnCheckedChanged({R.id.result_game_mystery_0, R.id.result_game_mystery_1, R.id.result_game_mystery_2, R.id.result_game_mystery_3, R.id.result_game_mystery_4, R.id.result_game_mystery_5})
+    public void onCheckedChangedMysteries(CompoundButton compoundButton, boolean b) {
+        if (b) resultGamePresenter.setSolvedMysteriesCount(Integer.parseInt((String) compoundButton.getText()));
+    }
+
     @Override
     public void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3) {
         defeatByEliminationSwitch.setChecked(v1);
@@ -163,6 +178,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @Override
     public void setMysteryValue(int i) {
         ((RadioButton) mysteriesRadioGroup.getChildAt(i)).setChecked(true);
+        System.out.println("SET MYSTERY " + i);
     }
 
     @OnTextChanged({R.id.result_game_gates_count, R.id.result_game_monsters_count, R.id.result_game_curse_count,
@@ -179,12 +195,12 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
 
     private void showSoftKeyboardOnView(View view) {
         EditText editText = (EditText) ((ViewGroup)view).getChildAt(EDIT_TEXT_INDEX);
-                (new Handler()).postDelayed(() -> {
-                    // Yes, I know what you are thinking about that. If you knew something better by any chance it would be magnificent to have your idea here in code.
-                    editText.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                    editText.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-                    editText.setSelection(editText.length());
-                }, 200);
+        (new Handler()).postDelayed(() -> {
+            // Yes, I know what you are thinking about that. If you knew something better by any chance it would be magnificent to have your idea here in code.
+            editText.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+            editText.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+            editText.setSelection(editText.length());
+        }, 200);
     }
 
     private int getResultFromField(EditText editText) {

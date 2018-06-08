@@ -35,6 +35,7 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
         expansionSubscribe = new CompositeDisposable();
         expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::updateInvListByExpansion));
         activeInvestigatorList = new ArrayList<>();
+        activeInvestigatorList.addAll(repository.getGame().getInvList());
         investigatorList = new ArrayList<>();
         updateInvListByExpansion(repository.getExpansionList());
         investigatorSubscribe = new CompositeDisposable();
@@ -149,9 +150,11 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
     }
 
     private void updateInvestigatorList() {
+        repository.getGame().setInvList(activeInvestigatorList);
         investigatorList = new ArrayList<>();
         investigatorList.addAll(activeInvestigatorList);
         investigatorList.addAll(allInvestigatorList);
+        repository.getGame().setInvList(activeInvestigatorList);
     }
 
     private void updateAllInvestigatorList() {

@@ -13,21 +13,22 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.Expansion;
 
 public class ExpansionChoiceAdapter extends RecyclerView.Adapter<ExpansionChoiceAdapter.ExpansionViewHolder> implements CompoundButton.OnCheckedChangeListener {
 
     static class ExpansionViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout itemExpansionLayout;
-        ImageView itemExpansionImage;
-        Switch itemExpansionSwitch;
+        @BindView(R.id.item_expansion_image) ImageView itemExpansionImage;
+        @BindView(R.id.item_expansion_switch) Switch itemExpansionSwitch;
 
         ExpansionViewHolder(View itemView) {
             super(itemView);
-            itemExpansionLayout = itemView.findViewById(R.id.item_expansion_layout);
-            itemExpansionImage = itemView.findViewById(R.id.item_expansion_image);
-            itemExpansionSwitch = itemView.findViewById(R.id.item_expansion_switch);
+            ButterKnife.bind(this, itemView);
         }
     }
 
@@ -47,8 +48,7 @@ public class ExpansionChoiceAdapter extends RecyclerView.Adapter<ExpansionChoice
     @Override
     public void onBindViewHolder(@NonNull ExpansionViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
-        Resources resources = context.getResources();
-        int resourceId = resources.getIdentifier(listStorage.get(position).getImageResource(), "drawable", context.getPackageName());
+        int resourceId = context.getResources().getIdentifier(listStorage.get(position).getImageResource(), "drawable", context.getPackageName());
         holder.itemExpansionImage.setImageResource(resourceId);
         holder.itemExpansionSwitch.setText(listStorage.get(position).getName());
         holder.itemExpansionSwitch.setChecked(listStorage.get(position).isEnable());

@@ -158,6 +158,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     public void setCurrentAncientOne(String value) {
         currentAncientOne = repository.getAncientOne(value);
+        repository.getGame().setAncientOneID(currentAncientOne.getId());
         repository.ancientOneOnNext(currentAncientOne);
     }
 
@@ -190,7 +191,6 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         repository.getGame().setPlayersCount(currentPlayersCount);
         repository.getGame().setAncientOneID(currentAncientOne.getId());
         repository.getGame().setPreludeID(currentPrelude.getId());
-        //repository.clearGame();
         expansionSubscribe.dispose();
         randomSubscribe.dispose();
         super.onDestroy();

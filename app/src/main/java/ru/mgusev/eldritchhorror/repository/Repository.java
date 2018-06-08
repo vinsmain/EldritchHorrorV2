@@ -3,6 +3,7 @@ package ru.mgusev.eldritchhorror.repository;
 import android.content.Context;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,7 +12,8 @@ import dagger.Module;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.database.StaticDataDB;
+import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
+import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -28,20 +30,22 @@ public class Repository {
     private final PublishSubject<Integer> scorePublish;
     private final PublishSubject<Boolean> isWinPublish;
     private final StaticDataDB staticDataDB;
+    private final UserDataDB userDataDB;
 
     private Investigator investigator;
     private PublishSubject<Investigator> investigatorPublish;
     private PublishSubject<List<Expansion>> expansionPublish;
     private PublishSubject<Integer> randomPublish;
     private PublishSubject<Integer> clearPublish;
+    private PublishSubject<List<Game>> gameListPublish;
 
     private Game game;
 
     @Inject
-    public Repository(Context context, StaticDataDB staticDataDB, Game game) {
+    public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB) {
         this.context = context;
         this.staticDataDB = staticDataDB;
-        this.game = game;
+        this.userDataDB = userDataDB;
         ancientOnePublish = PublishSubject.create();
         scorePublish = PublishSubject.create();
         isWinPublish = PublishSubject.create();
@@ -49,11 +53,17 @@ public class Repository {
         expansionPublish = PublishSubject.create();
         randomPublish = PublishSubject.create();
         clearPublish = PublishSubject.create();
+        gameListPublish = PublishSubject.create();
     }
 
     public Game getGame() {
         if (game == null) game = new Game();
         return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+        this.game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
     }
 
     public Context getContext() {
@@ -181,5 +191,35 @@ public class Repository {
 
     public void expansionOnNext() {
         expansionPublish.onNext(getExpansionList());
+    }
+
+    // Game
+
+    public List<Game> getGameList() {
+        return userDataDB.gameDAO().getAll();
+    }
+
+    public void insertGame(Game game) {
+        long id = new Date().getTime();
+        for (Investigator investigator : game.getInvList()) {
+            investigator.setGameId(game.getId());
+            investigator.setId(id++);
+        }
+        userDataDB.gameDAO().insertGame(game);
+        userDataDB.investigatorDAO().deleteByGameID(game.getId());
+        userDataDB.investigatorDAO().insertInvestigatorList(game.getInvList());
+    }
+
+    public void deleteGame(Game game) {
+        userDataDB.gameDAO().deleteGame(game);
+        userDataDB.investigatorDAO().deleteByGameID(game.getId());
+    }
+
+    public PublishSubject<List<Game>> getGameListPublish() {
+        return gameListPublish;
+    }
+
+    public void gameListOnNext() {
+        gameListPublish.onNext(getGameList());
     }
 }
