@@ -12,7 +12,7 @@
     android:layout_height="wrap_content">
 
     <ImageButton
-        android:id="@+id/editDefeatButton"
+        android:id="@+id/defeat_reason_edit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"
@@ -42,7 +42,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/defeatTableDetailHeader"
+                android:id="@+id/defeat_reason_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -55,20 +55,20 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/mysteriesCountDefeatDetailRow"
+            android:id="@+id/defeat_reason_mysteries_count_row"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/mysteriesCountDefeatDetailHeader"
+                android:id="@+id/defeat_reason_mysteries_count_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/solved_mysteries_header" />
 
             <TextView
-                android:id="@+id/mysteriesCountDefeatDetail"
+                android:id="@+id/defeat_reason_mysteries_count"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/defeatByEliminationDetail"
+            android:id="@+id/defeat_reason_by_elimination_row"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dp">
@@ -91,7 +91,7 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/defeatByMythosDeplitionDetail"
+            android:id="@+id/defeat_reason_by_mythos_depletion_row"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dp">
@@ -105,7 +105,7 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/defeatByAwakenedAncientOneDetail"
+            android:id="@+id/defeat_reason_by_awakened_ancient_one_row"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dp">

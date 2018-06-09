@@ -2,27 +2,53 @@ package ru.mgusev.eldritchhorror.presentation.view.details;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
-import java.util.List;
-
-import ru.mgusev.eldritchhorror.model.Game;
+import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.model.Expansion;
 
 public interface DetailsView extends MvpView {
 
-    /*@StateStrategyType(SkipStrategy.class)
-    void intentToPager();
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setHeadBackground(AncientOne ancientOne, Expansion expansion);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void setDataToAdapter(List<Game> gameList);
+    void setScore(int score);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void showEmptyListMessage();
+    void setVictoryIcon();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void hideEmptyListMessage();
+    void setDefeatByEliminationIcon();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void deleteGame(int position, List<Game> gameList);*/
+    void setDefeatByMythosDepletionIcon();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setDefeatByAwakenedAncientOneIcon();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showScore();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void hideScore();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setMysteriesCount(String mysteriesCount);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showVictoryCard();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showDefeatCard();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setInitialConditions(String date, String ancientOne, String prelude, String playersCount);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setAdditionalRules(boolean isSimpleMyths, boolean isNormalMyths, boolean isHardMyths, boolean isStartingRumor);
+
+    void setVictoryResult(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount);
+
+    void setDefeatReason(boolean isDefeatReasonByElimination, boolean isDefeatReasonByMythosDepletion, boolean isDefeatReasonByAwakenedAncientOne);
 }

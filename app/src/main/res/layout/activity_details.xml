@@ -26,7 +26,7 @@
             app:titleEnabled="false">
 
             <ImageView
-                android:id="@+id/backgroundDetail"
+                android:id="@+id/details_header_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:alpha="0.5"
@@ -39,7 +39,7 @@
                 tools:srcCompat="@drawable/azathoth" />
 
             <ImageView
-                android:id="@+id/expansion_image_details"
+                android:id="@+id/details_expansion_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
@@ -58,7 +58,7 @@
                 app:layout_collapseMode="pin">
 
                 <TextView
-                    android:id="@+id/totalScoreDetail"
+                    android:id="@+id/details_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -69,7 +69,7 @@
                     tools:text="12" />
 
                 <ImageView
-                    android:id="@+id/win_image_details"
+                    android:id="@+id/details_victory_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -79,7 +79,7 @@
             </LinearLayout>
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarDetails"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorTransparent"
@@ -104,296 +104,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:cardCornerRadius="0dp">
+            <include
+                layout="@layout/start_data_result_card"
+                android:id="@+id/start_data_result_card" />
 
-                <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageButton
-                        android:id="@+id/editStartingDataButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginTop="0dp"
-                        android:background="@color/colorTransparent"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:padding="8dp"
-                        android:theme="@style/AppTheme.ColorHighlight"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/fragment_edit" />
-
-                    <TableLayout
-                        android:id="@+id/tableLayout"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:shrinkColumns="*"
-                        android:stretchColumns="*"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/tableHeader"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_span="2"
-                                android:layout_weight="1"
-                                android:gravity="center_horizontal"
-                                android:text="@string/initial_conditions"
-                                android:textColor="@color/colorPrimaryText"
-                                android:textSize="16sp" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/dateDetailHeader"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/date"
-                                android:textColor="@color/colorSecondaryText" />
-
-                            <TextView
-                                android:id="@+id/dataDetail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:textColor="@color/colorSecondaryText" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/ancientOneDetailHeader"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/ancientOne"
-                                android:textColor="@color/colorSecondaryText" />
-
-                            <TextView
-                                android:id="@+id/ancientOneDetail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:textColor="@color/colorSecondaryText" />
-
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/preludeDetailHeader"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/prelude_header"
-                                android:textColor="@color/colorSecondaryText" />
-
-                            <TextView
-                                android:id="@+id/preludeDetail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:textColor="@color/colorSecondaryText" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/playersCountDetailHeader"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/playersCount"
-                                android:textColor="@color/colorSecondaryText" />
-
-                            <TextView
-                                android:id="@+id/playersCountDetail"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:textColor="@color/colorSecondaryText" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/additionalRulesDetailHeader"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_span="2"
-                                android:layout_weight="1"
-                                android:gravity="center_horizontal"
-                                android:text="@string/additionalRules"
-                                android:textColor="@color/colorPrimaryText"
-                                android:textSize="16sp" />
-
-                        </TableRow>
-
-                        <TableRow
-                            android:id="@+id/simpleMythsDetail"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_span="2"
-                                android:text="@string/simpleMyths" />
-
-                        </TableRow>
-
-                        <TableRow
-                            android:id="@+id/normalMythsDetail"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_span="2"
-                                android:text="@string/normalMyths" />
-
-                        </TableRow>
-
-                        <TableRow
-                            android:id="@+id/hardMythsDetail"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_span="2"
-                                android:text="@string/hardMyths" />
-
-                        </TableRow>
-
-                        <TableRow
-                            android:id="@+id/startingRumorDetail"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_span="2"
-                                android:text="@string/startingRumor" />
-
-                        </TableRow>
-                    </TableLayout>
-                </android.support.constraint.ConstraintLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/invCardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:padding="0dp"
-                app:cardCornerRadius="0dp">
-
-                <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageButton
-                        android:id="@+id/editInvestigatorsButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="0dp"
-                        android:layout_marginTop="0dp"
-                        android:background="@color/colorTransparent"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:padding="8dp"
-                        android:theme="@style/AppTheme.ColorHighlight"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/fragment_edit" />
-
-                    <TextView
-                        android:id="@+id/textView10"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center_horizontal"
-                        android:text="@string/investigators"
-                        android:textColor="@color/colorPrimaryText"
-                        android:textSize="16sp"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/invNoneTV"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/investigators_none"
-                        android:textColor="@color/colorSecondaryText"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView10" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/invRecycleViewDetail"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
-                        android:clipToPadding="false"
-                        android:paddingEnd="4dp"
-                        android:paddingStart="4dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView10" />
-                </android.support.constraint.ConstraintLayout>
-
-            </android.support.v7.widget.CardView>
+            <include
+                layout="@layout/investigator_result_card"
+                android:id="@+id/investigator_result_card" />
 
             <include
                 layout="@layout/victory_result_card"

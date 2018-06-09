@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/victory_result_card_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="0dp">
 
@@ -12,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:id="@+id/victory_result_edit_button"
+            android:id="@+id/start_data_result_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
@@ -29,19 +28,51 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:shrinkColumns="*"
             android:stretchColumns="*"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/start_data_result_initial_conditions_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="@string/initial_conditions"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="16sp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/start_data_result_date_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/date"
+                    android:textColor="@color/colorSecondaryText" />
+
+                <TextView
+                    android:id="@+id/start_data_result_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textColor="@color/colorSecondaryText" />
+            </TableRow>
 
             <TableRow
                 android:layout_width="wrap_content"
@@ -49,15 +80,20 @@
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/victory_result_header"
+                    android:id="@+id/start_data_result_ancient_one_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_span="2"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:text="@string/gameResult"
-                    android:textColor="@color/colorPrimaryText"
-                    android:textSize="16sp" />
+                    android:text="@string/ancientOne"
+                    android:textColor="@color/colorSecondaryText" />
+
+                <TextView
+                    android:id="@+id/start_data_result_ancient_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textColor="@color/colorSecondaryText" />
 
             </TableRow>
 
@@ -67,61 +103,15 @@
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/victory_result_mysteries_count_header"
+                    android:id="@+id/start_data_result_prelude_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/solved_mysteries_header"
+                    android:text="@string/prelude_header"
                     android:textColor="@color/colorSecondaryText" />
 
                 <TextView
-                    android:id="@+id/victory_result_mysteries_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:minWidth="100dp"
-                    android:textColor="@color/colorSecondaryText" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/victory_result_gates_count_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/gatesCount"
-                    android:textColor="@color/colorSecondaryText" />
-
-                <TextView
-                    android:id="@+id/victory_result_gates_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:minWidth="100dp"
-                    android:textColor="@color/colorSecondaryText" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/victory_result_monsters_count_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/monstersCount"
-                    android:textColor="@color/colorSecondaryText" />
-
-                <TextView
-                    android:id="@+id/victory_result_monsters_count"
+                    android:id="@+id/start_data_result_prelude"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -135,38 +125,16 @@
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/victory_result_curse_count_header"
+                    android:id="@+id/start_data_result_players_count_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/curseCount"
+                    android:text="@string/playersCount"
                     android:textColor="@color/colorSecondaryText" />
 
                 <TextView
-                    android:id="@+id/victory_result_curse_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|end"
-                    android:textColor="@color/colorSecondaryText" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/victory_result_rumors_count_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/rumorsCount"
-                    android:textColor="@color/colorSecondaryText" />
-
-                <TextView
-                    android:id="@+id/victory_result_rumors_count"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/start_data_result_players_count"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
@@ -174,72 +142,78 @@
             </TableRow>
 
             <TableRow
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/victory_result_clues_count_header"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/start_data_result_additional_rules_header"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_span="2"
                     android:layout_weight="1"
-                    android:text="@string/cluesCount"
-                    android:textColor="@color/colorSecondaryText" />
+                    android:gravity="center_horizontal"
+                    android:text="@string/additionalRules"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/victory_result_clues_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|end"
-                    android:textColor="@color/colorSecondaryText" />
             </TableRow>
 
             <TableRow
-                android:layout_width="wrap_content"
+                android:id="@+id/start_data_result_simple_myths_row"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/victory_result_blessed_count_header"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/blessedCount"
-                    android:textColor="@color/colorSecondaryText" />
+                    android:layout_span="2"
+                    android:text="@string/simpleMyths" />
 
-                <TextView
-                    android:id="@+id/victory_result_blessed_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|end"
-                    android:textColor="@color/colorSecondaryText" />
             </TableRow>
 
             <TableRow
-                android:layout_width="wrap_content"
+                android:id="@+id/start_data_result_normal_myths_row"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/victory_result_doom_count_header"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/doomCount"
-                    android:textColor="@color/colorSecondaryText" />
+                    android:layout_span="2"
+                    android:text="@string/normalMyths" />
 
-                <TextView
-                    android:id="@+id/victory_result_doom_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:textColor="@color/colorSecondaryText" />
             </TableRow>
 
+            <TableRow
+                android:id="@+id/start_data_result_hard_myths_row"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2"
+                    android:text="@string/hardMyths" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/start_data_result_starting_rumor_row"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2"
+                    android:text="@string/startingRumor" />
+
+            </TableRow>
         </TableLayout>
-
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
