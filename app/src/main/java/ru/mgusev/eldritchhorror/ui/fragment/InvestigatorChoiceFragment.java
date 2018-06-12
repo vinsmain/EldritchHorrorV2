@@ -42,6 +42,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
 
     private Unbinder unbinder;
     private InvestigatorChoiceAdapter adapter;
+    private AlertDialog clearDialog;
     private int columnsCount = 3;
 
     public static InvestigatorChoiceFragment newInstance(int page) {
@@ -137,7 +138,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
             investigatorChoicePresenter.dismissDialog();
         });
         builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> investigatorChoicePresenter.dismissDialog());
-        builder.show();
+        clearDialog = builder.show();
     }
 
     @Override
@@ -148,6 +149,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if(clearDialog != null && clearDialog.isShowing()) clearDialog.dismiss();
         unbinder.unbind();
     }
 }

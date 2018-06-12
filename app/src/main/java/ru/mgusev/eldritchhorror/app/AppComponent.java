@@ -3,6 +3,7 @@ package ru.mgusev.eldritchhorror.app;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import ru.mgusev.eldritchhorror.adapter.DetailsAdapter;
 import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
@@ -26,6 +27,7 @@ public interface AppComponent {
     void inject(InvestigatorPresenter presenter);
     void inject(ExpansionChoicePresenter presenter);
 
-    void inject(InvestigatorChoiceAdapter adapter);
     void inject(MainAdapter adapter);
+    void inject(InvestigatorChoiceAdapter adapter);
+    void inject(DetailsAdapter adapter);
 }

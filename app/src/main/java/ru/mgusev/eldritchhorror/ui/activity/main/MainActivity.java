@@ -1,8 +1,10 @@
 package ru.mgusev.eldritchhorror.ui.activity.main;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -45,6 +47,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private int columnsCount = 1;
     private MainAdapter adapter;
     private ScrollListener scrollListener;
+    private AlertDialog deleteDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +114,26 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
+    public void showDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle(R.string.dialogAlert);
+        builder.setMessage(R.string.deleteDialogMessage);
+        builder.setIcon(R.drawable.delete);
+        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+            mainPresenter.deleteGame();
+            mainPresenter.hideDeleteDialog();
+        });
+        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> mainPresenter.hideDeleteDialog());
+        deleteDialog = builder.show();
+    }
+
+    @Override
+    public void hideDeleteDialog() {
+        //Delete showDeleteDialog() from currentState with DismissDialogStrategy
+    }
+
+    @Override
     public void setDataToAdapter(List<Game> gameList) {
         adapter.updateGameList(gameList);
     }
@@ -163,11 +186,17 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void onDeleteClick(int position) {
-        mainPresenter.deleteGame(position);
+        mainPresenter.showDeleteDialog(position);
     }
 
     @Override
     public void deleteGame(int position, List<Game> gameList) {
         adapter.deleteGame(position, gameList);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
     }
 }

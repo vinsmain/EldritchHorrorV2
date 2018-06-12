@@ -1,6 +1,7 @@
 package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -40,6 +41,7 @@ public class Repository {
     private PublishSubject<List<Game>> gameListPublish;
 
     private Game game;
+    private int pagerPosition = 0;
 
     @Inject
     public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB) {
@@ -64,6 +66,14 @@ public class Repository {
     public void setGame(Game game) {
         this.game = game;
         this.game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
+    }
+
+    public int getPagerPosition() {
+        return pagerPosition;
+    }
+
+    public void setPagerPosition(int pagerPosition) {
+        this.pagerPosition = pagerPosition;
     }
 
     public Context getContext() {
@@ -213,6 +223,7 @@ public class Repository {
     public void deleteGame(Game game) {
         userDataDB.gameDAO().deleteGame(game);
         userDataDB.investigatorDAO().deleteByGameID(game.getId());
+        Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
     }
 
     public PublishSubject<List<Game>> getGameListPublish() {

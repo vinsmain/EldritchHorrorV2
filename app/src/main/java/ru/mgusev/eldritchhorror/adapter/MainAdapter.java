@@ -17,7 +17,6 @@ import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +95,7 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
         notifyItemRangeChanged(position, getItemCount());
     }
 
+    @NonNull
     @Override
     public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_game, parent, false);
@@ -130,7 +130,7 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
             holder.score.setVisibility(View.VISIBLE);
         } else {
             if (gameList.get(position).isDefeatByAwakenedAncientOne()) holder.winImage.setImageResource(R.drawable.skull);
-            else if (gameList.get(position).isDefeatByElimination()) holder.winImage.setImageResource(R.drawable.inestigators_out);
+            else if (gameList.get(position).isDefeatByElimination()) holder.winImage.setImageResource(R.drawable.investigators_out);
             else if (gameList.get(position).isDefeatByMythosDepletion()) holder.winImage.setImageResource(R.drawable.mythos_empty);
             holder.score.setVisibility(View.GONE);
         }

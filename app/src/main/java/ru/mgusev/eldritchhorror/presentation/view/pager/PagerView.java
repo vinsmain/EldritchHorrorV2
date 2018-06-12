@@ -43,6 +43,9 @@ public interface PagerView extends MvpView {
     @StateStrategyType(SkipStrategy.class)
     void showError();
 
+    @StateStrategyType(SkipStrategy.class)
+    void setCurrentPosition(int position);
+
     @StateStrategyType(value = AddToEndSingleStrategy.class, tag = BACK_DIALOG_TAG)
     void showBackDialog();
 

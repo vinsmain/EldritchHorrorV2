@@ -4,12 +4,16 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Game;
+import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
@@ -19,22 +23,26 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     @Inject
     Repository repository;
     private Game game;
+    private CompositeDisposable gameListSubscribe;
     private static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
     public DetailsPresenter() {
         App.getComponent().inject(this);
-        game = repository.getGame();
+        gameListSubscribe = new CompositeDisposable();
+        gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData));
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        initGameData();
+        initGameData(new ArrayList<>());
     }
 
-    private void initGameData() {
+    private void initGameData(List<Game> list) {
+        game = repository.getGame();
         initHeader();
         initStartData();
+        initInvestigatorList();
         initMysteriesCount();
         if (game.isWinGame()) initVictory();
         else initDefeat();
@@ -48,6 +56,12 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         getViewState().setInitialConditions(formatter.format(game.getDate()), repository.getAncientOne(game.getAncientOneID()).getName(),
                 repository.getPrelude(game.getPreludeID()).getName(), String.valueOf(game.getPlayersCount()));
         getViewState().setAdditionalRules(game.isSimpleMyths(), game.isNormalMyths(), game.isHardMyths(), game.isStartingRumor());
+    }
+
+    private void initInvestigatorList() {
+        List<Investigator> investigatorList = game.getInvList();
+        getViewState().hideInvestigatorsNotSelected(investigatorList.isEmpty());
+        getViewState().setInvestigatorsList(investigatorList);
     }
 
     private void initMysteriesCount() {
@@ -70,5 +84,33 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         else getViewState().setDefeatByAwakenedAncientOneIcon();
         getViewState().showDefeatCard();
         getViewState().setDefeatReason(game.isDefeatByElimination(), game.isDefeatByMythosDepletion(), game.isDefeatByAwakenedAncientOne());
+    }
+
+    public void showDeleteDialog() {
+        getViewState().showDeleteDialog();
+    }
+
+    public void hideDeleteDialog() {
+        getViewState().hideDeleteDialog();
+    }
+
+    public void deleteGame() {
+        repository.deleteGame(repository.getGame());
+        repository.gameListOnNext();
+    }
+
+    public void setCurrentPagerPosition(int position) {
+        repository.setPagerPosition(position);
+    }
+
+    public void setGameToRepository() {
+        repository.setGame(game);
+    }
+
+    @Override
+    public void onDestroy() {
+        gameListSubscribe.dispose();
+        repository.clearGame();
+        super.onDestroy();
     }
 }

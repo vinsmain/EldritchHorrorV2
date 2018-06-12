@@ -1,8 +1,14 @@
 package ru.mgusev.eldritchhorror.ui.activity.details;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TableRow;
@@ -11,15 +17,20 @@ import android.widget.TextView;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.adapter.DetailsAdapter;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
+import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
+import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 
 public class DetailsActivity extends MvpAppCompatActivity implements DetailsView {
 
@@ -41,7 +52,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.start_data_result_hard_myths_row) TableRow hardMyths;
     @BindView(R.id.start_data_result_starting_rumor_row) TableRow startingRumor;
 
-    @BindView(R.id.investigator_result_not_selected) TextView inestigatorsNotSelected;
+    @BindView(R.id.investigator_result_not_selected) TextView investigatorsNotSelected;
     @BindView(R.id.investigator_result_recycle_view) RecyclerView investigatorsRV;
 
     @BindView(R.id.victory_result_card) View includedVictoryResultCard;
@@ -60,6 +71,9 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.defeat_reason_by_mythos_depletion_row) TableRow defeatReasonByMythosDepletion;
     @BindView(R.id.defeat_reason_by_awakened_ancient_one_row) TableRow defeatReasonByAwakenedAncientOne;
 
+    private DetailsAdapter adapter;
+    private AlertDialog deleteDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +81,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         ButterKnife.bind(this);
 
         initToolbar();
+        initInvestigatorRV();
     }
 
     private void initToolbar() {
@@ -76,6 +91,77 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> finish());
+    }
+
+    private void initInvestigatorRV() {
+        LinearLayoutManager leanerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        investigatorsRV.setLayoutManager(leanerLayoutManager);
+        investigatorsRV.setHasFixedSize(true);
+
+        adapter = new DetailsAdapter(this);
+        investigatorsRV.setAdapter(adapter);
+    }
+
+    private void startIntent(int position) {
+        detailsPresenter.setCurrentPagerPosition(position);
+        detailsPresenter.setGameToRepository();
+        Intent editIntent = new Intent(this, PagerActivity.class);
+        startActivity(editIntent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_detail_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                detailsPresenter.showDeleteDialog();
+                return true;
+            case R.id.action_edit:
+                startIntent(0);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @OnClick({R.id.start_data_result_edit_button, R.id.investigator_result_edit_button, R.id.victory_result_edit_button, R.id.defeat_reason_edit_button})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.start_data_result_edit_button:
+                startIntent(0);
+                break;
+            case R.id.investigator_result_edit_button:
+                startIntent(1);
+                break;
+            default:
+                startIntent(2);
+                break;
+        }
+    }
+
+    @Override
+    public void showDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle(R.string.dialogAlert);
+        builder.setMessage(R.string.deleteDialogMessage);
+        builder.setIcon(R.drawable.delete);
+        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+            detailsPresenter.deleteGame();
+            finish();
+        });
+        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> detailsPresenter.hideDeleteDialog());
+        deleteDialog = builder.show();
+    }
+
+    @Override
+    public void hideDeleteDialog() {
+        //Delete showDeleteDialog() from currentState with DismissDialogStrategy
     }
 
     @Override
@@ -96,7 +182,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void setDefeatByEliminationIcon() {
-        victoryIcon.setImageDrawable(getResources().getDrawable(R.drawable.inestigators_out));
+        victoryIcon.setImageDrawable(getResources().getDrawable(R.drawable.investigators_out));
     }
 
     @Override
@@ -169,5 +255,21 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         defeatReasonByElimination.setVisibility(isDefeatReasonByElimination ? View.VISIBLE : View.GONE);
         defeatReasonByMythosDepletion.setVisibility(isDefeatReasonByMythosDepletion ? View.VISIBLE : View.GONE);
         defeatReasonByAwakenedAncientOne.setVisibility(isDefeatReasonByAwakenedAncientOne ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void hideInvestigatorsNotSelected(boolean isVisible) {
+        investigatorsNotSelected.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setInvestigatorsList(List<Investigator> list) {
+        adapter.setInvestigatorList(list);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
     }
 }
