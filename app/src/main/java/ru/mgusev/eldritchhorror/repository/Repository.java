@@ -32,6 +32,7 @@ public class Repository {
     private final PublishSubject<Boolean> isWinPublish;
     private final StaticDataDB staticDataDB;
     private final UserDataDB userDataDB;
+    private final PrefHelper prefHelper;
 
     private Investigator investigator;
     private PublishSubject<Investigator> investigatorPublish;
@@ -44,10 +45,11 @@ public class Repository {
     private int pagerPosition = 0;
 
     @Inject
-    public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB) {
+    public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper) {
         this.context = context;
         this.staticDataDB = staticDataDB;
         this.userDataDB = userDataDB;
+        this.prefHelper = prefHelper;
         ancientOnePublish = PublishSubject.create();
         scorePublish = PublishSubject.create();
         isWinPublish = PublishSubject.create();
@@ -205,8 +207,29 @@ public class Repository {
 
     // Game
 
+    public int getSortMode() {
+        return prefHelper.loadSortMode();
+    }
+
+    public void setSortMode(int sortMode) {
+        prefHelper.saveSortMode(sortMode);
+    }
+
     public List<Game> getGameList() {
-        return userDataDB.gameDAO().getAll();
+        switch (prefHelper.loadSortMode()) {
+            case 1:
+                return userDataDB.gameDAO().getGameListSortedDateDescending();
+            case 2:
+                return userDataDB.gameDAO().getGameListSortedDateAscending();
+            case 3:
+                return userDataDB.gameDAO().getGameListSortedAncientOne();
+            case 4:
+                return userDataDB.gameDAO().getGameListSortedScoreAscending();
+            case 5:
+                return userDataDB.gameDAO().getGameListSortedScoreDescending();
+            default:
+                return userDataDB.gameDAO().getGameListSortedDateDescending();
+        }
     }
 
     public void insertGame(Game game) {
@@ -232,5 +255,23 @@ public class Repository {
 
     public void gameListOnNext() {
         gameListPublish.onNext(getGameList());
+    }
+
+    // Statistics
+
+    public int getGameCount() {
+        return userDataDB.gameDAO().getGameCount();
+    }
+
+    public int getVictoryGameCount() {
+        return userDataDB.gameDAO().getVictoryGameCount();
+    }
+
+    public int getBestScore() {
+        return userDataDB.gameDAO().getBestScore();
+    }
+
+    public int getWorstScore() {
+        return userDataDB.gameDAO().getWorstScore();
     }
 }

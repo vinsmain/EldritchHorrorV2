@@ -16,6 +16,7 @@ import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.repository.PrefHelper;
 
 @Module
 public class AppModule {
@@ -34,8 +35,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Repository provideRepository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB){
-        return new Repository(context, staticDataDB, userDataDB);
+    public Repository provideRepository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper){
+        return new Repository(context, staticDataDB, userDataDB, prefHelper);
     }
 
     @Provides
@@ -69,5 +70,11 @@ public class AppModule {
     @Provides
     public List<AncientOne> provideAncientOneList(Repository repository) {
         return repository.getAncientOneList();
+    }
+
+    @Provides
+    @Singleton
+    public PrefHelper providePrefHelper(Context context) {
+        return new PrefHelper(context);
     }
 }

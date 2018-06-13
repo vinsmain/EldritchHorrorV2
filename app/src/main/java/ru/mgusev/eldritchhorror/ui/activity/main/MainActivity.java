@@ -28,6 +28,7 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
 import ru.mgusev.eldritchhorror.support.ScrollListener;
+import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 
@@ -39,6 +40,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @BindView(R.id.main_start_message) TextView startMessageTV;
     @BindView(R.id.main_game_list) RecyclerView gameListRV;
     @BindView(R.id.main_toolbar) Toolbar toolbar;
+    @BindView(R.id.main_game_count) TextView gameCount;
+    @BindView(R.id.main_best_score) TextView bestScore;
+    @BindView(R.id.main_worst_score) TextView worstScore;
 
     private MenuItem sortItem;
     private MenuItem authItem;
@@ -78,6 +82,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         sortItem = menu.findItem(R.id.action_sort);
         authItem = menu.findItem(R.id.action_auth);
         statItem = menu.findItem(R.id.action_statistics);
+        mainPresenter.setSortModeIcon();
         /*if (currentUser == null) authItem.setIcon(R.drawable.google_icon);
         else setPhoto();
         setSortItemIcon();
@@ -88,28 +93,50 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.action_about:
-                Intent intent = new Intent(this, DonateActivity.class);
+            case R.id.action_about:
+                Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.action_auth:
+           /* case R.id.action_auth:
                 if (currentUser != null) showPopupMenu(findViewById(R.id.action_auth));
                 else signIn();
-                return true;
+                return true;*/
             case R.id.action_sort:
-                if (currentSortMode != SORT_MODE_SCORE_UP) currentSortMode++;
-                else currentSortMode = SORT_MODE_DATE_DOWN;
-                prefHelper.saveSortMode(currentSortMode);
-                setSortItemIcon();
-                initGameList();
+                mainPresenter.changeSortMode();
                 return true;
-            case R.id.action_statistics:
+            /*case R.id.action_statistics:
                 Intent intentStatistics = new Intent(this, StatisticsActivity.class);
                 intentStatistics.putParcelableArrayListExtra("gameList", (ArrayList<? extends Parcelable>) gameList);
                 startActivity(intentStatistics);
                 return true;*/
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void setSortIcon(int sortMode) {
+        switch (sortMode) {
+            case 1:
+                sortItem.setIcon(R.drawable.calendar_sort_down);
+                sortItem.setTitle(R.string.sort_mode_message_1);
+                break;
+            case 2:
+                sortItem.setIcon(R.drawable.calendar_sort_up);
+                sortItem.setTitle(R.string.sort_mode_message_2);
+                break;
+            case 3:
+                sortItem.setIcon(R.drawable.ancien_one_sort);
+                sortItem.setTitle(R.string.sort_mode_message_3);
+                break;
+            case 4:
+                sortItem.setIcon(R.drawable.score_sort_down);
+                sortItem.setTitle(R.string.sort_mode_message_4);
+                break;
+            case 5:
+                sortItem.setIcon(R.drawable.score_sort_up);
+                sortItem.setTitle(R.string.sort_mode_message_5);
+                break;
         }
     }
 
@@ -192,6 +219,20 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public void deleteGame(int position, List<Game> gameList) {
         adapter.deleteGame(position, gameList);
+    }
+
+    @Override
+    public void setStatistics(int gameCount, int bestScore, int worstScore) {
+        this.gameCount.setText(String.valueOf(gameCount));
+        this.bestScore.setText(String.valueOf(bestScore));
+        this.worstScore.setText(String.valueOf(worstScore));
+    }
+
+    @Override
+    public void setStatistics(int gameCount) {
+        this.gameCount.setText(String.valueOf(gameCount));
+        this.bestScore.setText("");
+        this.worstScore.setText("");
     }
 
     @Override

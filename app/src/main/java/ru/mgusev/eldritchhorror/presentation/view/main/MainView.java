@@ -1,7 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.view.main;
 
-import android.content.Context;
-
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
@@ -9,8 +7,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import java.util.List;
 
-import ru.mgusev.eldritchhorror.model.AncientOne;
-import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 
@@ -23,6 +19,9 @@ public interface MainView extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
     void intentToDetails();
+
+    @StateStrategyType(SkipStrategy.class)
+    void setSortIcon(int sortMode);
 
     @StateStrategyType(value = AddToEndSingleStrategy.class, tag = DELETE_DIALOG_TAG)
     void showDeleteDialog();
@@ -41,4 +40,10 @@ public interface MainView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void deleteGame(int position, List<Game> gameList);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setStatistics(int gameCount, int bestScore, int worstScore);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setStatistics(int gameCount);
 }

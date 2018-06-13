@@ -17,6 +17,9 @@ import ru.mgusev.eldritchhorror.repository.Repository;
 @InjectViewState
 public class MainPresenter extends MvpPresenter<MainView> {
 
+    private static final int MIN_SORT_MODE = 1;
+    private static final int MAX_SORT_MODE = 5;
+
     @Inject
     Repository repository;
     private List<Game> gameList;
@@ -36,6 +39,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
         repository.gameListOnNext();
     }
 
+    public void setSortModeIcon() {
+        getViewState().setSortIcon(repository.getSortMode());
+    }
+
     public void addGame() {
         getViewState().intentToPager();
     }
@@ -48,12 +55,18 @@ public class MainPresenter extends MvpPresenter<MainView> {
         this.gameList = new ArrayList<>();
         this.gameList.addAll(gameList);
         showEmptyListMessage();
+        updateStatistics();
         getViewState().setDataToAdapter(this.gameList);
     }
 
     private void showEmptyListMessage() {
         if (gameList.isEmpty()) getViewState().showEmptyListMessage();
         else getViewState().hideEmptyListMessage();
+    }
+
+    private void updateStatistics() {
+        if (repository.getVictoryGameCount() == 0) getViewState().setStatistics(repository.getGameCount());
+        else getViewState().setStatistics(repository.getGameCount(), repository.getBestScore(), repository.getWorstScore());
     }
 
     public void showDeleteDialog(int deletingGamePosition) {
@@ -70,6 +83,14 @@ public class MainPresenter extends MvpPresenter<MainView> {
         gameList.remove(deletingGamePosition);
         getViewState().deleteGame(deletingGamePosition, gameList);
         showEmptyListMessage();
+        updateStatistics();
+    }
+
+    public void changeSortMode() {
+        if (repository.getSortMode() == MAX_SORT_MODE) repository.setSortMode(MIN_SORT_MODE);
+        else repository.setSortMode(repository.getSortMode() + 1);
+        getViewState().setSortIcon(repository.getSortMode());
+        repository.gameListOnNext();
     }
 
     @Override

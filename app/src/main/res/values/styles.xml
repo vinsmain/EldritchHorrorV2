@@ -41,7 +41,7 @@
         <item name="android:textColor">@color/colorText</item>
     </style>
 
-    <style name="donateTheme" parent="Base.Widget.AppCompat.Light.ActionBar">
+    <style name="aboutTheme" parent="Base.Widget.AppCompat.Light.ActionBar">
         <item name="colorControlNormal">@color/colorText</item>
         <item name="titleTextColor">@color/colorText</item>
     </style>
