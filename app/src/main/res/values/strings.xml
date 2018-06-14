@@ -119,4 +119,6 @@
     <string name="summary_stat_header">Summary</string>
     <string name="not_available">Not available</string>
     <string name="best_game">Best game</string>
+    <string name="donate_paypal_description">Donate PayPal</string>
+    <string name="donate_yandex_description">Donate Yandex</string>
 </resources>

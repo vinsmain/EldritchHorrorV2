@@ -31,6 +31,7 @@ import ru.mgusev.eldritchhorror.support.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
+import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked {
 
@@ -104,11 +105,10 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
             case R.id.action_sort:
                 mainPresenter.changeSortMode();
                 return true;
-            /*case R.id.action_statistics:
+            case R.id.action_statistics:
                 Intent intentStatistics = new Intent(this, StatisticsActivity.class);
-                intentStatistics.putParcelableArrayListExtra("gameList", (ArrayList<? extends Parcelable>) gameList);
                 startActivity(intentStatistics);
-                return true;*/
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

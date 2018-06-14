@@ -74,4 +74,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }
