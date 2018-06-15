@@ -32,7 +32,6 @@ public class Chart extends PieChart implements OnChartValueSelectedListener {
     private List<String> labels;
     private List<Float> values;
     private int count;
-    private TextView header;
 
     public Chart(Context context) {
         super(context);
@@ -47,7 +46,7 @@ public class Chart extends PieChart implements OnChartValueSelectedListener {
     }
 
     private void initColors() {
-        colors = new ArrayList<Integer>();
+        colors = new ArrayList<>();
 
         colors.add(Color.rgb(96,125,139));
         colors.add(Color.rgb(63,81,181));
@@ -95,10 +94,9 @@ public class Chart extends PieChart implements OnChartValueSelectedListener {
         legend.setWordWrapEnabled(true);
     }
 
-    private void initDescription(String desc) {
+    private void initDescription() {
         description = new Description();
         description.setText("");
-        header.setText(desc);
     }
 
     private void initPieData() {
@@ -116,14 +114,13 @@ public class Chart extends PieChart implements OnChartValueSelectedListener {
         setEntryLabelColor(Color.BLACK);
     }
 
-    public void setData(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum, TextView header) {
+    public void setData(List<PieEntry> entries, List<String> labels, List<Float> values, int sum) {
         this.labels = labels;
         this.values = values;
         this.count = sum;
-        this.header = header;
         initColors();
         initLegend();
-        initDescription(description);
+        initDescription();
         dataSet = new PieDataSet(entries, "");
         // add a lot of colors
         dataSet.setColors(colors);

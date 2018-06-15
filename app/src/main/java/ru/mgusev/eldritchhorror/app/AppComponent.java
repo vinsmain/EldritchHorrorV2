@@ -14,12 +14,14 @@ import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorPresent
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ResultGamePresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter;
+import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPresenter;
 
 @Component (modules = AppModule.class)
 @Singleton
 public interface AppComponent {
     void inject(MainPresenter presenter);
     void inject(DetailsPresenter presenter);
+    void inject(StatisticsPresenter presenter);
     void inject(PagerPresenter presenter);
     void inject(StartDataPresenter presenter);
     void inject(InvestigatorChoicePresenter presenter);

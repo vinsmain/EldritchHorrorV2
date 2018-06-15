@@ -40,6 +40,9 @@ public interface GameDAO {
     @Query("SELECT count(*) FROM games WHERE win_game = 1")
     int getVictoryGameCount();
 
+    @Query("SELECT count(*) FROM games WHERE win_game = 0")
+    int getDefeatGameCount();
+
     @Query("SELECT score FROM games WHERE win_game = 1 ORDER BY score ASC LIMIT 1")
     int getBestScore();
 

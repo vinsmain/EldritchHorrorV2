@@ -6,9 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.ui.fragment.InvestigatorChoiceFragment;
-import ru.mgusev.eldritchhorror.ui.fragment.ResultGameFragment;
-import ru.mgusev.eldritchhorror.ui.fragment.StartDataFragment;
+import ru.mgusev.eldritchhorror.ui.fragment.pager.InvestigatorChoiceFragment;
+import ru.mgusev.eldritchhorror.ui.fragment.pager.ResultGameFragment;
+import ru.mgusev.eldritchhorror.ui.fragment.pager.StartDataFragment;
+
 
 public class PagerAdapter extends FragmentPagerAdapter {
 

@@ -3,25 +3,61 @@ package ru.mgusev.eldritchhorror.ui.fragment.statistics;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.github.mikephil.charting.data.PieEntry;
 
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.presentation.presenter.statistics.ChartPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.statistics.ChartView;
+import ru.mgusev.eldritchhorror.ui.activity.statistics.Chart;
 
 public class ChartFragment extends MvpAppCompatFragment implements ChartView {
 
     @InjectPresenter
     ChartPresenter chartPresenter;
 
+    @BindView(R.id.chart_header) TextView chartHeader;
+    @BindView(R.id.chart) Chart chart;
+
+    private Unbinder unbinder;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        System.out.println("2 OnCreate");
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.chart_card, container, false);
+        View view = inflater.inflate(R.layout.chart_card, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        System.out.println("3 " + chartHeader);
+        return view;
+    }
+
+    public void setData(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum) {
+        System.out.println(description);
+        System.out.println(chartHeader);
+        chartHeader.setText(description);
+        chart.setData(entries, labels, values, sum);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

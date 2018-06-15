@@ -1,4 +1,4 @@
-package ru.mgusev.eldritchhorror.ui.fragment;
+package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
 import android.content.DialogInterface;
 import android.content.Intent;

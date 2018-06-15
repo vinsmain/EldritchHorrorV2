@@ -1,10 +1,10 @@
 package ru.mgusev.eldritchhorror.ui.activity.statistics;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,8 +18,10 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -96,13 +98,13 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
     private Game lastGame;
 
 
-    ChartFragment fragment;
-    ChartFragment fragment1;
-    ChartFragment fragment2;
-    ChartFragment fragment3;
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
-
+    private ChartFragment resultChartFragment;
+    private ChartFragment ancientOneChartFragment;
+    private ChartFragment scoreChartFragment;
+    private ChartFragment defeatReasonChartFragment;
+    private ChartFragment investigatorChartFragment;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,6 +112,8 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         setContentView(R.layout.activity_statistics);
         ButterKnife.bind(this);
         initToolbar();
+
+        System.out.println("CREATE");
 
         /*gameList = getIntent().getParcelableArrayListExtra("gameList");
 
@@ -162,24 +166,66 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
         initCharts();*/
 
-
+        initResultChartFragment();
 
 
     }
 
     @Override
     public void initFragments() {
-        System.out.println("12345");
+
+        //initResultChartFragment();
+
+
+
+    }
+
+    @Override
+    public void initResultChartFragment() {
         fragmentManager = getSupportFragmentManager();
+        /*for (Fragment fragment:getSupportFragmentManager().getFragments()) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }*/
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragment = new ChartFragment();
-        fragment1 = new ChartFragment();
-        fragment2 = new ChartFragment();
-        fragment3 = new ChartFragment();
-        fragmentTransaction.add(R.id.statistics_chart_container, fragment);
-        fragmentTransaction.add(R.id.statistics_chart_container, fragment1);
-        fragmentTransaction.add(R.id.statistics_chart_container, fragment2);
-        fragmentTransaction.add(R.id.statistics_chart_container, fragment3);
+        resultChartFragment = new ChartFragment();
+        System.out.println("1 " + resultChartFragment);
+        fragmentTransaction.replace(R.id.statistics_chart_container, resultChartFragment);
+        System.out.println("11 " + resultChartFragment);
+        fragmentTransaction.commit();
+        System.out.println("111 " + resultChartFragment);
+        statisticsPresenter.initResultChart();
+    }
+
+    @Override
+    public void setDataToResultChart(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum) {
+        resultChartFragment.setData(entries, description, labels, values, sum);
+    }
+
+    @Override
+    public void initAncientOneFragment() {
+        ancientOneChartFragment = new ChartFragment();
+        fragmentTransaction.add(R.id.statistics_chart_container, ancientOneChartFragment);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void initScoreChartFragment() {
+        scoreChartFragment = new ChartFragment();
+        fragmentTransaction.add(R.id.statistics_chart_container, scoreChartFragment);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void initDefeatReasonChartFragment() {
+        defeatReasonChartFragment = new ChartFragment();
+        fragmentTransaction.add(R.id.statistics_chart_container, defeatReasonChartFragment);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void initInvestigatorChartFragment() {
+        investigatorChartFragment = new ChartFragment();
+        fragmentTransaction.add(R.id.statistics_chart_container, investigatorChartFragment);
         fragmentTransaction.commit();
     }
 
@@ -273,16 +319,11 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
     private void initToolbar() {
         setSupportActionBar(toolbarStatistics);
-        getSupportActionBar().setTitle(R.string.statistics_header);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.statistics_header);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbarStatistics.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbarStatistics.setNavigationOnClickListener(v -> finish());
     }
 /*
     private void initWinDefeatChart() {

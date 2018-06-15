@@ -267,6 +267,10 @@ public class Repository {
         return userDataDB.gameDAO().getVictoryGameCount();
     }
 
+    public int getDefeatGameCount() {
+        return userDataDB.gameDAO().getDefeatGameCount();
+    }
+
     public int getBestScore() {
         return userDataDB.gameDAO().getBestScore();
     }
