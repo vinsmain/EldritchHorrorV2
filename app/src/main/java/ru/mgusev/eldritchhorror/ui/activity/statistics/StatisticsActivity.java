@@ -25,6 +25,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnItemSelected;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPresenter;
@@ -37,25 +38,27 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
     private static final int MAX_VALUES_IN_CHART = 12;
     private static final String DATE_PATTERN = "dd.MM.yyyy";
 
-    @InjectPresenter
-    StatisticsPresenter statisticsPresenter;
-
     @BindView(R.id.statistics_toolbar) Toolbar toolbarStatistics;
     @BindView(R.id.statistics_chart_container) LinearLayout chartContainer;
+    @BindView(R.id.statistics_ancient_one_spinner) Spinner ancientOneSpinner;
+    @BindView(R.id.statistics_background) ImageView background;
+
+    @InjectPresenter
+    StatisticsPresenter statisticsPresenter;
+    private ArrayAdapter<String> ancientOneAdapter;
+
     private List<Game> gameList;
     private int winCount;
     private int defeatCount;
     private int currentAncientOneID = 0; // 0 - все Древние
     private int sum;
-    private Spinner ancientOneSpinner;
-    private ImageView statBackground;
     private CardView baseStatCard;
     private CardView filterCard;
     private CardView ancientOneCard;
     private CardView scoreCard;
     private CardView defeatReasonCard;
     private CardView investigatorsCard;
-    private ArrayAdapter<String> ancientOneAdapter;
+
     private List <String> ancientOneList;
     private List<Float> chartValues;
     private List<String> chartLabels;
@@ -113,7 +116,9 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         ButterKnife.bind(this);
         initToolbar();
 
-        System.out.println("CREATE");
+        ancientOneAdapter = new ArrayAdapter<>(this, R.layout.spinner);
+        ancientOneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ancientOneSpinner.setAdapter(ancientOneAdapter);
 
         /*gameList = getIntent().getParcelableArrayListExtra("gameList");
 
@@ -166,18 +171,46 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
         initCharts();*/
 
-        initResultChartFragment();
+        initFragments();
 
 
     }
 
+    private void initToolbar() {
+        setSupportActionBar(toolbarStatistics);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.statistics_header);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbarStatistics.setNavigationOnClickListener(v -> finish());
+    }
+
+    @Override
+    public void initAncientOneSpinner(List<String> ancientOneNameList) {
+        ancientOneAdapter.clear();
+        ancientOneAdapter.addAll(ancientOneNameList);
+        ancientOneAdapter.notifyDataSetChanged();
+    }
+
+    @OnItemSelected(R.id.statistics_ancient_one_spinner)
+    public void onItemSelected() {
+        statisticsPresenter.setCurrentAncientOneId((String) ancientOneSpinner.getSelectedItem());
+    }
+
+    @Override
+    public void setBackgroundImage(String imageResource) {
+        background.setImageResource(getResources().getIdentifier(imageResource, "drawable", getPackageName()));
+    }
+
+    @Override
+    public void setDefaultBackgroundImage() {
+        background.setImageResource(R.drawable.eh_main);
+    }
+
     @Override
     public void initFragments() {
-
-        //initResultChartFragment();
-
-
-
+        initResultChartFragment();
+        initAncientOneFragment();
     }
 
     @Override
@@ -188,12 +221,8 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         }*/
         fragmentTransaction = fragmentManager.beginTransaction();
         resultChartFragment = new ChartFragment();
-        System.out.println("1 " + resultChartFragment);
         fragmentTransaction.replace(R.id.statistics_chart_container, resultChartFragment);
-        System.out.println("11 " + resultChartFragment);
         fragmentTransaction.commit();
-        System.out.println("111 " + resultChartFragment);
-        statisticsPresenter.initResultChart();
     }
 
     @Override
@@ -203,9 +232,15 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
     @Override
     public void initAncientOneFragment() {
+        fragmentTransaction = fragmentManager.beginTransaction();
         ancientOneChartFragment = new ChartFragment();
         fragmentTransaction.add(R.id.statistics_chart_container, ancientOneChartFragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void setDataToAncientOneChart(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum) {
+        ancientOneChartFragment.setData(entries, description, labels, values, sum);
     }
 
     @Override
@@ -317,14 +352,7 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         //initBaseStatistic();
     }*/
 
-    private void initToolbar() {
-        setSupportActionBar(toolbarStatistics);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.statistics_header);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbarStatistics.setNavigationOnClickListener(v -> finish());
-    }
+
 /*
     private void initWinDefeatChart() {
         winDefeatChart = findViewById(R.id.win_defeat_pie_chart);

@@ -13,8 +13,14 @@ public interface AncientOneDAO {
     @Query("SELECT * FROM ancient_ones ORDER BY name_ru")
     List<AncientOne> getAllRU();
 
-    @Query("SELECT * FROM ancient_ones ORDER BY name_ru")
+    @Query("SELECT * FROM ancient_ones WHERE _id IN(:idList) ORDER BY name_ru")
+    List<AncientOne> getAllRU(List<Integer> idList);
+
+    @Query("SELECT * FROM ancient_ones ORDER BY name_en")
     List<AncientOne> getAllEN();
+
+    @Query("SELECT * FROM ancient_ones WHERE _id IN(:idList) ORDER BY name_en")
+    List<AncientOne> getAllEN(List<Integer> idList);
 
     @Query("SELECT * FROM ancient_ones WHERE _id IS :id")
     AncientOne getAncientOneByID(int id);

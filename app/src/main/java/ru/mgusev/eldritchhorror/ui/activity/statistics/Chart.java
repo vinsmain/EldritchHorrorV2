@@ -3,8 +3,8 @@ package ru.mgusev.eldritchhorror.ui.activity.statistics;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -35,14 +35,17 @@ public class Chart extends PieChart implements OnChartValueSelectedListener {
 
     public Chart(Context context) {
         super(context);
+        this.setOnChartValueSelectedListener(this);
     }
 
     public Chart(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.setOnChartValueSelectedListener(this);
     }
 
     public Chart(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        this.setOnChartValueSelectedListener(this);
     }
 
     private void initColors() {
@@ -112,6 +115,9 @@ public class Chart extends PieChart implements OnChartValueSelectedListener {
         setNoDataTextColor(Color.BLACK);
         setDescription(description);
         setEntryLabelColor(Color.BLACK);
+        setHoleRadius(60f);
+        setTransparentCircleRadius(65f);
+        animateY(1000, Easing.EasingOption.EaseInOutQuad);
     }
 
     public void setData(List<PieEntry> entries, List<String> labels, List<Float> values, int sum) {

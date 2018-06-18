@@ -80,7 +80,8 @@ public class Expansion {
     @Override
     public boolean equals(Object obj) {
         if(obj == this) return true;
-        Expansion expansion = (Expansion) obj;
+        Expansion expansion = new Expansion();
+        if (obj instanceof Expansion) expansion = (Expansion) obj;
         return expansion.id == id && expansion.isEnable == isEnable;
     }
 }

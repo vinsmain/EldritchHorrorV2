@@ -8,6 +8,7 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
+import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Game;
 
 @Dao
@@ -43,9 +44,21 @@ public interface GameDAO {
     @Query("SELECT count(*) FROM games WHERE win_game = 0")
     int getDefeatGameCount();
 
+    @Query("SELECT count(*) FROM games WHERE win_game = 1 AND ancient_one_id = :id")
+    int getVictoryGameCount(int id);
+
+    @Query("SELECT count(*) FROM games WHERE win_game = 0 AND ancient_one_id = :id")
+    int getDefeatGameCount(int id);
+
     @Query("SELECT score FROM games WHERE win_game = 1 ORDER BY score ASC LIMIT 1")
     int getBestScore();
 
     @Query("SELECT score FROM games WHERE win_game = 1 ORDER BY score DESC LIMIT 1")
     int getWorstScore();
+
+    @Query("SELECT ancient_one_id FROM games GROUP BY ancient_one_id")
+    List<Integer> getAncientOneIdList();
+
+    @Query("SELECT count(*) FROM games WHERE ancient_one_id = :id")
+    int getAncientOneCountByID(int id);
 }

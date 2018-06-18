@@ -65,7 +65,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     private void updateStatistics() {
-        if (repository.getVictoryGameCount() == 0) getViewState().setStatistics(repository.getGameCount());
+        if (repository.getVictoryGameCount(0) == 0) getViewState().setStatistics(repository.getGameCount());
         else getViewState().setStatistics(repository.getGameCount(), repository.getBestScore(), repository.getWorstScore());
     }
 

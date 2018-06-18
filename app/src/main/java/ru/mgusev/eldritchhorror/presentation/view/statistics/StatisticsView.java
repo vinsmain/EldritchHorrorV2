@@ -11,6 +11,12 @@ import java.util.List;
 
 public interface StatisticsView extends MvpView {
 
+    void initAncientOneSpinner(List<String> ancientOneList);
+
+    void setBackgroundImage(String imageResource);
+
+    void setDefaultBackgroundImage();
+
     @StateStrategyType(SkipStrategy.class)
     void initFragments();
 
@@ -19,6 +25,8 @@ public interface StatisticsView extends MvpView {
     void setDataToResultChart(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum);
 
     void initAncientOneFragment();
+
+    void setDataToAncientOneChart(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum);
 
     void initScoreChartFragment();
 

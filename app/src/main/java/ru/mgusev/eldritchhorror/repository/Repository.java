@@ -263,12 +263,12 @@ public class Repository {
         return userDataDB.gameDAO().getGameCount();
     }
 
-    public int getVictoryGameCount() {
-        return userDataDB.gameDAO().getVictoryGameCount();
+    public int getVictoryGameCount(int ancientOneId) {
+        return ancientOneId == 0 ? userDataDB.gameDAO().getVictoryGameCount() : userDataDB.gameDAO().getVictoryGameCount(ancientOneId);
     }
 
-    public int getDefeatGameCount() {
-        return userDataDB.gameDAO().getDefeatGameCount();
+    public int getDefeatGameCount(int ancientOneId) {
+        return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatGameCount() : userDataDB.gameDAO().getDefeatGameCount(ancientOneId);
     }
 
     public int getBestScore() {
@@ -277,5 +277,15 @@ public class Repository {
 
     public int getWorstScore() {
         return userDataDB.gameDAO().getWorstScore();
+    }
+
+    public List<AncientOne> getAddedAncientOneList() {
+        List<Integer> idList = userDataDB.gameDAO().getAncientOneIdList();
+        if (Localization.getInstance().isRusLocale()) return staticDataDB.ancientOneDAO().getAllRU(idList);
+        else return staticDataDB.ancientOneDAO().getAllEN(idList);
+    }
+
+    public int getAncientOneCountById(int id) {
+        return userDataDB.gameDAO().getAncientOneCountByID(id);
     }
 }

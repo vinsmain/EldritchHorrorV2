@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.view.statistics.StatisticsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
@@ -25,6 +26,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     Repository repository;
     private List<Float> chartValues;
     private List<String> chartLabels;
+    private int currentAncientOneId; // 0 - all ancientOnes
 
     public StatisticsPresenter() {
         App.getComponent().inject(this);
@@ -33,36 +35,71 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        System.out.println("222");
-        getViewState().initFragments();
+        getViewState().initAncientOneSpinner(getAncientOneNameList());
+    }
+
+    public void setCurrentAncientOneId(String spinnerValue) {
+        if (spinnerValue.equals(repository.getContext().getResources().getString(R.string.all_results))) {
+            currentAncientOneId = 0;
+            getViewState().setDefaultBackgroundImage();
+        }
+        else {
+            currentAncientOneId = repository.getAncientOne(spinnerValue).getId();
+            getViewState().setBackgroundImage(repository.getAncientOne(currentAncientOneId).getImageResource());
+        }
+        initResultChart();
+        initAncientOneChart();
+    }
+
+    private List<String> getAncientOneNameList() {
+        List<String> ancientOneNameList = new ArrayList<>();
+        for (AncientOne ancientOne : repository.getAddedAncientOneList()) ancientOneNameList.add(ancientOne.getName());
+        ancientOneNameList.add(0, repository.getContext().getResources().getString(R.string.all_results));
+        return ancientOneNameList;
     }
 
     public void initResultChart() {
-        //winDefeatChart = findViewById(R.id.win_defeat_pie_chart);
-        //winDefeatChart.setOnChartValueSelectedListener(winDefeatChart);
-
-        initWinDefeatValues();
-
+        initResultValues();
         List<PieEntry> entries = new ArrayList<>();
-
         for (int i = 0; i < chartValues.size(); i++) {
             entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getGameCount(), DEN), chartLabels.get(i)));
         }
-        System.out.println("333");
         getViewState().setDataToResultChart(entries, repository.getContext().getResources().getString(R.string.win_defeat_stat_description), chartLabels, chartValues, repository.getGameCount());
     }
 
-    private void initWinDefeatValues() {
+    private void initResultValues() {
         chartValues = new ArrayList<>();
         chartLabels = new ArrayList<>();
 
-        if (repository.getVictoryGameCount() != 0) {
-            chartValues.add((float) repository.getVictoryGameCount());
+        if (repository.getVictoryGameCount(currentAncientOneId) != 0) {
+            chartValues.add((float) repository.getVictoryGameCount(currentAncientOneId));
             chartLabels.add(repository.getContext().getResources().getString(R.string.win_stat_label));
         }
-        if (repository.getDefeatGameCount() != 0) {
-            chartValues.add((float) repository.getDefeatGameCount());
+        if (repository.getDefeatGameCount(currentAncientOneId) != 0) {
+            chartValues.add((float) repository.getDefeatGameCount(currentAncientOneId));
             chartLabels.add(repository.getContext().getResources().getString(R.string.defeat_stat_label));
+        }
+    }
+
+
+
+
+    public void initAncientOneChart() {
+        initAncientOneValues();
+        List<PieEntry> entries = new ArrayList<>();
+        for (int i = 0; i < chartValues.size(); i++) {
+            entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getGameCount(), DEN), chartLabels.get(i)));
+        }
+        getViewState().setDataToAncientOneChart(entries, repository.getContext().getResources().getString(R.string.ancientOne), chartLabels, chartValues, repository.getGameCount());
+    }
+
+    private void initAncientOneValues() {
+        chartValues = new ArrayList<>();
+        chartLabels = new ArrayList<>();
+
+        for (AncientOne ancientOne : repository.getAddedAncientOneList()) {
+            chartValues.add((float) repository.getAncientOneCountById(ancientOne.getId()));
+            chartLabels.add(ancientOne.getName());
         }
     }
 
