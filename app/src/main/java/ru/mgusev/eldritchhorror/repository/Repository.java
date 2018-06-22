@@ -215,16 +215,16 @@ public class Repository {
         prefHelper.saveSortMode(sortMode);
     }
 
-    public List<Game> getGameList() {
-        switch (prefHelper.loadSortMode()) {
+    public List<Game> getGameList(int sortMode, int ancientOneId) {
+        switch (sortMode == 0 ? prefHelper.loadSortMode() : sortMode) {
             case 1:
-                return userDataDB.gameDAO().getGameListSortedDateDescending();
+                return ancientOneId == 0 ? userDataDB.gameDAO().getGameListSortedDateDescending() : userDataDB.gameDAO().getGameListSortedDateDescending(ancientOneId);
             case 2:
                 return userDataDB.gameDAO().getGameListSortedDateAscending();
             case 3:
                 return userDataDB.gameDAO().getGameListSortedAncientOne();
             case 4:
-                return userDataDB.gameDAO().getGameListSortedScoreAscending();
+                return ancientOneId == 0 ? userDataDB.gameDAO().getGameListSortedScoreAscending() : userDataDB.gameDAO().getGameListSortedScoreAscending(ancientOneId);
             case 5:
                 return userDataDB.gameDAO().getGameListSortedScoreDescending();
             default:
@@ -254,13 +254,13 @@ public class Repository {
     }
 
     public void gameListOnNext() {
-        gameListPublish.onNext(getGameList());
+        gameListPublish.onNext(getGameList(0, 0));
     }
 
     // Statistics
 
-    public int getGameCount() {
-        return userDataDB.gameDAO().getGameCount();
+    public int getGameCount(int ancientOneId) {
+        return ancientOneId ==0 ? userDataDB.gameDAO().getGameCount() : userDataDB.gameDAO().getGameCount(ancientOneId);
     }
 
     public int getVictoryGameCount(int ancientOneId) {
@@ -280,12 +280,38 @@ public class Repository {
     }
 
     public List<AncientOne> getAddedAncientOneList() {
-        List<Integer> idList = userDataDB.gameDAO().getAncientOneIdList();
-        if (Localization.getInstance().isRusLocale()) return staticDataDB.ancientOneDAO().getAllRU(idList);
-        else return staticDataDB.ancientOneDAO().getAllEN(idList);
+        return Localization.getInstance().isRusLocale() ? staticDataDB.ancientOneDAO().getAllRU(userDataDB.gameDAO().getAncientOneIdList()) : staticDataDB.ancientOneDAO().getAllEN(userDataDB.gameDAO().getAncientOneIdList());
     }
 
     public int getAncientOneCountById(int id) {
         return userDataDB.gameDAO().getAncientOneCountByID(id);
+    }
+
+    public List<Integer> getScoreList(int ancientOneId) {
+        return ancientOneId == 0 ? userDataDB.gameDAO().getScoreList() : userDataDB.gameDAO().getScoreList(ancientOneId);
+    }
+
+    public int getScoreCount(int score, int ancientOneId) {
+        return ancientOneId == 0 ? userDataDB.gameDAO().getScoreCount(score) : userDataDB.gameDAO().getScoreCount(score, ancientOneId);
+    }
+
+    public int getDefeatByEliminationCount(int ancientOneId) {
+        return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatByEliminationCount() : userDataDB.gameDAO().getDefeatByEliminationCount(ancientOneId);
+    }
+
+    public int getDefeatByMythosDepletionCount(int ancientOneId) {
+        return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatByMythosDepletionCount() : userDataDB.gameDAO().getDefeatByMythosDepletionCount(ancientOneId);
+    }
+
+    public int getDefeatByAwakenedAncientOneCount(int ancientOneId) {
+        return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatByAwakenedAncientOneCount() : userDataDB.gameDAO().getDefeatByAwakenedAncientOneCount(ancientOneId);
+    }
+
+    public List<Investigator> getAddedInvestigatorList(int ancientOneId) {
+        return userDataDB.investigatorDAO().getAddedInvestigatorList(ancientOneId == 0 ? userDataDB.gameDAO().getGameIdList() : userDataDB.gameDAO().getGameIdList(ancientOneId));
+    }
+
+    public int getInvestigatorCount(long gameId, String name) {
+        return userDataDB.investigatorDAO().getInvestigatorCount(gameId, name);
     }
 }

@@ -84,6 +84,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         authItem = menu.findItem(R.id.action_auth);
         statItem = menu.findItem(R.id.action_statistics);
         mainPresenter.setSortModeIcon();
+        mainPresenter.setVisibilityStatisticsMenuItem();
         /*if (currentUser == null) authItem.setIcon(R.drawable.google_icon);
         else setPhoto();
         setSortItemIcon();
@@ -176,6 +177,16 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
+    public void showStatisticsMenuItem() {
+        if (statItem != null) statItem.setVisible(true);
+    }
+
+    @Override
+    public void hideStatisticsMenuItem() {
+        if (statItem != null) statItem.setVisible(false);
+    }
+
+    @Override
     public void intentToPager() {
         Intent pagerIntent = new Intent(this, PagerActivity.class);
         startActivity(pagerIntent);
@@ -190,13 +201,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @OnClick({R.id.main_add_game})
     public void onClick(View view) {
         mainPresenter.addGame();
-        /*switch (view.getId()) {
-            case R.id.main_activity_add_game:
-                mainPresenter.addGame();
-                break;
-            default:
-                break;
-        }*/
     }
 
     @Override

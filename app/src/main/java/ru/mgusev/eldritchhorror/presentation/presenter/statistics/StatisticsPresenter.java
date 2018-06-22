@@ -1,17 +1,24 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.statistics;
 
+import android.os.Handler;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.github.mikephil.charting.data.PieEntry;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.model.Game;
+import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.statistics.StatisticsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
@@ -19,6 +26,7 @@ import ru.mgusev.eldritchhorror.repository.Repository;
 public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
 
     private static final int DEN = 100;
+    private static final int ALL_ANCIENT_ONES_ID = 0;
     private static final int MAX_VALUES_IN_CHART = 12;
     private static final String DATE_PATTERN = "dd.MM.yyyy";
 
@@ -26,10 +34,17 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     Repository repository;
     private List<Float> chartValues;
     private List<String> chartLabels;
+    private List<Investigator> investigatorList;
     private int currentAncientOneId; // 0 - all ancientOnes
+    private int investigatorCountSum;
+    private Game bestGame;
+    private Game lastGame;
+    private CompositeDisposable gameListSubscribe;
 
     public StatisticsPresenter() {
         App.getComponent().inject(this);
+        gameListSubscribe = new CompositeDisposable();
+        gameListSubscribe.add(repository.getGameListPublish().subscribe(this::updateAllCharts));
     }
 
     @Override
@@ -39,16 +54,47 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     }
 
     public void setCurrentAncientOneId(String spinnerValue) {
+        System.out.println(spinnerValue);
         if (spinnerValue.equals(repository.getContext().getResources().getString(R.string.all_results))) {
-            currentAncientOneId = 0;
+            currentAncientOneId = ALL_ANCIENT_ONES_ID;
             getViewState().setDefaultBackgroundImage();
         }
         else {
             currentAncientOneId = repository.getAncientOne(spinnerValue).getId();
             getViewState().setBackgroundImage(repository.getAncientOne(currentAncientOneId).getImageResource());
         }
+        updateAllCharts(new ArrayList<>());
+    }
+
+    private void updateAllCharts(List<Game> list) {
+        try {
+            bestGame = repository.getGameList(4, currentAncientOneId).get(0);
+            lastGame = repository.getGameList(1, currentAncientOneId).get(0);
+        } catch (IndexOutOfBoundsException e) {
+            getViewState().finishActivity();
+        }
+        getViewState().setLastResult(getGameScoreAndDate(lastGame));
+        getViewState().setBestResult(getGameScoreAndDate(bestGame));
+        //getViewState().setInvestigatorList(repository.getInvestigatorList().subList(0, 3));
+        getViewState().setVisibilityAncientOneChart(currentAncientOneId == ALL_ANCIENT_ONES_ID);
+        getViewState().setVisibilityScoreChart(repository.getVictoryGameCount(currentAncientOneId) != 0);
+        System.out.println("VICTORY " + repository.getVictoryGameCount(currentAncientOneId));
+        getViewState().setVisibilityDefeatReasonChart(repository.getDefeatGameCount(currentAncientOneId) != 0);
         initResultChart();
         initAncientOneChart();
+        initScoreChart();
+        initDefeatReasonChart();
+        initInvestigatorChart();
+    }
+
+    private String getGameScoreAndDate(Game game) {
+        return (game.isWinGame() ? game.getScore() : "") + " (" + new SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).format(game.getDate()) + ")";
+    }
+
+    public void goToDetailsActivity(boolean isLast) {
+        if (isLast) repository.setGame(lastGame);
+        else repository.setGame(bestGame);
+        getViewState().goToDetailsActivity();
     }
 
     private List<String> getAncientOneNameList() {
@@ -62,9 +108,9 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         initResultValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
-            entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getGameCount(), DEN), chartLabels.get(i)));
+            entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getGameCount(currentAncientOneId), DEN), chartLabels.get(i)));
         }
-        getViewState().setDataToResultChart(entries, repository.getContext().getResources().getString(R.string.win_defeat_stat_description), chartLabels, chartValues, repository.getGameCount());
+        getViewState().setDataToResultChart(entries, repository.getContext().getResources().getString(R.string.win_defeat_stat_description), chartLabels, chartValues, repository.getGameCount(currentAncientOneId));
     }
 
     private void initResultValues() {
@@ -81,16 +127,13 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
     }
 
-
-
-
     public void initAncientOneChart() {
         initAncientOneValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
-            entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getGameCount(), DEN), chartLabels.get(i)));
+            entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getGameCount(ALL_ANCIENT_ONES_ID), DEN), chartLabels.get(i)));
         }
-        getViewState().setDataToAncientOneChart(entries, repository.getContext().getResources().getString(R.string.ancientOne), chartLabels, chartValues, repository.getGameCount());
+        getViewState().setDataToAncientOneChart(entries, repository.getContext().getResources().getString(R.string.ancientOne), chartLabels, chartValues, repository.getGameCount(ALL_ANCIENT_ONES_ID));
     }
 
     private void initAncientOneValues() {
@@ -103,7 +146,86 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
     }
 
+    public void initScoreChart() {
+        initScoreValues();
+        List<PieEntry> entries = new ArrayList<>();
+        for (int i = 0; i < chartValues.size(); i++) {
+            entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getVictoryGameCount(currentAncientOneId), DEN), chartLabels.get(i)));
+        }
+        getViewState().setDataToScoreChart(entries, repository.getContext().getResources().getString(R.string.totalScore), chartLabels, chartValues, repository.getVictoryGameCount(currentAncientOneId));
+    }
+
+    private void initScoreValues() {
+        chartValues = new ArrayList<>();
+        chartLabels = new ArrayList<>();
+
+        for (int score : repository.getScoreList(currentAncientOneId)) {
+            chartValues.add((float) repository.getScoreCount(score, currentAncientOneId));
+            chartLabels.add(String.valueOf(score));
+        }
+    }
+
+    public void initDefeatReasonChart() {
+        initDefeatReasonValues();
+        List<PieEntry> entries = new ArrayList<>();
+        for (int i = 0; i < chartValues.size(); i++) {
+            entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getDefeatGameCount(currentAncientOneId), DEN), chartLabels.get(i)));
+        }
+        getViewState().setDataToDefeatReasonChart(entries, repository.getContext().getResources().getString(R.string.defeat_table_header), chartLabels, chartValues, repository.getDefeatGameCount(currentAncientOneId));
+    }
+
+    private void initDefeatReasonValues() {
+        chartValues = new ArrayList<>();
+        chartLabels = new ArrayList<>();
+
+        if (repository.getDefeatByEliminationCount(currentAncientOneId) != 0) {
+            chartValues.add((float) repository.getDefeatByEliminationCount(currentAncientOneId));
+            chartLabels.add(repository.getContext().getResources().getString(R.string.defeat_by_elimination));
+        }
+        if (repository.getDefeatByMythosDepletionCount(currentAncientOneId) != 0) {
+            chartValues.add((float) repository.getDefeatByMythosDepletionCount(currentAncientOneId));
+            chartLabels.add(repository.getContext().getResources().getString(R.string.defeat_by_mythos_depletion));
+        }
+        if (repository.getDefeatByAwakenedAncientOneCount(currentAncientOneId) != 0) {
+            chartValues.add((float) repository.getDefeatByAwakenedAncientOneCount(currentAncientOneId));
+            chartLabels.add(repository.getContext().getResources().getString(R.string.defeat_by_awakened_ancient_one));
+        }
+    }
+
+    public void initInvestigatorChart() {
+        initInvestigatorValues();
+        List<PieEntry> entries = new ArrayList<>();
+        for (int i = 0; i < chartValues.size(); i++) {
+            entries.add(new PieEntry(getPercent(chartValues.get(i), investigatorCountSum, DEN), chartLabels.get(i)));
+        }
+        getViewState().setDataToInvestigatorChart(entries, repository.getContext().getResources().getString(R.string.investigators), chartLabels, chartValues, investigatorCountSum);
+        getViewState().setVisibilityInvestigatorChart(investigatorCountSum != 0);
+
+        getViewState().setInvestigatorList(investigatorList);
+    }
+
+    private void initInvestigatorValues() {
+        chartValues = new ArrayList<>();
+        chartLabels = new ArrayList<>();
+        investigatorList = new ArrayList<>();
+        investigatorCountSum = 0;
+
+        List<Investigator> list = repository.getAddedInvestigatorList(currentAncientOneId);
+        for (int i = 0; i < list.size(); i++) {
+            chartValues.add((float) repository.getInvestigatorCount(list.get(i).getGameId(), list.get(i).getNameEN()));
+            investigatorCountSum += repository.getInvestigatorCount(list.get(i).getGameId(), list.get(i).getNameEN());
+            if (i < 5) investigatorList.add(list.get(i));
+            chartLabels.add(list.get(i).getName());
+        }
+    }
+
     private float getPercent(float value, int size, int den) {
         return size == 0 ? 0 : value / size * den;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        gameListSubscribe.dispose();
     }
 }

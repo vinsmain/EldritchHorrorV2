@@ -14,6 +14,10 @@ public interface MainView extends MvpView {
 
     String DELETE_DIALOG_TAG = "deleteDialog";
 
+    void showStatisticsMenuItem();
+
+    void hideStatisticsMenuItem();
+
     @StateStrategyType(SkipStrategy.class)
     void intentToPager();
 

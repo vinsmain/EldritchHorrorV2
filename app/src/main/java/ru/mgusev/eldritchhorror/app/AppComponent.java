@@ -6,6 +6,7 @@ import dagger.Component;
 import ru.mgusev.eldritchhorror.adapter.DetailsAdapter;
 import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
+import ru.mgusev.eldritchhorror.adapter.StatisticsAdapter;
 import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ExpansionChoicePresenter;
@@ -32,4 +33,5 @@ public interface AppComponent {
     void inject(MainAdapter adapter);
     void inject(InvestigatorChoiceAdapter adapter);
     void inject(DetailsAdapter adapter);
+    void inject(StatisticsAdapter adapter);
 }

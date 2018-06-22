@@ -26,11 +26,17 @@ public interface GameDAO {
     @Query("SELECT * FROM games ORDER BY date DESC, _id DESC")
     List<Game> getGameListSortedDateDescending();
 
+    @Query("SELECT * FROM games WHERE ancient_one_id = :id ORDER BY date DESC, _id DESC")
+    List<Game> getGameListSortedDateDescending(int id);
+
     @Query("SELECT * FROM games ORDER BY ancient_one_id ASC, win_game DESC, score ASC, date DESC, _id DESC")
     List<Game> getGameListSortedAncientOne();
 
     @Query("SELECT * FROM games ORDER BY win_game DESC, score ASC, date DESC, _id DESC")
     List<Game> getGameListSortedScoreAscending();
+
+    @Query("SELECT * FROM games WHERE ancient_one_id = :id ORDER BY win_game DESC, score ASC, date DESC, _id DESC")
+    List<Game> getGameListSortedScoreAscending(int id);
 
     @Query("SELECT * FROM games ORDER BY win_game ASC, score DESC, date ASC, _id ASC")
     List<Game> getGameListSortedScoreDescending();
@@ -43,6 +49,9 @@ public interface GameDAO {
 
     @Query("SELECT count(*) FROM games WHERE win_game = 0")
     int getDefeatGameCount();
+
+    @Query("SELECT count(*) FROM games WHERE ancient_one_id = :id")
+    int getGameCount(int id);
 
     @Query("SELECT count(*) FROM games WHERE win_game = 1 AND ancient_one_id = :id")
     int getVictoryGameCount(int id);
@@ -61,4 +70,40 @@ public interface GameDAO {
 
     @Query("SELECT count(*) FROM games WHERE ancient_one_id = :id")
     int getAncientOneCountByID(int id);
+
+    @Query("SELECT score FROM games WHERE win_game = 1 GROUP BY score ORDER BY score ASC")
+    List<Integer> getScoreList();
+
+    @Query("SELECT count(*) FROM games WHERE win_game = 1 AND score = :score")
+    int getScoreCount(int score);
+
+    @Query("SELECT score FROM games WHERE win_game = 1 AND ancient_one_id = :id GROUP BY score ORDER BY score ASC")
+    List<Integer> getScoreList(int id);
+
+    @Query("SELECT count(*) FROM games WHERE win_game = 1 AND score = :score AND ancient_one_id = :id")
+    int getScoreCount(int score, int id);
+
+    @Query("SELECT count(*) FROM games WHERE win_game = 0 AND defeat_by_elimination = 1")
+    int getDefeatByEliminationCount();
+
+    @Query("SELECT count(*) FROM games WHERE win_game = 0 AND defeat_by_elimination = 1 AND ancient_one_id = :id")
+    int getDefeatByEliminationCount(int id);
+
+    @Query("SELECT count(*) FROM games WHERE win_game = 0 AND defeat_by_mythos_depletion = 1")
+    int getDefeatByMythosDepletionCount();
+
+    @Query("SELECT count(*) FROM games WHERE win_game = 0 AND defeat_by_mythos_depletion = 1 AND ancient_one_id = :id")
+    int getDefeatByMythosDepletionCount(int id);
+
+    @Query("SELECT count(*) FROM games WHERE win_game = 0 AND defeat_by_awakened_ancient_one = 1")
+    int getDefeatByAwakenedAncientOneCount();
+
+    @Query("SELECT count(*) FROM games WHERE win_game = 0 AND defeat_by_awakened_ancient_one = 1 AND ancient_one_id = :id")
+    int getDefeatByAwakenedAncientOneCount(int id);
+
+    @Query("SELECT _id FROM games GROUP BY _id")
+    List<Long> getGameIdList();
+
+    @Query("SELECT _id FROM games WHERE ancient_one_id = :id GROUP BY _id")
+    List<Long> getGameIdList(int id);
 }

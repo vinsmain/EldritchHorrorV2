@@ -35,7 +35,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        gameList = repository.getGameList();
+        gameList = repository.getGameList(0, 0);
         repository.gameListOnNext();
     }
 
@@ -55,6 +55,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
         this.gameList = new ArrayList<>();
         this.gameList.addAll(gameList);
         showEmptyListMessage();
+        setVisibilityStatisticsMenuItem();
         updateStatistics();
         getViewState().setDataToAdapter(this.gameList);
     }
@@ -64,9 +65,14 @@ public class MainPresenter extends MvpPresenter<MainView> {
         else getViewState().hideEmptyListMessage();
     }
 
+    public void setVisibilityStatisticsMenuItem() {
+        if (gameList.isEmpty()) getViewState().hideStatisticsMenuItem();
+        else getViewState().showStatisticsMenuItem();
+    }
+
     private void updateStatistics() {
-        if (repository.getVictoryGameCount(0) == 0) getViewState().setStatistics(repository.getGameCount());
-        else getViewState().setStatistics(repository.getGameCount(), repository.getBestScore(), repository.getWorstScore());
+        if (repository.getVictoryGameCount(0) == 0) getViewState().setStatistics(repository.getGameCount(0));
+        else getViewState().setStatistics(repository.getGameCount(0), repository.getBestScore(), repository.getWorstScore());
     }
 
     public void showDeleteDialog(int deletingGamePosition) {
@@ -83,6 +89,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
         gameList.remove(deletingGamePosition);
         getViewState().deleteGame(deletingGamePosition, gameList);
         showEmptyListMessage();
+        setVisibilityStatisticsMenuItem();
         updateStatistics();
     }
 

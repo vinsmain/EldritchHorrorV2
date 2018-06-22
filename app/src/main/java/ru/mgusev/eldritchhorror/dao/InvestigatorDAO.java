@@ -11,6 +11,9 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 @Dao
 public interface InvestigatorDAO {
 
+    @Insert
+    void insertInvestigatorList(List<Investigator> list);
+
     @Query("SELECT * FROM investigators ORDER BY expansion_id, name_en")
     List<Investigator> getAllEN();
 
@@ -23,6 +26,9 @@ public interface InvestigatorDAO {
     @Query("DELETE FROM investigators WHERE game_id = :id")
      void deleteByGameID(long id);
 
-    @Insert
-    void insertInvestigatorList(List<Investigator> list);
+    @Query("SELECT * FROM investigators WHERE game_id IN (:gameIdList) GROUP BY name_en")
+    List<Investigator> getAddedInvestigatorList(List<Long> gameIdList);
+
+    @Query("SELECT count(*) FROM investigators WHERE game_id = :gameId AND name_en = :name")
+    int getInvestigatorCount(long gameId, String name);
 }
