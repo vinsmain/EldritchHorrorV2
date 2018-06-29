@@ -68,8 +68,7 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.St
         int resourceId = resources.getIdentifier(investigatorList.get(position).getImageResource(), "drawable", context.getPackageName());
         holder.invPhoto.setImageResource(resourceId);
         holder.invName.setText(investigatorList.get(position).getName());
-        System.out.println(investigatorList.get(position).getName());
-        holder.invOccupation.setText(investigatorList.get(position).getOccupation());
+        holder.invOccupation.setText(investigatorList.get(position).getOccupationEN());
         holder.invCardView.setClickable(false);
         holder.invCardView.setEnabled(false);
         holder.invCardView.setCardBackgroundColor(resources.getColor(R.color.colorTransparent));

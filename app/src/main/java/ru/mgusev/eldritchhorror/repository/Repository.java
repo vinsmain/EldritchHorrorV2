@@ -22,6 +22,7 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.app.AppModule;
+import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
 
 @Module (includes = AppModule.class)
 public class Repository {
@@ -233,10 +234,11 @@ public class Repository {
     }
 
     public void insertGame(Game game) {
-        long id = new Date().getTime();
+        long time = new Date().getTime();
+        game.setLastModified(time);
         for (Investigator investigator : game.getInvList()) {
             investigator.setGameId(game.getId());
-            investigator.setId(id++);
+            investigator.setId(time++);
         }
         userDataDB.gameDAO().insertGame(game);
         userDataDB.investigatorDAO().deleteByGameID(game.getId());
@@ -307,11 +309,15 @@ public class Repository {
         return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatByAwakenedAncientOneCount() : userDataDB.gameDAO().getDefeatByAwakenedAncientOneCount(ancientOneId);
     }
 
-    public List<Investigator> getAddedInvestigatorList(int ancientOneId) {
-        return userDataDB.investigatorDAO().getAddedInvestigatorList(ancientOneId == 0 ? userDataDB.gameDAO().getGameIdList() : userDataDB.gameDAO().getGameIdList(ancientOneId));
+    public List<StatisticsInvestigator> getStatisticsInvestigatorList(int ancientOneId) {
+        return userDataDB.investigatorDAO().getStatisticsInvestigatorList(ancientOneId == 0 ? userDataDB.gameDAO().getGameIdList() : userDataDB.gameDAO().getGameIdList(ancientOneId));
     }
 
-    public int getInvestigatorCount(long gameId, String name) {
-        return userDataDB.investigatorDAO().getInvestigatorCount(gameId, name);
+    public Investigator getInvestigator(String name) {
+        return staticDataDB.investigatorDAO().getByName(name);
+    }
+
+    public Game getGameById(long id) {
+        return userDataDB.gameDAO().getGame(id);
     }
 }

@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import ru.mgusev.eldritchhorror.model.Investigator;
+import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
 
 @Dao
 public interface InvestigatorDAO {
@@ -26,9 +27,9 @@ public interface InvestigatorDAO {
     @Query("DELETE FROM investigators WHERE game_id = :id")
      void deleteByGameID(long id);
 
-    @Query("SELECT * FROM investigators WHERE game_id IN (:gameIdList) GROUP BY name_en")
-    List<Investigator> getAddedInvestigatorList(List<Long> gameIdList);
+    @Query("SELECT * FROM investigators WHERE name_en = :name OR name_ru = :name")
+    Investigator getByName(String name);
 
-    @Query("SELECT count(*) FROM investigators WHERE game_id = :gameId AND name_en = :name")
-    int getInvestigatorCount(long gameId, String name);
+    @Query("SELECT name_en, count(name_en) FROM investigators WHERE game_id IN (:gameIdList) GROUP BY name_en ORDER BY count(name_en) DESC")
+    List<StatisticsInvestigator> getStatisticsInvestigatorList(List<Long> gameIdList);
 }

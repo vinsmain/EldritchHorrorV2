@@ -1,7 +1,14 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.main;
 
+import android.content.Intent;
+import android.util.Log;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +17,12 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+
+import static android.content.ContentValues.TAG;
 
 @InjectViewState
 public class MainPresenter extends MvpPresenter<MainView> {
@@ -22,6 +32,8 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     @Inject
     Repository repository;
+    @Inject
+    GoogleAuth googleAuth;
     private List<Game> gameList;
     private CompositeDisposable gameListSubscribe;
     private int deletingGamePosition;
@@ -37,6 +49,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
         super.onFirstViewAttach();
         gameList = repository.getGameList(0, 0);
         repository.gameListOnNext();
+        auth();
     }
 
     public void setSortModeIcon() {
@@ -99,6 +112,38 @@ public class MainPresenter extends MvpPresenter<MainView> {
         getViewState().setSortIcon(repository.getSortMode());
         repository.gameListOnNext();
     }
+
+
+    public void actionAuth() {
+        System.out.println(googleAuth.getCurrentUser());
+        if (googleAuth.getCurrentUser() != null) getViewState().showSignOutMenu();
+        else auth();
+    }
+
+    public void auth() {
+        getViewState().signIn(googleAuth.getmGoogleSignInClient().getSignInIntent());
+    }
+
+    public void signOut() {
+        googleAuth.signOut();
+    }
+
+    public void startAuthTask(Intent data) {
+        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+        try {
+            // Google Sign In was successful, authenticate with Firebase
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            googleAuth.firebaseAuthWithGoogle(account);
+        } catch (ApiException e) {
+            // Google Sign In failed, update UI appropriately
+            Log.w(TAG, "Google sign in failed", e);
+            // [START_EXCLUDE]
+            //updateUI(null);
+            // [END_EXCLUDE]
+        }
+    }
+
+
 
     @Override
     public void onDestroy() {

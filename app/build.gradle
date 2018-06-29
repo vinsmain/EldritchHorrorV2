@@ -34,6 +34,9 @@ android {
             }
         }
     }
+    lintOptions {
+        disable 'RestrictedApi'
+    }
 }
 
 repositories {
@@ -65,8 +68,8 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.15'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.15'
 
-    implementation "android.arch.persistence.room:runtime:1.1.0"
-    annotationProcessor "android.arch.persistence.room:compiler:1.1.0"
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
 
     implementation 'com.github.daolq3012:AssetSQLiteOpenHelper:1.0'
 
@@ -76,4 +79,13 @@ dependencies {
     implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-database:16.0.1'
+    implementation 'com.google.firebase:firebase-auth:16.0.2'
+    implementation 'com.google.android.gms:play-services-auth:15.0.1'
+
+    implementation 'com.github.skydoves:powermenu:2.0.4'
 }
+
+apply plugin: 'com.google.gms.google-services'

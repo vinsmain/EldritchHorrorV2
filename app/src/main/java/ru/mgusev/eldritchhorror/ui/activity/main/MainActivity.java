@@ -1,21 +1,34 @@
 package ru.mgusev.eldritchhorror.ui.activity.main;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.skydoves.powermenu.CustomPowerMenu;
+import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.PowerMenu;
+import com.skydoves.powermenu.PowerMenuItem;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,13 +40,14 @@ import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
+import ru.mgusev.eldritchhorror.support.IconizedMenu;
 import ru.mgusev.eldritchhorror.support.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 
-public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked {
+public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked, LifecycleOwner {
 
     @InjectPresenter
     MainPresenter mainPresenter;
@@ -45,6 +59,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @BindView(R.id.main_best_score) TextView bestScore;
     @BindView(R.id.main_worst_score) TextView worstScore;
 
+    private static final int RC_SIGN_IN = 9001;
+
+    private Menu menu;
     private MenuItem sortItem;
     private MenuItem authItem;
     private MenuItem statItem;
@@ -53,9 +70,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private MainAdapter adapter;
     private ScrollListener scrollListener;
     private AlertDialog deleteDialog;
+    private IconizedMenu popup;
+    private MenuPopupHelper optionsMenu;
+    private CustomPowerMenu powerMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -80,6 +101,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        this.menu = menu;
         sortItem = menu.findItem(R.id.action_sort);
         authItem = menu.findItem(R.id.action_auth);
         statItem = menu.findItem(R.id.action_statistics);
@@ -99,10 +121,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
                 return true;
-           /* case R.id.action_auth:
-                if (currentUser != null) showPopupMenu(findViewById(R.id.action_auth));
-                else signIn();
-                return true;*/
+            case R.id.action_auth:
+                mainPresenter.actionAuth();
+                return true;
             case R.id.action_sort:
                 mainPresenter.changeSortMode();
                 return true;
@@ -240,8 +261,76 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
+    public void showSignOutMenu() {
+
+        powerMenu = new CustomPowerMenu<>.Builder(this)
+                //.addItem(new IconPowerMenuItem(context.getResources().getDrawable(R.drawable.ic_twitter), "Twitter"))
+                .addItem(new PowerMenuItem("Travel", false))
+                .setAnimation(MenuAnimation.SHOWUP_TOP_LEFT) // Animation start point (TOP | LEFT)
+                .setMenuRadius(10f)
+                .setMenuShadow(10f)
+                .setTextColor(this.getResources().getColor(R.color.colorAccent))
+                .setSelectedTextColor(Color.BLUE)
+                .setMenuColor(Color.WHITE)
+                .setSelectedMenuColor(this.getResources().getColor(R.color.colorPrimary))
+                .setLifecycleOwner(this)
+                //.setOnMenuItemClickListener(onMenuItemClickListener)
+                .build();
+        powerMenu.showAsDropDown(findViewById(R.id.action_auth));*/
+    }
+
+    @Override
+    public void signIn(Intent signInIntent) {
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void signOut() {
+        mainPresenter.signOut();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            mainPresenter.startAuthTask(data);
+        }
+    }
+
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+        super.onOptionsMenuClosed(menu);
+            finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (popup != null) {
+            System.out.println(popup);
+            //menu.close();
+           // menu.clear();
+            //popup.dismiss();
+            //popup.onDestroy();
+            //popup.clear();
+            System.out.println(popup);
+
+
+
+        }
+        for (int i = 0; i <10000; i++) {
+            System.out.println(i + " " + popup);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
+        if (deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
+
+
+
     }
 }

@@ -19,13 +19,11 @@ public class ClearDialogFragment extends DialogFragment {
 
     public void setListener(DialogFragmentListener listener) {
         this.listener = listener;
-        System.out.println("LISTENER " + this.listener);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        System.out.println("CONTEXT " + context);
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
             listener = (DialogFragmentListener) context;
@@ -41,18 +39,8 @@ public class ClearDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setMessage(R.string.cleanDialogMessage)
-                .setPositiveButton(R.string.messageOK, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        System.out.println("DIALOG " + listener);
-                        System.out.println("FRAGMENT " + ClearDialogFragment.this);
-                        listener.onDialogPositiveClick(ClearDialogFragment.this);
-                    }
-                })
-                .setNegativeButton(R.string.messageCancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            listener.onDialogNegativeClick(ClearDialogFragment.this);
-                        }
-                    });
+                .setPositiveButton(R.string.messageOK, (dialog, id) -> listener.onDialogPositiveClick(ClearDialogFragment.this))
+                .setNegativeButton(R.string.messageCancel, (dialog, id) -> listener.onDialogNegativeClick(ClearDialogFragment.this));
         return builder.create();
     }
 }

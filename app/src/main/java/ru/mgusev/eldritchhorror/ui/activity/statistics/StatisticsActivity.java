@@ -1,6 +1,7 @@
 package ru.mgusev.eldritchhorror.ui.activity.statistics;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.github.mikephil.charting.data.PieEntry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,7 +50,7 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
     @InjectPresenter
     StatisticsPresenter statisticsPresenter;
     private ArrayAdapter<String> ancientOneAdapter;
-    private int columnsCount = 5;
+    private int columnsCount = 3;
     private StatisticsAdapter statisticsAdapter;
     private ChartFragment resultChartFragment;
     private ChartFragment ancientOneChartFragment;
@@ -68,6 +70,7 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         ancientOneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ancientOneSpinner.setAdapter(ancientOneAdapter);
 
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 5;
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, columnsCount);
         investigatorsRV.setLayoutManager(gridLayoutManager);
         investigatorsRV.setHasFixedSize(true);
@@ -76,12 +79,6 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         investigatorsRV.setAdapter(statisticsAdapter);
 
         initFragments();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //if (ancientOneSpinner.getSelectedItem() != null) statisticsPresenter.setCurrentAncientOneId((String) ancientOneSpinner.getSelectedItem());
     }
 
     private void initToolbar() {
@@ -117,7 +114,9 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
     @Override
     public void setInvestigatorList(List<Investigator> list) {
-        statisticsAdapter.updateAllInvCards(list);
+        List<Investigator> investigatorList = new ArrayList<>();
+        for (int i = 0; i < list.size() && i < columnsCount; i++) investigatorList.add(list.get(i));
+        statisticsAdapter.updateAllInvCards(investigatorList);
     }
 
     @Override
@@ -166,7 +165,6 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         Intent detailsIntent = new Intent(this, DetailsActivity.class);
         startActivity(detailsIntent);
     }
-
 
     public void initResultChartFragment() {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -256,7 +254,6 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
     @Override
     public void setVisibilityInvestigatorChart(boolean isVisible) {
-        System.out.println("VISIBLE " + isVisible);
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (isVisible) fragmentTransaction.show(investigatorChartFragment);
         else fragmentTransaction.hide(investigatorChartFragment);

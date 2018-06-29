@@ -20,6 +20,9 @@ public interface GameDAO {
     @Delete
     void deleteGame(Game game);
 
+    @Query("SELECT * FROM games WHERE _id = :id LIMIT 1")
+    Game getGame(long id);
+
     @Query("SELECT * FROM games ORDER BY date ASC, _id ASC")
     List<Game> getGameListSortedDateAscending();
 

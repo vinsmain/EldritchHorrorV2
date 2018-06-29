@@ -1,11 +1,10 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.statistics;
 
-import android.os.Handler;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.github.mikephil.charting.data.PieEntry;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +18,7 @@ import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
+import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
 import ru.mgusev.eldritchhorror.presentation.view.statistics.StatisticsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
@@ -34,7 +34,6 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     Repository repository;
     private List<Float> chartValues;
     private List<String> chartLabels;
-    private List<Investigator> investigatorList;
     private int currentAncientOneId; // 0 - all ancientOnes
     private int investigatorCountSum;
     private Game bestGame;
@@ -54,7 +53,6 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     }
 
     public void setCurrentAncientOneId(String spinnerValue) {
-        System.out.println(spinnerValue);
         if (spinnerValue.equals(repository.getContext().getResources().getString(R.string.all_results))) {
             currentAncientOneId = ALL_ANCIENT_ONES_ID;
             getViewState().setDefaultBackgroundImage();
@@ -67,6 +65,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     }
 
     private void updateAllCharts(List<Game> list) {
+        getViewState().initAncientOneSpinner(getAncientOneNameList());
         try {
             bestGame = repository.getGameList(4, currentAncientOneId).get(0);
             lastGame = repository.getGameList(1, currentAncientOneId).get(0);
@@ -75,11 +74,10 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
         getViewState().setLastResult(getGameScoreAndDate(lastGame));
         getViewState().setBestResult(getGameScoreAndDate(bestGame));
-        //getViewState().setInvestigatorList(repository.getInvestigatorList().subList(0, 3));
         getViewState().setVisibilityAncientOneChart(currentAncientOneId == ALL_ANCIENT_ONES_ID);
         getViewState().setVisibilityScoreChart(repository.getVictoryGameCount(currentAncientOneId) != 0);
-        System.out.println("VICTORY " + repository.getVictoryGameCount(currentAncientOneId));
         getViewState().setVisibilityDefeatReasonChart(repository.getDefeatGameCount(currentAncientOneId) != 0);
+        getViewState().setVisibilityInvestigatorChart(repository.getStatisticsInvestigatorList(currentAncientOneId).size() != 0);
         initResultChart();
         initAncientOneChart();
         initScoreChart();
@@ -104,7 +102,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         return ancientOneNameList;
     }
 
-    public void initResultChart() {
+    private void initResultChart() {
         initResultValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
@@ -127,7 +125,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
     }
 
-    public void initAncientOneChart() {
+    private void initAncientOneChart() {
         initAncientOneValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
@@ -146,7 +144,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
     }
 
-    public void initScoreChart() {
+    private void initScoreChart() {
         initScoreValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
@@ -165,7 +163,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
     }
 
-    public void initDefeatReasonChart() {
+    private void initDefeatReasonChart() {
         initDefeatReasonValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
@@ -192,30 +190,39 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
     }
 
-    public void initInvestigatorChart() {
+    private void initInvestigatorChart() {
+        List<Investigator> investigatorList = new ArrayList<>();
         initInvestigatorValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
             entries.add(new PieEntry(getPercent(chartValues.get(i), investigatorCountSum, DEN), chartLabels.get(i)));
+            if (i < 5) {
+                Investigator investigator = repository.getInvestigator(chartLabels.get(i));
+                investigator.setOccupationEN(new DecimalFormat("#0.0").format(getPercent(chartValues.get(i), investigatorCountSum, DEN)) + "%");
+                investigatorList.add(investigator);
+            }
         }
         getViewState().setDataToInvestigatorChart(entries, repository.getContext().getResources().getString(R.string.investigators), chartLabels, chartValues, investigatorCountSum);
-        getViewState().setVisibilityInvestigatorChart(investigatorCountSum != 0);
-
         getViewState().setInvestigatorList(investigatorList);
     }
 
     private void initInvestigatorValues() {
         chartValues = new ArrayList<>();
         chartLabels = new ArrayList<>();
-        investigatorList = new ArrayList<>();
         investigatorCountSum = 0;
+        int otherCountSum = 0;
 
-        List<Investigator> list = repository.getAddedInvestigatorList(currentAncientOneId);
+        List<StatisticsInvestigator> list = repository.getStatisticsInvestigatorList(currentAncientOneId);
         for (int i = 0; i < list.size(); i++) {
-            chartValues.add((float) repository.getInvestigatorCount(list.get(i).getGameId(), list.get(i).getNameEN()));
-            investigatorCountSum += repository.getInvestigatorCount(list.get(i).getGameId(), list.get(i).getNameEN());
-            if (i < 5) investigatorList.add(list.get(i));
-            chartLabels.add(list.get(i).getName());
+            if (i < MAX_VALUES_IN_CHART) {
+                chartValues.add((float) list.get(i).getCount());
+                chartLabels.add(repository.getInvestigator(list.get(i).getName()).getName());
+            } else otherCountSum += list.get(i).getCount();
+            investigatorCountSum += list.get(i).getCount();
+        }
+        if (otherCountSum != 0) {
+            chartValues.add((float) otherCountSum);
+            chartLabels.add(repository.getContext().getResources().getString(R.string.other_results));
         }
     }
 

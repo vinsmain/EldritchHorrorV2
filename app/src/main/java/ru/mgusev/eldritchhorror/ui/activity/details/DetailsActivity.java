@@ -260,6 +260,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @Override
     public void hideInvestigatorsNotSelected(boolean isVisible) {
         investigatorsNotSelected.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        investigatorsRV.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override

@@ -178,7 +178,6 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @Override
     public void setMysteryValue(int i) {
         ((RadioButton) mysteriesRadioGroup.getChildAt(i)).setChecked(true);
-        System.out.println("SET MYSTERY " + i);
     }
 
     @OnTextChanged({R.id.result_game_gates_count, R.id.result_game_monsters_count, R.id.result_game_curse_count,

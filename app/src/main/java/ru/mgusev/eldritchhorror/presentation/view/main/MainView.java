@@ -1,7 +1,10 @@
 package ru.mgusev.eldritchhorror.presentation.view.main;
 
+import android.content.Intent;
+
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
@@ -50,4 +53,13 @@ public interface MainView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setStatistics(int gameCount);
+
+    @StateStrategyType(SkipStrategy.class)
+    void showSignOutMenu();
+
+    @StateStrategyType(OneExecutionStateStrategy.class)
+    void signIn(Intent signInIntent);
+
+    @StateStrategyType(OneExecutionStateStrategy.class)
+    void signOut();
 }

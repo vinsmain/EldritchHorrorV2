@@ -1,5 +1,5 @@
 package ru.mgusev.eldritchhorror.database;
-/*
+
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -7,18 +7,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.sql.SQLException;
 import java.util.Date;
 
-import ru.mgusev.eldritchhorror.activity.MainActivity;
+import javax.inject.Inject;
+
+import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Game;
-import ru.mgusev.eldritchhorror.model.Investigator;
+import ru.mgusev.eldritchhorror.repository.Repository;
 
 public class FirebaseHelper {
+
+    @Inject
+    Repository repository;
     private static FirebaseHelper helper;
     private static FirebaseDatabase mDatabase;
     private static DatabaseReference reference;
-    private MainActivity mainActivity;
 
     public static FirebaseHelper getInstance() {
         if (helper == null) {
@@ -28,7 +31,11 @@ public class FirebaseHelper {
         return helper;
     }
 
-    public static void initDatabase() {
+    private FirebaseHelper() {
+        App.getComponent().inject(this);
+    }
+
+    private static void initDatabase() {
         if (mDatabase == null) {
             mDatabase = FirebaseDatabase.getInstance();
             mDatabase.setPersistenceEnabled(true);
@@ -52,20 +59,7 @@ public class FirebaseHelper {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Game deletingGame = dataSnapshot.getValue(Game.class);
-                try {
-                    if (HelperFactory.getHelper().getGameDAO().hasGame(deletingGame)) {
-                        try {
-                            HelperFactory.getHelper().getGameDAO().delete(deletingGame);
-                            HelperFactory.getHelper().getInvestigatorDAO().deleteInvestigatorsByGameID(deletingGame.id);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                        mainActivity.initGameList();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                repository.deleteGame(dataSnapshot.getValue(Game.class));
             }
 
             @Override
@@ -81,34 +75,16 @@ public class FirebaseHelper {
     }
 
     private void changeGame(Game game) {
-        if (game.id == -1) game.id = (new Date()).getTime();
-        try {
-            if (!(HelperFactory.getHelper().getGameDAO().hasGame(game) && game.lastModified == HelperFactory.getHelper().getGameDAO().getGameByID(game).lastModified) ) {
-                HelperFactory.getHelper().getGameDAO().writeGameToDB(game);
-                HelperFactory.getHelper().getInvestigatorDAO().deleteInvestigatorsByGameID(game.id);
-                for (Investigator investigator : game.invList) {
-                    if (investigator != null) {
-                        investigator.gameId = game.id;
-                        investigator.id = (new Date()).getTime();
-                        HelperFactory.getHelper().getInvestigatorDAO().create(investigator);
-                    }
-                }
-                mainActivity.initGameList();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (game.getLastModified() != repository.getGameById(game.getId()).getLastModified()) {
+            repository.insertGame(game);
         }
     }
 
-    public void setMainActivity(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-    }
-
     public static void addGame(Game game) {
-        if (reference != null) reference.child(String.valueOf(game.id)).setValue(game);
+        if (reference != null) reference.child(String.valueOf(game.getId())).setValue(game);
     }
 
     public static void removeGame(Game game) throws NullPointerException {
-        if (reference != null) reference.child(String.valueOf(game.id)).removeValue();
+        if (reference != null) reference.child(String.valueOf(game.getId())).removeValue();
     }
-}*/
+}

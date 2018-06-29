@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
+import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -76,5 +77,11 @@ public class AppModule {
     @Singleton
     public PrefHelper providePrefHelper(Context context) {
         return new PrefHelper(context);
+    }
+
+    @Provides
+    @Singleton
+    public GoogleAuth provideGoogleAuth(Context context) {
+        return new GoogleAuth(context);
     }
 }
