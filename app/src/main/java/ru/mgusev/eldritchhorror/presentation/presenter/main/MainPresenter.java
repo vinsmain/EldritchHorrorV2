@@ -1,6 +1,8 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.main;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -16,6 +18,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -36,12 +39,16 @@ public class MainPresenter extends MvpPresenter<MainView> {
     GoogleAuth googleAuth;
     private List<Game> gameList;
     private CompositeDisposable gameListSubscribe;
+    private CompositeDisposable userIconSubscribe;
+
     private int deletingGamePosition;
 
     public MainPresenter() {
         App.getComponent().inject(this);
         gameListSubscribe = new CompositeDisposable();
+        userIconSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::updateGameList));
+        userIconSubscribe.add(repository.getUserIconPublish().subscribe(this::updateUserIcon));
     }
 
     @Override
@@ -50,6 +57,11 @@ public class MainPresenter extends MvpPresenter<MainView> {
         gameList = repository.getGameList(0, 0);
         repository.gameListOnNext();
         auth();
+    }
+
+    private void updateUserIcon(Drawable icon) {
+        System.out.println("ICON " + icon);
+        getViewState().setUserIcon(icon);
     }
 
     public void setSortModeIcon() {
@@ -149,5 +161,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
     public void onDestroy() {
         super.onDestroy();
         gameListSubscribe.dispose();
+        userIconSubscribe.dispose();
     }
 }

@@ -1,6 +1,7 @@
 package ru.mgusev.eldritchhorror.presentation.view.main;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
@@ -62,4 +63,6 @@ public interface MainView extends MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void signOut();
+
+    void setUserIcon(Drawable icon);
 }

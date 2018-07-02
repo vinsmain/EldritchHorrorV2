@@ -4,18 +4,13 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -24,30 +19,28 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.skydoves.powermenu.CustomPowerMenu;
 import com.skydoves.powermenu.MenuAnimation;
-import com.skydoves.powermenu.PowerMenu;
-import com.skydoves.powermenu.PowerMenuItem;
+import com.skydoves.powermenu.OnMenuItemClickListener;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.adapter.IconMenuAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
-import ru.mgusev.eldritchhorror.support.IconizedMenu;
+import ru.mgusev.eldritchhorror.support.IconPowerMenuItem;
 import ru.mgusev.eldritchhorror.support.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 
-public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked, LifecycleOwner {
+public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked, LifecycleOwner, OnMenuItemClickListener {
 
     @InjectPresenter
     MainPresenter mainPresenter;
@@ -61,18 +54,15 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     private static final int RC_SIGN_IN = 9001;
 
-    private Menu menu;
     private MenuItem sortItem;
     private MenuItem authItem;
     private MenuItem statItem;
+    private CustomPowerMenu authPopupMenu;
 
     private int columnsCount = 1;
     private MainAdapter adapter;
     private ScrollListener scrollListener;
     private AlertDialog deleteDialog;
-    private IconizedMenu popup;
-    private MenuPopupHelper optionsMenu;
-    private CustomPowerMenu powerMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +91,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
-        this.menu = menu;
         sortItem = menu.findItem(R.id.action_sort);
         authItem = menu.findItem(R.id.action_auth);
         statItem = menu.findItem(R.id.action_statistics);
@@ -262,21 +251,21 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void showSignOutMenu() {
-
-        powerMenu = new CustomPowerMenu<>.Builder(this)
-                //.addItem(new IconPowerMenuItem(context.getResources().getDrawable(R.drawable.ic_twitter), "Twitter"))
-                .addItem(new PowerMenuItem("Travel", false))
-                .setAnimation(MenuAnimation.SHOWUP_TOP_LEFT) // Animation start point (TOP | LEFT)
-                .setMenuRadius(10f)
+        authPopupMenu = new CustomPowerMenu.Builder<>(this, new IconMenuAdapter())
+                .addItem(new IconPowerMenuItem(getResources().getDrawable(R.drawable.sign_out), getResources().getString(R.string.sign_out_menu_header)))
+                .setOnMenuItemClickListener(this)
+                .setAnimation(MenuAnimation.SHOWUP_TOP_RIGHT)
+                .setMenuRadius(0f)
                 .setMenuShadow(10f)
-                .setTextColor(this.getResources().getColor(R.color.colorAccent))
-                .setSelectedTextColor(Color.BLUE)
-                .setMenuColor(Color.WHITE)
-                .setSelectedMenuColor(this.getResources().getColor(R.color.colorPrimary))
                 .setLifecycleOwner(this)
-                //.setOnMenuItemClickListener(onMenuItemClickListener)
                 .build();
-        powerMenu.showAsDropDown(findViewById(R.id.action_auth));*/
+        authPopupMenu.showAsDropDown(findViewById(R.id.action_auth));
+    }
+
+    @Override
+    public void onItemClick(int position, Object item) {
+        mainPresenter.signOut();
+        authPopupMenu.dismiss();
     }
 
     @Override
@@ -300,37 +289,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
-    public void onOptionsMenuClosed(Menu menu) {
-        super.onOptionsMenuClosed(menu);
-            finish();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (popup != null) {
-            System.out.println(popup);
-            //menu.close();
-           // menu.clear();
-            //popup.dismiss();
-            //popup.onDestroy();
-            //popup.clear();
-            System.out.println(popup);
-
-
-
-        }
-        for (int i = 0; i <10000; i++) {
-            System.out.println(i + " " + popup);
-        }
+    public void setUserIcon(Drawable icon) {
+        System.out.println("SET ICON " + icon);
+        if (authItem != null) authItem.setIcon(icon);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
-
-
-
     }
 }

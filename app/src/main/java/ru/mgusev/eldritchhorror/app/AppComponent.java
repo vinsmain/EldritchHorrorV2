@@ -17,6 +17,7 @@ import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ResultGamePresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPresenter;
+import ru.mgusev.eldritchhorror.support.UserPhoto;
 
 @Component (modules = AppModule.class)
 @Singleton
@@ -37,4 +38,5 @@ public interface AppComponent {
     void inject(StatisticsAdapter adapter);
 
     void inject(FirebaseHelper helper);
+    void inject(UserPhoto userPhoto);
 }

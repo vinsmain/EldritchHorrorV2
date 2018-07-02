@@ -1,6 +1,7 @@
 package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
 import java.util.Arrays;
@@ -41,6 +42,7 @@ public class Repository {
     private PublishSubject<Integer> randomPublish;
     private PublishSubject<Integer> clearPublish;
     private PublishSubject<List<Game>> gameListPublish;
+    private PublishSubject<Drawable> userIconPublish;
 
     private Game game;
     private int pagerPosition = 0;
@@ -59,6 +61,7 @@ public class Repository {
         randomPublish = PublishSubject.create();
         clearPublish = PublishSubject.create();
         gameListPublish = PublishSubject.create();
+        userIconPublish = PublishSubject.create();
     }
 
     public Game getGame() {
@@ -69,6 +72,14 @@ public class Repository {
     public void setGame(Game game) {
         this.game = game;
         this.game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
+    }
+
+    public PublishSubject<Drawable> getUserIconPublish() {
+        return userIconPublish;
+    }
+
+    public void userIconOnNext(Drawable icon) {
+        userIconPublish.onNext(icon);
     }
 
     public int getPagerPosition() {
