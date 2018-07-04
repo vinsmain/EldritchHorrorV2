@@ -64,5 +64,6 @@ public interface MainView extends MvpView {
     @StateStrategyType(OneExecutionStateStrategy.class)
     void signOut();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setUserIcon(Drawable icon);
 }

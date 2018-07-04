@@ -15,8 +15,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.Objects;
+
+import javax.inject.Inject;
+
 import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.support.BitmapCircle;
 import ru.mgusev.eldritchhorror.support.UserPhoto;
 
@@ -24,19 +30,23 @@ public class GoogleAuth {
 
     private static final String TAG = "GoogleActivity";
 
+    @Inject
+    Repository repository;
+
     private Context context;
-    private UserPhoto userPhoto;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInOptions gso;
     private FirebaseUser currentUser;
+    private String defaultIconUrl;
 
-    public GoogleAuth(Context context, UserPhoto userPhoto) {
+    public GoogleAuth(Context context) {
+        App.getComponent().inject(this);
         this.context = context;
-        this.userPhoto = userPhoto;
         configGoogleSignIn();
         mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
         mAuth = FirebaseAuth.getInstance();
+        defaultIconUrl = "sign_out";
     }
 
     private void configGoogleSignIn() {
@@ -47,7 +57,7 @@ public class GoogleAuth {
     }
 
     public FirebaseUser getCurrentUser() {
-        return currentUser;
+        return mAuth.getCurrentUser();
     }
 
     public GoogleSignInClient getmGoogleSignInClient() {
@@ -61,7 +71,8 @@ public class GoogleAuth {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d(TAG, "signInWithCredential:success");
                 currentUser = mAuth.getCurrentUser();
-                userPhoto.getPhoto(currentUser);
+                repository.userIconOnNext(Objects.requireNonNull(Objects.requireNonNull(currentUser).getPhotoUrl()).toString());
+                System.out.println(currentUser.getPhotoUrl());
             } else {
                 // If sign in fails, display a message to the user.
                 Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -78,7 +89,11 @@ public class GoogleAuth {
         mGoogleSignInClient.signOut().addOnCompleteListener(
             task -> {
                 Log.d(TAG, "signInWithCredential:sign out");
-                userPhoto.clearPhoto();
+                repository.userIconOnNext(defaultIconUrl);
             });
+    }
+
+    public String getDefaultIconUrl() {
+        return defaultIconUrl;
     }
 }

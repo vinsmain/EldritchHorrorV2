@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -53,6 +54,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @BindView(R.id.main_worst_score) TextView worstScore;
 
     private static final int RC_SIGN_IN = 9001;
+    private static final String MUSIC_URL = "https://melodice.org/playlist/eldritch-horror-2013/";
 
     private MenuItem sortItem;
     private MenuItem authItem;
@@ -96,10 +98,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         statItem = menu.findItem(R.id.action_statistics);
         mainPresenter.setSortModeIcon();
         mainPresenter.setVisibilityStatisticsMenuItem();
-        /*if (currentUser == null) authItem.setIcon(R.drawable.google_icon);
-        else setPhoto();
-        setSortItemIcon();
-        setVisibleStatItem();*/
+        mainPresenter.startUpdateUserIcon();
         return true;
     }
 
@@ -120,6 +119,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 Intent intentStatistics = new Intent(this, StatisticsActivity.class);
                 startActivity(intentStatistics);
                 return true;
+            case R.id.action_music:
+                Intent browserIntentYandex = new Intent(Intent.ACTION_VIEW, Uri.parse(MUSIC_URL));
+                startActivity(browserIntentYandex);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -270,6 +272,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void signIn(Intent signInIntent) {
+        System.out.println("INTENT " + signInIntent);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
@@ -283,14 +286,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
             mainPresenter.startAuthTask(data);
         }
     }
 
     @Override
     public void setUserIcon(Drawable icon) {
-        System.out.println("SET ICON " + icon);
         if (authItem != null) authItem.setIcon(icon);
     }
 

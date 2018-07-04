@@ -42,7 +42,7 @@ public class Repository {
     private PublishSubject<Integer> randomPublish;
     private PublishSubject<Integer> clearPublish;
     private PublishSubject<List<Game>> gameListPublish;
-    private PublishSubject<Drawable> userIconPublish;
+    private PublishSubject<String> userIconPublish;
 
     private Game game;
     private int pagerPosition = 0;
@@ -74,12 +74,12 @@ public class Repository {
         this.game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
     }
 
-    public PublishSubject<Drawable> getUserIconPublish() {
+    public PublishSubject<String> getUserIconPublish() {
         return userIconPublish;
     }
 
-    public void userIconOnNext(Drawable icon) {
-        userIconPublish.onNext(icon);
+    public void userIconOnNext(String iconUrl) {
+        userIconPublish.onNext(iconUrl);
     }
 
     public int getPagerPosition() {

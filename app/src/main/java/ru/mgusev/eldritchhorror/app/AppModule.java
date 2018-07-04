@@ -18,7 +18,6 @@ import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.repository.PrefHelper;
-import ru.mgusev.eldritchhorror.support.UserPhoto;
 
 @Module
 public class AppModule {
@@ -82,13 +81,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public GoogleAuth provideGoogleAuth(Context context, UserPhoto userPhoto) {
-        return new GoogleAuth(context, userPhoto);
-    }
-
-    @Provides
-    @Singleton
-    public UserPhoto provideUserPhoto() {
-        return new UserPhoto();
+    public GoogleAuth provideGoogleAuth(Context context) {
+        return new GoogleAuth(context);
     }
 }

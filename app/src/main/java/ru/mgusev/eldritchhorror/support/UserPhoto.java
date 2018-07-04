@@ -21,11 +21,11 @@ import ru.mgusev.eldritchhorror.repository.Repository;
 public class UserPhoto {
 
     private static Drawable drawablePhoto;
-    @Inject
+    //@Inject
     Repository repository;
 
     public UserPhoto() {
-        App.getComponent().inject(this);
+        //App.getComponent().inject(this);
     }
 
     public Drawable getPhoto(FirebaseUser user) {
@@ -50,7 +50,7 @@ public class UserPhoto {
 
                     System.out.println("REPO " + repository);
                     System.out.println("ICON " + drawablePhoto);
-                    repository.userIconOnNext(drawablePhoto);
+                    //repository.userIconOnNext(drawablePhoto);
                 }
             }.execute(user.getPhotoUrl().toString());
         }
@@ -60,6 +60,6 @@ public class UserPhoto {
 
     public void clearPhoto() {
         drawablePhoto = null;
-        repository.userIconOnNext(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
+        //repository.userIconOnNext(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
     }
 }

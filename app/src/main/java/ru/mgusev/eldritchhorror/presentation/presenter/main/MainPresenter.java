@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.presentation.presenter.main;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -11,6 +12,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +21,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.subjects.PublishSubject;
+import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.support.CircularTransformation;
 
 import static android.content.ContentValues.TAG;
 
@@ -40,6 +44,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     private List<Game> gameList;
     private CompositeDisposable gameListSubscribe;
     private CompositeDisposable userIconSubscribe;
+    private String tempIconUrl;
 
     private int deletingGamePosition;
 
@@ -49,6 +54,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
         userIconSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::updateGameList));
         userIconSubscribe.add(repository.getUserIconPublish().subscribe(this::updateUserIcon));
+        tempIconUrl = googleAuth.getDefaultIconUrl();
     }
 
     @Override
@@ -56,12 +62,44 @@ public class MainPresenter extends MvpPresenter<MainView> {
         super.onFirstViewAttach();
         gameList = repository.getGameList(0, 0);
         repository.gameListOnNext();
-        auth();
+        if (googleAuth.getCurrentUser() != null) auth();
     }
 
-    private void updateUserIcon(Drawable icon) {
-        System.out.println("ICON " + icon);
-        getViewState().setUserIcon(icon);
+    public void startUpdateUserIcon() {
+        updateUserIcon(tempIconUrl);
+    }
+
+    private void updateUserIcon(String iconUrl) {
+        tempIconUrl = iconUrl;
+        if (!iconUrl.equals(googleAuth.getDefaultIconUrl())) {
+            final Target target = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                    Log.d("DEBUG", "onBitmapLoaded");
+                    BitmapDrawable mBitmapDrawable = new BitmapDrawable(repository.getContext().getResources(), bitmap);
+                    //                                mBitmapDrawable.setBounds(0,0,24,24);
+                    // setting icon of Menu Item or Navigation View's Menu Item
+                    getViewState().setUserIcon(mBitmapDrawable);
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                    Log.d("DEBUG", "onBitmapFailed");
+                    getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_signed_in));
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable drawable) {
+                    Log.d("DEBUG", "onPrepareLoad");
+                    getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_signed_in));
+                }
+            };
+
+            Picasso.get()
+                    .load(iconUrl)
+                    .transform(new CircularTransformation())
+                    .into(target);
+        } else getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
     }
 
     public void setSortModeIcon() {
@@ -127,7 +165,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
 
     public void actionAuth() {
-        System.out.println(googleAuth.getCurrentUser());
+        System.out.println("123 " + googleAuth.getCurrentUser());
         if (googleAuth.getCurrentUser() != null) getViewState().showSignOutMenu();
         else auth();
     }
@@ -149,13 +187,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
         } catch (ApiException e) {
             // Google Sign In failed, update UI appropriately
             Log.w(TAG, "Google sign in failed", e);
-            // [START_EXCLUDE]
-            //updateUI(null);
-            // [END_EXCLUDE]
+            tempIconUrl = googleAuth.getDefaultIconUrl();
+            getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
         }
     }
-
-
 
     @Override
     public void onDestroy() {

@@ -122,4 +122,5 @@
     <string name="donate_paypal_description">Donate PayPal</string>
     <string name="donate_yandex_description">Donate Yandex</string>
     <string name="statistics_background">statistics_background</string>
+    <string name="music_header">Atmospheric music</string>
 </resources>
