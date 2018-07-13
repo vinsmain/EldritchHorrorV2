@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
+import ru.mgusev.eldritchhorror.database.FirebaseHelper;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -36,8 +37,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Repository provideRepository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper){
-        return new Repository(context, staticDataDB, userDataDB, prefHelper);
+    public Repository provideRepository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FirebaseHelper firebaseHelper){
+        return new Repository(context, staticDataDB, userDataDB, prefHelper, firebaseHelper);
     }
 
     @Provides
@@ -83,5 +84,11 @@ public class AppModule {
     @Singleton
     public GoogleAuth provideGoogleAuth(Context context) {
         return new GoogleAuth(context);
+    }
+
+    @Provides
+    @Singleton
+    public FirebaseHelper provideFirebaseHelper() {
+        return new FirebaseHelper();
     }
 }

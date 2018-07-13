@@ -85,9 +85,9 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
         photoImage.setImageResource(getResources().getIdentifier(investigator.getImageResource(), "drawable", getPackageName()));
         nameTV.setText(investigator.getName());
         occupationTV.setText(investigator.getOccupation());
-        startingGameSwitch.setChecked(investigator.isStarting());
-        replacementSwitch.setChecked(investigator.isReplacement());
-        deadSwitch.setChecked(investigator.isDead());
+        startingGameSwitch.setChecked(investigator.getIsStarting());
+        replacementSwitch.setChecked(investigator.getIsReplacement());
+        deadSwitch.setChecked(investigator.getIsDead());
     }
 
     @Override

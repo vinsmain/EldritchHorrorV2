@@ -104,15 +104,15 @@ public class InvestigatorChoiceAdapter extends RecyclerView.Adapter<Investigator
             holder.invExpansion.setVisibility(View.VISIBLE);
         } else holder.invExpansion.setVisibility(View.GONE);
 
-        if (investigatorList.get(position).isStarting()) {
+        if (investigatorList.get(position).getIsStarting()) {
             decorateInvestigatorCard(holder, R.color.color_starting_investigator, R.color.colorPrimaryText, R.color.colorPrimaryText);
-        } else if (investigatorList.get(position).isReplacement()) {
+        } else if (investigatorList.get(position).getIsReplacement()) {
             decorateInvestigatorCard(holder, R.color.color_replacement_investigator, R.color.colorText, R.color.colorText);
         } else {
             decorateInvestigatorCard(holder, R.color.colorText, R.color.colorPrimaryText, R.color.colorSecondaryText);
         }
 
-        if (investigatorList.get(position).isDead()) {
+        if (investigatorList.get(position).getIsDead()) {
             holder.invDead.setVisibility(View.VISIBLE);
         } else holder.invDead.setVisibility(View.INVISIBLE);
 

@@ -71,11 +71,13 @@ public class GoogleAuth {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d(TAG, "signInWithCredential:success");
                 currentUser = mAuth.getCurrentUser();
+                repository.setUser(currentUser);
+                repository.initFirebaseHelper();
                 repository.userIconOnNext(Objects.requireNonNull(Objects.requireNonNull(currentUser).getPhotoUrl()).toString());
-                System.out.println(currentUser.getPhotoUrl());
             } else {
                 // If sign in fails, display a message to the user.
                 Log.w(TAG, "signInWithCredential:failure", task.getException());
+                repository.authOnNext(true);
             }
         });
     }
@@ -90,6 +92,10 @@ public class GoogleAuth {
             task -> {
                 Log.d(TAG, "signInWithCredential:sign out");
                 repository.userIconOnNext(defaultIconUrl);
+                repository.deleteSynchGames();
+                repository.gameListOnNext();
+                repository.setUser(currentUser);
+                repository.firebaseSubscribeDispose();
             });
     }
 

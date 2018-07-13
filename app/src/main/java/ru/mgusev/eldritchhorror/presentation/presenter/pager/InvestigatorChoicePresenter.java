@@ -66,19 +66,19 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
     private int getCountStartingInv() {
         int countStartingInv = 0;
         for (Investigator investigator : activeInvestigatorList) {
-            if (investigator.isStarting()) countStartingInv++;
+            if (investigator.getIsStarting()) countStartingInv++;
         }
         return countStartingInv;
     }
 
     private void updateInvListByCurrentInv(Investigator currentInvestigator) {
         //Проверка на превышение числи стартовых сыщиков
-        if (currentInvestigator.isStarting() && getCountStartingInv() == repository.getGame().getPlayersCount()
-                && (!activeInvestigatorList.contains(currentInvestigator) || !activeInvestigatorList.get(activeInvestigatorList.indexOf(currentInvestigator)).isStarting())) {
+        if (currentInvestigator.getIsStarting() && getCountStartingInv() == repository.getGame().getPlayersCount()
+                && (!activeInvestigatorList.contains(currentInvestigator) || !activeInvestigatorList.get(activeInvestigatorList.indexOf(currentInvestigator)).getIsStarting())) {
             getViewState().showError();
         }
         //Сыщик стал активным
-        else if (currentInvestigator.isStarting() || currentInvestigator.isReplacement()) {
+        else if (currentInvestigator.getIsStarting() || currentInvestigator.getIsReplacement()) {
             //Был активным ранее
             if (activeInvestigatorList.contains(currentInvestigator)) {
                 int position = activeInvestigatorList.indexOf(currentInvestigator);
@@ -137,7 +137,7 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
                 int index = random.nextInt(allInvestigatorList.size());
                 inv = allInvestigatorList.get(index);
             } while (isRepeatSpecialization(inv) && activeInvestigatorList.size() < 7);
-            inv.setStarting(true);
+            inv.setIsStarting(true);
             updateInvListByCurrentInv(inv);
         }
     }

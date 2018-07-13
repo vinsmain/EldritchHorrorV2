@@ -28,7 +28,7 @@
     <item
         android:id="@+id/action_auth"
         android:title="@string/auth_header"
-        android:icon="@drawable/google_icon"
+        android:icon="@drawable/loader"
         app:showAsAction="always|collapseActionView" />
 
 </menu>

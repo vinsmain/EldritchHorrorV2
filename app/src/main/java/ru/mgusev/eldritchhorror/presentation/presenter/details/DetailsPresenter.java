@@ -44,7 +44,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         initStartData();
         initInvestigatorList();
         initMysteriesCount();
-        if (game.isWinGame()) initVictory();
+        if (game.getIsWinGame()) initVictory();
         else initDefeat();
     }
 
@@ -55,7 +55,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     private void initStartData() {
         getViewState().setInitialConditions(formatter.format(game.getDate()), repository.getAncientOne(game.getAncientOneID()).getName(),
                 repository.getPrelude(game.getPreludeID()).getName(), String.valueOf(game.getPlayersCount()));
-        getViewState().setAdditionalRules(game.isSimpleMyths(), game.isNormalMyths(), game.isHardMyths(), game.isStartingRumor());
+        getViewState().setAdditionalRules(game.getIsSimpleMyths(), game.getIsNormalMyths(), game.getIsHardMyths(), game.getIsStartingRumor());
     }
 
     private void initInvestigatorList() {
@@ -79,11 +79,11 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
 
     private void initDefeat() {
         getViewState().hideScore();
-        if (game.isDefeatByElimination()) getViewState().setDefeatByEliminationIcon();
-        else if (game.isDefeatByMythosDepletion()) getViewState().setDefeatByMythosDepletionIcon();
+        if (game.getIsDefeatByElimination()) getViewState().setDefeatByEliminationIcon();
+        else if (game.getIsDefeatByMythosDepletion()) getViewState().setDefeatByMythosDepletionIcon();
         else getViewState().setDefeatByAwakenedAncientOneIcon();
         getViewState().showDefeatCard();
-        getViewState().setDefeatReason(game.isDefeatByElimination(), game.isDefeatByMythosDepletion(), game.isDefeatByAwakenedAncientOne());
+        getViewState().setDefeatReason(game.getIsDefeatByElimination(), game.getIsDefeatByMythosDepletion(), game.getIsDefeatByAwakenedAncientOne());
     }
 
     public void showDeleteDialog() {

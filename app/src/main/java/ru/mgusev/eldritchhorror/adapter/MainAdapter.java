@@ -124,14 +124,14 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
         holder.ancientOne.setText(Objects.requireNonNull(getAncientOne(gameList.get(position).getAncientOneID())).getName());
         holder.playersCount.setText(String.valueOf(gameList.get(position).getPlayersCount()));
 
-        if (gameList.get(position).isWinGame()) {
+        if (gameList.get(position).getIsWinGame()) {
             holder.winImage.setImageResource(R.drawable.stars);
             holder.score.setText(String.valueOf(gameList.get(position).getScore()));
             holder.score.setVisibility(View.VISIBLE);
         } else {
-            if (gameList.get(position).isDefeatByAwakenedAncientOne()) holder.winImage.setImageResource(R.drawable.skull);
-            else if (gameList.get(position).isDefeatByElimination()) holder.winImage.setImageResource(R.drawable.investigators_out);
-            else if (gameList.get(position).isDefeatByMythosDepletion()) holder.winImage.setImageResource(R.drawable.mythos_empty);
+            if (gameList.get(position).getIsDefeatByAwakenedAncientOne()) holder.winImage.setImageResource(R.drawable.skull);
+            else if (gameList.get(position).getIsDefeatByElimination()) holder.winImage.setImageResource(R.drawable.investigators_out);
+            else if (gameList.get(position).getIsDefeatByMythosDepletion()) holder.winImage.setImageResource(R.drawable.mythos_empty);
             holder.score.setVisibility(View.GONE);
         }
 

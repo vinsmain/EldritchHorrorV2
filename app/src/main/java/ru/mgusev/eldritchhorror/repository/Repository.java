@@ -1,8 +1,9 @@
 package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -11,9 +12,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Module;
+import durdinapps.rxfirebase2.RxFirebaseChildEvent;
 import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.database.FirebaseHelper;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -43,16 +47,22 @@ public class Repository {
     private PublishSubject<Integer> clearPublish;
     private PublishSubject<List<Game>> gameListPublish;
     private PublishSubject<String> userIconPublish;
+    private final PublishSubject<Boolean> authPublish;
+
+    private CompositeDisposable firebaseSubscribe;
 
     private Game game;
     private int pagerPosition = 0;
+    private FirebaseHelper firebaseHelper;
+    private FirebaseUser user;
 
     @Inject
-    public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper) {
+    public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FirebaseHelper firebaseHelper) {
         this.context = context;
         this.staticDataDB = staticDataDB;
         this.userDataDB = userDataDB;
         this.prefHelper = prefHelper;
+        this.firebaseHelper = firebaseHelper;
         ancientOnePublish = PublishSubject.create();
         scorePublish = PublishSubject.create();
         isWinPublish = PublishSubject.create();
@@ -62,6 +72,7 @@ public class Repository {
         clearPublish = PublishSubject.create();
         gameListPublish = PublishSubject.create();
         userIconPublish = PublishSubject.create();
+        authPublish = PublishSubject.create();
     }
 
     public Game getGame() {
@@ -135,7 +146,7 @@ public class Repository {
     }
 
     public void isWinOnNext() {
-        isWinPublish.onNext(game.isWinGame());
+        isWinPublish.onNext(game.getIsWinGame());
     }
 
     public AncientOne getAncientOne(int id) {
@@ -244,6 +255,53 @@ public class Repository {
         }
     }
 
+    public void initFirebaseHelper() {
+        firebaseHelper.initReference(user);
+        firebaseSubscribe = new CompositeDisposable();
+        firebaseSubscribe.add(firebaseHelper.getChildEventDisposable().subscribe(this::processDataFromFirebase));
+        for (Game game : userDataDB.gameDAO().getGameListSortedDateAscending()) {
+            if (game.getUserID() == null) insertGame(game);
+        }
+    }
+
+    public void setUser(FirebaseUser user) {
+        this.user = user;
+    }
+
+    private void processDataFromFirebase(RxFirebaseChildEvent<Game> data) {
+        switch (data.getEventType()) {
+            case ADDED:
+                changeGame(data.getValue());
+                break;
+            case CHANGED:
+                changeGame(data.getValue());
+                break;
+            case REMOVED: {
+                removeGame(data.getValue());
+                break;
+            }
+        }
+    }
+
+    public void firebaseSubscribeDispose() {
+        firebaseSubscribe.dispose();
+    }
+
+    private void changeGame(Game game) {
+        if (this.game != null && this.game.getId() == game.getId()) this.game = game;
+        if (getGameById(game.getId()) == null || game.getLastModified() != getGameById(game.getId()).getLastModified()) {
+            insertGameToDB(game);
+            gameListOnNext();
+        }
+    }
+
+    private void removeGame(Game game) {
+        if (game != null) {
+            deleteGameFromDB(game);
+            gameListOnNext();
+        }
+    }
+
     public void insertGame(Game game) {
         long time = new Date().getTime();
         game.setLastModified(time);
@@ -251,15 +309,36 @@ public class Repository {
             investigator.setGameId(game.getId());
             investigator.setId(time++);
         }
+        if (user != null && game.getUserID() == null) {
+            game.setUserID(user.getUid());
+        }
+        insertGameToDB(game);
+        firebaseHelper.addGame(game);
+    }
+
+    private void insertGameToDB(Game game) {
         userDataDB.gameDAO().insertGame(game);
         userDataDB.investigatorDAO().deleteByGameID(game.getId());
         userDataDB.investigatorDAO().insertInvestigatorList(game.getInvList());
     }
 
     public void deleteGame(Game game) {
+        deleteGameFromDB(game);
+        Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
+        firebaseHelper.removeGame(game);
+    }
+
+    private void deleteGameFromDB(Game game) {
         userDataDB.gameDAO().deleteGame(game);
         userDataDB.investigatorDAO().deleteByGameID(game.getId());
-        Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void deleteSynchGames() {
+        for (Game game : userDataDB.gameDAO().getGameListSortedDateAscending()) {
+            if (game.getUserID() != null) {
+                deleteGameFromDB(game);
+            }
+        }
     }
 
     public PublishSubject<List<Game>> getGameListPublish() {
@@ -328,7 +407,15 @@ public class Repository {
         return staticDataDB.investigatorDAO().getByName(name);
     }
 
-    public Game getGameById(long id) {
+    private Game getGameById(long id) {
         return userDataDB.gameDAO().getGame(id);
+    }
+
+    public PublishSubject<Boolean> getAuthPublish() {
+        return authPublish;
+    }
+
+    public void authOnNext(boolean isAuthFail) {
+        authPublish.onNext(isAuthFail);
     }
 }

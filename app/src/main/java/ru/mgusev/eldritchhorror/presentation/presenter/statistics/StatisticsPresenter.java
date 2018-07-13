@@ -86,7 +86,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     }
 
     private String getGameScoreAndDate(Game game) {
-        return (game.isWinGame() ? game.getScore() : "") + " (" + new SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).format(game.getDate()) + ")";
+        return (game.getIsWinGame() ? game.getScore() : "") + " (" + new SimpleDateFormat(DATE_PATTERN, Locale.getDefault()).format(game.getDate()) + ")";
     }
 
     public void goToDetailsActivity(boolean isLast) {

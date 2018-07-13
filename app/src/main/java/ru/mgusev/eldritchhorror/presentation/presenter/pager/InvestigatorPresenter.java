@@ -30,14 +30,14 @@ public class InvestigatorPresenter extends MvpPresenter<InvestigatorView> {
         super.onFirstViewAttach();
         getViewState().showInvestigatorCard(investigator);
         getViewState().showExpansionIcon(repository.getExpansion(investigator.getExpansionID()).getImageResource());
-        getViewState().setMaleOrFemale(investigator.isMale());
+        getViewState().setMaleOrFemale(investigator.getIsMale());
         getViewState().setListeners();
     }
 
     public void setInvestigator(boolean isStarting, boolean isReplacement, boolean isDead) {
-        investigator.setStarting(isStarting);
-        investigator.setReplacement(isReplacement);
-        investigator.setDead(isDead);
+        investigator.setIsStarting(isStarting);
+        investigator.setIsReplacement(isReplacement);
+        investigator.setIsDead(isDead);
     }
 
     @Override

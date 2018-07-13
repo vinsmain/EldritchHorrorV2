@@ -44,8 +44,8 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
             getViewState().setWinIcon();
         } else {
             getViewState().hideScore();
-            if (repository.getGame().isDefeatByElimination()) getViewState().setDefeatByEliminationIcon();
-            else if (repository.getGame().isDefeatByMythosDepletion()) getViewState().setDefeatByMythosDepletionIcon();
+            if (repository.getGame().getIsDefeatByElimination()) getViewState().setDefeatByEliminationIcon();
+            else if (repository.getGame().getIsDefeatByMythosDepletion()) getViewState().setDefeatByMythosDepletionIcon();
             else getViewState().setDefeatByAwakenedAncientOneIcon();
         }
     }
@@ -71,13 +71,13 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     private boolean isCorrectActiveInvestigatorsCount() {
         int invCount = 0;
         for (Investigator inv : repository.getGame().getInvList()) {
-            if (inv.isStarting()) invCount++;
+            if (inv.getIsStarting()) invCount++;
         }
         return repository.getGame().getPlayersCount() >= invCount;
     }
 
     private void clearResultValuesIfDefeat() {
-        if (!repository.getGame().isWinGame()) {
+        if (!repository.getGame().getIsWinGame()) {
             repository.getGame().setGatesCount(0);
             repository.getGame().setMonstersCount(0);
             repository.getGame().setCurseCount(0);

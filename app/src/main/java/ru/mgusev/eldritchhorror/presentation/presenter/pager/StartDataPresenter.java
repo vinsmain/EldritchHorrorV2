@@ -176,14 +176,14 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     public void setSwitchValue() {
         Game game = repository.getGame();
-        getViewState().setSwitchValue(game.isSimpleMyths(), game.isNormalMyths(), game.isHardMyths(), game.isStartingRumor());
+        getViewState().setSwitchValue(game.getIsSimpleMyths(), game.getIsNormalMyths(), game.getIsHardMyths(), game.getIsStartingRumor());
     }
 
     public void setSwitchValueToGame(boolean easyMythosValue, boolean normalMythosValue, boolean hardMythosValue, boolean startingRumorValue) {
-        repository.getGame().setSimpleMyths(easyMythosValue);
-        repository.getGame().setNormalMyths(normalMythosValue);
-        repository.getGame().setHardMyths(hardMythosValue);
-        repository.getGame().setStartingRumor(startingRumorValue);
+        repository.getGame().setIsSimpleMyths(easyMythosValue);
+        repository.getGame().setIsNormalMyths(normalMythosValue);
+        repository.getGame().setIsHardMyths(hardMythosValue);
+        repository.getGame().setIsStartingRumor(startingRumorValue);
     }
 
     @Override

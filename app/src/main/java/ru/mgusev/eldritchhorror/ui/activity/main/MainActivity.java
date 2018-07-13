@@ -1,5 +1,6 @@
 package ru.mgusev.eldritchhorror.ui.activity.main;
 
+import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -294,6 +297,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public void setUserIcon(Drawable icon) {
         if (authItem != null) authItem.setIcon(icon);
+    }
+
+    @Override
+    public void showErrorSnackBar() {
+        Snackbar.make(findViewById(R.id.main_coordinator), R.string.auth_error, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

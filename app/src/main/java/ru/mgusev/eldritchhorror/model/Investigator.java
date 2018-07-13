@@ -3,13 +3,9 @@ package ru.mgusev.eldritchhorror.model;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.util.Objects;
 
 @Entity(tableName = "investigators")
-public class Investigator implements Parcelable {
+public class Investigator {
 
     public static final String INVESTIGATOR_TABLE_NAME = "investigators";
 
@@ -86,56 +82,6 @@ public class Investigator implements Parcelable {
         this.specialization = investigator.specialization;
     }
 
-    protected Investigator(Parcel in) {
-        id = in.readLong();
-        gameId = in.readLong();
-        imageResource = in.readString();
-        isMale = in.readByte() != 0;
-        nameEN = in.readString();
-        nameRU = in.readString();
-        occupationEN = in.readString();
-        occupationRU = in.readString();
-        isStarting = in.readByte() != 0;
-        isReplacement = in.readByte() != 0;
-        isDead = in.readByte() != 0;
-        expansionID = in.readInt();
-        specialization = in.readInt();
-    }
-
-    public static final Creator<Investigator> CREATOR = new Creator<Investigator>() {
-        @Override
-        public Investigator createFromParcel(Parcel in) {
-            return new Investigator(in);
-        }
-
-        @Override
-        public Investigator[] newArray(int size) {
-            return new Investigator[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(id);
-        parcel.writeLong(gameId);
-        parcel.writeString(imageResource);
-        parcel.writeByte((byte) (isMale ? 1 : 0));
-        parcel.writeString(nameEN);
-        parcel.writeString(nameRU);
-        parcel.writeString(occupationEN);
-        parcel.writeString(occupationRU);
-        parcel.writeByte((byte) (isStarting ? 1 : 0));
-        parcel.writeByte((byte) (isReplacement ? 1 : 0));
-        parcel.writeByte((byte) (isDead ? 1 : 0));
-        parcel.writeInt(expansionID);
-        parcel.writeInt(specialization);
-    }
-
     public long getId() {
         return id;
     }
@@ -160,11 +106,11 @@ public class Investigator implements Parcelable {
         this.imageResource = imageResource;
     }
 
-    public boolean isMale() {
+    public boolean getIsMale() {
         return isMale;
     }
 
-    public void setMale(boolean male) {
+    public void setIsMale(boolean male) {
         isMale = male;
     }
 
@@ -200,27 +146,27 @@ public class Investigator implements Parcelable {
         this.occupationRU = occupationRU;
     }
 
-    public boolean isStarting() {
+    public boolean getIsStarting() {
         return isStarting;
     }
 
-    public void setStarting(boolean starting) {
+    public void setIsStarting(boolean starting) {
         isStarting = starting;
     }
 
-    public boolean isReplacement() {
+    public boolean getIsReplacement() {
         return isReplacement;
     }
 
-    public void setReplacement(boolean replacement) {
+    public void setIsReplacement(boolean replacement) {
         isReplacement = replacement;
     }
 
-    public boolean isDead() {
+    public boolean getIsDead() {
         return isDead;
     }
 
-    public void setDead(boolean dead) {
+    public void setIsDead(boolean dead) {
         isDead = dead;
     }
 
@@ -245,9 +191,19 @@ public class Investigator implements Parcelable {
         else return nameEN;
     }
 
+    public void setName(String name) {
+        // For fix Firebase ClassMapper alert
+        // W/ClassMapper: No setter/field for name found on class ru.mgusev.eldritchhorror.model.Investigator (fields/setters are case sensitive!)
+    }
+
     public String getOccupation() {
         if (Localization.getInstance().isRusLocale()) return occupationRU;
         else return occupationEN;
+    }
+
+    public void setOccupation(String occupation) {
+        // For fix Firebase ClassMapper alert
+        // W/ClassMapper: No setter/field for occupation found on class ru.mgusev.eldritchhorror.model.Investigator (fields/setters are case sensitive!)
     }
 
     @Override

@@ -68,8 +68,8 @@ public class DetailsAdapter  extends RecyclerView.Adapter<DetailsAdapter.Details
         for (Expansion expansion : expansionList) {
             if (expansion.getId() == investigatorList.get(position).getExpansionID()) holder.expansionIcon.setImageResource(resources.getIdentifier(expansion.getImageResource(), "drawable", context.getPackageName()));
         }
-        holder.investigatorCard.setCardBackgroundColor(ContextCompat.getColor(context, investigatorList.get(position).isReplacement() ? R.color.color_replacement_investigator : R.color.color_starting_investigator));
-        holder.deadIcon.setVisibility(investigatorList.get(position).isDead() ? View.VISIBLE : View.GONE);
+        holder.investigatorCard.setCardBackgroundColor(ContextCompat.getColor(context, investigatorList.get(position).getIsReplacement() ? R.color.color_replacement_investigator : R.color.color_starting_investigator));
+        holder.deadIcon.setVisibility(investigatorList.get(position).getIsDead() ? View.VISIBLE : View.GONE);
     }
 
     @Override

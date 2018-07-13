@@ -4,15 +4,13 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity(tableName = "games")
-public class Game implements Parcelable {
+public class Game {
 
     public static final String GAME_TABLE_NAME = "games";
 
@@ -150,82 +148,6 @@ public class Game implements Parcelable {
         invList = new ArrayList<>();
     }
 
-    private Game(Parcel in) {
-        id = in.readLong();
-        date = in.readLong();
-        ancientOneID = in.readInt();
-        playersCount = in.readInt();
-        isSimpleMyths = in.readByte() != 0;
-        isNormalMyths = in.readByte() != 0;
-        isHardMyths = in.readByte() != 0;
-        isStartingRumor = in.readByte() != 0;
-        isWinGame = in.readByte() != 0;
-        isDefeatByElimination = in.readByte() != 0;
-        isDefeatByMythosDepletion = in.readByte() != 0;
-        isDefeatByAwakenedAncientOne = in.readByte() != 0;
-        gatesCount = in.readInt();
-        monstersCount = in.readInt();
-        curseCount = in.readInt();
-        rumorsCount = in.readInt();
-        cluesCount = in.readInt();
-        blessedCount = in.readInt();
-        doomCount = in.readInt();
-        score = in.readInt();
-        preludeID = in.readInt();
-        solvedMysteriesCount = in.readInt();
-        userID = in.readString();
-        lastModified = in.readLong();
-        adventureID = in.readInt();
-        invList = in.createTypedArrayList(Investigator.CREATOR);
-    }
-
-    public static final Creator<Game> CREATOR = new Creator<Game>() {
-        @Override
-        public Game createFromParcel(Parcel in) {
-            return new Game(in);
-        }
-
-        @Override
-        public Game[] newArray(int size) {
-            return new Game[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(id);
-        parcel.writeLong(date);
-        parcel.writeInt(ancientOneID);
-        parcel.writeInt(playersCount);
-        parcel.writeByte((byte) (isSimpleMyths ? 1 : 0));
-        parcel.writeByte((byte) (isNormalMyths ? 1 : 0));
-        parcel.writeByte((byte) (isHardMyths ? 1 : 0));
-        parcel.writeByte((byte) (isStartingRumor ? 1 : 0));
-        parcel.writeByte((byte) (isWinGame ? 1 : 0));
-        parcel.writeByte((byte) (isDefeatByElimination ? 1 : 0));
-        parcel.writeByte((byte) (isDefeatByMythosDepletion ? 1 : 0));
-        parcel.writeByte((byte) (isDefeatByAwakenedAncientOne ? 1 : 0));
-        parcel.writeInt(gatesCount);
-        parcel.writeInt(monstersCount);
-        parcel.writeInt(curseCount);
-        parcel.writeInt(rumorsCount);
-        parcel.writeInt(cluesCount);
-        parcel.writeInt(blessedCount);
-        parcel.writeInt(doomCount);
-        parcel.writeInt(score);
-        parcel.writeInt(preludeID);
-        parcel.writeInt(solvedMysteriesCount);
-        parcel.writeString(userID);
-        parcel.writeLong(lastModified);
-        parcel.writeInt(adventureID);
-        parcel.writeTypedList(invList);
-    }
-
     public long getId() {
         return id;
     }
@@ -258,67 +180,67 @@ public class Game implements Parcelable {
         this.playersCount = playersCount;
     }
 
-    public boolean isSimpleMyths() {
+    public boolean getIsSimpleMyths() {
         return isSimpleMyths;
     }
 
-    public void setSimpleMyths(boolean simpleMyths) {
-        isSimpleMyths = simpleMyths;
+    public void setIsSimpleMyths(boolean isSimpleMyths) {
+        this.isSimpleMyths = isSimpleMyths;
     }
 
-    public boolean isNormalMyths() {
+    public boolean getIsNormalMyths() {
         return isNormalMyths;
     }
 
-    public void setNormalMyths(boolean normalMyths) {
+    public void setIsNormalMyths(boolean normalMyths) {
         isNormalMyths = normalMyths;
     }
 
-    public boolean isHardMyths() {
+    public boolean getIsHardMyths() {
         return isHardMyths;
     }
 
-    public void setHardMyths(boolean hardMyths) {
+    public void setIsHardMyths(boolean hardMyths) {
         isHardMyths = hardMyths;
     }
 
-    public boolean isStartingRumor() {
+    public boolean getIsStartingRumor() {
         return isStartingRumor;
     }
 
-    public void setStartingRumor(boolean startingRumor) {
+    public void setIsStartingRumor(boolean startingRumor) {
         isStartingRumor = startingRumor;
     }
 
-    public boolean isWinGame() {
+    public boolean getIsWinGame() {
         return isWinGame;
     }
 
-    public void setWinGame(boolean winGame) {
+    public void setIsWinGame(boolean winGame) {
         isWinGame = winGame;
     }
 
-    public boolean isDefeatByElimination() {
+    public boolean getIsDefeatByElimination() {
         return isDefeatByElimination;
     }
 
-    public void setDefeatByElimination(boolean defeatByElimination) {
+    public void setIsDefeatByElimination(boolean defeatByElimination) {
         isDefeatByElimination = defeatByElimination;
     }
 
-    public boolean isDefeatByMythosDepletion() {
+    public boolean getIsDefeatByMythosDepletion() {
         return isDefeatByMythosDepletion;
     }
 
-    public void setDefeatByMythosDepletion(boolean defeatByMythosDepletion) {
+    public void setIsDefeatByMythosDepletion(boolean defeatByMythosDepletion) {
         isDefeatByMythosDepletion = defeatByMythosDepletion;
     }
 
-    public boolean isDefeatByAwakenedAncientOne() {
+    public boolean getIsDefeatByAwakenedAncientOne() {
         return isDefeatByAwakenedAncientOne;
     }
 
-    public void setDefeatByAwakenedAncientOne(boolean defeatByAwakenedAncientOne) {
+    public void setIsDefeatByAwakenedAncientOne(boolean defeatByAwakenedAncientOne) {
         isDefeatByAwakenedAncientOne = defeatByAwakenedAncientOne;
     }
 

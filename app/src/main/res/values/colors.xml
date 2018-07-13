@@ -21,4 +21,8 @@
     <color name="enable_thrumb_green">#bdbdbd</color>
 
     <color name="colorHighlight">#607d8b</color>
+
+    <color name="color_preloader_start">#00000000</color>
+    <color name="color_preloader_center">#00000000</color>
+    <color name="color_preloader_end">#ff56a9c7</color>
 </resources>

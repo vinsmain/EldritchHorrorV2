@@ -66,4 +66,7 @@ public interface MainView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setUserIcon(Drawable icon);
+
+    @StateStrategyType(OneExecutionStateStrategy.class)
+    void showErrorSnackBar();
 }

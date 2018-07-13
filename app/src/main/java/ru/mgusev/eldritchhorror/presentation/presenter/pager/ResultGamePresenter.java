@@ -30,11 +30,11 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getViewState().setResultSwitchChecked(repository.getGame().isWinGame());
+        getViewState().setResultSwitchChecked(repository.getGame().getIsWinGame());
         getViewState().setMysteryValue(repository.getGame().getSolvedMysteriesCount());
         setResultValues();
         repository.scoreOnNext(); //устанавливаем счет при первом запуске
-        getViewState().setDefeatReasonSwitchChecked(repository.getGame().isDefeatByElimination(), repository.getGame().isDefeatByMythosDepletion(), repository.getGame().isDefeatByAwakenedAncientOne());
+        getViewState().setDefeatReasonSwitchChecked(repository.getGame().getIsDefeatByElimination(), repository.getGame().getIsDefeatByMythosDepletion(), repository.getGame().getIsDefeatByAwakenedAncientOne());
     }
 
     private void setResultValues() {
@@ -43,7 +43,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     }
 
     public void setResultSwitch(boolean value) {
-        repository.getGame().setWinGame(value);
+        repository.getGame().setIsWinGame(value);
         repository.isWinOnNext();
     }
 
@@ -80,9 +80,9 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     }
 
     public void setDefeatReasons(boolean v1, boolean v2, boolean v3) {
-        repository.getGame().setDefeatByElimination(v1);
-        repository.getGame().setDefeatByMythosDepletion(v2);
-        repository.getGame().setDefeatByAwakenedAncientOne(v3);
+        repository.getGame().setIsDefeatByElimination(v1);
+        repository.getGame().setIsDefeatByMythosDepletion(v2);
+        repository.getGame().setIsDefeatByAwakenedAncientOne(v3);
         repository.isWinOnNext();
     }
 

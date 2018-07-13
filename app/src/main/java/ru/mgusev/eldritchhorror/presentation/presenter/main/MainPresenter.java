@@ -44,6 +44,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     private List<Game> gameList;
     private CompositeDisposable gameListSubscribe;
     private CompositeDisposable userIconSubscribe;
+    private CompositeDisposable authSubscribe;
     private String tempIconUrl;
 
     private int deletingGamePosition;
@@ -52,8 +53,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
         App.getComponent().inject(this);
         gameListSubscribe = new CompositeDisposable();
         userIconSubscribe = new CompositeDisposable();
+        authSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::updateGameList));
         userIconSubscribe.add(repository.getUserIconPublish().subscribe(this::updateUserIcon));
+        authSubscribe.add(repository.getAuthPublish().subscribe(this::showAuthError));
         tempIconUrl = googleAuth.getDefaultIconUrl();
     }
 
@@ -189,7 +192,12 @@ public class MainPresenter extends MvpPresenter<MainView> {
             Log.w(TAG, "Google sign in failed", e);
             tempIconUrl = googleAuth.getDefaultIconUrl();
             getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
+            getViewState().showErrorSnackBar();
         }
+    }
+
+    private void showAuthError(boolean isAuthFail) {
+        if (isAuthFail) getViewState().showErrorSnackBar();
     }
 
     @Override
@@ -197,5 +205,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
         super.onDestroy();
         gameListSubscribe.dispose();
         userIconSubscribe.dispose();
+        authSubscribe.dispose();
     }
 }
