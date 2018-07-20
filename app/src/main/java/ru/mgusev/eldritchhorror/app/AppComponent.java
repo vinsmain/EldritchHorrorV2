@@ -9,6 +9,7 @@ import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.adapter.StatisticsAdapter;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.FirebaseHelper;
+import ru.mgusev.eldritchhorror.database.oldDB.DatabaseHelperOld;
 import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ExpansionChoicePresenter;
@@ -18,7 +19,6 @@ import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ResultGamePresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPresenter;
-import ru.mgusev.eldritchhorror.support.UserPhoto;
 
 @Component (modules = AppModule.class)
 @Singleton
@@ -40,4 +40,6 @@ public interface AppComponent {
 
     void inject(FirebaseHelper helper);
     void inject(GoogleAuth googleAuth);
+
+    void inject(DatabaseHelperOld databaseHelperOld);
 }

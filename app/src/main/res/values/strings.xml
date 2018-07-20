@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Eldritch Horror Assistant</string>
+    <string name="appl_name">Eldritch Horror Assistant</string>
     <string name="main_header">My games</string>
     <string name="choose_date">Choose a date</string>
     <string name="ready">OK</string>
@@ -12,8 +12,8 @@
     <string name="hardMyths">Hard Mythos Cards</string>
     <string name="startingRumor">Starting Rumor</string>
     <string name="next">Next</string>
-    <string name="gatesCount">Number of open Gates on the game board</string>
-    <string name="monstersCount">Number of Monsters on the game board</string>
+    <string name="gatesCount">Number of open Gates on the gameOld board</string>
+    <string name="monstersCount">Number of Monsters on the gameOld board</string>
     <string name="curseCount">Total number of \"Cursed\" or \"Dark Pact\" Conditions</string>
     <string name="rumorsCount">Number of Rumor Mythos card in play</string>
     <string name="cluesCount">Total number of Clue tokens investigators have</string>
@@ -28,7 +28,7 @@
     <string name="win_table_header">Scoring</string>
     <string name="defeat_table_header">Reasons for defeat</string>
     <string name="dialogAlert">Confirm</string>
-    <string name="deleteDialogMessage">Do you want to delete the game result?</string>
+    <string name="deleteDialogMessage">Do you want to delete the gameOld result?</string>
     <string name="cleanDialogMessage">Do you want to clean the list of investigators?</string>
     <string name="messageOK">Yes</string>
     <string name="messageCancel">No</string>
@@ -43,10 +43,10 @@
     <string name="five">5</string>
     <string name="starting_game">Initial team</string>
     <string name="replacement">Replacement</string>
-    <string name="dead">Out of the game</string>
+    <string name="dead">Out of the gameOld</string>
     <string name="starting_game_female">Initial team</string>
     <string name="replacement_female">Replacement</string>
-    <string name="dead_female">Out of the game</string>
+    <string name="dead_female">Out of the gameOld</string>
     <string name="initial_conditions">Initial conditions</string>
     <string name="investigators">Investigators</string>
     <string name="investigators_none">None</string>
@@ -57,8 +57,8 @@
     <string name="defeat_by_mythos_depletion">A Mythos card cannot be drawn</string>
     <string name="defeat_by_awakened_ancient_one">Indication on the Ancient One sheet</string>
 
-    <string name="add_new_game">Create a new game</string>
-    <string name="edit_game">Edit game</string>
+    <string name="add_new_game">Create a new gameOld</string>
+    <string name="edit_game">Edit gameOld</string>
     <string name="dialogBackAlert">Unsaved data will be lost!</string>
     <string name="backDialogMessage">Do you want to leave?</string>
     <string name="edit_expansion">Edit the list of expansion</string>
@@ -87,7 +87,7 @@
     <string name="message_rate">Rate now</string>
     <string name="message_later">Remind Me Later</string>
 
-    <string name="message_starting">So far there are no results of the game.\nTo add the result of the game, click on the big orange button.</string>
+    <string name="message_starting">So far there are no results of the gameOld.\nTo add the result of the gameOld, click on the big orange button.</string>
 
     <string name="random_button_header">Random selection</string>
     <string name="alert_investigators_limit">"Number of initial investigators exceeded!"</string>
@@ -114,13 +114,13 @@
 
     <string name="all_results">All results</string>
     <string name="other_results">Others</string>
-    <string name="last_game_header">Last game</string>
+    <string name="last_game_header">Last gameOld</string>
     <string name="popular_investigators_header">Popular investigators</string>
     <string name="summary_stat_header">Summary</string>
     <string name="not_available">Not available</string>
-    <string name="best_game">Best game</string>
-    <string name="donate_paypal_description">Donate PayPal</string>
-    <string name="donate_yandex_description">Donate Yandex</string>
-    <string name="statistics_background">statistics_background</string>
+    <string name="best_game">Best gameOld</string>
+    <string name="donate_paypal_description" translatable="false">Donate PayPal</string>
+    <string name="donate_yandex_description" translatable="false">Donate Yandex</string>
+    <string name="statistics_background" translatable="false">statistics_background</string>
     <string name="music_header">Atmospheric music</string>
 </resources>

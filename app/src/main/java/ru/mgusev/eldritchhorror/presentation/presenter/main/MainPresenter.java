@@ -24,6 +24,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
+import ru.mgusev.eldritchhorror.database.oldDB.DatabaseHelperOld;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
 import ru.mgusev.eldritchhorror.repository.Repository;
@@ -45,6 +46,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     private CompositeDisposable gameListSubscribe;
     private CompositeDisposable userIconSubscribe;
     private CompositeDisposable authSubscribe;
+    private CompositeDisposable rateSubscribe;
     private String tempIconUrl;
 
     private int deletingGamePosition;
@@ -54,18 +56,29 @@ public class MainPresenter extends MvpPresenter<MainView> {
         gameListSubscribe = new CompositeDisposable();
         userIconSubscribe = new CompositeDisposable();
         authSubscribe = new CompositeDisposable();
+        rateSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::updateGameList));
         userIconSubscribe.add(repository.getUserIconPublish().subscribe(this::updateUserIcon));
         authSubscribe.add(repository.getAuthPublish().subscribe(this::showAuthError));
+        rateSubscribe.add(repository.getRatePublish().subscribe(this::showRateDialog));
         tempIconUrl = googleAuth.getDefaultIconUrl();
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
+        importOldUserData();
         gameList = repository.getGameList(0, 0);
         repository.gameListOnNext();
         if (googleAuth.getCurrentUser() != null) auth();
+    }
+
+
+
+    private void importOldUserData() {
+        new DatabaseHelperOld(repository.getContext()); //import data from old version User DB
+        repository.getContext().deleteDatabase("eldritchHorrorDB.db"); //delete old version User DB
+        repository.getContext().deleteDatabase("EHLocalDB.db"); //delete old version Static DB
     }
 
     public void startUpdateUserIcon() {
@@ -80,8 +93,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
                     Log.d("DEBUG", "onBitmapLoaded");
                     BitmapDrawable mBitmapDrawable = new BitmapDrawable(repository.getContext().getResources(), bitmap);
-                    //                                mBitmapDrawable.setBounds(0,0,24,24);
-                    // setting icon of Menu Item or Navigation View's Menu Item
                     getViewState().setUserIcon(mBitmapDrawable);
                 }
 
@@ -150,6 +161,18 @@ public class MainPresenter extends MvpPresenter<MainView> {
         getViewState().hideDeleteDialog();
     }
 
+    private void showRateDialog(boolean value) {
+        getViewState().showRateDialog();
+    }
+
+    public void hideRateDialog() {
+        getViewState().hideRateDialog();
+    }
+
+    public void setRateResult(boolean isRate) {
+        repository.setRate(isRate);
+    }
+
     public void deleteGame() {
         repository.deleteGame(gameList.get(deletingGamePosition));
         gameList.remove(deletingGamePosition);
@@ -168,13 +191,12 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
 
     public void actionAuth() {
-        System.out.println("123 " + googleAuth.getCurrentUser());
         if (googleAuth.getCurrentUser() != null) getViewState().showSignOutMenu();
         else auth();
     }
 
     public void auth() {
-        getViewState().signIn(googleAuth.getmGoogleSignInClient().getSignInIntent());
+        getViewState().signIn(googleAuth.getGoogleSignInClient().getSignInIntent());
     }
 
     public void signOut() {
@@ -206,5 +228,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
         gameListSubscribe.dispose();
         userIconSubscribe.dispose();
         authSubscribe.dispose();
+        rateSubscribe.dispose();
     }
 }

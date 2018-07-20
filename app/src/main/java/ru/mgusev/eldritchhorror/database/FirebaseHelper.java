@@ -32,12 +32,10 @@ public class FirebaseHelper {
         return childEventDisposable;
     }
 
-    public boolean addGame(Game game) {
+    public void addGame(Game game) {
         if (reference != null) {
             reference.child(String.valueOf(game.getId())).setValue(game);
-            return true;
         }
-        return false;
     }
 
     public void removeGame(Game game) throws NullPointerException {

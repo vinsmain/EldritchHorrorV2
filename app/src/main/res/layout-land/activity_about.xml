@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/eldritch_horror_logo"
-                android:contentDescription="@string/app_name" />
+                android:contentDescription="@string/appl_name" />
 
             <TextView
                 android:id="@+id/about_version"
