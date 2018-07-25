@@ -17,9 +17,12 @@ import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 public interface MainView extends MvpView {
 
     String DELETE_DIALOG_TAG = "deleteDialog";
+    String RATE_DIALOG_TAG = "deleteDialog";
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void showStatisticsMenuItem();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void hideStatisticsMenuItem();
 
     @StateStrategyType(SkipStrategy.class)
@@ -37,6 +40,12 @@ public interface MainView extends MvpView {
     @StateStrategyType(value = DismissDialogStrategy.class, tag = DELETE_DIALOG_TAG)
     void hideDeleteDialog();
 
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = RATE_DIALOG_TAG)
+    void showRateDialog();
+
+    @StateStrategyType(value = DismissDialogStrategy.class, tag = RATE_DIALOG_TAG)
+    void hideRateDialog();
+
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setDataToAdapter(List<Game> gameList);
 
@@ -45,6 +54,9 @@ public interface MainView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void hideEmptyListMessage();
+
+    @StateStrategyType(OneExecutionStateStrategy.class)
+    void intentToGooglePlay();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void deleteGame(int position, List<Game> gameList);

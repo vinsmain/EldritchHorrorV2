@@ -156,10 +156,18 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     private void initScoreValues() {
         chartValues = new ArrayList<>();
         chartLabels = new ArrayList<>();
+        List<Integer> scoreList = repository.getScoreList(currentAncientOneId);
+        int otherCountSum = 0;
 
-        for (int score : repository.getScoreList(currentAncientOneId)) {
-            chartValues.add((float) repository.getScoreCount(score, currentAncientOneId));
-            chartLabels.add(String.valueOf(score));
+        for (int i = 0; i < scoreList.size(); i++) {
+            if (i < MAX_VALUES_IN_CHART) {
+                chartValues.add((float) repository.getScoreCount(scoreList.get(i), currentAncientOneId));
+                chartLabels.add(String.valueOf(scoreList.get(i)));
+            } else otherCountSum += repository.getScoreCount(scoreList.get(i), currentAncientOneId);
+        }
+        if (otherCountSum != 0) {
+            chartValues.add((float) otherCountSum);
+            chartLabels.add(repository.getContext().getResources().getString(R.string.other_results));
         }
     }
 

@@ -1,14 +1,17 @@
 package ru.mgusev.eldritchhorror.ui.activity.main;
 
-import android.app.ProgressDialog;
+import android.Manifest;
+import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -58,6 +60,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     private static final int RC_SIGN_IN = 9001;
     private static final String MUSIC_URL = "https://melodice.org/playlist/eldritch-horror-2013/";
+    private static final String GOOGLE_PLAY_URL = "market://details?id=";
 
     private MenuItem sortItem;
     private MenuItem authItem;
@@ -68,6 +71,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private MainAdapter adapter;
     private ScrollListener scrollListener;
     private AlertDialog deleteDialog;
+    private AlertDialog rateDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        //verifyStoragePermissions(this);
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 2;
 
@@ -92,6 +98,38 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         setSupportActionBar(toolbar);
         setTitle(R.string.main_header);
     }
+
+
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,6 +215,30 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
+    public void showRateDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle(R.string.rate_title);
+        builder.setMessage(R.string.rate_massage);
+        builder.setIcon(R.drawable.rate_star);
+        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+            intentToGooglePlay();
+            mainPresenter.hideRateDialog();
+            mainPresenter.setRateResult(true);
+        });
+        builder.setNegativeButton(R.string.message_later, (DialogInterface dialog, int which) -> {
+            mainPresenter.hideRateDialog();
+            mainPresenter.setRateResult(false);
+        });
+        rateDialog = builder.show();
+    }
+
+    @Override
+    public void hideRateDialog() {
+        //Delete showRateDialog() from currentState with DismissDialogStrategy
+    }
+
+    @Override
     public void setDataToAdapter(List<Game> gameList) {
         adapter.updateGameList(gameList);
     }
@@ -211,6 +273,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     public void intentToDetails() {
         Intent detailsIntent = new Intent(this, DetailsActivity.class);
         startActivity(detailsIntent);
+    }
+
+    @Override
+    public void intentToGooglePlay() {
+        Uri uri = Uri.parse(GOOGLE_PLAY_URL + getPackageName()); // Go to Android market
+        Intent googlePlayIntent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(googlePlayIntent);
     }
 
     @OnClick({R.id.main_add_game})
@@ -275,7 +344,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void signIn(Intent signInIntent) {
-        System.out.println("INTENT " + signInIntent);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
@@ -308,5 +376,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     protected void onDestroy() {
         super.onDestroy();
         if (deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
+        if (rateDialog != null && rateDialog.isShowing()) rateDialog.dismiss();
     }
 }

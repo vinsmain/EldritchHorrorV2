@@ -1,9 +1,6 @@
 package ru.mgusev.eldritchhorror.auth;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -19,12 +16,9 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
-import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.repository.Repository;
-import ru.mgusev.eldritchhorror.support.BitmapCircle;
-import ru.mgusev.eldritchhorror.support.UserPhoto;
 
 public class GoogleAuth {
 
@@ -35,7 +29,7 @@ public class GoogleAuth {
 
     private Context context;
     private FirebaseAuth mAuth;
-    private GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInClient googleSignInClient;
     private GoogleSignInOptions gso;
     private FirebaseUser currentUser;
     private String defaultIconUrl;
@@ -44,7 +38,7 @@ public class GoogleAuth {
         App.getComponent().inject(this);
         this.context = context;
         configGoogleSignIn();
-        mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
+        googleSignInClient = GoogleSignIn.getClient(context, gso);
         mAuth = FirebaseAuth.getInstance();
         defaultIconUrl = "sign_out";
     }
@@ -60,8 +54,8 @@ public class GoogleAuth {
         return mAuth.getCurrentUser();
     }
 
-    public GoogleSignInClient getmGoogleSignInClient() {
-        return mGoogleSignInClient;
+    public GoogleSignInClient getGoogleSignInClient() {
+        return googleSignInClient;
     }
 
     public void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
@@ -83,19 +77,19 @@ public class GoogleAuth {
     }
 
     public void signOut() {
+        repository.firebaseSubscribeDispose();
         currentUser = null;
         // Firebase sign out
         mAuth.signOut();
 
         // Google sign out
-        mGoogleSignInClient.signOut().addOnCompleteListener(
+        googleSignInClient.signOut().addOnCompleteListener(
             task -> {
                 Log.d(TAG, "signInWithCredential:sign out");
                 repository.userIconOnNext(defaultIconUrl);
                 repository.deleteSynchGames();
                 repository.gameListOnNext();
                 repository.setUser(currentUser);
-                repository.firebaseSubscribeDispose();
             });
     }
 

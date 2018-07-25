@@ -63,6 +63,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
             clearResultValuesIfDefeat();
             repository.insertGame(repository.getGame());
             repository.gameListOnNext();
+            repository.rateOnNext();
             getViewState().finishActivity();
         }
         else getViewState().showError();

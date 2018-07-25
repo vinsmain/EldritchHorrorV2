@@ -1,6 +1,7 @@
 package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -33,25 +34,26 @@ import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
 public class Repository {
 
     private final Context context;
-    private final PublishSubject<AncientOne> ancientOnePublish;
-    private final PublishSubject<Integer> scorePublish;
-    private final PublishSubject<Boolean> isWinPublish;
     private final StaticDataDB staticDataDB;
     private final UserDataDB userDataDB;
     private final PrefHelper prefHelper;
 
-    private Investigator investigator;
+    private PublishSubject<AncientOne> ancientOnePublish;
+    private PublishSubject<Integer> scorePublish;
+    private PublishSubject<Boolean> isWinPublish;
     private PublishSubject<Investigator> investigatorPublish;
     private PublishSubject<List<Expansion>> expansionPublish;
     private PublishSubject<Integer> randomPublish;
     private PublishSubject<Integer> clearPublish;
     private PublishSubject<List<Game>> gameListPublish;
     private PublishSubject<String> userIconPublish;
-    private final PublishSubject<Boolean> authPublish;
+    private PublishSubject<Boolean> authPublish;
+    private PublishSubject<Boolean> ratePublish;
 
     private CompositeDisposable firebaseSubscribe;
 
     private Game game;
+    private Investigator investigator;
     private int pagerPosition = 0;
     private FirebaseHelper firebaseHelper;
     private FirebaseUser user;
@@ -73,6 +75,7 @@ public class Repository {
         gameListPublish = PublishSubject.create();
         userIconPublish = PublishSubject.create();
         authPublish = PublishSubject.create();
+        ratePublish = PublishSubject.create();
     }
 
     public Game getGame() {
@@ -228,7 +231,7 @@ public class Repository {
         expansionPublish.onNext(getExpansionList());
     }
 
-    // Game
+    // GameOld
 
     public int getSortMode() {
         return prefHelper.loadSortMode();
@@ -258,7 +261,7 @@ public class Repository {
     public void initFirebaseHelper() {
         firebaseHelper.initReference(user);
         firebaseSubscribe = new CompositeDisposable();
-        firebaseSubscribe.add(firebaseHelper.getChildEventDisposable().subscribe(this::processDataFromFirebase));
+        firebaseSubscribe.add(firebaseHelper.getChildEventDisposable().subscribe(this::processDataFromFirebase, e -> Log.w("FIREBASE", e)));
         for (Game game : userDataDB.gameDAO().getGameListSortedDateAscending()) {
             if (game.getUserID() == null) insertGame(game);
         }
@@ -284,7 +287,7 @@ public class Repository {
     }
 
     public void firebaseSubscribeDispose() {
-        firebaseSubscribe.dispose();
+        if (firebaseSubscribe != null) firebaseSubscribe.dispose();
     }
 
     private void changeGame(Game game) {
@@ -417,5 +420,22 @@ public class Repository {
 
     public void authOnNext(boolean isAuthFail) {
         authPublish.onNext(isAuthFail);
+    }
+
+    public PublishSubject<Boolean> getRatePublish() {
+        return ratePublish;
+    }
+
+    public void rateOnNext() {
+        if (isShowRate()) ratePublish.onNext(true);
+    }
+
+    public void setRate(boolean isRate) {
+        prefHelper.saveIsRate(isRate);
+        prefHelper.saveGameCountForRateDialog(getGameCount(0));
+    }
+
+    private boolean isShowRate() {
+        return !prefHelper.loadIsRate() && prefHelper.loadGameCountForRateDialog() + 5 <= getGameCount(0);
     }
 }

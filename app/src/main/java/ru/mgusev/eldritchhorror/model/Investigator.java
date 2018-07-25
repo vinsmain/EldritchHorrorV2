@@ -193,7 +193,7 @@ public class Investigator {
 
     public void setName(String name) {
         // For fix Firebase ClassMapper alert
-        // W/ClassMapper: No setter/field for name found on class ru.mgusev.eldritchhorror.model.Investigator (fields/setters are case sensitive!)
+        // W/ClassMapper: No setter/field for name found on class ru.mgusev.eldritchhorror.model.InvestigatorOld (fields/setters are case sensitive!)
     }
 
     public String getOccupation() {
@@ -203,7 +203,7 @@ public class Investigator {
 
     public void setOccupation(String occupation) {
         // For fix Firebase ClassMapper alert
-        // W/ClassMapper: No setter/field for occupation found on class ru.mgusev.eldritchhorror.model.Investigator (fields/setters are case sensitive!)
+        // W/ClassMapper: No setter/field for occupation found on class ru.mgusev.eldritchhorror.model.InvestigatorOld (fields/setters are case sensitive!)
     }
 
     @Override
