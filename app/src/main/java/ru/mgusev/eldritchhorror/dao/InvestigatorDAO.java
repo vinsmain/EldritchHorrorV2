@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
 @Dao
 public interface InvestigatorDAO {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertInvestigatorList(List<Investigator> list);
 
     @Query("SELECT * FROM investigators ORDER BY expansion_id, name_en")

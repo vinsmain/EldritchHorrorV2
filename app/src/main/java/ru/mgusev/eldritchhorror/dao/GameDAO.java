@@ -8,7 +8,6 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Game;
 
 @Dao
@@ -18,7 +17,7 @@ public interface GameDAO {
     void insertGame(Game game);
 
     @Delete
-    void deleteGame(Game game);
+    int deleteGame(Game game);
 
     @Query("SELECT * FROM games WHERE _id = :id LIMIT 1")
     Game getGame(long id);

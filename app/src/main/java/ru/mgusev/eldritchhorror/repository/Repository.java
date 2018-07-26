@@ -28,6 +28,7 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.app.AppModule;
+import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
 
 @Module (includes = AppModule.class)
@@ -79,7 +80,6 @@ public class Repository {
     }
 
     public Game getGame() {
-        if (game == null) game = new Game();
         return game;
     }
 
@@ -231,7 +231,7 @@ public class Repository {
         expansionPublish.onNext(getExpansionList());
     }
 
-    // GameOld
+    // Game
 
     public int getSortMode() {
         return prefHelper.loadSortMode();
@@ -319,7 +319,7 @@ public class Repository {
         firebaseHelper.addGame(game);
     }
 
-    private void insertGameToDB(Game game) {
+    public void insertGameToDB(Game game) {
         userDataDB.gameDAO().insertGame(game);
         userDataDB.investigatorDAO().deleteByGameID(game.getId());
         userDataDB.investigatorDAO().insertInvestigatorList(game.getInvList());
@@ -332,7 +332,6 @@ public class Repository {
     }
 
     private void deleteGameFromDB(Game game) {
-        userDataDB.gameDAO().deleteGame(game);
         userDataDB.investigatorDAO().deleteByGameID(game.getId());
     }
 
@@ -437,5 +436,23 @@ public class Repository {
 
     private boolean isShowRate() {
         return !prefHelper.loadIsRate() && prefHelper.loadGameCountForRateDialog() + 5 <= getGameCount(0);
+    }
+
+    // Specialization
+
+    public List<Specialization> getSpecializationList() {
+        return staticDataDB.specializationDAO().getAll();
+    }
+
+    public void saveSpecializationList(List<Specialization> list) {
+        staticDataDB.specializationDAO().insertSpecializationList(list);
+    }
+
+    public Specialization getSpecialization(int id) {
+        return staticDataDB.specializationDAO().getSpecializationById(id);
+    }
+
+    public int getEnabledSpecializationCount() {
+        return staticDataDB.specializationDAO().getEnabledSpecializationCount();
     }
 }

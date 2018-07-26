@@ -9,6 +9,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.ExpansionChoiceAdapter;
 import ru.mgusev.eldritchhorror.model.Expansion;
@@ -20,17 +22,16 @@ public class ExpansionChoiceActivity extends MvpAppCompatActivity implements Exp
     @InjectPresenter
     ExpansionChoicePresenter pagerPresenter;
 
-    private static int columnsCount = 1;
+    @BindView(R.id.expansion_choice_recycler_view) RecyclerView expansionRV;
 
-    private RecyclerView expansionRV;
+    private static int columnsCount = 1;
     private ExpansionChoiceAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expansion_choice);
-
-        expansionRV = findViewById(R.id.expansion_choice_recycler_view);
+        ButterKnife.bind(this);
     }
 
     @Override

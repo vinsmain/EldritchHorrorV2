@@ -118,4 +118,5 @@
     <string name="not_available">Данные отсутствуют</string>
     <string name="best_game">Лучшая игра</string>
     <string name="music_header">Атмосферная музыка</string>
+    <string name="specialization_header">Специализация сыщиков</string>
 </resources>

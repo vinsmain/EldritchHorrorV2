@@ -73,8 +73,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
         if (googleAuth.getCurrentUser() != null) auth();
     }
 
-
-
     private void importOldUserData() {
         new DatabaseHelperOld(repository.getContext()); //import data from old version User DB
         repository.getContext().deleteDatabase("eldritchHorrorDB.db"); //delete old version User DB
@@ -121,6 +119,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public void addGame() {
+        repository.setGame(new Game());
         getViewState().intentToPager();
     }
 

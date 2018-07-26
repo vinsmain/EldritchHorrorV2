@@ -136,7 +136,7 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
             do {
                 int index = random.nextInt(allInvestigatorList.size());
                 inv = allInvestigatorList.get(index);
-            } while (isRepeatSpecialization(inv) && activeInvestigatorList.size() < 7);
+            } while (isRepeatSpecialization(inv) && activeInvestigatorList.size() < repository.getSpecializationList().size());
             inv.setIsStarting(true);
             updateInvListByCurrentInv(inv);
         }
@@ -146,7 +146,7 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
         for (Investigator investigator : activeInvestigatorList) {
             if (investigator.getSpecialization() == inv.getSpecialization()) return true;
         }
-        return false;
+        return !repository.getSpecialization(inv.getSpecialization()).isEnable() && activeInvestigatorList.size() < repository.getEnabledSpecializationCount();
     }
 
     private void updateInvestigatorList() {

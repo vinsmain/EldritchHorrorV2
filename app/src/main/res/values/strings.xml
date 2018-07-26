@@ -123,4 +123,5 @@
     <string name="donate_yandex_description" translatable="false">Donate Yandex</string>
     <string name="statistics_background" translatable="false">statistics_background</string>
     <string name="music_header">Atmospheric music</string>
+    <string name="specialization_header">Specialization of investigators</string>
 </resources>

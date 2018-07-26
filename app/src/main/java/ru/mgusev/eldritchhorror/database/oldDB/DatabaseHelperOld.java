@@ -19,6 +19,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.model.Investigator;
 
@@ -371,8 +372,9 @@ public class DatabaseHelperOld extends OrmLiteSqliteOpenHelper {
                 List<GameOld> gameOldList = getGameOldDAO().getGamesSortDateUp();
                 for (GameOld gameOld : gameOldList) {
                     gameOld.setInvList(getInvestigatorOldDAO().getInvestigatorsListByGameID(gameOld.id));
-                    repository.insertGame(gameOld.convert());
+                    repository.insertGameToDB(gameOld.convert());
                 }
+                repository.gameListOnNext();
                 Log.e(TAG, "Finish update 12 - 13");
             }
 

@@ -12,7 +12,13 @@
         android:icon="@drawable/clear_white"
         android:title="@string/cleanDialogMessage"
         android:visible="false"
-        app:showAsAction="always|collapseActionView" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_random_settings"
+        android:icon="@drawable/random"
+        android:title="Настройка случайного выбора"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_random"

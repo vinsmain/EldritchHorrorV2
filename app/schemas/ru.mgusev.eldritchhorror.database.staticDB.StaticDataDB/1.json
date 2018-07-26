@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "66524d3376b79917d3d2c304ed4adfb0",
+    "identityHash": "bebc65a27c0c887eeea4fb3dee83b7e2",
     "entities": [
       {
         "tableName": "ancient_ones",
@@ -227,11 +227,55 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "specializations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `image_resource` TEXT, `name_en` TEXT, `name_ru` TEXT, `is_enable` INTEGER NOT NULL, PRIMARY KEY(`_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageResource",
+            "columnName": "image_resource",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nameEN",
+            "columnName": "name_en",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nameRU",
+            "columnName": "name_ru",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isEnable",
+            "columnName": "is_enable",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"66524d3376b79917d3d2c304ed4adfb0\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"bebc65a27c0c887eeea4fb3dee83b7e2\")"
     ]
   }
 }

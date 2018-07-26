@@ -62,11 +62,9 @@ public class ExpansionChoiceAdapter extends RecyclerView.Adapter<ExpansionChoice
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        int position = 0;
         for (int i = 0; i < listStorage.size(); i++) {
             if (listStorage.get(i).getName().contentEquals(compoundButton.getText())) {
                 listStorage.get(i).setEnable(b);
-                position = i;
                 break;
             }
         }

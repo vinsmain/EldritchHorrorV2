@@ -95,7 +95,8 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     }
 
     public void deleteGame() {
-        repository.deleteGame(repository.getGame());
+        repository.deleteGame(game);
+        gameListSubscribe.dispose();
         repository.gameListOnNext();
     }
 

@@ -17,6 +17,7 @@ import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorChoiceP
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ResultGamePresenter;
+import ru.mgusev.eldritchhorror.presentation.presenter.pager.SpecializationChoicePresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPresenter;
 
@@ -32,6 +33,7 @@ public interface AppComponent {
     void inject(ResultGamePresenter presenter);
     void inject(InvestigatorPresenter presenter);
     void inject(ExpansionChoicePresenter presenter);
+    void inject(SpecializationChoicePresenter presenter);
 
     void inject(MainAdapter adapter);
     void inject(InvestigatorChoiceAdapter adapter);

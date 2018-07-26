@@ -48,6 +48,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private AlertDialog backDialog;
     private MenuItem actionRandom;
     private MenuItem actionClear;
+    private MenuItem actionRandomSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +136,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         getMenuInflater().inflate(R.menu.menu_games_pager_activity, menu);
         actionRandom = menu.findItem(R.id.action_random);
         actionClear = menu.findItem(R.id.action_clear);
+        actionRandomSettings = menu.findItem(R.id.action_random_settings);
         showMenuItem();
         return true;
     }
@@ -145,8 +147,14 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             else actionRandom.setVisible(true);
         }
         if (actionClear != null) {
-            if (currentPosition == 1) actionClear.setVisible(true);
-            else actionClear.setVisible(false);
+            if (currentPosition == 1) {
+                actionClear.setVisible(true);
+                actionRandomSettings.setVisible(true);
+            }
+            else {
+                actionClear.setVisible(false);
+                actionRandomSettings.setVisible(false);
+            }
         }
     }
 
@@ -162,9 +170,13 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             case R.id.action_random:
                 pagerPresenter.actionRandom(currentPosition);
                 return true;
+            case R.id.action_random_settings:
+                Intent randomSettingsIntent = new Intent(this, SpecializationChoiceActivity.class);
+                startActivity(randomSettingsIntent);
+                return true;
             case R.id.action_edit_expansion:
-                Intent intent = new Intent(this, ExpansionChoiceActivity.class);
-                startActivity(intent);
+                Intent expansionChoiceIntent = new Intent(this, ExpansionChoiceActivity.class);
+                startActivity(expansionChoiceIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

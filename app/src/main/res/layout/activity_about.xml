@@ -115,32 +115,42 @@
             android:textColor="@color/colorPrimaryText"
             android:textSize="18sp" />
 
-        <ImageButton
-            android:id="@+id/about_donate_yandex_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/image_button_border"
-            android:backgroundTint="@color/cardview_light_background"
-            android:foreground="?attr/selectableItemBackground"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:theme="@style/AppTheme.ColorHighlight"
-            app:srcCompat="@drawable/yandex_money_logo" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/about_donate_paypal_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/image_button_border"
-            android:backgroundTint="@color/cardview_light_background"
-            android:foreground="?attr/selectableItemBackground"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:theme="@style/AppTheme.ColorHighlight"
-            app:srcCompat="@drawable/paypal_logo" />
+            <ImageButton
+                android:id="@+id/about_donate_yandex_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/image_button_border"
+                android:backgroundTint="@color/cardview_light_background"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:scaleType="fitCenter"
+                android:theme="@style/AppTheme.ColorHighlight"
+                app:srcCompat="@drawable/yandex_money_logo" />
+
+            <ImageButton
+                android:id="@+id/about_donate_paypal_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/image_button_border"
+                android:backgroundTint="@color/cardview_light_background"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:scaleType="fitCenter"
+                android:theme="@style/AppTheme.ColorHighlight"
+                app:srcCompat="@drawable/paypal_logo" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
