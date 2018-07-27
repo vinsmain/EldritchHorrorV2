@@ -1,12 +1,20 @@
 package ru.mgusev.eldritchhorror.support;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.os.Build;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 /**
@@ -21,15 +29,13 @@ public class AndroidBug5497Workaround {
     private View mChildOfContent;
     private int usableHeightPrevious;
     private FrameLayout.LayoutParams frameLayoutParams;
+    private Activity activity;
 
     private AndroidBug5497Workaround(Activity activity) {
-        FrameLayout content = (FrameLayout) activity.findViewById(android.R.id.content);
+        FrameLayout content = activity.findViewById(android.R.id.content);
+        this.activity = activity;
         mChildOfContent = content.getChildAt(0);
-        mChildOfContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            public void onGlobalLayout() {
-                possiblyResizeChildOfContent();
-            }
-        });
+        mChildOfContent.getViewTreeObserver().addOnGlobalLayoutListener(this::possiblyResizeChildOfContent);
         frameLayoutParams = (FrameLayout.LayoutParams) mChildOfContent.getLayoutParams();
     }
 
@@ -47,11 +53,43 @@ public class AndroidBug5497Workaround {
                 frameLayoutParams.height = usableHeightSansKeyboard - heightDifference + getNavigationBarHeight(mChildOfContent.getContext());
             } else {
                 // keyboard probably just became hidden
-                frameLayoutParams.height = usableHeightSansKeyboard -  getStatusBarHeight(mChildOfContent.getContext()) - getNavigationBarHeight(mChildOfContent.getContext());
+                if (hasSoftKeys(activity.getWindowManager(), mChildOfContent.getContext())) frameLayoutParams.height = usableHeightSansKeyboard - getStatusBarHeight(mChildOfContent.getContext()) - getNavigationBarHeight(mChildOfContent.getContext());
+                else frameLayoutParams.height = usableHeightSansKeyboard;
             }
             mChildOfContent.requestLayout();
             usableHeightPrevious = usableHeightNow;
         }
+    }
+
+    @SuppressLint("ObsoleteSdkInt")
+    private static boolean hasSoftKeys(WindowManager windowManager, Context context){
+        boolean hasSoftwareKeys;
+        //c = context; use getContext(); in fragments, and in activities you can
+        //directly access the windowManager();
+
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            Display d = windowManager.getDefaultDisplay();
+
+            DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+            d.getRealMetrics(realDisplayMetrics);
+
+            int realHeight = realDisplayMetrics.heightPixels;
+            int realWidth = realDisplayMetrics.widthPixels;
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            d.getMetrics(displayMetrics);
+
+            int displayHeight = displayMetrics.heightPixels;
+            int displayWidth = displayMetrics.widthPixels;
+
+            hasSoftwareKeys =  (realWidth - displayWidth) > 0 ||
+                    (realHeight - displayHeight) > 0;
+        } else {
+            boolean hasMenuKey = ViewConfiguration.get(context).hasPermanentMenuKey();
+            boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            hasSoftwareKeys = !hasMenuKey && !hasBackKey;
+        }
+        return hasSoftwareKeys;
     }
 
     private int computeUsableHeight() {
