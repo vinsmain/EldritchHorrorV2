@@ -119,4 +119,5 @@
     <string name="best_game">Лучшая игра</string>
     <string name="music_header">Атмосферная музыка</string>
     <string name="specialization_header">Специализация сыщиков</string>
+    <string name="clean_header">Очистить список сыщиков</string>
 </resources>

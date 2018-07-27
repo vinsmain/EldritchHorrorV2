@@ -124,4 +124,5 @@
     <string name="statistics_background" translatable="false">statistics_background</string>
     <string name="music_header">Atmospheric music</string>
     <string name="specialization_header">Specialization of investigators</string>
+    <string name="clean_header">Clean the list of investigators</string>
 </resources>

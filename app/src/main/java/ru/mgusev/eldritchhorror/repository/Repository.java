@@ -332,6 +332,7 @@ public class Repository {
     }
 
     private void deleteGameFromDB(Game game) {
+        userDataDB.gameDAO().deleteGame(game);
         userDataDB.investigatorDAO().deleteByGameID(game.getId());
     }
 

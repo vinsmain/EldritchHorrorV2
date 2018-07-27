@@ -100,6 +100,11 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     @Override
+    public void setEditToolbarHeader() {
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.edit_game);
+    }
+
+    @Override
     public void setCurrentPosition(int position) {
         pager.setCurrentItem(position, false);
     }

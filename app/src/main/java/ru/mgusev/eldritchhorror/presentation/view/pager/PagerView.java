@@ -43,6 +43,9 @@ public interface PagerView extends MvpView {
     @StateStrategyType(SkipStrategy.class)
     void showError();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setEditToolbarHeader();
+
     @StateStrategyType(SkipStrategy.class)
     void setCurrentPosition(int position);
 

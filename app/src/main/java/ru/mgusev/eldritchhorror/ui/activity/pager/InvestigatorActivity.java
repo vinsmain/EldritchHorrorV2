@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorPresenter;
@@ -19,26 +21,20 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
     @InjectPresenter
     InvestigatorPresenter investigatorPresenter;
 
-    private ImageView photoImage;
-    private ImageView expansionIcon;
-    private TextView nameTV;
-    private TextView occupationTV;
-    private Switch startingGameSwitch;
-    private Switch replacementSwitch;
-    private Switch deadSwitch;
+    @BindView(R.id.investigator_photo) ImageView photoImage;
+    @BindView(R.id.investigator_expansion_icon) ImageView expansionIcon;
+    @BindView(R.id.investigator_specialization_icon) ImageView specializationIcon;
+    @BindView(R.id.investigator_name) TextView nameTV;
+    @BindView(R.id.investigator_occupation) TextView occupationTV;
+    @BindView(R.id.investigator_starting_game_switch) Switch startingGameSwitch;
+    @BindView(R.id.investigator_replacement_switch) Switch replacementSwitch;
+    @BindView(R.id.investigator_dead_switch) Switch deadSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_investigator);
-
-        photoImage = findViewById(R.id.investigator_photo);
-        expansionIcon = findViewById(R.id.investigator_expansion_icon);
-        nameTV = findViewById(R.id.investigator_name);
-        occupationTV = findViewById(R.id.investigator_occupation);
-        startingGameSwitch = findViewById(R.id.investigator_starting_game_switch);
-        replacementSwitch = findViewById(R.id.investigator_replacement_switch);
-        deadSwitch = findViewById(R.id.investigator_dead_switch);
+        ButterKnife.bind(this);
     }
 
     @Override
@@ -93,5 +89,10 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
     @Override
     public void showExpansionIcon(String iconName) {
         expansionIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", getPackageName()));
+    }
+
+    @Override
+    public void showSpecializationIcon(String iconName) {
+        specializationIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", getPackageName()));
     }
 }

@@ -17,6 +17,7 @@ import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
+import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.repository.PrefHelper;
 
@@ -67,6 +68,11 @@ public class AppModule {
     @Provides
     public List<Expansion> provideExpansionList(Repository repository) {
         return repository.getExpansionList();
+    }
+
+    @Provides
+    public List<Specialization> provideSpecializationList(Repository repository) {
+        return repository.getSpecializationList();
     }
 
     @Provides

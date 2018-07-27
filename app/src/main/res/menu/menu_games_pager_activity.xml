@@ -10,14 +10,14 @@
     <item
         android:id="@+id/action_clear"
         android:icon="@drawable/clear_white"
-        android:title="@string/cleanDialogMessage"
+        android:title="@string/clean_header"
         android:visible="false"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_random_settings"
-        android:icon="@drawable/random"
-        android:title="Настройка случайного выбора"
+        android:icon="@drawable/specialization_settings"
+        android:title="@string/specialization_header"
         app:showAsAction="ifRoom" />
 
     <item

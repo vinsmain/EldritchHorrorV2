@@ -36,6 +36,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         getViewState().setCurrentPosition(repository.getPagerPosition());
+        if (repository.getGame().getLastModified() != 0) getViewState().setEditToolbarHeader();
     }
 
     private void setResultIcon(boolean isWin) {

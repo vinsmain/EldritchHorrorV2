@@ -45,8 +45,8 @@ public class SpecializationChoiceAdapter extends RecyclerView.Adapter<Specializa
     @Override
     public void onBindViewHolder(@NonNull SpecializationViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
-        //int resourceId = context.getResources().getIdentifier(listStorage.get(position).getImageResource(), "drawable", context.getPackageName());
-        //holder.itemSpecializationImage.setImageResource(resourceId);
+        int resourceId = context.getResources().getIdentifier(listStorage.get(position).getImageResource(), "drawable", context.getPackageName());
+        holder.itemSpecializationImage.setImageResource(resourceId);
         holder.itemSpecializationSwitch.setText(listStorage.get(position).getName());
         holder.itemSpecializationSwitch.setChecked(listStorage.get(position).isEnable());
         holder.itemSpecializationSwitch.setOnCheckedChangeListener(this);

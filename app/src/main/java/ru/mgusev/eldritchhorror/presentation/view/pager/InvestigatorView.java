@@ -19,4 +19,7 @@ public interface InvestigatorView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setListeners();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showSpecializationIcon(String iconName);
 }

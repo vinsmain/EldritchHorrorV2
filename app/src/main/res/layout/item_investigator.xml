@@ -38,6 +38,16 @@
             tools:srcCompat="@drawable/cities_in_ruin" />
 
         <ImageView
+            android:id="@+id/item_inv_specialization"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/item_inv_photo"
+            app:layout_constraintStart_toStartOf="@+id/item_inv_dead"
+            tools:srcCompat="@drawable/cities_in_ruin" />
+
+        <ImageView
             android:id="@+id/item_inv_dead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

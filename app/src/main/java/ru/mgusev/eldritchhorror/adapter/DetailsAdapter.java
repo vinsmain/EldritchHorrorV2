@@ -22,6 +22,7 @@ import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
+import ru.mgusev.eldritchhorror.model.Specialization;
 
 public class DetailsAdapter  extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
 
@@ -29,6 +30,7 @@ public class DetailsAdapter  extends RecyclerView.Adapter<DetailsAdapter.Details
         @BindView(R.id.item_investigator_card) CardView investigatorCard;
         @BindView(R.id.item_investigator_photo) ImageView photo;
         @BindView(R.id.item_investigator_expansion_icon) ImageView expansionIcon;
+        @BindView(R.id.item_investigator_specialization_icon) ImageView specializationIcon;
         @BindView(R.id.item_investigator_dead_icon) ImageView deadIcon;
 
         DetailsViewHolder(View itemView) {
@@ -39,6 +41,8 @@ public class DetailsAdapter  extends RecyclerView.Adapter<DetailsAdapter.Details
 
     @Inject
     List<Expansion> expansionList;
+    @Inject
+    List<Specialization> specializationList;
     private Context context;
     private List<Investigator> investigatorList;
 
@@ -66,7 +70,16 @@ public class DetailsAdapter  extends RecyclerView.Adapter<DetailsAdapter.Details
         Resources resources = context.getResources();
         holder.photo.setImageResource(resources.getIdentifier(investigatorList.get(position).getImageResource(), "drawable", context.getPackageName()));
         for (Expansion expansion : expansionList) {
-            if (expansion.getId() == investigatorList.get(position).getExpansionID()) holder.expansionIcon.setImageResource(resources.getIdentifier(expansion.getImageResource(), "drawable", context.getPackageName()));
+            if (expansion.getId() == investigatorList.get(position).getExpansionID()) {
+                holder.expansionIcon.setImageResource(resources.getIdentifier(expansion.getImageResource(), "drawable", context.getPackageName()));
+                break;
+            }
+        }
+        for (Specialization specialization : specializationList) {
+            if (specialization.getId() == investigatorList.get(position).getSpecialization()) {
+                holder.specializationIcon.setImageResource(resources.getIdentifier(specialization.getImageResource(), "drawable", context.getPackageName()));
+                break;
+            }
         }
         holder.investigatorCard.setCardBackgroundColor(ContextCompat.getColor(context, investigatorList.get(position).getIsReplacement() ? R.color.color_replacement_investigator : R.color.color_starting_investigator));
         holder.deadIcon.setVisibility(investigatorList.get(position).getIsDead() ? View.VISIBLE : View.GONE);

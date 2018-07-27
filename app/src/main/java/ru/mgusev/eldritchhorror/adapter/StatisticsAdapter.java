@@ -23,6 +23,7 @@ import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
+import ru.mgusev.eldritchhorror.model.Specialization;
 
 public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.StatisticsViewHolder> {
 
@@ -30,6 +31,7 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.St
         @BindView(R.id.item_inv_card_view) CardView invCardView;
         @BindView(R.id.item_inv_photo) ImageView invPhoto;
         @BindView(R.id.item_inv_expansion) ImageView invExpansion;
+        @BindView(R.id.item_inv_specialization) ImageView invSpecialization;
         @BindView(R.id.item_inv_name) TextView invName;
         @BindView(R.id.item_inv_occupation) TextView invOccupation;
 
@@ -41,6 +43,8 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.St
 
     @Inject
     List<Expansion> expansionList;
+    @Inject
+    List<Specialization> specializationList;
     private OnItemClicked onClick;
     private List<Investigator> investigatorList;
 
@@ -65,8 +69,7 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.St
     public void onBindViewHolder(@NonNull final StatisticsViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
         Resources resources = context.getResources();
-        int resourceId = resources.getIdentifier(investigatorList.get(position).getImageResource(), "drawable", context.getPackageName());
-        holder.invPhoto.setImageResource(resourceId);
+        holder.invPhoto.setImageResource(resources.getIdentifier(investigatorList.get(position).getImageResource(), "drawable", context.getPackageName()));
         holder.invName.setText(investigatorList.get(position).getName());
         holder.invOccupation.setText(investigatorList.get(position).getOccupationEN());
         holder.invCardView.setClickable(false);
@@ -74,16 +77,19 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.St
         holder.invCardView.setCardBackgroundColor(resources.getColor(R.color.colorTransparent));
         holder.invCardView.setCardElevation(0);
 
-        String expansionResource = null;
         for (Expansion expansion : expansionList) {
             if (expansion.getId() == investigatorList.get(position).getExpansionID()) {
-                expansionResource = expansion.getImageResource();
+                holder.invExpansion.setImageResource(resources.getIdentifier(expansion.getImageResource(), "drawable", context.getPackageName()));
                 break;
             }
         }
 
-        resourceId = resources.getIdentifier(expansionResource, "drawable", context.getPackageName());
-        holder.invExpansion.setImageResource(resourceId);
+        for (Specialization specialization : specializationList) {
+            if (specialization.getId() == investigatorList.get(position).getSpecialization()) {
+                holder.invSpecialization.setImageResource(resources.getIdentifier(specialization.getImageResource(), "drawable", context.getPackageName()));
+                break;
+            }
+        }
 
         holder.invCardView.setOnClickListener(v -> onClick.onItemClick(holder.getAdapterPosition()));
     }
