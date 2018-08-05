@@ -9,9 +9,9 @@
 
     <application
         android:name=".app.App"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/appl_name"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -36,6 +36,9 @@
         <activity android:name=".ui.activity.about.AboutActivity" />
         <activity android:name=".ui.activity.statistics.StatisticsActivity" />
         <activity android:name=".ui.activity.pager.SpecializationChoiceActivity" android:theme="@style/DialogTheme"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="daff0a7464dda3e82e7d0404d5bc9b1f7f64a575" />
     </application>
 
 </manifest>
