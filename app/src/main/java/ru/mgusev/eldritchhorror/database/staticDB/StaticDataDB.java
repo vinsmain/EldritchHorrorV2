@@ -14,7 +14,7 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.model.Specialization;
 
-@Database(entities = {AncientOne.class, Expansion.class, Investigator.class, Prelude.class, Specialization.class}, version = 1)
+@Database(entities = {AncientOne.class, Expansion.class, Investigator.class, Prelude.class, Specialization.class}, version = 2)
 public abstract class StaticDataDB extends RoomDatabase {
     public abstract AncientOneDAO ancientOneDAO();
     public abstract ExpansionDAO expansionDAO();
