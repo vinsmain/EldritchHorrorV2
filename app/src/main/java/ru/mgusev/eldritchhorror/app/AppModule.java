@@ -12,6 +12,7 @@ import dagger.Module;
 import dagger.Provides;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.FirebaseHelper;
+import ru.mgusev.eldritchhorror.database.staticDB.Migrations;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -47,7 +48,7 @@ public class AppModule {
     public StaticDataDB provideStaticDataDB(Context context) {
         return Room.databaseBuilder(context, StaticDataDB.class, "StaticDataDB.db")
                 .openHelperFactory(new AssetSQLiteOpenHelperFactory())
-                //.addMigrations(Migrations.MIGRATION_1_2)
+                .addMigrations(Migrations.MIGRATION_1_2)
                 .allowMainThreadQueries()
                 .build();
     }

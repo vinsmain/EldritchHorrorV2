@@ -1,6 +1,7 @@
 package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.app.AppModule;
 import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @Module (includes = AppModule.class)
 public class Repository {
@@ -77,9 +79,23 @@ public class Repository {
         userIconPublish = PublishSubject.create();
         authPublish = PublishSubject.create();
         ratePublish = PublishSubject.create();
+
+        for (Game game : getGameList(0, 0)) fixSpecializationsForOldInvestigators(game);
+    }
+
+    private void fixSpecializationsForOldInvestigators(Game game) {
+        boolean update = false;
+        for (Investigator investigator : game.getInvList()) {
+            if (investigator.getSpecialization() == 0) {
+                investigator.setSpecialization(staticDataDB.investigatorDAO().getByName(investigator.getName()).getSpecialization());
+                update = true;
+            }
+        }
+        if (update) insertGame(game);
     }
 
     public Game getGame() {
+        if (game == null) context.startActivity(new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         return game;
     }
 
@@ -291,6 +307,7 @@ public class Repository {
     }
 
     private void changeGame(Game game) {
+        fixSpecializationsForOldInvestigators(game);
         if (this.game != null && this.game.getId() == game.getId()) this.game = game;
         if (getGameById(game.getId()) == null || game.getLastModified() != getGameById(game.getId()).getLastModified()) {
             insertGameToDB(game);
