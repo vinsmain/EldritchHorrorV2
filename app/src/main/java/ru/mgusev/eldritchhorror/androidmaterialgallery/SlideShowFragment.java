@@ -40,6 +40,7 @@ public class SlideShowFragment extends DialogFragment implements GalleryStripAda
     private int mCurrentPosition;
     //set bottom to visible of first load
     boolean isBottomBarVisible = true;
+    static GamePhotoFragment gamePhotoFragment;
 
 
     public SlideShowFragment() {
@@ -47,7 +48,7 @@ public class SlideShowFragment extends DialogFragment implements GalleryStripAda
     }
 
     //This method will create new instance of SlideShowFragment
-    public static SlideShowFragment newInstance(int position) {
+    public static SlideShowFragment newInstance(int position, GamePhotoFragment photoFragment) {
         SlideShowFragment fragment = new SlideShowFragment();
         //Create bundle
         Bundle args = new Bundle();
@@ -55,6 +56,7 @@ public class SlideShowFragment extends DialogFragment implements GalleryStripAda
         args.putInt(ARG_CURRENT_POSITION, position);
         //set arguments of SlideShowFragment
         fragment.setArguments(args);
+        gamePhotoFragment = photoFragment;
         //return fragment instance
         return fragment;
     }
@@ -68,7 +70,11 @@ public class SlideShowFragment extends DialogFragment implements GalleryStripAda
             //get Current selected position from arguments
             mCurrentPosition = getArguments().getInt(ARG_CURRENT_POSITION);
             //get GalleryItems from activity
-            galleryItems = ((GamePhotoFragment)getChildFragmentManager().findFragmentByTag("unique_tag")).getGalleryItems();
+            System.out.println(getChildFragmentManager().findFragmentByTag("unique_tag"));
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            galleryItems = gamePhotoFragment.getGalleryItems();//((GamePhotoFragment)getChildFragmentManager().findFragmentByTag("unique_tag")).getGalleryItems();
         }
 
     }

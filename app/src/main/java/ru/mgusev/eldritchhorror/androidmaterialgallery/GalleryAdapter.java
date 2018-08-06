@@ -47,8 +47,8 @@ public class GalleryAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View row = inflater.inflate(R.layout.custom_row_gallery_item, parent, false);
+        //LayoutInflater inflater = LayoutInflater.from(context);
+        View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_row_gallery_item, parent, false);//inflater.inflate(R.layout.custom_row_gallery_item, parent, false);
         return new GalleryItemHolder(row);
     }
 

@@ -168,7 +168,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onItemSelected(int position) {
         //create fullscreen SlideShowFragment dialog
-        SlideShowFragment slideShowFragment = SlideShowFragment.newInstance(position);
+        SlideShowFragment slideShowFragment = SlideShowFragment.newInstance(position, this);
         //setUp style for slide show fragment
         slideShowFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogFragmentTheme);
         //finally show dialogue

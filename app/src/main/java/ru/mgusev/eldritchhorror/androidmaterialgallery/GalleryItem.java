@@ -12,5 +12,6 @@ public class GalleryItem {
     public GalleryItem(String imageUri, String imageName) {
         this.imageUri = imageUri;
         this.imageName = imageName;
+        System.out.println("ITEM " + imageUri + " " + imageName);
     }
 }
