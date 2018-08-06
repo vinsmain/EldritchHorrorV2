@@ -16,7 +16,7 @@ android {
         applicationId "ru.mgusev.eldritchhorror"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 28
+        versionCode 28 //Не забыть раскомментировать crashlytics перед релизом
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -53,6 +53,7 @@ repositories {
     maven {
         url 'https://jitpack.io'
     }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {

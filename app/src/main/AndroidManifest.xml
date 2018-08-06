@@ -47,8 +47,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="Android/data/ru.mgusev.eldritchhorror.debug/images">
-        </meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 
