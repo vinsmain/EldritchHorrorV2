@@ -28,7 +28,7 @@ public class SlideShowFragment extends DialogFragment implements GalleryStripAda
     private static final String ARG_CURRENT_POSITION = "position";
     //Declare list of GalleryItems
     List<GalleryItem> galleryItems;
-    //Deceleration of  Gallery Strip Adapter
+    //Deceleration of  Gallery1 Strip Adapter
     GalleryStripAdapter mGalleryStripAdapter;
     // //Deceleration of  Slide show View Pager Adapter
     SlideShowPagerAdapter mSlideShowPagerAdapter;

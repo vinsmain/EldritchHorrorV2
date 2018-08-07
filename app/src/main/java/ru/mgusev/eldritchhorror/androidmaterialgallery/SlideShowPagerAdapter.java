@@ -23,7 +23,7 @@ public class SlideShowPagerAdapter extends PagerAdapter {
     Context mContext;
     //Layout inflater
     LayoutInflater mLayoutInflater;
-    //list of Gallery Items
+    //list of Gallery1 Items
     List<GalleryItem> galleryItems;
 
     public SlideShowPagerAdapter(Context context, List<GalleryItem> galleryItems) {

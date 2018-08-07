@@ -16,23 +16,27 @@ import java.util.List;
 public class GalleryUtils {
 
     //Define bucket name from which you want to take images Example '/DCIM/Camera' for camera images
-    public static String CAMERA_IMAGE_BUCKET_NAME;// = Environment.getDataDirectory().toString();
+    public static String CAMERA_IMAGE_BUCKET_NAME = Environment.getExternalStorageDirectory().toString() + "/DCIM/Camera";
 
     static ArrayList<GalleryItem> f = new ArrayList<>();// list of file paths
     public static File[] listFile;
 
     //method to get id of image bucket from path
     public static String getBucketId(String path) {
+        System.out.println(path);
         return String.valueOf(path.toLowerCase().hashCode());
     }
 
     //method to get images
     public static List<GalleryItem> getImages(Context context) {
-        /*final String[] projection = {MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA};
+       /* final String[] projection = {MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA};
         final String selection = MediaStore.Images.Media.BUCKET_ID + " = ?";
-        CAMERA_IMAGE_BUCKET_NAME = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath();
+        //CAMERA_IMAGE_BUCKET_NAME = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath();
         final String[] selectionArgs = {GalleryUtils.getBucketId(CAMERA_IMAGE_BUCKET_NAME)};
+        for (int i = 0; i < selectionArgs.length; i++) System.out.println(selectionArgs[i]);
+
         System.out.println("PATH " + CAMERA_IMAGE_BUCKET_NAME);
+        System.out.println("PATH111 " + context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath());
         final Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 selection,
@@ -43,30 +47,23 @@ public class GalleryUtils {
         if (cursor.moveToFirst()) {
             final int dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             final int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
+            System.out.println("BUCKET_ID " + cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID));
             do {
                 GalleryItem galleryItem = new GalleryItem(cursor.getString(dataColumn), cursor.getString(nameColumn));
                 result.add(galleryItem);
             } while (cursor.moveToNext());
         }
-        cursor.close();*/
-
+        cursor.close();
+        return result;*/
+        f = new ArrayList<>();
         File file = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-        if (file.isDirectory())
-        {
+        if (file != null && file.isDirectory()) {
             listFile = file.listFiles();
-
-
-            for (int i = 0; i < listFile.length; i++)
-            {
-
-                f.add(new GalleryItem(listFile[i].getAbsolutePath(), listFile[i].getName()));
-
+            for (File aListFile : listFile) {
+                f.add(new GalleryItem(aListFile.getAbsolutePath(), aListFile.getName()));
             }
         }
-
-
         return f;
-
     }
 }

@@ -45,7 +45,7 @@ public class GalleryStripAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        //get Curent Gallery Item
+        //get Curent Gallery1 Item
         GalleryItem mCurrentItem = galleryItems.get(position);
         //get thumb square size 1/6 of screen width
         final int thumbSize = ScreenUtils.getScreenWidth(context) / 6;

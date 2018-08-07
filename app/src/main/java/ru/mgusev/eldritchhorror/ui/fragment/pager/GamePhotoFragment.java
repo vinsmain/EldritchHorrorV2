@@ -36,6 +36,7 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
 import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryItem;
@@ -116,7 +117,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
 
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             //imageView.setImageURI(photoURI);
-            mGalleryAdapter.notifyDataSetChanged();
+            mGalleryAdapter.addGalleryItems(GalleryUtils.getImages(getContext()));
         }
     }
 

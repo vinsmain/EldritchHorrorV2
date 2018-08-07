@@ -37,11 +37,14 @@ public class GalleryAdapter extends RecyclerView.Adapter {
         this.galleryItems = new ArrayList<>();
     }
 
-    //This method will take care of adding new Gallery items to RecyclerView
+    //This method will take care of adding new Gallery1 items to RecyclerView
     public void addGalleryItems(List<GalleryItem> galleryItems) {
-        int previousSize = this.galleryItems.size();
+        this.galleryItems.clear();
         this.galleryItems.addAll(galleryItems);
-        notifyItemRangeInserted(previousSize, galleryItems.size());
+        notifyDataSetChanged();
+//        int previousSize = this.galleryItems.size();
+//        this.galleryItems.addAll(galleryItems);
+//        notifyItemRangeInserted(previousSize, galleryItems.size());
 
     }
 
@@ -54,7 +57,7 @@ public class GalleryAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        //get current Gallery Item
+        //get current Gallery1 Item
         GalleryItem currentItem = galleryItems.get(position);
         //Create file to load with Picasso lib
         File imageViewThoumb = new File(currentItem.imageUri);
