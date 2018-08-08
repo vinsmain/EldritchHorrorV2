@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -42,6 +43,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @BindView(R.id.games_pager_win_icon) ImageView winIcon;
     @BindView(R.id.games_pager_toolbar) Toolbar toolbar;
     @BindView(R.id.games_pager_viewpager) ViewPager pager;
+    @BindView(R.id.games_pager_add_photo) FloatingActionButton addPhotoButton;
 
     private int currentPosition = 0;
     private PagerAdapter pagerAdapter;
@@ -58,8 +60,9 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         AndroidBug5497Workaround.assistActivity(this);
 
         initToolbar();
+        showAddPhotoButton();
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
-        pager.setOffscreenPageLimit(2);
+        pager.setOffscreenPageLimit(3);
         pager.setAdapter(pagerAdapter);
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -69,6 +72,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 Log.d("PAGER", "onPageSelected, position = " + position);
                 currentPosition = position;
                 showMenuItem();
+                showAddPhotoButton();
                 hideKeyboard();
             }
 
@@ -148,7 +152,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     private void showMenuItem() {
         if (actionRandom != null) {
-            if (currentPosition == 2) actionRandom.setVisible(false);
+            if (currentPosition > 1) actionRandom.setVisible(false);
             else actionRandom.setVisible(true);
         }
         if (actionClear != null) {
@@ -161,6 +165,11 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 actionRandomSettings.setVisible(false);
             }
         }
+    }
+
+    private void showAddPhotoButton() {
+        if (currentPosition == 3) addPhotoButton.setVisibility(View.VISIBLE);
+        else addPhotoButton.setVisibility(View.GONE);
     }
 
     @Override

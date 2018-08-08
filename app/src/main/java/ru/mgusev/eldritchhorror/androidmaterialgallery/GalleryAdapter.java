@@ -24,7 +24,7 @@ import ru.mgusev.eldritchhorror.ui.fragment.pager.GamePhotoFragment;
 
 public class GalleryAdapter extends RecyclerView.Adapter {
     //Declare GalleryItems List
-    List<GalleryItem> galleryItems;
+    List<String> galleryItems;
     Context context;
     //Declare GalleryAdapterCallBacks
     GalleryAdapterCallBacks mAdapterCallBacks;
@@ -38,7 +38,7 @@ public class GalleryAdapter extends RecyclerView.Adapter {
     }
 
     //This method will take care of adding new Gallery1 items to RecyclerView
-    public void addGalleryItems(List<GalleryItem> galleryItems) {
+    public void addGalleryItems(List<String> galleryItems) {
         this.galleryItems.clear();
         this.galleryItems.addAll(galleryItems);
         notifyDataSetChanged();
@@ -51,16 +51,16 @@ public class GalleryAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //LayoutInflater inflater = LayoutInflater.from(context);
-        View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_row_gallery_item, parent, false);//inflater.inflate(R.layout.custom_row_gallery_item, parent, false);
+        View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery, parent, false);//inflater.inflate(R.layout.item_gallery, parent, false);
         return new GalleryItemHolder(row);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         //get current Gallery1 Item
-        GalleryItem currentItem = galleryItems.get(position);
+        String currentItem = galleryItems.get(position);
         //Create file to load with Picasso lib
-        File imageViewThoumb = new File(currentItem.imageUri);
+        File imageViewThoumb = new File(currentItem);
         //cast holder with gallery holder
         GalleryItemHolder galleryItemHolder = (GalleryItemHolder) holder;
         //Load with Picasso
@@ -70,7 +70,7 @@ public class GalleryAdapter extends RecyclerView.Adapter {
                 .resize(ScreenUtils.getScreenWidth(context) / 2, ScreenUtils.getScreenHeight(context) / 3)//Resize image to width half of screen and height 1/3 of screen height
                 .into(galleryItemHolder.imageViewThumbnail);
         //set name of Image
-        galleryItemHolder.textViewImageName.setText(currentItem.imageName);
+        //galleryItemHolder.textViewImageName.setText(currentItem.imageName);
         //set on click listener on imageViewThumbnail
         galleryItemHolder.imageViewThumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,12 +89,12 @@ public class GalleryAdapter extends RecyclerView.Adapter {
 
     public class GalleryItemHolder extends RecyclerView.ViewHolder {
         ImageView imageViewThumbnail;
-        TextView textViewImageName;
+
 
         public GalleryItemHolder(View itemView) {
             super(itemView);
-            imageViewThumbnail = itemView.findViewById(R.id.imageViewThumbnail);
-            textViewImageName = itemView.findViewById(R.id.textViewImageName);
+            imageViewThumbnail = itemView.findViewById(R.id.item_gallery_photo);
+            //textViewImageName = itemView.findViewById(R.id.textViewImageName);
 
         }
     }

@@ -2,11 +2,15 @@ package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.common.util.UriUtil;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -472,5 +476,19 @@ public class Repository {
 
     public int getEnabledSpecializationCount() {
         return staticDataDB.specializationDAO().getEnabledSpecializationCount();
+    }
+
+    // Game Photo
+
+    public List<String> getImages() {
+        List<String> urlFileList = new ArrayList<>();
+        File file = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        if (file != null && file.isDirectory()) {
+            for (File aListFile : file.listFiles()) {
+                urlFileList.add(UriUtil.getUriForFile(aListFile).toString());
+            }
+        }
+        return urlFileList;
     }
 }

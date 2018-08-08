@@ -1,16 +1,11 @@
 package ru.mgusev.eldritchhorror.androidmaterialgallery;
 
-/**
- * Created by amardeep on 11/3/2017.
- */
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
-//square layout
 public class SquareLayout extends RelativeLayout {
 
     public SquareLayout(Context context) {
