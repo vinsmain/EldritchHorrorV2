@@ -56,6 +56,7 @@ public class Repository {
     private PublishSubject<String> userIconPublish;
     private PublishSubject<Boolean> authPublish;
     private PublishSubject<Boolean> ratePublish;
+    private PublishSubject<Boolean> photoPublish;
 
     private CompositeDisposable firebaseSubscribe;
 
@@ -83,6 +84,7 @@ public class Repository {
         userIconPublish = PublishSubject.create();
         authPublish = PublishSubject.create();
         ratePublish = PublishSubject.create();
+        photoPublish = PublishSubject.create();
 
         for (Game game : getGameList(0, 0)) fixSpecializationsForOldInvestigators(game);
     }
@@ -478,17 +480,25 @@ public class Repository {
         return staticDataDB.specializationDAO().getEnabledSpecializationCount();
     }
 
-    // Game Photo
+    // GamePhoto
 
     public List<String> getImages() {
         List<String> urlFileList = new ArrayList<>();
-        File file = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-        if (file != null && file.isDirectory()) {
-            for (File aListFile : file.listFiles()) {
-                urlFileList.add(UriUtil.getUriForFile(aListFile).toString());
+        if (dir != null && dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+                urlFileList.add(UriUtil.getUriForFile(file).toString());
             }
         }
         return urlFileList;
+    }
+
+    public PublishSubject<Boolean> getPhotoPublish() {
+        return photoPublish;
+    }
+
+    public void photoOnNext(boolean value) {
+        photoPublish.onNext(value);
     }
 }

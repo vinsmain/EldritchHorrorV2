@@ -87,11 +87,6 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
         return view;
     }
 
-    //@OnClick(R.id.games_pager_add_photo)
-    public void onClick(View view) {
-        dispatchTakePictureIntent();
-    }
-
     @Override
     public void updatePhotoGallery(List<String> imagesUrlList) {
         //check for read storage permission

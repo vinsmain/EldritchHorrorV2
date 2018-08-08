@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.PagerAdapter;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -241,6 +242,11 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @Override
     public void onBackPressed() {
         pagerPresenter.showBackDialog();
+    }
+
+    @OnClick(R.id.games_pager_add_photo)
+    public void onClick() {
+        pagerPresenter.clickOnAddPhotoButton();
     }
 
     @Override

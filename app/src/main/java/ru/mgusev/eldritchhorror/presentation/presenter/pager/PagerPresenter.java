@@ -99,6 +99,10 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         getViewState().hideBackDialog();
     }
 
+    public void clickOnAddPhotoButton() {
+        repository.photoOnNext(true);
+    }
+
     @Override
     public void onDestroy() {
         ancientOneSubscribe.dispose();

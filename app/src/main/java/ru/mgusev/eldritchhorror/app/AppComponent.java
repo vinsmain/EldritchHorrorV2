@@ -7,6 +7,7 @@ import ru.mgusev.eldritchhorror.adapter.DetailsAdapter;
 import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.adapter.StatisticsAdapter;
+import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.FirebaseHelper;
 import ru.mgusev.eldritchhorror.database.oldDB.DatabaseHelperOld;
