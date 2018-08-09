@@ -86,6 +86,11 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     }
 
     @Override
+    public void onItemLongClick(int position) {
+
+    }
+
+    @Override
     public void onEditClick(int position) {
 
     }

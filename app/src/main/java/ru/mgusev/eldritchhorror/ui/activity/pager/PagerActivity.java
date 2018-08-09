@@ -174,6 +174,11 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     @Override
+    public void setAddPhotoButtonIcon(boolean selectedMode) {
+        addPhotoButton.setImageResource(selectedMode ? R.drawable.delete : R.drawable.cross);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:

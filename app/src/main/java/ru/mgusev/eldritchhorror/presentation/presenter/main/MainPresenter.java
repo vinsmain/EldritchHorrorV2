@@ -3,17 +3,22 @@ package ru.mgusev.eldritchhorror.presentation.presenter.main;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.facebook.common.executors.UiThreadImmediateExecutorService;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.DataSource;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.request.ImageRequest;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,31 +91,24 @@ public class MainPresenter extends MvpPresenter<MainView> {
     private void updateUserIcon(String iconUrl) {
         tempIconUrl = iconUrl;
         if (!iconUrl.equals(googleAuth.getDefaultIconUrl())) {
-            final Target target = new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-                    Log.d("DEBUG", "onBitmapLoaded");
-                    BitmapDrawable mBitmapDrawable = new BitmapDrawable(repository.getContext().getResources(), bitmap);
-                    getViewState().setUserIcon(mBitmapDrawable);
-                }
+            ImageRequest imageRequest = ImageRequest.fromUri(tempIconUrl);
+            ImagePipeline imagePipeline = Fresco.getImagePipeline();
+            DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, null);
 
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                    Log.d("DEBUG", "onBitmapFailed");
-                    getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_signed_in));
-                }
+            dataSource.subscribe(
+                    new BaseBitmapDataSubscriber() {
 
-                @Override
-                public void onPrepareLoad(Drawable drawable) {
-                    Log.d("DEBUG", "onPrepareLoad");
-                    getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_signed_in));
-                }
-            };
+                        @Override
+                        protected void onNewResultImpl(Bitmap bitmap) {
+                            getViewState().setUserIcon(new BitmapDrawable(repository.getContext().getResources(), CircularTransformation.getCroppedBitmap(bitmap)));
+                        }
 
-            Picasso.get()
-                    .load(iconUrl)
-                    .transform(new CircularTransformation())
-                    .into(target);
+                        @Override
+                        protected void onFailureImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
+                            getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_signed_in));
+                        }
+                    },
+                    UiThreadImmediateExecutorService.getInstance());
         } else getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
     }
 

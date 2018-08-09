@@ -1,6 +1,7 @@
 package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -18,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
@@ -36,13 +38,14 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
+import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.GamePhotoPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
 
 import static android.app.Activity.RESULT_OK;
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhotoView, GalleryAdapter.GalleryAdapterCallBacks {
+public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhotoView, OnItemClicked, ImageViewer.OnDismissListener {
 
     @InjectPresenter
     GamePhotoPresenter gamePhotoPresenter;
@@ -57,6 +60,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     private GalleryAdapter galleryAdapter;
     private Uri photoURI;
     private List<String> urlList;
+    private ImageViewer imageViewer;
 
     public static GamePhotoFragment newInstance(int page) {
         GamePhotoFragment pageFragment = new GamePhotoFragment();
@@ -81,8 +85,9 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 3;
 
         recyclerViewGallery.setLayoutManager(new GridLayoutManager(getContext(), columnsCount));
-        galleryAdapter = new GalleryAdapter(getContext(), this);
+        galleryAdapter = new GalleryAdapter(getContext());
         recyclerViewGallery.setAdapter(galleryAdapter);
+        galleryAdapter.setOnClick(this);
 
         return view;
     }
@@ -91,9 +96,6 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     public void updatePhotoGallery(List<String> imagesUrlList) {
         //check for read storage permission
         if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            //Get images
-            //galleryItems = GalleryUtils.getImages(getContext());
-            // add images to gallery recyclerview using adapter
             galleryAdapter.addGalleryItems(imagesUrlList);
             urlList = imagesUrlList;
         } else {
@@ -147,13 +149,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public void onItemSelected(int position) {
-        new ImageViewer.Builder(getContext(), urlList)
-                .setStartPosition(position)
-                .show();
+        if (imageViewer != null) imageViewer.onDismiss();
     }
 
     @Override
@@ -162,13 +158,51 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
         if (requestCode == RC_READ_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 gamePhotoPresenter.updateGallery();
-                //Get images
-                //galleryItems = GalleryUtils.getImages(getContext());
-                // add images to gallery recyclerview using adapter
-                //galleryAdapter.addGalleryItems(galleryItems);
             } else {
                 Toast.makeText(getContext(), "Storage Permission denied", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        if (gamePhotoPresenter.isSelectMode()) gamePhotoPresenter.selectGalleryItem(urlList.get(position), position);
+        else gamePhotoPresenter.openFullScreenPhotoViewer(position);
+    }
+
+    @Override
+    public void onItemLongClick(int position) {
+        if (!gamePhotoPresenter.isSelectMode()) {
+            gamePhotoPresenter.setSelectMode(true);
+            gamePhotoPresenter.selectGalleryItem(urlList.get(position), position);
+        }
+    }
+
+    @Override
+    public void onEditClick(int position) {
+
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+
+    }
+
+    @Override
+    public void selectGalleryItem(List<String> list, int position) {
+        galleryAdapter.selectGalleryItem(list, position);
+    }
+
+    @Override
+    public void openFullScreenPhotoViewer(int position) {
+        imageViewer = new ImageViewer.Builder(getContext(), urlList)
+                .setOnDismissListener(this)
+                .setStartPosition(position)
+                .show();
+    }
+
+    @Override
+    public void onDismiss() {
+        System.out.println("DISSMISS");
     }
 }

@@ -19,6 +19,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     private CompositeDisposable ancientOneSubscribe;
     private CompositeDisposable scoreSubscribe;
     private CompositeDisposable isWinSubscribe;
+    private CompositeDisposable selectModeSubscribe;
 
     public PagerPresenter() {
         App.getComponent().inject(this);
@@ -30,6 +31,9 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
         isWinSubscribe = new CompositeDisposable();
         isWinSubscribe.add(repository.getObservableIsWin().subscribe(this::setResultIcon));
+
+        selectModeSubscribe = new CompositeDisposable();
+        selectModeSubscribe.add(repository.getSelectModePublish().subscribe(selectMode -> getViewState().setAddPhotoButtonIcon(selectMode)));
     }
 
     @Override
@@ -108,6 +112,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         ancientOneSubscribe.dispose();
         scoreSubscribe.dispose();
         isWinSubscribe.dispose();
+        selectModeSubscribe.dispose();
         repository.clearGame();
         repository.setPagerPosition(0);
         super.onDestroy();

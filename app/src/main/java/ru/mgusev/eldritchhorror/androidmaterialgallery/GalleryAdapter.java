@@ -18,6 +18,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.ui.fragment.pager.GamePhotoFragment;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryItemHolder> {
@@ -33,25 +34,26 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryI
         }
     }
 
-    //Declare GalleryItems List
     private List<String> galleryItems;
+    private List<String> selectedGalleryItems;
     private Context context;
-    //Declare GalleryAdapterCallBacks
-    private GalleryAdapterCallBacks mAdapterCallBacks;
+    private OnItemClicked onClick;
 
-    public GalleryAdapter(Context context, GamePhotoFragment fragment) {
+    public GalleryAdapter(Context context) {
         this.context = context;
-        //get GalleryAdapterCallBacks from contex
-        this.mAdapterCallBacks = (GalleryAdapterCallBacks) fragment;
-        //Initialize GalleryItem List
         this.galleryItems = new ArrayList<>();
+        this.selectedGalleryItems = new ArrayList<>();
     }
 
-    //This method will take care of adding new Gallery1 items to RecyclerView
     public void addGalleryItems(List<String> galleryItems) {
         notifyItemRangeRemoved(0, getItemCount());
         this.galleryItems = galleryItems;
         notifyItemRangeInserted(0, getItemCount());
+    }
+
+    public void selectGalleryItem(List<String> selectedGalleryItems, int position) {
+        this.selectedGalleryItems = selectedGalleryItems;
+        notifyItemChanged(position);
     }
 
     @NonNull
@@ -63,15 +65,16 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryI
 
     @Override
     public void onBindViewHolder(@NonNull GalleryItemHolder holder, int position) {
-        holder.photo.setImageURI(Uri.parse(galleryItems.get(position)));
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //call onItemSelected method and pass the position and let activity decide what to do when item selected
-                mAdapterCallBacks.onItemSelected(position);
-            }
-        });
+        holder.photo.setImageURI(Uri.parse(galleryItems.get(holder.getAdapterPosition())));
 
+        if (selectedGalleryItems.contains(galleryItems.get(holder.getAdapterPosition()))) holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.color_starting_investigator));
+        else holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.colorText));
+
+        holder.cardView.setOnClickListener(v -> onClick.onItemClick(holder.getAdapterPosition()));
+        holder.cardView.setOnLongClickListener(v -> {
+            onClick.onItemLongClick(holder.getAdapterPosition());
+            return false;
+        });
     }
 
     @Override
@@ -79,9 +82,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryI
         return galleryItems.size();
     }
 
-    //Interface for communication of Adapter and MainActivity
-    public interface GalleryAdapterCallBacks {
-        //call this method to notify about item is clicked
-        void onItemSelected(int position);
+    public void setOnClick(OnItemClicked onClick) {
+        this.onClick = onClick;
     }
 }

@@ -294,6 +294,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
+    public void onItemLongClick(int position) {
+
+    }
+
+    @Override
     public void onEditClick(int position) {
         mainPresenter.setCurrentGame(position);
         intentToPager();

@@ -14,4 +14,10 @@ public interface GamePhotoView extends MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void dispatchTakePictureIntent();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void selectGalleryItem(List<String> list, int position);
+
+    @StateStrategyType(OneExecutionStateStrategy.class)
+    void openFullScreenPhotoViewer(int position);
 }

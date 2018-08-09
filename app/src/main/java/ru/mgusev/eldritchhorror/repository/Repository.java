@@ -57,6 +57,7 @@ public class Repository {
     private PublishSubject<Boolean> authPublish;
     private PublishSubject<Boolean> ratePublish;
     private PublishSubject<Boolean> photoPublish;
+    private PublishSubject<Boolean> selectModePublish;
 
     private CompositeDisposable firebaseSubscribe;
 
@@ -85,6 +86,7 @@ public class Repository {
         authPublish = PublishSubject.create();
         ratePublish = PublishSubject.create();
         photoPublish = PublishSubject.create();
+        selectModePublish = PublishSubject.create();
 
         for (Game game : getGameList(0, 0)) fixSpecializationsForOldInvestigators(game);
     }
@@ -500,5 +502,13 @@ public class Repository {
 
     public void photoOnNext(boolean value) {
         photoPublish.onNext(value);
+    }
+
+    public PublishSubject<Boolean> getSelectModePublish() {
+        return selectModePublish;
+    }
+
+    public void selectModeOnNext(boolean value) {
+        selectModePublish.onNext(value);
     }
 }
