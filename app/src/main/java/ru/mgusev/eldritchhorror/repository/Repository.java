@@ -486,7 +486,7 @@ public class Repository {
 
     public List<String> getImages() {
         List<String> urlFileList = new ArrayList<>();
-        File dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + getGame().getId());
 
         if (dir != null && dir.isDirectory()) {
             for (File file : dir.listFiles()) {

@@ -42,6 +42,7 @@ import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.GamePhotoPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
@@ -58,7 +59,6 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     private Unbinder unbinder;
     private int columnsCount = 2;
     private GalleryAdapter galleryAdapter;
-    private Uri photoURI;
     private List<String> urlList;
     private ImageViewer imageViewer;
 
@@ -107,15 +107,20 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        System.out.println(requestCode);
+        System.out.println(resultCode);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             gamePhotoPresenter.updateGallery();
+        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
+            File file = new File(gamePhotoPresenter.getCurrentPhotoURI().getPath());
+            if (file.exists()) file.delete();
         }
     }
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Objects.requireNonNull(getActivity()).getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = Objects.requireNonNull(getActivity()).getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + gamePhotoPresenter.getGameId());
         return File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -138,9 +143,9 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                photoURI = FileProvider.getUriForFile(getContext(), "com.example.android.provider", photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), "com.example.android.provider", photoFile));
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(photoFile));
             }
         }
     }
@@ -199,6 +204,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
                 .setOnDismissListener(this)
                 .setStartPosition(position)
                 .show();
+        System.out.println("VIEWER " + imageViewer.getUrl());
     }
 
     @Override

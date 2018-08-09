@@ -3,7 +3,9 @@ package ru.mgusev.eldritchhorror.ui.activity.pager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.io.File;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -121,7 +124,11 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         builder.setTitle(R.string.dialogBackAlert);
         builder.setMessage(R.string.backDialogMessage);
         builder.setIcon(R.drawable.back_icon);
-        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> finishActivity());
+        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+            File storageDir = Objects.requireNonNull(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + pagerPresenter.getGameId()));
+            deleteRecursive(storageDir);
+            finishActivity();
+        });
         builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
         backDialog = builder.show();
     }
@@ -129,6 +136,14 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @Override
     public void finishActivity() {
         finish();
+    }
+
+    private void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+
+        fileOrDirectory.delete();
     }
 
     @Override
@@ -175,7 +190,8 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     public void setAddPhotoButtonIcon(boolean selectedMode) {
-        addPhotoButton.setImageResource(selectedMode ? R.drawable.delete : R.drawable.cross);
+        addPhotoButton.setImageResource(selectedMode ? R.drawable.delete_white : R.drawable.cross);
+        addPhotoButton.setBackgroundTintList(selectedMode ? ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark)) : ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
     }
 
     @Override

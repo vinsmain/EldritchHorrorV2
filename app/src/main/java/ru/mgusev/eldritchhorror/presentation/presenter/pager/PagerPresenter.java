@@ -107,6 +107,10 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         repository.photoOnNext(true);
     }
 
+    public long getGameId() {
+        return repository.getGame().getId();
+    }
+
     @Override
     public void onDestroy() {
         ancientOneSubscribe.dispose();

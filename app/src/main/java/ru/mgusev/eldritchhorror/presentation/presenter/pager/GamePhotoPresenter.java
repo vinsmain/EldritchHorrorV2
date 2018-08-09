@@ -1,8 +1,11 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
+import android.net.Uri;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     private CompositeDisposable photoSubscribe;
     private List<String> selectedPhotoList;
     private boolean selectMode = false;
+    private Uri currentPhotoURI;
 
     public GamePhotoPresenter() {
         App.getComponent().inject(this);
@@ -41,7 +45,8 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     }
 
     private void makePhoto(boolean value) {
-        getViewState().dispatchTakePictureIntent();
+        if (selectedPhotoList.isEmpty()) getViewState().dispatchTakePictureIntent();
+        else deleteFiles();
     }
 
     public void selectGalleryItem(String selectedItem, int position) {
@@ -64,6 +69,28 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
 
     public void openFullScreenPhotoViewer(int position) {
         getViewState().openFullScreenPhotoViewer(position);
+    }
+
+    private void deleteFiles() {
+        for (String uri : selectedPhotoList) {
+            File file = new File(Uri.parse(uri).getPath());
+            if (file.exists()) file.delete();
+        }
+        selectedPhotoList.clear();
+        updateGallery();
+        setSelectMode(false);
+    }
+
+    public long getGameId() {
+        return repository.getGame().getId();
+    }
+
+    public Uri getCurrentPhotoURI() {
+        return currentPhotoURI;
+    }
+
+    public void setCurrentPhotoURI(Uri currentPhotoURI) {
+        this.currentPhotoURI = currentPhotoURI;
     }
 
     @Override
