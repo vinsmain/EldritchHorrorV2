@@ -1,7 +1,7 @@
 package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
 import android.Manifest;
-import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -14,12 +14,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
@@ -46,7 +46,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhotoView, OnItemClicked, ImageViewer.OnDismissListener {
+public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhotoView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener {
 
     @InjectPresenter
     GamePhotoPresenter gamePhotoPresenter;
@@ -61,6 +61,8 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     private GalleryAdapter galleryAdapter;
     private List<String> urlList;
     private ImageViewer imageViewer;
+    private boolean imageViewerIsOpen;
+    private AlertDialog deleteDialog;
 
     public static GamePhotoFragment newInstance(int page) {
         GamePhotoFragment pageFragment = new GamePhotoFragment();
@@ -112,9 +114,30 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             gamePhotoPresenter.updateGallery();
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
-            File file = new File(gamePhotoPresenter.getCurrentPhotoURI().getPath());
-            if (file.exists()) file.delete();
+            gamePhotoPresenter.deleteFile(new File(gamePhotoPresenter.getCurrentPhotoURI().getPath()));
+            //File file = new File(gamePhotoPresenter.getCurrentPhotoURI().getPath());
+            //if (file.exists()) file.delete();
         }
+    }
+
+    @Override
+    public void showDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        builder.setCancelable(false);
+        builder.setTitle(R.string.dialogAlert);
+        builder.setMessage(R.string.delete_photo_dialog_message);
+        builder.setIcon(R.drawable. delete);
+        builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
+            gamePhotoPresenter.deleteFiles();
+            gamePhotoPresenter.dismissDeleteDialog();
+        });
+        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> gamePhotoPresenter.dismissDeleteDialog());
+        deleteDialog = builder.show();
+    }
+
+    @Override
+    public void hideDeleteDialog() {
+        //Delete showDeleteDialog() from currentState with DismissDialogStrategy
     }
 
     private File createImageFile() throws IOException {
@@ -154,7 +177,11 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        if (imageViewer != null) imageViewer.onDismiss();
+        if (imageViewer != null) {
+            imageViewerIsOpen = true;
+            imageViewer.onDismiss();
+        }
+        if(deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
     }
 
     @Override
@@ -172,7 +199,10 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onItemClick(int position) {
         if (gamePhotoPresenter.isSelectMode()) gamePhotoPresenter.selectGalleryItem(urlList.get(position), position);
-        else gamePhotoPresenter.openFullScreenPhotoViewer(position);
+        else {
+            gamePhotoPresenter.setCurrentPosition(position);
+            gamePhotoPresenter.openFullScreenPhotoViewer();
+        }
     }
 
     @Override
@@ -199,16 +229,27 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     }
 
     @Override
-    public void openFullScreenPhotoViewer(int position) {
+    public void openFullScreenPhotoViewer() {
         imageViewer = new ImageViewer.Builder(getContext(), urlList)
+                .setImageChangeListener(this)
                 .setOnDismissListener(this)
-                .setStartPosition(position)
+                .setStartPosition(gamePhotoPresenter.getCurrentPosition())
                 .show();
-        System.out.println("VIEWER " + imageViewer.getUrl());
+    }
+
+    @Override
+    public void closeFullScreenPhotoViewer() {
+        if (imageViewer != null) imageViewer.onDismiss();
     }
 
     @Override
     public void onDismiss() {
-        System.out.println("DISSMISS");
+        if (!imageViewerIsOpen) gamePhotoPresenter.closeFullScreenPhotoViewer();
+    }
+
+    @Override
+    public void onImageChange(int position) {
+        gamePhotoPresenter.setCurrentPosition(position);
+        System.out.println(position);
     }
 }

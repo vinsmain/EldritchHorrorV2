@@ -124,9 +124,8 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         builder.setTitle(R.string.dialogBackAlert);
         builder.setMessage(R.string.backDialogMessage);
         builder.setIcon(R.drawable.back_icon);
-        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
-            File storageDir = Objects.requireNonNull(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + pagerPresenter.getGameId()));
-            deleteRecursive(storageDir);
+        builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
+            pagerPresenter.deleteFilesIfGameNotCreated();
             finishActivity();
         });
         builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
@@ -136,14 +135,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @Override
     public void finishActivity() {
         finish();
-    }
-
-    private void deleteRecursive(File fileOrDirectory) {
-        if (fileOrDirectory.isDirectory())
-            for (File child : fileOrDirectory.listFiles())
-                deleteRecursive(child);
-
-        fileOrDirectory.delete();
     }
 
     @Override

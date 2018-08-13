@@ -26,6 +26,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     private List<String> selectedPhotoList;
     private boolean selectMode = false;
     private Uri currentPhotoURI;
+    private int currentPosition;
 
     public GamePhotoPresenter() {
         App.getComponent().inject(this);
@@ -46,7 +47,11 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
 
     private void makePhoto(boolean value) {
         if (selectedPhotoList.isEmpty()) getViewState().dispatchTakePictureIntent();
-        else deleteFiles();
+        else getViewState().showDeleteDialog();
+    }
+
+    public void dismissDeleteDialog() {
+        getViewState().hideDeleteDialog();
     }
 
     public void selectGalleryItem(String selectedItem, int position) {
@@ -67,11 +72,15 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         repository.selectModeOnNext(this.selectMode);
     }
 
-    public void openFullScreenPhotoViewer(int position) {
-        getViewState().openFullScreenPhotoViewer(position);
+    public void openFullScreenPhotoViewer() {
+        getViewState().openFullScreenPhotoViewer();
     }
 
-    private void deleteFiles() {
+    public void closeFullScreenPhotoViewer() {
+        getViewState().closeFullScreenPhotoViewer();
+    }
+
+    public void deleteFiles() {
         for (String uri : selectedPhotoList) {
             File file = new File(Uri.parse(uri).getPath());
             if (file.exists()) file.delete();
@@ -91,6 +100,18 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
 
     public void setCurrentPhotoURI(Uri currentPhotoURI) {
         this.currentPhotoURI = currentPhotoURI;
+    }
+
+    public void deleteFile(File file) {
+        repository.deleteRecursiveFiles(file);
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
     @Override

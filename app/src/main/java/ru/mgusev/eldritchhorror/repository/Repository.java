@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -107,8 +108,14 @@ public class Repository {
         return game;
     }
 
+    public Game getGame(long id) {
+        Game game = userDataDB.gameDAO().getGame(id);
+        if (game != null) game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
+        return game;
+    }
+
     public void setGame(Game game) {
-        this.game = game;
+        this.game = new Game(game);
         this.game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
     }
 
@@ -352,6 +359,7 @@ public class Repository {
 
     public void deleteGame(Game game) {
         deleteGameFromDB(game);
+        deleteRecursiveFiles(Objects.requireNonNull(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + game.getId())));
         Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
         firebaseHelper.removeGame(game);
     }
@@ -359,6 +367,16 @@ public class Repository {
     private void deleteGameFromDB(Game game) {
         userDataDB.gameDAO().deleteGame(game);
         userDataDB.investigatorDAO().deleteByGameID(game.getId());
+    }
+
+    public void deleteRecursiveFiles(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursiveFiles(child);
+
+        fileOrDirectory.delete();
+
+        //TODO Предусмотреть удаление пустых папок
     }
 
     public void deleteSynchGames() {

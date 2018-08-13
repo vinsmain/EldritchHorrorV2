@@ -1,12 +1,18 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
+import android.os.Environment;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+
+import java.io.File;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
 import ru.mgusev.eldritchhorror.repository.Repository;
@@ -65,7 +71,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     public void actionSave() {
         if (isCorrectActiveInvestigatorsCount()) {
-            clearResultValuesIfDefeat();
+            repository.getGame().clearResultValuesIfDefeat();
             repository.insertGame(repository.getGame());
             repository.gameListOnNext();
             repository.rateOnNext();
@@ -82,21 +88,10 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         return repository.getGame().getPlayersCount() >= invCount;
     }
 
-    private void clearResultValuesIfDefeat() {
-        if (!repository.getGame().getIsWinGame()) {
-            repository.getGame().setGatesCount(0);
-            repository.getGame().setMonstersCount(0);
-            repository.getGame().setCurseCount(0);
-            repository.getGame().setRumorsCount(0);
-            repository.getGame().setCluesCount(0);
-            repository.getGame().setBlessedCount(0);
-            repository.getGame().setDoomCount(0);
-            repository.getGame().setScore(0);
-        }
-    }
-
     public void showBackDialog() {
-        getViewState().showBackDialog();
+        Game game = repository.getGame(repository.getGame().getId());
+        if (game == null || !game.equals(repository.getGame())) getViewState().showBackDialog();
+        else getViewState().finishActivity();
     }
 
     public void dismissBackDialog() {
@@ -107,8 +102,9 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         repository.photoOnNext(true);
     }
 
-    public long getGameId() {
-        return repository.getGame().getId();
+    public void deleteFilesIfGameNotCreated() {
+        if (repository.getGame(repository.getGame().getId()) == null)
+            Objects.requireNonNull(repository.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + repository.getGame().getId()));
     }
 
     @Override

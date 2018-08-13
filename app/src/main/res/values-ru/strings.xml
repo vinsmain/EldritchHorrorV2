@@ -35,7 +35,6 @@
     <string name="activity_party_details_header">Детали игры</string>
     <string name="activity_add_party_header">Начальные данные</string>
     <string name="activity_investigators_choice_header">Сыщики</string>
-    <string name="zero">0</string>
     <string name="starting_game">Стартовый состав</string>
     <string name="replacement">Вышел на замену</string>
     <string name="dead">Выбыл из игры</string>
@@ -63,7 +62,6 @@
     <string name="worst_result">Худший результат</string>
     <string name="about">О приложении</string>
     <string name="donate">Поддержать проект</string>
-    <string name="version_header">v.\u0020</string>
 
     <string name="donate_message">Для доступа ко всем возможностям приложения на 24 часа посмотрите рекламный ролик</string>
     <string name="view_question">Начать просмотр?</string>
@@ -103,11 +101,6 @@
     <string name="win_defeat_stat_description">Победы/Поражения</string>
     <string name="win_stat_label">Победы</string>
     <string name="defeat_stat_label">Поражения</string>
-    <string name="one">1</string>
-    <string name="two">2</string>
-    <string name="three">3</string>
-    <string name="four">4</string>
-    <string name="five">5</string>
     <string name="auth_header">Авторизация</string>
     <string name="statistics_header">Статистика</string>
     <string name="statistics_none">Данные отсутствуют</string>
@@ -121,4 +114,6 @@
     <string name="music_header">Атмосферная музыка</string>
     <string name="specialization_header">Специализация сыщиков</string>
     <string name="clean_header">Очистить список сыщиков</string>
+    <string name="game_photo_header">Фотогалерея</string>
+    <string name="delete_photo_dialog_message">Удалить выбранные файлы?</string>
 </resources>

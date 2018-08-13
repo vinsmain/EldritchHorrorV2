@@ -18,7 +18,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     public PagerAdapter(Context context, FragmentManager fm) {
         super(fm);
-        titleArray = new String[]{context.getString(R.string.activity_add_party_header), context.getString(R.string.activity_investigators_choice_header), context.getString(R.string.gameResult), "Фото"};
+        titleArray = new String[]{context.getString(R.string.activity_add_party_header), context.getString(R.string.activity_investigators_choice_header), context.getString(R.string.gameResult), context.getString(R.string.game_photo_header)};
     }
 
     @Override

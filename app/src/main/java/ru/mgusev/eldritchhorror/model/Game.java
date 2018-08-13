@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -146,6 +147,35 @@ public class Game {
         lastModified = 0;
         adventureID = 0;
         invList = new ArrayList<>();
+    }
+
+    public Game(Game game) {
+        this.id = game.id;
+        this.date = game.date;
+        this.ancientOneID = game.ancientOneID;
+        this.playersCount = game.playersCount;
+        this.isSimpleMyths = game.isSimpleMyths;
+        this.isNormalMyths = game.isNormalMyths;
+        this.isHardMyths = game.isHardMyths;
+        this.isStartingRumor = game.isStartingRumor;
+        this.isWinGame = game.isWinGame;
+        this.isDefeatByElimination = game.isDefeatByElimination;
+        this.isDefeatByMythosDepletion = game.isDefeatByMythosDepletion;
+        this.isDefeatByAwakenedAncientOne = game.isDefeatByAwakenedAncientOne;
+        this.gatesCount = game.gatesCount;
+        this.monstersCount = game.monstersCount;
+        this.curseCount = game.curseCount;
+        this.rumorsCount = game.rumorsCount;
+        this.cluesCount = game.cluesCount;
+        this.blessedCount = game.blessedCount;
+        this.doomCount = game.doomCount;
+        this.score = game.score;
+        this.preludeID = game.preludeID;
+        this.solvedMysteriesCount = game.solvedMysteriesCount;
+        this.userID = game.userID;
+        this.lastModified = game.lastModified;
+        this.adventureID = game.adventureID;
+        this.invList = game.invList;
     }
 
     public long getId() {
@@ -354,5 +384,92 @@ public class Game {
 
     public void setInvList(List<Investigator> invList) {
         this.invList = invList;
+    }
+
+    public void clearResultValuesIfDefeat() {
+        if (!getIsWinGame()) {
+            setGatesCount(0);
+            setMonstersCount(0);
+            setCurseCount(0);
+            setRumorsCount(0);
+            setCluesCount(0);
+            setBlessedCount(0);
+            setDoomCount(0);
+            setScore(0);
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) return true;
+        Game game = new Game();
+        if(obj instanceof Game) game = (Game) obj;
+        return getId() == game.getId() &&
+                getDate() == game.getDate() &&
+                getAncientOneID() == game.getAncientOneID() &&
+                getPlayersCount() == game.getPlayersCount() &&
+                getIsSimpleMyths() == game.getIsSimpleMyths() &&
+                getIsNormalMyths() == game.getIsNormalMyths() &&
+                getIsHardMyths() == game.getIsHardMyths() &&
+                getIsStartingRumor() == game.getIsStartingRumor() &&
+                getIsWinGame() == game.getIsWinGame() &&
+                getIsDefeatByElimination() == game.getIsDefeatByElimination() &&
+                getIsDefeatByMythosDepletion() == game.getIsDefeatByMythosDepletion() &&
+                getIsDefeatByAwakenedAncientOne() == game.getIsDefeatByAwakenedAncientOne() &&
+                getGatesCount() == game.getGatesCount() &&
+                getMonstersCount() == game.getMonstersCount() &&
+                getCurseCount() == game.getCurseCount() &&
+                getRumorsCount() == game.getRumorsCount() &&
+                getCluesCount() == game.getCluesCount() &&
+                getBlessedCount() == game.getBlessedCount() &&
+                getDoomCount() == game.getDoomCount() &&
+                getScore() == game.getScore() &&
+                getPreludeID() == game.getPreludeID() &&
+                getSolvedMysteriesCount() == game.getSolvedMysteriesCount() &&
+                getLastModified() == game.getLastModified() &&
+                getAdventureID() == game.getAdventureID() &&
+                equalsInvList(getInvList(), game.getInvList());
+    }
+
+    private boolean equalsInvList(List<Investigator> invList1, List<Investigator> invList2) {
+        System.out.println("SIZE " + invList1.size() + " " + invList2.size());
+        if (invList1.size() != invList2.size()) return false;
+        for (Investigator investigator1 : invList1) {
+            for (Investigator investigator2 : invList2) {
+                if (investigator1.equals(investigator2)) {
+                    investigator1.printLog(investigator2);
+                    if (!investigator1.equalsTwoInvestigators(investigator2)) return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    public void printLog(Game game) {
+        Log.d("GAME", String.valueOf(getId() == game.getId()));
+                 Log.d("GAME", String.valueOf(getDate() == game.getDate()));
+                 Log.d("GAME", String.valueOf(getAncientOneID() == game.getAncientOneID()));
+                 Log.d("GAME", String.valueOf(getPlayersCount() == game.getPlayersCount()));
+                 Log.d("GAME", String.valueOf(getIsSimpleMyths() == game.getIsSimpleMyths()));
+                 Log.d("GAME", String.valueOf(getIsNormalMyths() == game.getIsNormalMyths()));
+                 Log.d("GAME", String.valueOf(getIsHardMyths() == game.getIsHardMyths()));
+                 Log.d("GAME", String.valueOf(getIsStartingRumor() == game.getIsStartingRumor()));
+                 Log.d("GAME", String.valueOf(getIsWinGame() == game.getIsWinGame()));
+                 Log.d("GAME", String.valueOf(getIsDefeatByElimination() == game.getIsDefeatByElimination()));
+                 Log.d("GAME", String.valueOf(getIsDefeatByMythosDepletion() == game.getIsDefeatByMythosDepletion()));
+                 Log.d("GAME", String.valueOf(getIsDefeatByAwakenedAncientOne() == game.getIsDefeatByAwakenedAncientOne()));
+                 Log.d("GAME", String.valueOf(getGatesCount() == game.getGatesCount()));
+                 Log.d("GAME", String.valueOf(getMonstersCount() == game.getMonstersCount()));
+                 Log.d("GAME", String.valueOf(getCurseCount() == game.getCurseCount()));
+                 Log.d("GAME", String.valueOf(getRumorsCount() == game.getRumorsCount()));
+                 Log.d("GAME", String.valueOf(getCluesCount() == game.getCluesCount()));
+                 Log.d("GAME", String.valueOf(getBlessedCount() == game.getBlessedCount()));
+                 Log.d("GAME", String.valueOf(getDoomCount() == game.getDoomCount()));
+                 Log.d("GAME", String.valueOf(getScore() == game.getScore()));
+                 Log.d("GAME", String.valueOf(getPreludeID() == game.getPreludeID()));
+                 Log.d("GAME", String.valueOf(getSolvedMysteriesCount() == game.getSolvedMysteriesCount()));
+                 Log.d("GAME", String.valueOf(getLastModified() == game.getLastModified()));
+                 Log.d("GAME", String.valueOf(getAdventureID() == game.getAdventureID()));
+                 Log.d("GAME", String.valueOf(equalsInvList(getInvList(), game.getInvList())));
     }
 }
