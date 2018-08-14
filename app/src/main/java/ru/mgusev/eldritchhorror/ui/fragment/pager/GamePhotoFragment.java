@@ -109,14 +109,10 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println(requestCode);
-        System.out.println(resultCode);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             gamePhotoPresenter.updateGallery();
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
             gamePhotoPresenter.deleteFile(new File(gamePhotoPresenter.getCurrentPhotoURI().getPath()));
-            //File file = new File(gamePhotoPresenter.getCurrentPhotoURI().getPath());
-            //if (file.exists()) file.delete();
         }
     }
 
@@ -250,6 +246,5 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onImageChange(int position) {
         gamePhotoPresenter.setCurrentPosition(position);
-        System.out.println(position);
     }
 }

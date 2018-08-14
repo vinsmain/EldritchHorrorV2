@@ -2,8 +2,10 @@ package ru.mgusev.eldritchhorror.ui.activity.details;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +28,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.DetailsAdapter;
+import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
+import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
@@ -32,7 +37,7 @@ import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 
-public class DetailsActivity extends MvpAppCompatActivity implements DetailsView {
+public class DetailsActivity extends MvpAppCompatActivity implements DetailsView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener {
 
     @InjectPresenter
     DetailsPresenter detailsPresenter;
@@ -71,8 +76,15 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.defeat_reason_by_mythos_depletion_row) TableRow defeatReasonByMythosDepletion;
     @BindView(R.id.defeat_reason_by_awakened_ancient_one_row) TableRow defeatReasonByAwakenedAncientOne;
 
+    @BindView(R.id.photo_details_recycle_view) RecyclerView photoRV;
+
     private DetailsAdapter adapter;
+    private GalleryAdapter galleryAdapter;
     private AlertDialog deleteDialog;
+    private List<String> uriList;
+    private int columnsCount = 4;
+    private ImageViewer imageViewer;
+    private boolean imageViewerIsOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +94,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
         initToolbar();
         initInvestigatorRV();
+        initPhotoRV();
     }
 
     private void initToolbar() {
@@ -100,6 +113,16 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
         adapter = new DetailsAdapter(this);
         investigatorsRV.setAdapter(adapter);
+    }
+
+    private void initPhotoRV() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 6;
+        photoRV.setLayoutManager(new GridLayoutManager(this, columnsCount));
+        photoRV.setHasFixedSize(true);
+
+        galleryAdapter = new GalleryAdapter(this);
+        photoRV.setAdapter(galleryAdapter);
+        galleryAdapter.setOnClick(this);
     }
 
     private void startIntent(int position) {
@@ -129,7 +152,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         }
     }
 
-    @OnClick({R.id.start_data_result_edit_button, R.id.investigator_result_edit_button, R.id.victory_result_edit_button, R.id.defeat_reason_edit_button})
+    @OnClick({R.id.start_data_result_edit_button, R.id.investigator_result_edit_button, R.id.victory_result_edit_button, R.id.defeat_reason_edit_button, R.id.photo_details_edit_button})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.start_data_result_edit_button:
@@ -137,6 +160,9 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
                 break;
             case R.id.investigator_result_edit_button:
                 startIntent(1);
+                break;
+            case R.id.photo_details_edit_button:
+                startIntent(3);
                 break;
             default:
                 startIntent(2);
@@ -269,8 +295,64 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     @Override
+    public void setPhotoList(List<String> list) {
+        uriList = list;
+        galleryAdapter.addGalleryItems(uriList);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if(deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
+        if (imageViewer != null) {
+            imageViewerIsOpen = true;
+            imageViewer.onDismiss();
+        }
+
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        detailsPresenter.setCurrentPosition(position);
+        detailsPresenter.openFullScreenPhotoViewer();
+    }
+
+    @Override
+    public void onItemLongClick(int position) {
+
+    }
+
+    @Override
+    public void onEditClick(int position) {
+
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+
+    }
+
+    @Override
+    public void openFullScreenPhotoViewer() {
+        imageViewer = new ImageViewer.Builder(this, uriList)
+                .setImageChangeListener(this)
+                .setOnDismissListener(this)
+                .setStartPosition(detailsPresenter.getCurrentPosition())
+                .show();
+    }
+
+    @Override
+    public void closeFullScreenPhotoViewer() {
+        if (imageViewer != null) imageViewer.onDismiss();
+    }
+
+    @Override
+    public void onDismiss() {
+        if (!imageViewerIsOpen) detailsPresenter.closeFullScreenPhotoViewer();
+    }
+
+    @Override
+    public void onImageChange(int position) {
+        detailsPresenter.setCurrentPosition(position);
     }
 }

@@ -14,6 +14,7 @@ import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 public interface DetailsView extends MvpView {
 
     String DELETE_DIALOG_TAG = "deleteDialog";
+    String IMAGE_VIEWER_TAG = "fullScreenImageViewer";
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setHeadBackground(AncientOne ancientOne, Expansion expansion);
@@ -71,4 +72,13 @@ public interface DetailsView extends MvpView {
 
     @StateStrategyType(value = DismissDialogStrategy.class, tag = DELETE_DIALOG_TAG)
     void hideDeleteDialog();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setPhotoList(List<String> list);
+
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = IMAGE_VIEWER_TAG)
+    void openFullScreenPhotoViewer();
+
+    @StateStrategyType(value = DismissDialogStrategy.class, tag = IMAGE_VIEWER_TAG)
+    void closeFullScreenPhotoViewer();
 }

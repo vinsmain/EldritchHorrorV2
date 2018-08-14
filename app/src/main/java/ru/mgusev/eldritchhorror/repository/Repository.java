@@ -503,15 +503,15 @@ public class Repository {
     // GamePhoto
 
     public List<String> getImages() {
-        List<String> urlFileList = new ArrayList<>();
+        List<String> uriFileList = new ArrayList<>();
         File dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + getGame().getId());
 
         if (dir != null && dir.isDirectory()) {
             for (File file : dir.listFiles()) {
-                urlFileList.add(UriUtil.getUriForFile(file).toString());
+                uriFileList.add(UriUtil.getUriForFile(file).toString());
             }
         }
-        return urlFileList;
+        return uriFileList;
     }
 
     public PublishSubject<Boolean> getPhotoPublish() {

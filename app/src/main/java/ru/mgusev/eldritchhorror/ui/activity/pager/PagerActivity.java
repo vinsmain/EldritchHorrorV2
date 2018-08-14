@@ -175,8 +175,8 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     private void showAddPhotoButton() {
-        if (currentPosition == 3) addPhotoButton.setVisibility(View.VISIBLE);
-        else addPhotoButton.setVisibility(View.GONE);
+        if (currentPosition == 3) addPhotoButton.show();
+        else addPhotoButton.hide();
     }
 
     @Override

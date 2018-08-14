@@ -25,6 +25,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     private Game game;
     private CompositeDisposable gameListSubscribe;
     private static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+    private int currentPosition;
 
     public DetailsPresenter() {
         App.getComponent().inject(this);
@@ -46,6 +47,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         initMysteriesCount();
         if (game.getIsWinGame()) initVictory();
         else initDefeat();
+        initPhotoList();
     }
 
     private void initHeader() {
@@ -62,6 +64,12 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         List<Investigator> investigatorList = game.getInvList();
         getViewState().hideInvestigatorsNotSelected(investigatorList.isEmpty());
         getViewState().setInvestigatorsList(investigatorList);
+    }
+
+    private void initPhotoList() {
+        List<String> photoList = repository.getImages();
+        //getViewState().hideInvestigatorsNotSelected(investigatorList.isEmpty());
+        getViewState().setPhotoList(photoList);
     }
 
     private void initMysteriesCount() {
@@ -106,6 +114,22 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
 
     public void setGameToRepository() {
         repository.setGame(game);
+    }
+
+    public void openFullScreenPhotoViewer() {
+        getViewState().openFullScreenPhotoViewer();
+    }
+
+    public void closeFullScreenPhotoViewer() {
+        getViewState().closeFullScreenPhotoViewer();
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
     @Override
