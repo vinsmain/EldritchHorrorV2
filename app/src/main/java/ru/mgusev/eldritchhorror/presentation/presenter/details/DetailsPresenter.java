@@ -24,6 +24,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     Repository repository;
     private Game game;
     private CompositeDisposable gameListSubscribe;
+    private CompositeDisposable photoSubscribe;
     private static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     private int currentPosition;
 
@@ -31,6 +32,8 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         App.getComponent().inject(this);
         gameListSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData));
+        photoSubscribe = new CompositeDisposable();
+        photoSubscribe.add(repository.getPhotoPublish().subscribe(this::initPhotoList));
     }
 
     @Override
@@ -47,7 +50,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         initMysteriesCount();
         if (game.getIsWinGame()) initVictory();
         else initDefeat();
-        initPhotoList();
+        initPhotoList(true);
     }
 
     private void initHeader() {
@@ -66,9 +69,9 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         getViewState().setInvestigatorsList(investigatorList);
     }
 
-    private void initPhotoList() {
+    private void initPhotoList(boolean value) {
         List<String> photoList = repository.getImages();
-        //getViewState().hideInvestigatorsNotSelected(investigatorList.isEmpty());
+        getViewState().showPhotoNoneMessage(photoList.isEmpty());
         getViewState().setPhotoList(photoList);
     }
 
@@ -135,6 +138,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     @Override
     public void onDestroy() {
         gameListSubscribe.dispose();
+        photoSubscribe.dispose();
         repository.clearGame();
         super.onDestroy();
     }

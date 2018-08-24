@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.io.File;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -52,9 +50,13 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private int currentPosition = 0;
     private PagerAdapter pagerAdapter;
     private AlertDialog backDialog;
+    private MenuItem actionSave;
+    private MenuItem actionEditExpansion;
     private MenuItem actionRandom;
     private MenuItem actionClear;
     private MenuItem actionRandomSettings;
+    private MenuItem actionSelectAll;
+    private MenuItem actionSelectCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,28 +152,26 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_games_pager_activity, menu);
+        actionSave = menu.findItem(R.id.action_save);
         actionRandom = menu.findItem(R.id.action_random);
+        actionEditExpansion = menu.findItem(R.id.action_edit_expansion);
         actionClear = menu.findItem(R.id.action_clear);
         actionRandomSettings = menu.findItem(R.id.action_random_settings);
+        actionSelectAll = menu.findItem(R.id.action_select_all);
+        actionSelectCancel = menu.findItem(R.id.action_select_cancel);
         showMenuItem();
         return true;
     }
 
     private void showMenuItem() {
-        if (actionRandom != null) {
-            if (currentPosition > 1) actionRandom.setVisible(false);
-            else actionRandom.setVisible(true);
-        }
-        if (actionClear != null) {
-            if (currentPosition == 1) {
-                actionClear.setVisible(true);
-                actionRandomSettings.setVisible(true);
-            }
-            else {
-                actionClear.setVisible(false);
-                actionRandomSettings.setVisible(false);
-            }
-        }
+        if (actionRandom != null) actionRandom.setVisible(currentPosition <= 1);
+        if (actionClear != null) actionClear.setVisible(currentPosition == 1);
+        if (actionRandomSettings != null) actionRandomSettings.setVisible(currentPosition == 1);
+        if (actionSelectAll != null) actionSelectAll.setVisible(currentPosition == 3);
+        if (actionSave != null) actionSave.setVisible(currentPosition != 3);
+        if (actionEditExpansion != null) actionEditExpansion.setVisible(currentPosition != 3);
+
+        showActionSelectCancelButton();
     }
 
     private void showAddPhotoButton() {
@@ -181,8 +181,16 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     public void setAddPhotoButtonIcon(boolean selectedMode) {
-        addPhotoButton.setImageResource(selectedMode ? R.drawable.delete_white : R.drawable.cross);
+        addPhotoButton.setImageResource(selectedMode ? R.drawable.delete_white : R.drawable.camera);
         addPhotoButton.setBackgroundTintList(selectedMode ? ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark)) : ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+        showActionSelectCancelButton();
+    }
+
+    private void showActionSelectCancelButton() {
+        if (actionSelectCancel != null) {
+            if (currentPosition == 3) actionSelectCancel.setVisible(pagerPresenter.isSelectedMode());
+            else actionSelectCancel.setVisible(false);
+        }
     }
 
     @Override
@@ -204,6 +212,12 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             case R.id.action_edit_expansion:
                 Intent expansionChoiceIntent = new Intent(this, ExpansionChoiceActivity.class);
                 startActivity(expansionChoiceIntent);
+                return true;
+            case R.id.action_select_all:
+                pagerPresenter.clickSelectPhoto(true);
+                return true;
+            case R.id.action_select_cancel:
+                pagerPresenter.clickSelectPhoto(false);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

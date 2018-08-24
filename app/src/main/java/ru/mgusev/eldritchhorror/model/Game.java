@@ -432,12 +432,10 @@ public class Game {
     }
 
     private boolean equalsInvList(List<Investigator> invList1, List<Investigator> invList2) {
-        System.out.println("SIZE " + invList1.size() + " " + invList2.size());
         if (invList1.size() != invList2.size()) return false;
         for (Investigator investigator1 : invList1) {
             for (Investigator investigator2 : invList2) {
                 if (investigator1.equals(investigator2)) {
-                    investigator1.printLog(investigator2);
                     if (!investigator1.equalsTwoInvestigators(investigator2)) return false;
                 }
             }

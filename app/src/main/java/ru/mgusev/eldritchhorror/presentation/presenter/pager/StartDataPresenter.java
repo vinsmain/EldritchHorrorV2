@@ -164,6 +164,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     public void setCurrentPrelude(String value) {
         currentPrelude = repository.getPrelude(value);
+        repository.getGame().setPreludeID(currentPrelude.getId());
     }
 
     public void setSpinnerPosition() {

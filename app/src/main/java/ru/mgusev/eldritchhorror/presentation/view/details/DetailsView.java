@@ -81,4 +81,7 @@ public interface DetailsView extends MvpView {
 
     @StateStrategyType(value = DismissDialogStrategy.class, tag = IMAGE_VIEWER_TAG)
     void closeFullScreenPhotoViewer();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showPhotoNoneMessage(boolean isShow);
 }

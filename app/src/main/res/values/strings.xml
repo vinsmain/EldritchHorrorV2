@@ -127,4 +127,8 @@
     <string name="clean_header">Clean the list of investigators</string>
     <string name="game_photo_header">Photo Gallery</string>
     <string name="delete_photo_dialog_message">Delete the selected files?</string>
+    <string name="game_photo_none">None</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
+    <string name="create_file_error">Cannot create file</string>
 </resources>

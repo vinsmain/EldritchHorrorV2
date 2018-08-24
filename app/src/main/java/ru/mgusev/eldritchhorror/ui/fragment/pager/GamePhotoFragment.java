@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,9 +26,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -97,13 +93,13 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void updatePhotoGallery(List<String> imagesUrlList) {
         //check for read storage permission
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        //if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             galleryAdapter.addGalleryItems(imagesUrlList);
             urlList = imagesUrlList;
-        } else {
+        //} else {
             //request permission
-            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RC_READ_STORAGE);
-        }
+            //ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RC_READ_STORAGE);
+        //}
     }
 
     @Override
@@ -111,6 +107,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             gamePhotoPresenter.updateGallery();
+            gamePhotoPresenter.addImageFile();
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
             gamePhotoPresenter.deleteFile(new File(gamePhotoPresenter.getCurrentPhotoURI().getPath()));
         }
@@ -124,7 +121,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
         builder.setMessage(R.string.delete_photo_dialog_message);
         builder.setIcon(R.drawable. delete);
         builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
-            gamePhotoPresenter.deleteFiles();
+            gamePhotoPresenter.deleteSelectedFiles();
             gamePhotoPresenter.dismissDeleteDialog();
         });
         builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> gamePhotoPresenter.dismissDeleteDialog());
@@ -136,36 +133,23 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
         //Delete showDeleteDialog() from currentState with DismissDialogStrategy
     }
 
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Objects.requireNonNull(getActivity()).getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + gamePhotoPresenter.getGameId());
-        return File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-    }
-
     @Override
-    public void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                Toast.makeText(getContext(), "Error!", Toast.LENGTH_SHORT).show();
+    public void dispatchTakePictureIntent(File photoFile) {
+        //check for read storage permission
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), "com.example.android.provider", photoFile));
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                    gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(photoFile));
+                }
             }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), "com.example.android.provider", photoFile));
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(photoFile));
-            }
+        } else {
+            //request permission
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RC_READ_STORAGE);
         }
     }
 

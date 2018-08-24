@@ -77,6 +77,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.defeat_reason_by_awakened_ancient_one_row) TableRow defeatReasonByAwakenedAncientOne;
 
     @BindView(R.id.photo_details_recycle_view) RecyclerView photoRV;
+    @BindView(R.id.photo_details_none) TextView photoNoneMessage;
 
     private DetailsAdapter adapter;
     private GalleryAdapter galleryAdapter;
@@ -354,5 +355,11 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @Override
     public void onImageChange(int position) {
         detailsPresenter.setCurrentPosition(position);
+    }
+
+    @Override
+    public void showPhotoNoneMessage(boolean isShow) {
+        photoNoneMessage.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        photoRV.setVisibility(isShow ? View.GONE : View.VISIBLE);
     }
 }

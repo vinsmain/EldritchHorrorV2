@@ -5,6 +5,7 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
+import java.io.File;
 import java.util.List;
 
 import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
@@ -24,7 +25,7 @@ public interface GamePhotoView extends MvpView {
     void hideDeleteDialog();
 
     @StateStrategyType(OneExecutionStateStrategy.class)
-    void dispatchTakePictureIntent();
+    void dispatchTakePictureIntent(File photoFile);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void selectGalleryItem(List<String> list, int position);

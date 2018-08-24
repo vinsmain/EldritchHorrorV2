@@ -3,7 +3,6 @@ package ru.mgusev.eldritchhorror.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import java.util.Date;
 
 public class PrefHelper {
 

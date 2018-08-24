@@ -16,7 +16,7 @@ android {
         applicationId "ru.mgusev.eldritchhorror"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 28 //Не забыть раскомментировать crashlytics перед релизом
+        versionCode 28
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -91,8 +91,8 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.firebase:firebase-database:16.0.1'
-    implementation 'com.google.firebase:firebase-auth:16.0.2'
-    implementation 'com.google.android.gms:play-services-auth:15.0.1'
+    implementation 'com.google.firebase:firebase-auth:16.0.3'
+    implementation 'com.google.android.gms:play-services-auth:16.0.0'
 
     implementation 'com.github.skydoves:powermenu:2.0.4'
 
@@ -102,6 +102,8 @@ dependencies {
 
     implementation 'com.facebook.fresco:fresco:1.10.0'
     implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
+
+    implementation 'com.google.firebase:firebase-storage:16.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

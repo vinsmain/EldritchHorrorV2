@@ -137,7 +137,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
         builder.setCancelable(false);
         builder.setTitle(R.string.dialogAlert);
         builder.setMessage(R.string.cleanDialogMessage);
-        builder.setIcon(R.drawable.clear);
+        builder.setIcon(R.drawable.cancel_select);
         builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
             investigatorChoicePresenter.clearInvestigatorList();
             investigatorChoicePresenter.dismissDialog();

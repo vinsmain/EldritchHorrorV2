@@ -26,6 +26,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     private CompositeDisposable scoreSubscribe;
     private CompositeDisposable isWinSubscribe;
     private CompositeDisposable selectModeSubscribe;
+    private boolean selectedMode;
 
     public PagerPresenter() {
         App.getComponent().inject(this);
@@ -39,7 +40,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         isWinSubscribe.add(repository.getObservableIsWin().subscribe(this::setResultIcon));
 
         selectModeSubscribe = new CompositeDisposable();
-        selectModeSubscribe.add(repository.getSelectModePublish().subscribe(selectMode -> getViewState().setAddPhotoButtonIcon(selectMode)));
+        selectModeSubscribe.add(repository.getSelectModePublish().subscribe(this::updateSelectedMode));
     }
 
     @Override
@@ -103,8 +104,23 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     }
 
     public void deleteFilesIfGameNotCreated() {
-        if (repository.getGame(repository.getGame().getId()) == null)
+        if (repository.getGame(repository.getGame().getId()) == null) {
             repository.deleteRecursiveFiles(repository.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + repository.getGame().getId()));
+            repository.removeImageFile(repository.getGame().getId());
+        }
+    }
+
+    public void clickSelectPhoto(boolean isSelectAll) {
+        repository.selectAllPhotoOnNext(isSelectAll);
+    }
+
+    private void updateSelectedMode(boolean selectedMode) {
+        this.selectedMode = selectedMode;
+        getViewState().setAddPhotoButtonIcon(selectedMode);
+    }
+
+    public boolean isSelectedMode() {
+        return selectedMode;
     }
 
     @Override

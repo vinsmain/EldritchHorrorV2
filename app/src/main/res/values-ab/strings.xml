@@ -115,4 +115,8 @@
     <string name="clean_header">Очистить список сыщиков</string>
     <string name="game_photo_header">Фотогалерея</string>
     <string name="delete_photo_dialog_message">Удалить выбранные файлы?</string>
+    <string name="game_photo_none">Нет фото</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="deselect_all">Отменить выбор</string>
+    <string name="create_file_error">Не удалось создать файл</string>
 </resources>

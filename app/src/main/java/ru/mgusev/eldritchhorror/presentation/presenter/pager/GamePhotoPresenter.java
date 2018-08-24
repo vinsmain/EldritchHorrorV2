@@ -6,13 +6,18 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.ImageFile;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 
@@ -23,6 +28,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     Repository repository;
 
     private CompositeDisposable photoSubscribe;
+    private CompositeDisposable selectAllPhotoSubscribe;
     private List<String> selectedPhotoList;
     private boolean selectMode = false;
     private Uri currentPhotoURI;
@@ -32,6 +38,8 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         App.getComponent().inject(this);
         photoSubscribe = new CompositeDisposable();
         photoSubscribe.add(repository.getPhotoPublish().subscribe(this::makePhoto));
+        selectAllPhotoSubscribe = new CompositeDisposable();
+        selectAllPhotoSubscribe.add(repository.getSelectAllPhotoPublish().subscribe(this::selectAllPhoto));
         selectedPhotoList = new ArrayList<>();
     }
 
@@ -39,15 +47,30 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         updateGallery();
+        //repository.fireStoreSubscribe();
     }
 
     public void updateGallery() {
         getViewState().updatePhotoGallery(repository.getImages());
+        repository.photoOnNext(false);
+    }
+
+    public void addImageFile() {
+        ImageFile file = new ImageFile();
+        file.setGameId(repository.getGame().getId());
+        file.setName(currentPhotoURI.getLastPathSegment());
+        repository.addImageFile(file);
+        repository.sendFileToStorage(currentPhotoURI);
     }
 
     private void makePhoto(boolean value) {
-        if (selectedPhotoList.isEmpty()) getViewState().dispatchTakePictureIntent();
-        else getViewState().showDeleteDialog();
+        if (value) {
+            if (selectedPhotoList.isEmpty()) {
+                String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + "_";
+                getViewState().dispatchTakePictureIntent(repository.getPhotoFile(imageFileName));
+            }
+            else getViewState().showDeleteDialog();
+        }
     }
 
     public void dismissDeleteDialog() {
@@ -72,6 +95,19 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         repository.selectModeOnNext(this.selectMode);
     }
 
+    private void selectAllPhoto(boolean isSelectAll) {
+        List<String> imagesUriList = repository.getImages();
+        if (!imagesUriList.isEmpty()) {
+            selectedPhotoList.clear();
+            if (isSelectAll) {
+                selectedPhotoList.addAll(imagesUriList);
+                setSelectMode(true);
+            } else setSelectMode(false);
+            getViewState().selectGalleryItem(selectedPhotoList, 0);
+            getViewState().updatePhotoGallery(imagesUriList);
+        }
+    }
+
     public void openFullScreenPhotoViewer() {
         getViewState().openFullScreenPhotoViewer();
     }
@@ -80,18 +116,13 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         getViewState().closeFullScreenPhotoViewer();
     }
 
-    public void deleteFiles() {
+    public void deleteSelectedFiles() {
         for (String uri : selectedPhotoList) {
-            File file = new File(Uri.parse(uri).getPath());
-            if (file.exists()) file.delete();
+            deleteFile(new File(Uri.parse(uri).getPath()));
         }
         selectedPhotoList.clear();
         updateGallery();
         setSelectMode(false);
-    }
-
-    public long getGameId() {
-        return repository.getGame().getId();
     }
 
     public Uri getCurrentPhotoURI() {
@@ -103,6 +134,10 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     }
 
     public void deleteFile(File file) {
+        System.out.println(Uri.fromFile(file).getLastPathSegment());
+        ImageFile imageFile = repository.getImageFile(file.getName());
+        repository.removeImageFile(imageFile);
+        repository.removeFileFromFirebase(imageFile);
         repository.deleteRecursiveFiles(file);
     }
 
@@ -118,5 +153,6 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     public void onDestroy() {
         super.onDestroy();
         photoSubscribe.dispose();
+        selectAllPhotoSubscribe.dispose();
     }
 }

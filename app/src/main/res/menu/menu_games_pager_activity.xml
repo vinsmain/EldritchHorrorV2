@@ -9,7 +9,7 @@
 
     <item
         android:id="@+id/action_clear"
-        android:icon="@drawable/clear_white"
+        android:icon="@drawable/cancel_select_white"
         android:title="@string/clean_header"
         android:visible="false"
         app:showAsAction="ifRoom" />
@@ -30,5 +30,17 @@
         android:id="@+id/action_save"
         android:icon="@drawable/checked_white"
         android:title="@string/saveResult"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_select_all"
+        android:icon="@drawable/select_all_white"
+        android:title="@string/select_all"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_select_cancel"
+        android:icon="@drawable/cancel_select_white"
+        android:title="@string/deselect_all"
         app:showAsAction="always|collapseActionView" />
 </menu>
