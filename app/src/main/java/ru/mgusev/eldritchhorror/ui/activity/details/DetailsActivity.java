@@ -297,8 +297,10 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void setPhotoList(List<String> list) {
+        photoRV.setVisibility(View.GONE);
         uriList = list;
         galleryAdapter.addGalleryItems(uriList);
+        photoRV.setVisibility(View.VISIBLE);
     }
 
     @Override

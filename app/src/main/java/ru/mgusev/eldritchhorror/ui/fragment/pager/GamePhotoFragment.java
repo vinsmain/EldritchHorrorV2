@@ -92,21 +92,15 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
 
     @Override
     public void updatePhotoGallery(List<String> imagesUrlList) {
-        //check for read storage permission
-        //if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            galleryAdapter.addGalleryItems(imagesUrlList);
-            urlList = imagesUrlList;
-        //} else {
-            //request permission
-            //ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RC_READ_STORAGE);
-        //}
+        galleryAdapter.addGalleryItems(imagesUrlList);
+        urlList = imagesUrlList;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            gamePhotoPresenter.updateGallery();
+            gamePhotoPresenter.changeGallery();
             gamePhotoPresenter.addImageFile();
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
             gamePhotoPresenter.deleteFile(new File(gamePhotoPresenter.getCurrentPhotoURI().getPath()));
@@ -169,7 +163,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == RC_READ_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                gamePhotoPresenter.updateGallery();
+                gamePhotoPresenter.changeGallery();
             } else {
                 Toast.makeText(getContext(), "Storage Permission denied", Toast.LENGTH_SHORT).show();
             }

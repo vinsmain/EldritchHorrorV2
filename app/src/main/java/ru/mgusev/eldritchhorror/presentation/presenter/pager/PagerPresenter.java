@@ -6,7 +6,6 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.io.File;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -30,6 +29,9 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     public PagerPresenter() {
         App.getComponent().inject(this);
+
+        repository.checkCurrentGameIsExist();
+
         ancientOneSubscribe = new CompositeDisposable();
         ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne, repository.getExpansion(ancientOne.getExpansionID()))));
 
@@ -100,7 +102,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     }
 
     public void clickOnAddPhotoButton() {
-        repository.photoOnNext(true);
+        repository.clickPhotoButtonOnNext(true);
     }
 
     public void deleteFilesIfGameNotCreated() {

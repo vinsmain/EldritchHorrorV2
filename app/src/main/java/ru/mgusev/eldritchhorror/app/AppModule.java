@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
-import ru.mgusev.eldritchhorror.database.FirebaseHelper;
+import ru.mgusev.eldritchhorror.repository.FirebaseHelper;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;

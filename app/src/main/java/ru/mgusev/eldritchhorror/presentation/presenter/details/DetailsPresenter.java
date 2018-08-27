@@ -30,10 +30,13 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
 
     public DetailsPresenter() {
         App.getComponent().inject(this);
+
+        repository.checkCurrentGameIsExist();
+
         gameListSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData));
         photoSubscribe = new CompositeDisposable();
-        photoSubscribe.add(repository.getPhotoPublish().subscribe(this::initPhotoList));
+        photoSubscribe.add(repository.getUpdatePhotoGalleryPublish().subscribe(this::initPhotoList));
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +26,8 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     @Inject
     Repository repository;
 
-    private CompositeDisposable photoSubscribe;
+    private CompositeDisposable clickPhotoButtonSubscribe;
+    private CompositeDisposable updatePhotoGallerySubscribe;
     private CompositeDisposable selectAllPhotoSubscribe;
     private List<String> selectedPhotoList;
     private boolean selectMode = false;
@@ -36,8 +36,10 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
 
     public GamePhotoPresenter() {
         App.getComponent().inject(this);
-        photoSubscribe = new CompositeDisposable();
-        photoSubscribe.add(repository.getPhotoPublish().subscribe(this::makePhoto));
+        clickPhotoButtonSubscribe = new CompositeDisposable();
+        clickPhotoButtonSubscribe.add(repository.getClickPhotoButtonPublish().subscribe(this::makePhoto));
+        updatePhotoGallerySubscribe = new CompositeDisposable();
+        updatePhotoGallerySubscribe.add(repository.getUpdatePhotoGalleryPublish().subscribe(this::changeGallery));
         selectAllPhotoSubscribe = new CompositeDisposable();
         selectAllPhotoSubscribe.add(repository.getSelectAllPhotoPublish().subscribe(this::selectAllPhoto));
         selectedPhotoList = new ArrayList<>();
@@ -46,27 +48,30 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        updateGallery();
-        //repository.fireStoreSubscribe();
+        changeGallery();
     }
 
-    public void updateGallery() {
+    public void changeGallery() {
+        repository.updatePhotoGalleryOnNext(true);
+    }
+
+    private void changeGallery(boolean value) {
         getViewState().updatePhotoGallery(repository.getImages());
-        repository.photoOnNext(false);
     }
 
     public void addImageFile() {
         ImageFile file = new ImageFile();
         file.setGameId(repository.getGame().getId());
         file.setName(currentPhotoURI.getLastPathSegment());
+        file.setLastModified(new Date().getTime());
         repository.addImageFile(file);
-        repository.sendFileToStorage(currentPhotoURI);
+        repository.sendFileToStorage(currentPhotoURI, repository.getGame().getId());
     }
 
     private void makePhoto(boolean value) {
         if (value) {
             if (selectedPhotoList.isEmpty()) {
-                String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + "_";
+                String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + "_" + new Date().getTime() + ".jpg";
                 getViewState().dispatchTakePictureIntent(repository.getPhotoFile(imageFileName));
             }
             else getViewState().showDeleteDialog();
@@ -121,7 +126,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
             deleteFile(new File(Uri.parse(uri).getPath()));
         }
         selectedPhotoList.clear();
-        updateGallery();
+        changeGallery();
         setSelectMode(false);
     }
 
@@ -134,10 +139,8 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     }
 
     public void deleteFile(File file) {
-        System.out.println(Uri.fromFile(file).getLastPathSegment());
         ImageFile imageFile = repository.getImageFile(file.getName());
         repository.removeImageFile(imageFile);
-        repository.removeFileFromFirebase(imageFile);
         repository.deleteRecursiveFiles(file);
     }
 
@@ -152,7 +155,8 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        photoSubscribe.dispose();
+        clickPhotoButtonSubscribe.dispose();
+        updatePhotoGallerySubscribe.dispose();
         selectAllPhotoSubscribe.dispose();
     }
 }

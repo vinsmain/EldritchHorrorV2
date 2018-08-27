@@ -20,7 +20,7 @@ public interface ImageFileDAO {
     int deleteImageFile(ImageFile file);
 
     @Query("SELECT * FROM files")
-    List<ImageFile> getAllImageFil();
+    List<ImageFile> getAllImageFiles();
 
     @Query("SELECT * FROM files WHERE name = :name LIMIT 1")
     ImageFile getImageFile(String name);

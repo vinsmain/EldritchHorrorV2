@@ -8,13 +8,6 @@
         app:showAsAction="always|collapseActionView" />
 
     <item
-        android:id="@+id/action_clear"
-        android:icon="@drawable/cancel_select_white"
-        android:title="@string/clean_header"
-        android:visible="false"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_random_settings"
         android:icon="@drawable/specialization_settings"
         android:title="@string/specialization_header"
@@ -27,10 +20,11 @@
         app:showAsAction="always|collapseActionView" />
 
     <item
-        android:id="@+id/action_save"
-        android:icon="@drawable/checked_white"
-        android:title="@string/saveResult"
-        app:showAsAction="always|collapseActionView" />
+        android:id="@+id/action_clear"
+        android:icon="@drawable/cancel_select_white"
+        android:title="@string/clean_header"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_select_all"
@@ -42,5 +36,11 @@
         android:id="@+id/action_select_cancel"
         android:icon="@drawable/cancel_select_white"
         android:title="@string/deselect_all"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/checked_white"
+        android:title="@string/saveResult"
         app:showAsAction="always|collapseActionView" />
 </menu>

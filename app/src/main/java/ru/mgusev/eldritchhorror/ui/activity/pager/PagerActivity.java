@@ -50,7 +50,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private int currentPosition = 0;
     private PagerAdapter pagerAdapter;
     private AlertDialog backDialog;
-    private MenuItem actionSave;
     private MenuItem actionEditExpansion;
     private MenuItem actionRandom;
     private MenuItem actionClear;
@@ -152,7 +151,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_games_pager_activity, menu);
-        actionSave = menu.findItem(R.id.action_save);
         actionRandom = menu.findItem(R.id.action_random);
         actionEditExpansion = menu.findItem(R.id.action_edit_expansion);
         actionClear = menu.findItem(R.id.action_clear);
@@ -168,7 +166,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         if (actionClear != null) actionClear.setVisible(currentPosition == 1);
         if (actionRandomSettings != null) actionRandomSettings.setVisible(currentPosition == 1);
         if (actionSelectAll != null) actionSelectAll.setVisible(currentPosition == 3);
-        if (actionSave != null) actionSave.setVisible(currentPosition != 3);
         if (actionEditExpansion != null) actionEditExpansion.setVisible(currentPosition != 3);
 
         showActionSelectCancelButton();

@@ -1,11 +1,8 @@
-package ru.mgusev.eldritchhorror.database;
+package ru.mgusev.eldritchhorror.repository;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -14,17 +11,16 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import durdinapps.rxfirebase2.RxFirebaseChildEvent;
 import durdinapps.rxfirebase2.RxFirebaseDatabase;
 import durdinapps.rxfirebase2.RxFirebaseStorage;
 import io.reactivex.Flowable;
+import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.ImageFile;
-import ru.mgusev.eldritchhorror.model.ImageFileList;
 
 public class FirebaseHelper {
 
@@ -36,12 +32,16 @@ public class FirebaseHelper {
 
     private Flowable<RxFirebaseChildEvent<Game>> childEventDisposable;
     private Flowable<RxFirebaseChildEvent<ImageFile>> fileEventDisposable;
+    private PublishSubject<ImageFile> downloadFileDisposable;
+    private PublishSubject<ImageFile> successUploadFilePublish;
 
     public FirebaseHelper() {
         App.getComponent().inject(this);
         mDatabase = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
         mDatabase.setPersistenceEnabled(true);
+        successUploadFilePublish = PublishSubject.create();
+        downloadFileDisposable = PublishSubject.create();
     }
 
     public void initReference(FirebaseUser user) {
@@ -88,18 +88,15 @@ public class FirebaseHelper {
             UploadTask uploadTask = sendReference.putFile(file);
 
             // Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
-                    Log.d("FIRESTORE", "SUCCESS");
-                }
+            uploadTask.addOnFailureListener(exception -> {
+                // Handle unsuccessful uploads
+            }).addOnSuccessListener(taskSnapshot -> {
+                ImageFile imageFile = new ImageFile();
+                imageFile.setName(Objects.requireNonNull(taskSnapshot.getMetadata()).getName());
+                imageFile.setGameId(gameId);
+                imageFile.setMd5Hash(taskSnapshot.getMetadata().getMd5Hash());
+                successUploadFilePublish.onNext(imageFile);
+                Log.d("FIRESTORE", Objects.requireNonNull(taskSnapshot.getMetadata()).getMd5Hash());
             });
         }
     }
@@ -110,6 +107,7 @@ public class FirebaseHelper {
 
             RxFirebaseStorage.getFile(fileReference, localFile)
                     .subscribe(taskSnapshot -> {
+                        downloadFileDisposable.onNext(imageFile);
                         Log.i("RxFirebaseSample", "transferred: " + taskSnapshot.getBytesTransferred() + " bytes " + localFile.getAbsolutePath());
                     }, throwable -> {
                         Log.e("RxFirebaseSample", throwable.toString());
@@ -121,17 +119,25 @@ public class FirebaseHelper {
         if (fileReference != null) {
             StorageReference deleteReference = storageReference.child(String.valueOf(file.getGameId())).child(file.getName());
 
-            deleteReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    // File deleted successfully
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Uh-oh, an error occurred!
-                }
+            deleteReference.delete().addOnSuccessListener(aVoid -> {
+                // File deleted successfully
+            }).addOnFailureListener(exception -> {
+                // Uh-oh, an error occurred!
             });
         }
+    }
+
+    public PublishSubject<ImageFile> getSuccessUploadFilePublish() {
+        return successUploadFilePublish;
+    }
+
+    public PublishSubject<ImageFile> getDownloadFileDisposable() {
+        return downloadFileDisposable;
+    }
+
+    public void signOut() {
+        reference = null;
+        fileReference = null;
+        storageReference = null;
     }
 }

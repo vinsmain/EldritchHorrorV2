@@ -6,12 +6,8 @@ import android.os.Environment;
 import com.facebook.common.util.UriUtil;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class FileHelper {
 
@@ -31,25 +27,20 @@ public class FileHelper {
                 uriFileList.add(UriUtil.getUriForFile(file).toString());
             }
         }
+        if (uriFileList.size() == 0) dir.delete();
         return uriFileList;
     }
 
-    public File createImageFile(String imageFileName, long gameId) throws IOException {
+    public File getImageFile(String imageFileName, long gameId) {
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + gameId);
-        return File.createTempFile(
-                imageFileName,   /* prefix */
-                ".jpg",    /* suffix */
-                storageDir       /* directory */
-        ); //TODO Разобраться с временными файлами
+        return new File(storageDir, imageFileName);
     }
 
     public void deleteRecursiveFiles(File fileOrDirectory) {
-        if (fileOrDirectory.isDirectory())
-            for (File child : fileOrDirectory.listFiles())
-                deleteRecursiveFiles(child);
-
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) deleteRecursiveFiles(child);
+        }
         fileOrDirectory.delete();
-
-        //TODO Предусмотреть удаление пустых папок
+        if (!fileOrDirectory.isDirectory() && fileOrDirectory.getParentFile().listFiles().length == 0) fileOrDirectory.getParentFile().delete();
     }
 }

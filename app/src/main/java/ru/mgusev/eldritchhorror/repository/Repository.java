@@ -7,16 +7,22 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.GenericTypeIndicator;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -27,14 +33,12 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.database.FirebaseHelper;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.ImageFile;
-import ru.mgusev.eldritchhorror.model.ImageFileList;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.model.Prelude;
@@ -63,19 +67,21 @@ public class Repository {
     private PublishSubject<String> userIconPublish;
     private PublishSubject<Boolean> authPublish;
     private PublishSubject<Boolean> ratePublish;
-    private PublishSubject<Boolean> photoPublish;
+    private PublishSubject<Boolean> clickPhotoButtonPublish;
+    private PublishSubject<Boolean> updatePhotoGalleryPublish;
     private PublishSubject<Boolean> selectModePublish;
     private PublishSubject<Boolean> selectAllPhotoPublish;
 
     private CompositeDisposable firebaseDBSubscribe;
     private CompositeDisposable firebaseFilesSubscribe;
+    private CompositeDisposable uploadFileSubscribe;
+    private CompositeDisposable downloadFileSubscribe;
 
     private Game game;
     private Investigator investigator;
     private int pagerPosition = 0;
     private FirebaseHelper firebaseHelper;
     private FirebaseUser user;
-    private GenericTypeIndicator<ImageFile> genericTypeIndicator;
 
     @Inject
     public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FileHelper fileHelper, FirebaseHelper firebaseHelper) {
@@ -96,11 +102,16 @@ public class Repository {
         userIconPublish = PublishSubject.create();
         authPublish = PublishSubject.create();
         ratePublish = PublishSubject.create();
-        photoPublish = PublishSubject.create();
+        clickPhotoButtonPublish = PublishSubject.create();
+        updatePhotoGalleryPublish = PublishSubject.create();
         selectModePublish = PublishSubject.create();
         selectAllPhotoPublish = PublishSubject.create();
 
-        genericTypeIndicator = new GenericTypeIndicator<ImageFile>(){};
+        uploadFileSubscribe = new CompositeDisposable();
+        uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile));
+
+        downloadFileSubscribe = new CompositeDisposable();
+        downloadFileSubscribe.add(firebaseHelper.getDownloadFileDisposable().subscribe(this::downloadFile));
 
         for (Game game : getGameList(0, 0)) fixSpecializationsForOldInvestigators(game);
     }
@@ -116,8 +127,11 @@ public class Repository {
         if (update) insertGame(game);
     }
 
+    public void checkCurrentGameIsExist() {
+        if (getGame() == null) context.startActivity(new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+    }
+
     public Game getGame() {
-        if (game == null) context.startActivity(new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         return game;
     }
 
@@ -314,13 +328,19 @@ public class Repository {
         firebaseFilesSubscribe = new CompositeDisposable();
         firebaseFilesSubscribe.add(firebaseHelper.getFileEventDisposable().subscribe(this::processFilesDataFromFirebase, e -> Log.w("FIREBASE", e)));
 
-        for (ImageFile file : userDataDB.imageFileDAO().getAllImageFil()) {
-            addImageFile(file);
+        for (ImageFile file : userDataDB.imageFileDAO().getAllImageFiles()) {
+            if (file.getUserID() == null) {
+                file.setLastModified(new Date().getTime());
+                file.setUserID(user.getUid());
+                addImageFile(file);
+            }
+            if (file.getMd5Hash() == null) sendFileToStorage(Uri.fromFile(fileHelper.getImageFile(file.getName(), file.getGameId())), file.getGameId());
         }
     }
 
     public void setUser(FirebaseUser user) {
         this.user = user;
+        if (user == null) firebaseHelper.signOut();
     }
 
     private void processDataFromFirebase(RxFirebaseChildEvent<Game> data) {
@@ -356,6 +376,7 @@ public class Repository {
     public void firebaseSubscribeDispose() {
         if (firebaseDBSubscribe != null) firebaseDBSubscribe.dispose();
         if (firebaseFilesSubscribe != null) firebaseFilesSubscribe.dispose();
+        if (uploadFileSubscribe != null) uploadFileSubscribe.dispose();
     }
 
     private void changeGame(Game game) {
@@ -375,10 +396,10 @@ public class Repository {
     }
 
     private void changeImageFile(ImageFile file) {
-        if (file != null && getImageFile(file.getName()) == null) {
-            userDataDB.imageFileDAO().insertImageFile(file);
+        if (file != null) {
+            if (getImageFile(file.getName()) == null) userDataDB.imageFileDAO().insertImageFile(file);
+            if (file.getMd5Hash() != null) getFileFromStorage(file);
         }
-        if (file != null) getFileFromStorage(file);
     }
 
     public void insertGame(Game game) {
@@ -538,15 +559,44 @@ public class Repository {
     // GamePhoto
 
     public List<String> getImages() {
+        /*List<String> filePaths = fileHelper.getImages(getGame().getId());
+
+        for (String path : filePaths) {
+            File file = new File(path);
+            if (getMD5Hash(file).equals(userDataDB.imageFileDAO().getImageFile(Uri.fromFile(file).getLastPathSegment()).getMd5Hash())) {
+                System.out.println("TRUE");
+            } else System.out.println("FALSE");
+        }*/
         return fileHelper.getImages(getGame().getId());
     }
 
-    public PublishSubject<Boolean> getPhotoPublish() {
-        return photoPublish;
+    private String getMD5Hash(File file) {
+        FileInputStream fis;
+        String md5 = "";
+        try {
+            fis = new FileInputStream(file);
+            md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return md5;
     }
 
-    public void photoOnNext(boolean value) {
-        photoPublish.onNext(value);
+    public PublishSubject<Boolean> getClickPhotoButtonPublish() {
+        return clickPhotoButtonPublish;
+    }
+
+    public void clickPhotoButtonOnNext(boolean value) {
+        clickPhotoButtonPublish.onNext(value);
+    }
+
+    public PublishSubject<Boolean> getUpdatePhotoGalleryPublish() {
+        return updatePhotoGalleryPublish;
+    }
+
+    public void updatePhotoGalleryOnNext(boolean value) {
+        updatePhotoGalleryPublish.onNext(value);
     }
 
     public PublishSubject<Boolean> getSelectModePublish() {
@@ -566,12 +616,7 @@ public class Repository {
     }
 
     public File getPhotoFile(String fileName) {
-        try {
-            return fileHelper.createImageFile(fileName, getGame().getId());
-        } catch (IOException e) {
-            Toast.makeText(context, R.string.create_file_error, Toast.LENGTH_SHORT).show();
-        }
-        return null;
+        return fileHelper.getImageFile(fileName, getGame().getId());
     }
 
     public void addImageFile(ImageFile file) {
@@ -584,14 +629,11 @@ public class Repository {
     }
 
     public void removeImageFile(ImageFile file) {
-        if (file != null) {
+        if (file != null && userDataDB.imageFileDAO().getImageFile(file.getName()) != null) {
             userDataDB.imageFileDAO().deleteImageFile(file);
+            firebaseHelper.removeFile(file);
             firebaseHelper.deleteFileFromFirebaseStorage(file);
         }
-    }
-
-    public void removeFileFromFirebase(ImageFile file) {
-        if (file != null) firebaseHelper.removeFile(file);
     }
 
     public void deleteRecursiveFiles(File fileOrDirectory) {
@@ -601,23 +643,36 @@ public class Repository {
     public void removeImageFile(long gameId) {
         for (ImageFile file : userDataDB.imageFileDAO().getImageFileList(gameId)) {
             removeImageFile(file);
-            removeFileFromFirebase(file);
         }
     }
 
-    public void sendFileToStorage(Uri file) {
-        firebaseHelper.sendFileToFirebaseStorage(file, getGame().getId());
+    public void sendFileToStorage(Uri file, long gameId) {
+        firebaseHelper.sendFileToFirebaseStorage(file, gameId);
     }
 
-    public void getFileFromStorage(ImageFile imageFile) {
+    private void getFileFromStorage(ImageFile imageFile) {
         boolean exist = false;
         for (String filePath : fileHelper.getImages(imageFile.getGameId())) {
             if (filePath.contains(imageFile.getName())) exist = true;
         }
+        if (!exist) firebaseHelper.getFileFromFirebaseStorage(imageFile, fileHelper.getImageFile(imageFile.getName(), imageFile.getGameId()));
+    }
+
+    private void uploadFile(ImageFile file) {
         try {
-            if (!exist) firebaseHelper.getFileFromFirebaseStorage(imageFile, fileHelper.createImageFile(imageFile.getName(), imageFile.getGameId()));
-        } catch (IOException e) {
-            e.printStackTrace();
+            ImageFile imageFile = getImageFile(file.getName());
+            imageFile.setMd5Hash(file.getMd5Hash());
+            imageFile.setLastModified(new Date().getTime());
+            addImageFile(imageFile);
+        } catch (Exception e) {
+            firebaseHelper.deleteFileFromFirebaseStorage(file);
+            Log.d("UPLOAD", e.getMessage());
         }
+    }
+
+    private void downloadFile(ImageFile imageFile) {
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        imagePipeline.clearCaches();
+        if (getGame() != null && getGame().getId() == imageFile.getGameId()) updatePhotoGalleryOnNext(true);
     }
 }

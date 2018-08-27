@@ -16,12 +16,7 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
-        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-                .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
-                .setResizeAndRotateEnabledForNetwork(true)
-                .setDownsampleEnabled(true)
-                .build();
-        Fresco.initialize(this, config);
+        Fresco.initialize(this);
 
         component = DaggerAppComponent.builder()
                 .appModule(new AppModule(this.getApplicationContext()))
