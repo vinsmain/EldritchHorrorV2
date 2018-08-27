@@ -89,14 +89,14 @@ public class FirebaseHelper {
 
             // Register observers to listen for when the download is done or if it fails
             uploadTask.addOnFailureListener(exception -> {
-                // Handle unsuccessful uploads
+                Log.d("FIRESTORAGE UPLOAD", "FAIL " + exception.getLocalizedMessage());
             }).addOnSuccessListener(taskSnapshot -> {
                 ImageFile imageFile = new ImageFile();
                 imageFile.setName(Objects.requireNonNull(taskSnapshot.getMetadata()).getName());
                 imageFile.setGameId(gameId);
                 imageFile.setMd5Hash(taskSnapshot.getMetadata().getMd5Hash());
                 successUploadFilePublish.onNext(imageFile);
-                Log.d("FIRESTORE", Objects.requireNonNull(taskSnapshot.getMetadata()).getMd5Hash());
+                Log.d("FIRESTORAGE UPLOAD", Objects.requireNonNull(taskSnapshot.getMetadata()).getMd5Hash());
             });
         }
     }
@@ -120,9 +120,9 @@ public class FirebaseHelper {
             StorageReference deleteReference = storageReference.child(String.valueOf(file.getGameId())).child(file.getName());
 
             deleteReference.delete().addOnSuccessListener(aVoid -> {
-                // File deleted successfully
+                Log.d("FIRESTORAGE DELETE", "SUCCESS");
             }).addOnFailureListener(exception -> {
-                // Uh-oh, an error occurred!
+                Log.d("FIRESTORAGE UPLOAD", "FAIL " + exception.getLocalizedMessage());
             });
         }
     }

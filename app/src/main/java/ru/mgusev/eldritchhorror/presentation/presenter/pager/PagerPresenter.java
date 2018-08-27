@@ -29,9 +29,6 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     public PagerPresenter() {
         App.getComponent().inject(this);
-
-        repository.checkCurrentGameIsExist();
-
         ancientOneSubscribe = new CompositeDisposable();
         ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne, repository.getExpansion(ancientOne.getExpansionID()))));
 

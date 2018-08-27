@@ -30,9 +30,6 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
 
     public DetailsPresenter() {
         App.getComponent().inject(this);
-
-        repository.checkCurrentGameIsExist();
-
         gameListSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData));
         photoSubscribe = new CompositeDisposable();
@@ -46,14 +43,18 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     }
 
     private void initGameData(List<Game> list) {
-        game = repository.getGame();
-        initHeader();
-        initStartData();
-        initInvestigatorList();
-        initMysteriesCount();
-        if (game.getIsWinGame()) initVictory();
-        else initDefeat();
-        initPhotoList(true);
+        try {
+            game = repository.getGame();
+            initHeader();
+            initStartData();
+            initInvestigatorList();
+            initMysteriesCount();
+            if (game.getIsWinGame()) initVictory();
+            else initDefeat();
+            initPhotoList(true);
+        } catch (NullPointerException e) {
+            repository.doRestart();
+        }
     }
 
     private void initHeader() {
