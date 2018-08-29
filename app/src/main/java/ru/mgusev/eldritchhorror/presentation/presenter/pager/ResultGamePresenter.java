@@ -20,6 +20,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
 
     public ResultGamePresenter() {
         App.getComponent().inject(this);
+
         ancientOneSubscribe = new CompositeDisposable();
         ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne ->  getViewState().showMysteriesRadioGroup(ancientOne)));
 

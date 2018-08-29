@@ -273,6 +273,13 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        pagerPresenter.activityOnStop();
+        Log.d("PAGER", "On Stop");
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if(backDialog != null && backDialog.isShowing()) backDialog.dismiss();

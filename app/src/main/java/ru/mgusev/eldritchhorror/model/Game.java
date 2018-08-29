@@ -40,6 +40,7 @@ public class Game {
     public static final String GAME_FIELD_USER_ID = "user_id";
     public static final String GAME_FIELD_LAST_MODIFIED = "last_modified";
     public static final String GAME_FIELD_ADVENTURE_ID = "adventure_id";
+    public static final String GAME_FIELD_PARENT_ID = "parent_id";
 
     @PrimaryKey
     @ColumnInfo(name = GAME_FIELD_ID)
@@ -117,6 +118,9 @@ public class Game {
     @ColumnInfo(name = GAME_FIELD_ADVENTURE_ID)
     private int adventureID;
 
+    @ColumnInfo(name = GAME_FIELD_PARENT_ID)
+    private long parentId;
+
     @Ignore
     private List<Investigator> invList;
 
@@ -146,6 +150,7 @@ public class Game {
         userID = null;
         lastModified = 0;
         adventureID = 0;
+        parentId = 0;
         invList = new ArrayList<>();
     }
 
@@ -175,6 +180,7 @@ public class Game {
         this.userID = game.userID;
         this.lastModified = game.lastModified;
         this.adventureID = game.adventureID;
+        this.parentId = game.getParentId();
         this.invList = game.invList;
     }
 
@@ -376,6 +382,14 @@ public class Game {
 
     public void setAdventureID(int adventureID) {
         this.adventureID = adventureID;
+    }
+
+    public long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(long parentId) {
+        this.parentId = parentId;
     }
 
     public List<Investigator> getInvList() {

@@ -29,6 +29,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     public PagerPresenter() {
         App.getComponent().inject(this);
+
         ancientOneSubscribe = new CompositeDisposable();
         ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne, repository.getExpansion(ancientOne.getExpansionID()))));
 
@@ -120,6 +121,10 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     public boolean isSelectedMode() {
         return selectedMode;
+    }
+
+    public void activityOnStop() {
+        repository.saveGameDraft();
     }
 
     @Override

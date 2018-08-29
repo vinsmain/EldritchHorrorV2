@@ -36,6 +36,9 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
 
     public GamePhotoPresenter() {
         App.getComponent().inject(this);
+
+        if (repository.getGame() == null) repository.loadGameDraft();
+
         clickPhotoButtonSubscribe = new CompositeDisposable();
         clickPhotoButtonSubscribe.add(repository.getClickPhotoButtonPublish().subscribe(this::makePhoto));
         updatePhotoGallerySubscribe = new CompositeDisposable();

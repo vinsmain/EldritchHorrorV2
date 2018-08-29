@@ -48,6 +48,8 @@ import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked, LifecycleOwner, OnMenuItemClickListener {
 
+    public static boolean initialized;
+
     @InjectPresenter
     MainPresenter mainPresenter;
 
@@ -79,8 +81,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        //verifyStoragePermissions(this);
+        initialized = true;
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 2;
 

@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -301,6 +302,13 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         uriList = list;
         galleryAdapter.addGalleryItems(uriList);
         photoRV.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        detailsPresenter.activityOnStop();
+        Log.d("DETAILS", "On Stop");
     }
 
     @Override

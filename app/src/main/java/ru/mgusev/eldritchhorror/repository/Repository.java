@@ -1,10 +1,7 @@
 package ru.mgusev.eldritchhorror.repository;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -122,55 +119,21 @@ public class Repository {
         if (update) insertGame(game);
     }
 
-    public void restartApp() {
-        context.startActivity(new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+    public void saveGameDraft() {
+        Game draftGame = new Game(getGame());
+        draftGame.setParentId(getGame().getId());
+        draftGame.setId(new Date().getTime());
+        insertGame(draftGame);
     }
 
-    public void doRestart() {
-        /*Intent mStartActivity = new Intent(context, MainActivity.class);
-        int mPendingIntentId = 123456;
-        PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId, mStartActivity,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-        System.exit(0);*/
-        //String TAG = "RESTART APP";
-        /*try {
-            //check if the context is given
-            if (context != null) {
-                //fetch the packagemanager so we can get the default launch activity
-                // (you can replace this intent with any other activity if you want
-                PackageManager pm = context.getPackageManager();
-                //check if we got the PackageManager
-                if (pm != null) {
-                    //create the intent with the default start activity for your application
-                    Intent mStartActivity = pm.getLaunchIntentForPackage(
-                            context.getPackageName()
-                    );
-                    if (mStartActivity != null) {
-                        mStartActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        //create a pending intent so the application is restarted after System.exit(0) was called.
-                        // We use an AlarmManager to call this intent in 100ms
-                        int mPendingIntentId = 223344;
-                        PendingIntent mPendingIntent = PendingIntent
-                                .getActivity(context, mPendingIntentId, mStartActivity,
-                                        PendingIntent.FLAG_CANCEL_CURRENT);
-                        AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        Objects.requireNonNull(mgr).set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-                        //kill the application
-                        System.exit(0);
-                    } else {
-                        Log.e(TAG, "Was not able to restart application, mStartActivity null");
-                    }
-                } else {
-                    Log.e(TAG, "Was not able to restart application, PM null");
-                }
-            } else {
-                Log.e(TAG, "Was not able to restart application, Context null");
-            }
-        } catch (Exception ex) {
-            Log.e(TAG, "Was not able to restart application");
-        }*/
+    public void loadGameDraft() {
+        Game draftGame = userDataDB.gameDAO().getDraftGame();
+        Game game = new Game(draftGame);
+        game.setId(game.getParentId());
+        game.setParentId(0);
+        game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
+        setGame(game);
+        deleteGame(draftGame);
     }
 
     public Game getGame() {
@@ -455,7 +418,7 @@ public class Repository {
             game.setUserID(user.getUid());
         }
         insertGameToDB(game);
-        firebaseHelper.addGame(game);
+        if (game.getParentId() == 0) firebaseHelper.addGame(game);
     }
 
     public void insertGameToDB(Game game) {

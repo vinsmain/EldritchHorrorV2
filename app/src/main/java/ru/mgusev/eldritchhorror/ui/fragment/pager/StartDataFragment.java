@@ -92,6 +92,11 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void showDatePicker(Calendar date) {
         Calendar currentDate;
         if (startDataPresenter.getTempDate() != null) currentDate = startDataPresenter.getTempDate();

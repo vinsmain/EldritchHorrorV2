@@ -58,6 +58,7 @@ public class AppModule {
     public UserDataDB provideUserDataDB(Context context) {
         return Room.databaseBuilder(context, UserDataDB.class, "UserDataDB.db")
                 .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_1_2)
+                .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_2_3)
                 .allowMainThreadQueries()
                 .build();
     }
