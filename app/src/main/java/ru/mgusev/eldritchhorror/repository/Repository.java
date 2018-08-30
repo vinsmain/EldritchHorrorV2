@@ -121,14 +121,16 @@ public class Repository {
     }
 
     public void saveGameDraft() {
-        System.out.println("SAVE DRAFT " + game.getId() + " " + game.getInvList().size());
+        System.out.println("SAVE " + game.getId() + " " + game.getInvList().size());
         Game draftGame = new Game(getGame());
         draftGame.setParentId(draftGame.getId());
         draftGame.setId(new Date().getTime());
+        System.out.println("SAVE DRAFT " + game.getId() + " " + game.getInvList().size());
         insertGame(draftGame);
     }
 
     public void loadGameDraft() {
+        for (Game d : userDataDB.gameDAO().getDraftGameList()) System.out.println(d.getId());
         System.out.println("LOAD DRAFT");
         Game draftGame = userDataDB.gameDAO().getDraftGame();
         System.out.println(draftGame.getId());
@@ -143,8 +145,9 @@ public class Repository {
             investigator.setGameId(game.getId());
             System.out.println("INV " + investigator.getNameEN());
         }
-        setGame(game);
-        deleteGame(draftGame);
+        this.game = game;
+        deleteGame(draftGame); //SAVE 1535652734443 8
+        //SAVE DRAFT 1535652734443 8
     }
 
     public Game getGame() {
