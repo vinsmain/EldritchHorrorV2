@@ -33,10 +33,15 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
     public InvestigatorChoicePresenter() {
         App.getComponent().inject(this);
 
+        System.out.println("INV START");
+
         expansionSubscribe = new CompositeDisposable();
         expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::updateInvListByExpansion));
         activeInvestigatorList = new ArrayList<>();
         activeInvestigatorList.addAll(repository.getGame().getInvList());
+        for (Investigator investigator : activeInvestigatorList) {
+            System.out.println("INVESTIGATOR " + investigator.getName());
+        }
         investigatorList = new ArrayList<>();
         updateInvListByExpansion(repository.getExpansionList());
         investigatorSubscribe = new CompositeDisposable();

@@ -15,6 +15,7 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @InjectViewState
 public class PagerPresenter extends MvpPresenter<PagerView> {
@@ -29,6 +30,12 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     public PagerPresenter() {
         App.getComponent().inject(this);
+        System.out.println("PAGER START");
+        if (!MainActivity.initialized && repository.getGame() == null) {
+            System.out.println("PAGER SET GAME");
+            repository.loadGameDraft();
+        }
+
 
         ancientOneSubscribe = new CompositeDisposable();
         ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne, repository.getExpansion(ancientOne.getExpansionID()))));

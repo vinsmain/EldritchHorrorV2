@@ -77,6 +77,7 @@ public class Repository {
 
     @Inject
     public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FileHelper fileHelper, FirebaseHelper firebaseHelper) {
+        System.out.println("START REPOSITORY");
         this.context = context;
         this.staticDataDB = staticDataDB;
         this.userDataDB = userDataDB;
@@ -120,18 +121,28 @@ public class Repository {
     }
 
     public void saveGameDraft() {
+        System.out.println("SAVE DRAFT " + game.getId() + " " + game.getInvList().size());
         Game draftGame = new Game(getGame());
-        draftGame.setParentId(getGame().getId());
+        draftGame.setParentId(draftGame.getId());
         draftGame.setId(new Date().getTime());
         insertGame(draftGame);
     }
 
     public void loadGameDraft() {
+        System.out.println("LOAD DRAFT");
         Game draftGame = userDataDB.gameDAO().getDraftGame();
+        System.out.println(draftGame.getId());
+        System.out.println("SIZE " + userDataDB.investigatorDAO().getByGameID(draftGame.getId()).size());
+        draftGame.setInvList(userDataDB.investigatorDAO().getByGameID(draftGame.getId()));
+        for (Investigator inv : userDataDB.investigatorDAO().getByGameID(draftGame.getId()))
+            System.out.println("INV DRAFT " + inv.getName());
         Game game = new Game(draftGame);
         game.setId(game.getParentId());
         game.setParentId(0);
-        game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
+        for (Investigator investigator : game.getInvList()) {
+            investigator.setGameId(game.getId());
+            System.out.println("INV " + investigator.getNameEN());
+        }
         setGame(game);
         deleteGame(draftGame);
     }

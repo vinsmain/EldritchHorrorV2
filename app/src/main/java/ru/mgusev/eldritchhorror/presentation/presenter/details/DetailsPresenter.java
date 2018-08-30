@@ -16,6 +16,7 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @InjectViewState
 public class DetailsPresenter extends MvpPresenter<DetailsView> {
@@ -30,7 +31,10 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
 
     public DetailsPresenter() {
         App.getComponent().inject(this);
-        if (repository.getGame() == null) repository.loadGameDraft();
+        //if (repository.getGame() == null) repository.loadGameDraft();
+
+        if (!MainActivity.initialized) repository.loadGameDraft();
+
         gameListSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData));
         photoSubscribe = new CompositeDisposable();

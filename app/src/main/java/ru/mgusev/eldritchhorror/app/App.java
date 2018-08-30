@@ -19,15 +19,17 @@ public class App extends Application{
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
 
-        if (!MainActivity.initialized) {
-            Intent firstIntent = new Intent(this, MainActivity.class);
-            firstIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // So all other activities will be dumped
-            startActivity(firstIntent);
-        }
-
         component = DaggerAppComponent.builder()
                 .appModule(new AppModule(this.getApplicationContext()))
                 .build();
+
+        if (!MainActivity.initialized) {
+//            Intent firstIntent = new Intent(this, MainActivity.class);
+//            firstIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // So all other activities will be dumped
+//            startActivity(firstIntent);
+
+
+        }
     }
 
     public static AppComponent getComponent() {
