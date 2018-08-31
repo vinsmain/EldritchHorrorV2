@@ -1,7 +1,6 @@
 package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -37,7 +36,6 @@ import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.app.AppModule;
 import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
-import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @Module (includes = AppModule.class)
 public class Repository {
@@ -77,7 +75,6 @@ public class Repository {
 
     @Inject
     public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FileHelper fileHelper, FirebaseHelper firebaseHelper) {
-        System.out.println("START REPOSITORY");
         this.context = context;
         this.staticDataDB = staticDataDB;
         this.userDataDB = userDataDB;
@@ -121,33 +118,30 @@ public class Repository {
     }
 
     public void saveGameDraft() {
-        System.out.println("SAVE " + game.getId() + " " + game.getInvList().size());
-        Game draftGame = new Game(getGame());
-        draftGame.setParentId(draftGame.getId());
-        draftGame.setId(new Date().getTime());
-        System.out.println("SAVE DRAFT " + game.getId() + " " + game.getInvList().size());
-        insertGame(draftGame);
+        if (getGame() != null) {
+            Game draftGame = new Game(getGame());
+            draftGame.setParentId(draftGame.getId());
+            draftGame.setId(userDataDB.gameDAO().getDraftGame(draftGame.getParentId()) == null ? draftGame.getId() : userDataDB.gameDAO().getDraftGame(draftGame.getParentId()).getId());
+            insertGame(draftGame);
+        }
     }
 
     public void loadGameDraft() {
-        for (Game d : userDataDB.gameDAO().getDraftGameList()) System.out.println(d.getId());
-        System.out.println("LOAD DRAFT");
         Game draftGame = userDataDB.gameDAO().getDraftGame();
-        System.out.println(draftGame.getId());
-        System.out.println("SIZE " + userDataDB.investigatorDAO().getByGameID(draftGame.getId()).size());
-        draftGame.setInvList(userDataDB.investigatorDAO().getByGameID(draftGame.getId()));
-        for (Investigator inv : userDataDB.investigatorDAO().getByGameID(draftGame.getId()))
-            System.out.println("INV DRAFT " + inv.getName());
-        Game game = new Game(draftGame);
-        game.setId(game.getParentId());
-        game.setParentId(0);
-        for (Investigator investigator : game.getInvList()) {
-            investigator.setGameId(game.getId());
-            System.out.println("INV " + investigator.getNameEN());
+        if (draftGame != null) {
+            draftGame.setInvList(userDataDB.investigatorDAO().getByGameID(draftGame.getId()));
+            Game game = new Game(draftGame);
+            game.setId(game.getParentId());
+            game.setParentId(0);
+            this.game = game;
+        } else this.game = new Game();
+    }
+
+    public void deleteAllDraftGames() {
+        for (Game game : userDataDB.gameDAO().getDraftGameList()) {
+            game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
+            deleteGame(game, false);
         }
-        this.game = game;
-        deleteGame(draftGame); //SAVE 1535652734443 8
-        //SAVE DRAFT 1535652734443 8
     }
 
     public Game getGame() {
@@ -441,12 +435,14 @@ public class Repository {
         userDataDB.investigatorDAO().insertInvestigatorList(game.getInvList());
     }
 
-    public void deleteGame(Game game) {
+    public void deleteGame(Game game, boolean showToast) {
         deleteGameFromDB(game);
         removeImageFile(game.getId());
         deleteRecursiveFiles(Objects.requireNonNull(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + game.getId())));
-        Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
-        firebaseHelper.removeGame(game);
+        if (showToast) {
+            Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
+            firebaseHelper.removeGame(game);
+        }
     }
 
     private void deleteGameFromDB(Game game) {

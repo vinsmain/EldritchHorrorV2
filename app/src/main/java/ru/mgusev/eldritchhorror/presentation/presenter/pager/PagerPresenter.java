@@ -30,12 +30,8 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     public PagerPresenter() {
         App.getComponent().inject(this);
-        System.out.println("PAGER START");
-        if (!MainActivity.initialized && repository.getGame() == null) {
-            System.out.println("PAGER SET GAME");
-            repository.loadGameDraft();
-        }
 
+        if (!MainActivity.initialized && repository.getGame() == null) repository.loadGameDraft();
 
         ancientOneSubscribe = new CompositeDisposable();
         ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne, repository.getExpansion(ancientOne.getExpansionID()))));
@@ -111,7 +107,9 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     }
 
     public void deleteFilesIfGameNotCreated() {
-        if (repository.getGame(repository.getGame().getId()) == null) {
+        System.out.println("PAGER DELETE GAME 111 " + repository.getGame().getId());
+        if (repository.getGame(repository.getGame().getId()) == null || repository.getGame(repository.getGame().getId()).getParentId() != 0) {
+            System.out.println("PAGER DELETE GAME " + repository.getGame().getId());
             repository.deleteRecursiveFiles(repository.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + repository.getGame().getId()));
             repository.removeImageFile(repository.getGame().getId());
         }

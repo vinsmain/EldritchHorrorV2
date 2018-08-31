@@ -442,6 +442,7 @@ public class Game {
                 getSolvedMysteriesCount() == game.getSolvedMysteriesCount() &&
                 getLastModified() == game.getLastModified() &&
                 getAdventureID() == game.getAdventureID() &&
+                getParentId() == game.getParentId() &&
                 equalsInvList(getInvList(), game.getInvList());
     }
 

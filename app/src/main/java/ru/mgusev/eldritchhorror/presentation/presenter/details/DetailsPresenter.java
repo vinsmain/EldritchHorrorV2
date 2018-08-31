@@ -49,13 +49,15 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
 
     private void initGameData(List<Game> list) {
         game = repository.getGame();
-        initHeader();
-        initStartData();
-        initInvestigatorList();
-        initMysteriesCount();
-        if (game.getIsWinGame()) initVictory();
-        else initDefeat();
-        initPhotoList(true);
+        if (game != null) {
+            initHeader();
+            initStartData();
+            initInvestigatorList();
+            initMysteriesCount();
+            if (game.getIsWinGame()) initVictory();
+            else initDefeat();
+            initPhotoList(true);
+        }
     }
 
     private void initHeader() {
@@ -111,7 +113,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     }
 
     public void deleteGame() {
-        repository.deleteGame(game);
+        repository.deleteGame(game, true);
         gameListSubscribe.dispose();
         repository.gameListOnNext();
     }

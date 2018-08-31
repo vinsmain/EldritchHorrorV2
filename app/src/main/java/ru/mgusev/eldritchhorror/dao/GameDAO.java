@@ -112,6 +112,9 @@ public interface GameDAO {
     @Query("SELECT * FROM games WHERE parent_id > 0 ORDER BY _id ASC LIMIT 1")
     Game getDraftGame();
 
+    @Query("SELECT * FROM games WHERE parent_id = :parentId LIMIT 1")
+    Game getDraftGame(long parentId);
+
     @Query("SELECT * FROM games WHERE parent_id > 0 ORDER BY _id")
     List<Game> getDraftGameList();
 }

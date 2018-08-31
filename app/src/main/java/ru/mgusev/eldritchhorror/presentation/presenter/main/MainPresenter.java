@@ -84,6 +84,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
         repository.getContext().deleteDatabase("EHLocalDB.db"); //delete old version Static DB
     }
 
+    public void deleteDraftGames() {
+        repository.deleteAllDraftGames();
+    }
+
     public void startUpdateUserIcon() {
         updateUserIcon(tempIconUrl);
     }
@@ -171,7 +175,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public void deleteGame() {
-        repository.deleteGame(gameList.get(deletingGamePosition));
+        repository.deleteGame(gameList.get(deletingGamePosition), true);
         gameList.remove(deletingGamePosition);
         getViewState().deleteGame(deletingGamePosition, gameList);
         showEmptyListMessage();
