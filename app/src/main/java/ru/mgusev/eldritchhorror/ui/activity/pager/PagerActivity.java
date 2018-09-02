@@ -33,6 +33,7 @@ import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
 import ru.mgusev.eldritchhorror.support.AndroidBug5497Workaround;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
@@ -63,6 +64,12 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         setContentView(R.layout.activity_games_pager);
         ButterKnife.bind(this);
         AndroidBug5497Workaround.assistActivity(this);
+
+        if (!MainActivity.initialized) {
+            Intent firstIntent = new Intent(this, MainActivity.class);
+            firstIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // So all other activities will be dumped
+            startActivity(firstIntent);
+        }
 
         initToolbar();
         showAddPhotoButton();

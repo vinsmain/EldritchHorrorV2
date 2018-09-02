@@ -99,7 +99,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     protected void onResume() {
         super.onResume();
-        mainPresenter.deleteDraftGames();
+        //mainPresenter.deleteDraftGames();
     }
 
     @Override

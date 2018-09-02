@@ -36,6 +36,7 @@ import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 
 public class DetailsActivity extends MvpAppCompatActivity implements DetailsView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener {
@@ -93,6 +94,12 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
+
+        if (!MainActivity.initialized) {
+            Intent firstIntent = new Intent(this, MainActivity.class);
+            firstIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // So all other activities will be dumped
+            startActivity(firstIntent);
+        }
 
         initToolbar();
         initInvestigatorRV();
@@ -307,7 +314,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @Override
     protected void onStop() {
         super.onStop();
-        detailsPresenter.activityOnStop();
+        //detailsPresenter.activityOnStop();
         Log.d("DETAILS", "On Stop");
     }
 

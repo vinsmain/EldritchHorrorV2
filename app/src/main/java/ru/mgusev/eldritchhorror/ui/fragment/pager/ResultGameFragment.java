@@ -1,5 +1,6 @@
 package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -29,6 +30,7 @@ import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ResultGamePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
@@ -74,6 +76,13 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if (!MainActivity.initialized) {
+            Intent firstIntent = new Intent(getContext(), MainActivity.class);
+            firstIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // So all other activities will be dumped
+            startActivity(firstIntent);
+        }
+
         View view = inflater.inflate(R.layout.fragment_result_game, null);
         unbinder = ButterKnife.bind(this, view);
         switchArray = new Switch[]{defeatByEliminationSwitch, defeatByMythosDepletionSwitch, defeatByAwakenedAncientOneSwitch};

@@ -37,6 +37,7 @@ import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.GamePhotoPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -77,6 +78,13 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if (!MainActivity.initialized) {
+            Intent firstIntent = new Intent(getContext(), MainActivity.class);
+            firstIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // So all other activities will be dumped
+            startActivity(firstIntent);
+        }
+
         View view = inflater.inflate(R.layout.fragment_game_photo, null);
         unbinder = ButterKnife.bind(this, view);
 

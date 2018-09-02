@@ -117,7 +117,7 @@ public class Repository {
         if (update) insertGame(game);
     }
 
-    public void saveGameDraft() {
+    /*public void saveGameDraft() {
         if (getGame() != null) {
             Game draftGame = new Game(getGame());
             draftGame.setParentId(draftGame.getId());
@@ -141,6 +141,15 @@ public class Repository {
         for (Game game : userDataDB.gameDAO().getDraftGameList()) {
             game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
             deleteGame(game, false);
+        }
+    }*/
+
+    public void deleteDraftFiles() {
+        for (ImageFile file : userDataDB.imageFileDAO().getAllImageFiles()) {
+            if (userDataDB.gameDAO().getGame(file.getGameId()) == null) {
+                removeImageFile(file);
+                deleteRecursiveFiles(Objects.requireNonNull(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + file.getGameId() + "/" + file.getName())));
+            }
         }
     }
 
@@ -342,7 +351,7 @@ public class Repository {
         firebaseFilesSubscribe.add(firebaseHelper.getFileEventDisposable().subscribe(this::processFilesDataFromFirebase, e -> Log.w("FIREBASE", e)));
 
         for (ImageFile file : userDataDB.imageFileDAO().getAllImageFiles()) {
-            if (file.getUserID() == null) {
+            if (file.getUserID() == null && getGame(file.getGameId()) != null) {
                 file.setLastModified(new Date().getTime());
                 file.setUserID(user.getUid());
                 addImageFile(file);
@@ -409,7 +418,7 @@ public class Repository {
     }
 
     private void changeImageFile(ImageFile file) {
-        if (file != null) {
+        if (file != null && getGame(file.getGameId()) != null) {
             if (getImageFile(file.getName()) == null) userDataDB.imageFileDAO().insertImageFile(file);
             if (file.getMd5Hash() != null) getFileFromStorage(file);
         }
@@ -426,7 +435,7 @@ public class Repository {
             game.setUserID(user.getUid());
         }
         insertGameToDB(game);
-        if (game.getParentId() == 0) firebaseHelper.addGame(game);
+        firebaseHelper.addGame(game);
     }
 
     public void insertGameToDB(Game game) {
@@ -441,8 +450,8 @@ public class Repository {
         deleteRecursiveFiles(Objects.requireNonNull(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + game.getId())));
         if (showToast) {
             Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
-            firebaseHelper.removeGame(game);
         }
+        firebaseHelper.removeGame(game);
     }
 
     private void deleteGameFromDB(Game game) {
@@ -624,6 +633,7 @@ public class Repository {
 
     public void removeImageFile(ImageFile file) {
         if (file != null && userDataDB.imageFileDAO().getImageFile(file.getName()) != null) {
+            System.out.println("REMOVE IMAGE " + file.getName());
             userDataDB.imageFileDAO().deleteImageFile(file);
             firebaseHelper.removeFile(file);
             firebaseHelper.deleteFileFromFirebaseStorage(file);

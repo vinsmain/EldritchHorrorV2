@@ -33,7 +33,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         App.getComponent().inject(this);
         //if (repository.getGame() == null) repository.loadGameDraft();
 
-        if (!MainActivity.initialized) repository.loadGameDraft();
+        //if (!MainActivity.initialized) repository.loadGameDraft();
 
         gameListSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData));
@@ -142,9 +142,9 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         this.currentPosition = currentPosition;
     }
 
-    public void activityOnStop() {
+    /*public void activityOnStop() {
         repository.saveGameDraft();
-    }
+    }*/
 
     @Override
     public void onDestroy() {

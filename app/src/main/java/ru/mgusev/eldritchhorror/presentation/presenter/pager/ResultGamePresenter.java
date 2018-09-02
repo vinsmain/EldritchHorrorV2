@@ -22,7 +22,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     public ResultGamePresenter() {
         App.getComponent().inject(this);
 
-        if (repository.getGame() == null && !MainActivity.initialized) repository.loadGameDraft();
+        if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         System.out.println("RESULT START");
 

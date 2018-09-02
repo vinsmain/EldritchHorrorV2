@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.ImageFile;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
 import ru.mgusev.eldritchhorror.repository.Repository;
@@ -38,7 +39,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     public GamePhotoPresenter() {
         App.getComponent().inject(this);
 
-        if (repository.getGame() == null && !MainActivity.initialized) repository.loadGameDraft();
+        if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         clickPhotoButtonSubscribe = new CompositeDisposable();
         clickPhotoButtonSubscribe.add(repository.getClickPhotoButtonPublish().subscribe(this::makePhoto));

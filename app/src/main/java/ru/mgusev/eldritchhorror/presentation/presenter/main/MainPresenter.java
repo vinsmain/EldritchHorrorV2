@@ -76,16 +76,13 @@ public class MainPresenter extends MvpPresenter<MainView> {
         gameList = repository.getGameList(0, 0);
         repository.gameListOnNext();
         if (googleAuth.getCurrentUser() != null) auth();
+        repository.deleteDraftFiles();
     }
 
     private void importOldUserData() {
         new DatabaseHelperOld(repository.getContext()); //import data from old version User DB
         repository.getContext().deleteDatabase("eldritchHorrorDB.db"); //delete old version User DB
         repository.getContext().deleteDatabase("EHLocalDB.db"); //delete old version Static DB
-    }
-
-    public void deleteDraftGames() {
-        repository.deleteAllDraftGames();
     }
 
     public void startUpdateUserIcon() {

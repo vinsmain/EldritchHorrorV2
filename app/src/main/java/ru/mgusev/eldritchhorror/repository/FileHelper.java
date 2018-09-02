@@ -2,12 +2,14 @@ package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import com.facebook.common.util.UriUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FileHelper {
 
@@ -27,7 +29,7 @@ public class FileHelper {
                 uriFileList.add(UriUtil.getUriForFile(file).toString());
             }
         }
-        if (uriFileList.size() == 0) dir.delete();
+        if (uriFileList.size() == 0) Log.d("DELETE FILE DIR", Objects.requireNonNull(dir).getPath() + " " + dir.delete());
         return uriFileList;
     }
 
@@ -40,7 +42,9 @@ public class FileHelper {
         if (fileOrDirectory.isDirectory()) {
             for (File child : fileOrDirectory.listFiles()) deleteRecursiveFiles(child);
         }
-        fileOrDirectory.delete();
-        if (!fileOrDirectory.isDirectory() && fileOrDirectory.getParentFile().listFiles().length == 0) fileOrDirectory.getParentFile().delete();
+        Log.d("DELETE FILE", fileOrDirectory.getPath() + " " + fileOrDirectory.delete());
+        if (!fileOrDirectory.isDirectory() && fileOrDirectory.getParentFile().listFiles().length == 0) {
+            Log.d("DELETE FILE", fileOrDirectory.getPath() + " " + fileOrDirectory.getParentFile().delete());
+        }
     }
 }

@@ -1,5 +1,7 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
+import android.content.Intent;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
@@ -12,6 +14,7 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Expansion;
+import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorChoiceView;
 import ru.mgusev.eldritchhorror.repository.Repository;
@@ -34,7 +37,7 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
     public InvestigatorChoicePresenter() {
         App.getComponent().inject(this);
 
-        if (repository.getGame() == null && !MainActivity.initialized) repository.loadGameDraft();
+        if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         expansionSubscribe = new CompositeDisposable();
         expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::updateInvListByExpansion));

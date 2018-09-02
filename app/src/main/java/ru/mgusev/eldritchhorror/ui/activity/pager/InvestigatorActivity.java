@@ -1,5 +1,6 @@
 package ru.mgusev.eldritchhorror.ui.activity.pager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorView;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 public class InvestigatorActivity extends MvpAppCompatActivity implements InvestigatorView, CompoundButton.OnCheckedChangeListener {
 
@@ -35,6 +37,12 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_investigator);
         ButterKnife.bind(this);
+
+        if (!MainActivity.initialized) {
+            Intent firstIntent = new Intent(this, MainActivity.class);
+            firstIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // So all other activities will be dumped
+            startActivity(firstIntent);
+        }
     }
 
     @Override
@@ -78,6 +86,7 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
 
     @Override
     public void showInvestigatorCard(Investigator investigator) {
+        //TODO Исправить вылет после перезапуска
         photoImage.setImageResource(getResources().getIdentifier(investigator.getImageResource(), "drawable", getPackageName()));
         nameTV.setText(investigator.getName());
         occupationTV.setText(investigator.getOccupation());

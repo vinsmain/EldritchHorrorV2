@@ -43,7 +43,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     public StartDataPresenter() {
         App.getComponent().inject(this);
 
-        if (repository.getGame() == null && !MainActivity.initialized) repository.loadGameDraft();
+        if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         expansionSubscribe = new CompositeDisposable();
         expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners));
