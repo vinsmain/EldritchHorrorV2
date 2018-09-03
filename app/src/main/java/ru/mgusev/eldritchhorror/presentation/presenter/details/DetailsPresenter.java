@@ -142,10 +142,6 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         this.currentPosition = currentPosition;
     }
 
-    /*public void activityOnStop() {
-        repository.saveGameDraft();
-    }*/
-
     @Override
     public void onDestroy() {
         gameListSubscribe.dispose();

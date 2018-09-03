@@ -11,12 +11,16 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import durdinapps.rxfirebase2.RxFirebaseChildEvent;
 import durdinapps.rxfirebase2.RxFirebaseDatabase;
 import durdinapps.rxfirebase2.RxFirebaseStorage;
 import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -30,7 +34,7 @@ public class FirebaseHelper {
     private static DatabaseReference fileReference;
     private static StorageReference storageReference;
 
-    private Flowable<RxFirebaseChildEvent<Game>> childEventDisposable;
+    private Flowable<List<RxFirebaseChildEvent<Game>>> childEventDisposable;
     private Flowable<RxFirebaseChildEvent<ImageFile>> fileEventDisposable;
     private PublishSubject<ImageFile> downloadFileDisposable;
     private PublishSubject<ImageFile> successUploadFilePublish;
@@ -46,7 +50,7 @@ public class FirebaseHelper {
 
     public void initReference(FirebaseUser user) {
         reference = mDatabase.getReference().child("users").child(user.getUid()).child("games");
-        childEventDisposable = RxFirebaseDatabase.observeChildEvent(reference, Game.class);
+        childEventDisposable = RxFirebaseDatabase.observeChildEvent(reference, Game.class).subscribeOn(Schedulers.io()).buffer(250, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread());
 
         fileReference = mDatabase.getReference().child("users").child(user.getUid()).child("files");
         fileEventDisposable = RxFirebaseDatabase.observeChildEvent(fileReference, ImageFile.class);
@@ -54,7 +58,7 @@ public class FirebaseHelper {
         storageReference = storage.getReference().child("users").child(user.getUid()).child("games");
     }
 
-    public Flowable<RxFirebaseChildEvent<Game>> getChildEventDisposable() {
+    public Flowable<List<RxFirebaseChildEvent<Game>>> getChildEventDisposable() {
         return childEventDisposable;
     }
 

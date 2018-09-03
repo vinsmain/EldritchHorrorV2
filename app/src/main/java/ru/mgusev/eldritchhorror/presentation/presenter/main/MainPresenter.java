@@ -76,7 +76,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
         gameList = repository.getGameList(0, 0);
         repository.gameListOnNext();
         if (googleAuth.getCurrentUser() != null) auth();
-        repository.deleteDraftFiles();
     }
 
     private void importOldUserData() {

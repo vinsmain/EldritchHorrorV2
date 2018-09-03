@@ -86,7 +86,6 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
 
     @Override
     public void showInvestigatorCard(Investigator investigator) {
-        //TODO Исправить вылет после перезапуска
         photoImage.setImageResource(getResources().getIdentifier(investigator.getImageResource(), "drawable", getPackageName()));
         nameTV.setText(investigator.getName());
         occupationTV.setText(investigator.getOccupation());

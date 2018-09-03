@@ -144,15 +144,6 @@ public class Repository {
         }
     }*/
 
-    public void deleteDraftFiles() {
-        for (ImageFile file : userDataDB.imageFileDAO().getAllImageFiles()) {
-            if (userDataDB.gameDAO().getGame(file.getGameId()) == null) {
-                removeImageFile(file);
-                deleteRecursiveFiles(Objects.requireNonNull(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + file.getGameId() + "/" + file.getName())));
-            }
-        }
-    }
-
     public Game getGame() {
         return game;
     }
@@ -351,7 +342,7 @@ public class Repository {
         firebaseFilesSubscribe.add(firebaseHelper.getFileEventDisposable().subscribe(this::processFilesDataFromFirebase, e -> Log.w("FIREBASE", e)));
 
         for (ImageFile file : userDataDB.imageFileDAO().getAllImageFiles()) {
-            if (file.getUserID() == null && getGame(file.getGameId()) != null) {
+            if (file.getUserID() == null) {
                 file.setLastModified(new Date().getTime());
                 file.setUserID(user.getUid());
                 addImageFile(file);
@@ -365,19 +356,21 @@ public class Repository {
         if (user == null) firebaseHelper.signOut();
     }
 
-    private void processDataFromFirebase(RxFirebaseChildEvent<Game> data) {
-        switch (data.getEventType()) {
-            case ADDED:
-                changeGame(data.getValue());
-                break;
-            case CHANGED:
-                changeGame(data.getValue());
-                break;
-            case REMOVED: {
-                removeGame(data.getValue());
-                break;
-            }
+    private void processDataFromFirebase(List<RxFirebaseChildEvent<Game>> data) {
+        for (RxFirebaseChildEvent<Game> event : data)
+            switch (event.getEventType()) {
+                case ADDED:
+                    changeGame(event.getValue());
+                    break;
+                case CHANGED:
+                    changeGame(event.getValue());
+                    break;
+                case REMOVED: {
+                    removeGame(event.getValue());
+                    break;
+                }
         }
+        if (data.size() > 0) gameListOnNext();
     }
 
     private void processFilesDataFromFirebase(RxFirebaseChildEvent<ImageFile> data) {
@@ -406,14 +399,14 @@ public class Repository {
         if (this.game != null && this.game.getId() == game.getId()) this.game = game;
         if (getGameById(game.getId()) == null || game.getLastModified() != getGameById(game.getId()).getLastModified()) {
             insertGameToDB(game);
-            gameListOnNext();
+            //gameListOnNext();
         }
     }
 
     private void removeGame(Game game) {
         if (game != null) {
             deleteGameFromDB(game);
-            gameListOnNext();
+            //gameListOnNext();
         }
     }
 
@@ -465,6 +458,7 @@ public class Repository {
                 deleteGameFromDB(game);
             }
         }
+        userDataDB.imageFileDAO().deleteAllImageFiles();
     }
 
     public PublishSubject<List<Game>> getGameListPublish() {
@@ -633,7 +627,6 @@ public class Repository {
 
     public void removeImageFile(ImageFile file) {
         if (file != null && userDataDB.imageFileDAO().getImageFile(file.getName()) != null) {
-            System.out.println("REMOVE IMAGE " + file.getName());
             userDataDB.imageFileDAO().deleteImageFile(file);
             firebaseHelper.removeFile(file);
             firebaseHelper.deleteFileFromFirebaseStorage(file);

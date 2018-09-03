@@ -97,12 +97,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        //mainPresenter.deleteDraftGames();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
         sortItem = menu.findItem(R.id.action_sort);

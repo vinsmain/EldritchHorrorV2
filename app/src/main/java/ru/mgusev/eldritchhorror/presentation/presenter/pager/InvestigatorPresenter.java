@@ -23,7 +23,7 @@ public class InvestigatorPresenter extends MvpPresenter<InvestigatorView> {
     public InvestigatorPresenter() {
         App.getComponent().inject(this);
 
-        if (repository.getInvestigator() == null && !MainActivity.initialized) repository.setInvestigator(new Investigator());
+        if (repository.getInvestigator() == null && !MainActivity.initialized) repository.setInvestigator(repository.getInvestigator("Charlie Kane"));
 
         //Clone current investigator
         investigator = new Investigator(repository.getInvestigator());

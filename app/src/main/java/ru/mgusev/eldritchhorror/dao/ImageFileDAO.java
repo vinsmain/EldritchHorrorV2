@@ -19,6 +19,9 @@ public interface ImageFileDAO {
     @Delete
     int deleteImageFile(ImageFile file);
 
+    @Query("DELETE FROM files WHERE user_id != null")
+    void deleteAllImageFiles();
+
     @Query("SELECT * FROM files")
     List<ImageFile> getAllImageFiles();
 
