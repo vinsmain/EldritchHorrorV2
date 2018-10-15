@@ -131,4 +131,12 @@
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect all</string>
     <string name="create_file_error">Cannot create file</string>
+    <string name="d1" translatable="false">1$</string>
+    <string name="d2" translatable="false">2$</string>
+    <string name="d5" translatable="false">5$</string>
+    <string name="d10" translatable="false">10$</string>
+    <string name="d50" translatable="false">50$</string>
+    <string name="d100" translatable="false">100$</string>
+    <string name="donate_error_header">Error! Try again later.</string>
+    <string name="donate_success_header">Thanks for the support!</string>
 </resources>
