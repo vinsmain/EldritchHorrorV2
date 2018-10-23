@@ -74,13 +74,17 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     }
 
     private void makePhoto(boolean value) {
-        if (value) {
+        /*if (value) {
             if (selectedPhotoList.isEmpty()) {
                 String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + "_" + new Date().getTime() + ".jpg";
                 getViewState().dispatchTakePictureIntent(repository.getPhotoFile(imageFileName));
             }
             else getViewState().showDeleteDialog();
-        }
+        }*/
+
+
+        getViewState().openImagePicker();
+
     }
 
     public void dismissDeleteDialog() {

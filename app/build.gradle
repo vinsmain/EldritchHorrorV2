@@ -57,6 +57,10 @@ repositories {
 }
 
 dependencies {
+    configurations {
+        all*.exclude group: 'com.android.support', module: 'support-v13'
+    }
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
@@ -105,8 +109,9 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-storage:16.0.3'
 
-    //implementation 'com.anjlab.android.iab.v3:library:1.0.44'
     implementation 'com.android.billingclient:billing:1.1'
+
+    implementation 'com.github.vansikrishna:Multimager:1.0.8'
 }
 
 apply plugin: 'com.google.gms.google-services'

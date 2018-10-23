@@ -35,4 +35,6 @@ public interface GamePhotoView extends MvpView {
 
     @StateStrategyType(value = DismissDialogStrategy.class, tag = IMAGE_VIEWER_TAG)
     void closeFullScreenPhotoViewer();
+
+    void openImagePicker();
 }

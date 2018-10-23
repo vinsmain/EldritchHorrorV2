@@ -24,8 +24,13 @@ import android.widget.Toast;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.stfalcon.frescoimageviewer.ImageViewer;
+import com.vlk.multimager.activities.GalleryActivity;
+import com.vlk.multimager.utils.Constants;
+import com.vlk.multimager.utils.Image;
+import com.vlk.multimager.utils.Params;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,6 +56,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @BindView(R.id.recyclerViewGallery) RecyclerView recyclerViewGallery;
 
     static final int REQUEST_TAKE_PHOTO = 1;
+    static final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 3;
     private static final int RC_READ_STORAGE = 5;
 
     private Unbinder unbinder;
@@ -60,6 +66,8 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     private ImageViewer imageViewer;
     private boolean imageViewerIsOpen;
     private AlertDialog deleteDialog;
+
+    Intent intent;
 
     public static GamePhotoFragment newInstance(int page) {
         GamePhotoFragment pageFragment = new GamePhotoFragment();
@@ -107,9 +115,16 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            gamePhotoPresenter.changeGallery();
-            gamePhotoPresenter.addImageFile();
+        System.out.println("12345 " + requestCode);
+        //if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
+            //gamePhotoPresenter.changeGallery();
+            //gamePhotoPresenter.addImageFile();
+
+            ArrayList<Image> imagesList = intent.getParcelableArrayListExtra(Constants.KEY_BUNDLE_LIST);
+            for (Image item : imagesList) System.out.println(item.uri);
+
+
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
             gamePhotoPresenter.deleteFile(new File(gamePhotoPresenter.getCurrentPhotoURI().getPath()));
         }
@@ -232,5 +247,19 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onImageChange(int position) {
         gamePhotoPresenter.setCurrentPosition(position);
+    }
+
+
+    @Override
+    public void openImagePicker() {
+        intent = new Intent(this.getContext(), GalleryActivity.class);
+        Params params = new Params();
+        params.setCaptureLimit(10);
+        params.setPickerLimit(10);
+        //params.setToolbarColor(selectedColor);
+        //params.setActionButtonColor(selectedColor);
+        //params.setButtonTextColor(selectedColor);
+        intent.putExtra(Constants.KEY_PARAMS, params);
+        startActivityForResult(intent, Constants.TYPE_MULTI_PICKER);
     }
 }
