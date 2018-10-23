@@ -120,6 +120,10 @@
                 layout="@layout/defeat_reason_card"
                 android:id="@+id/defeat_reason_card" />
 
+            <include
+                layout="@layout/photo_details_card"
+                android:id="@+id/photo_details_card" />
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

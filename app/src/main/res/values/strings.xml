@@ -35,12 +35,12 @@
     <string name="activity_party_details_header">Details</string>
     <string name="activity_add_party_header">Initial data</string>
     <string name="activity_investigators_choice_header">Investigators</string>
-    <string name="zero">0</string>
-    <string name="one">1</string>
-    <string name="two">2</string>
-    <string name="three">3</string>
-    <string name="four">4</string>
-    <string name="five">5</string>
+    <string name="zero" translatable="false">0</string>
+    <string name="one" translatable="false">1</string>
+    <string name="two" translatable="false">2</string>
+    <string name="three" translatable="false">3</string>
+    <string name="four" translatable="false">4</string>
+    <string name="five" translatable="false">5</string>
     <string name="starting_game">Initial team</string>
     <string name="replacement">Replacement</string>
     <string name="dead">Out of the gameOld</string>
@@ -68,7 +68,7 @@
     <string name="worst_result">Worst result</string>
     <string name="about">About</string>
     <string name="donate">Donate now</string>
-    <string name="version_header">v.\u0020</string>
+    <string name="version_header" translatable="false">v.\u0020</string>
 
     <string name="donate_message">To get full access for 24 hours play ad video</string>
     <string name="view_question">Play now?</string>
@@ -125,4 +125,18 @@
     <string name="music_header">Atmospheric music</string>
     <string name="specialization_header">Specialization of investigators</string>
     <string name="clean_header">Clean the list of investigators</string>
+    <string name="game_photo_header">Photo Gallery</string>
+    <string name="delete_photo_dialog_message">Delete the selected files?</string>
+    <string name="game_photo_none">None</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
+    <string name="create_file_error">Cannot create file</string>
+    <string name="d1" translatable="false">1$</string>
+    <string name="d2" translatable="false">2$</string>
+    <string name="d5" translatable="false">5$</string>
+    <string name="d10" translatable="false">10$</string>
+    <string name="d50" translatable="false">50$</string>
+    <string name="d100" translatable="false">100$</string>
+    <string name="donate_error_header">Error! Try again later.</string>
+    <string name="donate_success_header">Thanks for the support!</string>
 </resources>

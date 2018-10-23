@@ -3,7 +3,9 @@ package ru.mgusev.eldritchhorror.ui.activity.pager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +25,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.PagerAdapter;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -30,6 +33,7 @@ import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
 import ru.mgusev.eldritchhorror.support.AndroidBug5497Workaround;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
@@ -42,13 +46,17 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @BindView(R.id.games_pager_win_icon) ImageView winIcon;
     @BindView(R.id.games_pager_toolbar) Toolbar toolbar;
     @BindView(R.id.games_pager_viewpager) ViewPager pager;
+    @BindView(R.id.games_pager_add_photo) FloatingActionButton addPhotoButton;
 
     private int currentPosition = 0;
     private PagerAdapter pagerAdapter;
     private AlertDialog backDialog;
+    private MenuItem actionEditExpansion;
     private MenuItem actionRandom;
     private MenuItem actionClear;
     private MenuItem actionRandomSettings;
+    private MenuItem actionSelectAll;
+    private MenuItem actionSelectCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +65,16 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         ButterKnife.bind(this);
         AndroidBug5497Workaround.assistActivity(this);
 
+        if (!MainActivity.initialized) {
+            Intent firstIntent = new Intent(this, MainActivity.class);
+            firstIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // So all other activities will be dumped
+            startActivity(firstIntent);
+        }
+
         initToolbar();
+        showAddPhotoButton();
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
-        pager.setOffscreenPageLimit(2);
+        pager.setOffscreenPageLimit(3);
         pager.setAdapter(pagerAdapter);
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -69,6 +84,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 Log.d("PAGER", "onPageSelected, position = " + position);
                 currentPosition = position;
                 showMenuItem();
+                showAddPhotoButton();
                 hideKeyboard();
             }
 
@@ -116,7 +132,10 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         builder.setTitle(R.string.dialogBackAlert);
         builder.setMessage(R.string.backDialogMessage);
         builder.setIcon(R.drawable.back_icon);
-        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> finishActivity());
+        builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
+            pagerPresenter.deleteFilesIfGameNotCreated();
+            finishActivity();
+        });
         builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
         backDialog = builder.show();
     }
@@ -140,26 +159,41 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_games_pager_activity, menu);
         actionRandom = menu.findItem(R.id.action_random);
+        actionEditExpansion = menu.findItem(R.id.action_edit_expansion);
         actionClear = menu.findItem(R.id.action_clear);
         actionRandomSettings = menu.findItem(R.id.action_random_settings);
+        actionSelectAll = menu.findItem(R.id.action_select_all);
+        actionSelectCancel = menu.findItem(R.id.action_select_cancel);
         showMenuItem();
         return true;
     }
 
     private void showMenuItem() {
-        if (actionRandom != null) {
-            if (currentPosition == 2) actionRandom.setVisible(false);
-            else actionRandom.setVisible(true);
-        }
-        if (actionClear != null) {
-            if (currentPosition == 1) {
-                actionClear.setVisible(true);
-                actionRandomSettings.setVisible(true);
-            }
-            else {
-                actionClear.setVisible(false);
-                actionRandomSettings.setVisible(false);
-            }
+        if (actionRandom != null) actionRandom.setVisible(currentPosition <= 1);
+        if (actionClear != null) actionClear.setVisible(currentPosition == 1);
+        if (actionRandomSettings != null) actionRandomSettings.setVisible(currentPosition == 1);
+        if (actionSelectAll != null) actionSelectAll.setVisible(currentPosition == 3);
+        if (actionEditExpansion != null) actionEditExpansion.setVisible(currentPosition != 3);
+
+        showActionSelectCancelButton();
+    }
+
+    private void showAddPhotoButton() {
+        if (currentPosition == 3) addPhotoButton.show();
+        else addPhotoButton.hide();
+    }
+
+    @Override
+    public void setAddPhotoButtonIcon(boolean selectedMode) {
+        addPhotoButton.setImageResource(selectedMode ? R.drawable.delete_white : R.drawable.camera);
+        addPhotoButton.setBackgroundTintList(selectedMode ? ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark)) : ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+        showActionSelectCancelButton();
+    }
+
+    private void showActionSelectCancelButton() {
+        if (actionSelectCancel != null) {
+            if (currentPosition == 3) actionSelectCancel.setVisible(pagerPresenter.isSelectedMode());
+            else actionSelectCancel.setVisible(false);
         }
     }
 
@@ -182,6 +216,12 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             case R.id.action_edit_expansion:
                 Intent expansionChoiceIntent = new Intent(this, ExpansionChoiceActivity.class);
                 startActivity(expansionChoiceIntent);
+                return true;
+            case R.id.action_select_all:
+                pagerPresenter.clickSelectPhoto(true);
+                return true;
+            case R.id.action_select_cancel:
+                pagerPresenter.clickSelectPhoto(false);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -232,6 +272,18 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @Override
     public void onBackPressed() {
         pagerPresenter.showBackDialog();
+    }
+
+    @OnClick(R.id.games_pager_add_photo)
+    public void onClick() {
+        pagerPresenter.clickOnAddPhotoButton();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        pagerPresenter.activityOnStop();
+        Log.d("PAGER", "On Stop");
     }
 
     @Override

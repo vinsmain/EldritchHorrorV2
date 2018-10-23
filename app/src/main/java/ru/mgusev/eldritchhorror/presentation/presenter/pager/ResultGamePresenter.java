@@ -10,6 +10,7 @@ import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @InjectViewState
 public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
@@ -20,6 +21,11 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
 
     public ResultGamePresenter() {
         App.getComponent().inject(this);
+
+        if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
+
+        System.out.println("RESULT START");
+
         ancientOneSubscribe = new CompositeDisposable();
         ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne ->  getViewState().showMysteriesRadioGroup(ancientOne)));
 

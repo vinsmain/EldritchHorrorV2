@@ -8,11 +8,12 @@ import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.adapter.StatisticsAdapter;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
-import ru.mgusev.eldritchhorror.database.FirebaseHelper;
+import ru.mgusev.eldritchhorror.repository.FirebaseHelper;
 import ru.mgusev.eldritchhorror.database.oldDB.DatabaseHelperOld;
 import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ExpansionChoicePresenter;
+import ru.mgusev.eldritchhorror.presentation.presenter.pager.GamePhotoPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorChoicePresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
@@ -34,6 +35,7 @@ public interface AppComponent {
     void inject(InvestigatorPresenter presenter);
     void inject(ExpansionChoicePresenter presenter);
     void inject(SpecializationChoicePresenter presenter);
+    void inject(GamePhotoPresenter presenter);
 
     void inject(MainAdapter adapter);
     void inject(InvestigatorChoiceAdapter adapter);

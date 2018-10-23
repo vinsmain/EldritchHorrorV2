@@ -213,4 +213,20 @@ public class Investigator {
         if(obj instanceof Investigator) investigator = (Investigator) obj;
         return investigator.getNameEN().equals(getNameEN());
     }
+
+    public boolean equalsTwoInvestigators(Investigator inv) {
+        return getNameEN().equals(inv.getNameEN()) &&
+                getOccupationEN().equals(inv.getOccupationEN()) &&
+                getIsStarting() == inv.getIsStarting() &&
+                getIsReplacement() == inv.getIsReplacement() &&
+                getIsDead() == inv.getIsDead();
+    }
+
+    public void printLog(Investigator inv) {
+        System.out.println(getNameEN().equals(inv.getNameEN()));
+        System.out.println(getOccupationEN().equals(inv.getOccupationEN()));
+        System.out.println(getIsStarting() == inv.getIsStarting());
+        System.out.println(getIsReplacement() == inv.getIsReplacement());
+        System.out.println(getIsDead() == inv.getIsDead());
+    }
 }

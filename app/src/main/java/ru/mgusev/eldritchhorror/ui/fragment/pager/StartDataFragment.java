@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +34,7 @@ import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
@@ -75,6 +77,13 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if (!MainActivity.initialized) {
+            Intent firstIntent = new Intent(getContext(), MainActivity.class);
+            firstIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // So all other activities will be dumped
+            startActivity(firstIntent);
+        }
+
         View view = inflater.inflate(R.layout.fragment_start_data, null);
         unbinder = ButterKnife.bind(this, view);
 
@@ -89,6 +98,11 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         playersCountSpinner.setAdapter(playersCountAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //super.onSaveInstanceState(outState);
     }
 
     @Override

@@ -29,6 +29,7 @@ import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorChoicePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorChoiceView;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.InvestigatorActivity;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
@@ -63,6 +64,13 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if (!MainActivity.initialized) {
+            Intent firstIntent = new Intent(getContext(), MainActivity.class);
+            firstIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // So all other activities will be dumped
+            startActivity(firstIntent);
+        }
+
         View view = inflater.inflate(R.layout.fragment_investigator_choice, null);
 
         unbinder = ButterKnife.bind(this, view);
@@ -83,6 +91,11 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     @Override
     public void onItemClick(int position) {
         investigatorChoicePresenter.itemClick(position);
+    }
+
+    @Override
+    public void onItemLongClick(int position) {
+
     }
 
     @Override
@@ -132,7 +145,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
         builder.setCancelable(false);
         builder.setTitle(R.string.dialogAlert);
         builder.setMessage(R.string.cleanDialogMessage);
-        builder.setIcon(R.drawable.clear);
+        builder.setIcon(R.drawable.cancel_select);
         builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
             investigatorChoicePresenter.clearInvestigatorList();
             investigatorChoicePresenter.dismissDialog();

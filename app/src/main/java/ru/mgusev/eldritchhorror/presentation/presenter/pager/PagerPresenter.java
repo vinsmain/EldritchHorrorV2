@@ -1,15 +1,21 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
+import android.os.Environment;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @InjectViewState
 public class PagerPresenter extends MvpPresenter<PagerView> {
@@ -19,9 +25,15 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     private CompositeDisposable ancientOneSubscribe;
     private CompositeDisposable scoreSubscribe;
     private CompositeDisposable isWinSubscribe;
+    private CompositeDisposable selectModeSubscribe;
+    private boolean selectedMode;
+    private boolean backDialogShow;
 
     public PagerPresenter() {
         App.getComponent().inject(this);
+
+        if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
+
         ancientOneSubscribe = new CompositeDisposable();
         ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne, repository.getExpansion(ancientOne.getExpansionID()))));
 
@@ -30,6 +42,9 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
         isWinSubscribe = new CompositeDisposable();
         isWinSubscribe.add(repository.getObservableIsWin().subscribe(this::setResultIcon));
+
+        selectModeSubscribe = new CompositeDisposable();
+        selectModeSubscribe.add(repository.getSelectModePublish().subscribe(this::updateSelectedMode));
     }
 
     @Override
@@ -61,7 +76,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     public void actionSave() {
         if (isCorrectActiveInvestigatorsCount()) {
-            clearResultValuesIfDefeat();
+            repository.getGame().clearResultValuesIfDefeat();
             repository.insertGame(repository.getGame());
             repository.gameListOnNext();
             repository.rateOnNext();
@@ -78,25 +93,46 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         return repository.getGame().getPlayersCount() >= invCount;
     }
 
-    private void clearResultValuesIfDefeat() {
-        if (!repository.getGame().getIsWinGame()) {
-            repository.getGame().setGatesCount(0);
-            repository.getGame().setMonstersCount(0);
-            repository.getGame().setCurseCount(0);
-            repository.getGame().setRumorsCount(0);
-            repository.getGame().setCluesCount(0);
-            repository.getGame().setBlessedCount(0);
-            repository.getGame().setDoomCount(0);
-            repository.getGame().setScore(0);
-        }
-    }
-
     public void showBackDialog() {
-        getViewState().showBackDialog();
+        backDialogShow = true;
+        Game game = repository.getGame(repository.getGame().getId());
+        if (game == null || !game.equals(repository.getGame())) getViewState().showBackDialog();
+        else getViewState().finishActivity();
     }
 
     public void dismissBackDialog() {
+        backDialogShow = false;
         getViewState().hideBackDialog();
+    }
+
+    public void clickOnAddPhotoButton() {
+        repository.clickPhotoButtonOnNext(true);
+    }
+
+    public void deleteFilesIfGameNotCreated() {
+        System.out.println("PAGER DELETE GAME 111 " + repository.getGame().getId());
+        if (repository.getGame(repository.getGame().getId()) == null) {
+            System.out.println("PAGER DELETE GAME " + repository.getGame().getId());
+            repository.removeImageFile(repository.getGame().getId());
+            repository.deleteRecursiveFiles(repository.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + repository.getGame().getId()));
+        }
+    }
+
+    public void clickSelectPhoto(boolean isSelectAll) {
+        repository.selectAllPhotoOnNext(isSelectAll);
+    }
+
+    private void updateSelectedMode(boolean selectedMode) {
+        this.selectedMode = selectedMode;
+        getViewState().setAddPhotoButtonIcon(selectedMode);
+    }
+
+    public boolean isSelectedMode() {
+        return selectedMode;
+    }
+
+    public void activityOnStop() {
+        //if (!backDialogShow) repository.saveGameDraft();
     }
 
     @Override
@@ -104,6 +140,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         ancientOneSubscribe.dispose();
         scoreSubscribe.dispose();
         isWinSubscribe.dispose();
+        selectModeSubscribe.dispose();
         repository.clearGame();
         repository.setPagerPosition(0);
         super.onDestroy();

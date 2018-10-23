@@ -18,6 +18,7 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @InjectViewState
 public class StartDataPresenter extends MvpPresenter<StartDataView> {
@@ -41,6 +42,8 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     public StartDataPresenter() {
         App.getComponent().inject(this);
+
+        if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         expansionSubscribe = new CompositeDisposable();
         expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners));
@@ -164,6 +167,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     public void setCurrentPrelude(String value) {
         currentPrelude = repository.getPrelude(value);
+        repository.getGame().setPreludeID(currentPrelude.getId());
     }
 
     public void setSpinnerPosition() {

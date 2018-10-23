@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:name=".app.App"
@@ -33,12 +34,24 @@
         </activity>
         <activity android:name=".ui.activity.pager.ExpansionChoiceActivity" android:theme="@style/DialogTheme"/>
         <activity android:name=".ui.activity.details.DetailsActivity" />
-        <activity android:name=".ui.activity.about.AboutActivity" />
         <activity android:name=".ui.activity.statistics.StatisticsActivity" />
         <activity android:name=".ui.activity.pager.SpecializationChoiceActivity" android:theme="@style/DialogTheme"/>
+        <activity android:name=".ui.activity.about.AboutActivity" />
+
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="daff0a7464dda3e82e7d0404d5bc9b1f7f64a575" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.android.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

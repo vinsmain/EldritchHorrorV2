@@ -6,9 +6,11 @@ import com.arellomobile.mvp.MvpPresenter;
 import javax.inject.Inject;
 
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @InjectViewState
 public class InvestigatorPresenter extends MvpPresenter<InvestigatorView> {
@@ -20,6 +22,8 @@ public class InvestigatorPresenter extends MvpPresenter<InvestigatorView> {
 
     public InvestigatorPresenter() {
         App.getComponent().inject(this);
+
+        if (repository.getInvestigator() == null && !MainActivity.initialized) repository.setInvestigator(repository.getInvestigator("Charlie Kane"));
 
         //Clone current investigator
         investigator = new Investigator(repository.getInvestigator());

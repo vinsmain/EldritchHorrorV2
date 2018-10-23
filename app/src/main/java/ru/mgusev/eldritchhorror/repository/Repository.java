@@ -1,15 +1,20 @@
 package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
-import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -19,19 +24,18 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.database.FirebaseHelper;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
+import ru.mgusev.eldritchhorror.model.ImageFile;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.app.AppModule;
 import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
-import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @Module (includes = AppModule.class)
 public class Repository {
@@ -40,6 +44,7 @@ public class Repository {
     private final StaticDataDB staticDataDB;
     private final UserDataDB userDataDB;
     private final PrefHelper prefHelper;
+    private final FileHelper fileHelper;
 
     private PublishSubject<AncientOne> ancientOnePublish;
     private PublishSubject<Integer> scorePublish;
@@ -52,8 +57,15 @@ public class Repository {
     private PublishSubject<String> userIconPublish;
     private PublishSubject<Boolean> authPublish;
     private PublishSubject<Boolean> ratePublish;
+    private PublishSubject<Boolean> clickPhotoButtonPublish;
+    private PublishSubject<Boolean> updatePhotoGalleryPublish;
+    private PublishSubject<Boolean> selectModePublish;
+    private PublishSubject<Boolean> selectAllPhotoPublish;
 
-    private CompositeDisposable firebaseSubscribe;
+    private CompositeDisposable firebaseDBSubscribe;
+    private CompositeDisposable firebaseFilesSubscribe;
+    private CompositeDisposable uploadFileSubscribe;
+    private CompositeDisposable downloadFileSubscribe;
 
     private Game game;
     private Investigator investigator;
@@ -62,11 +74,12 @@ public class Repository {
     private FirebaseUser user;
 
     @Inject
-    public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FirebaseHelper firebaseHelper) {
+    public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FileHelper fileHelper, FirebaseHelper firebaseHelper) {
         this.context = context;
         this.staticDataDB = staticDataDB;
         this.userDataDB = userDataDB;
         this.prefHelper = prefHelper;
+        this.fileHelper = fileHelper;
         this.firebaseHelper = firebaseHelper;
         ancientOnePublish = PublishSubject.create();
         scorePublish = PublishSubject.create();
@@ -79,6 +92,16 @@ public class Repository {
         userIconPublish = PublishSubject.create();
         authPublish = PublishSubject.create();
         ratePublish = PublishSubject.create();
+        clickPhotoButtonPublish = PublishSubject.create();
+        updatePhotoGalleryPublish = PublishSubject.create();
+        selectModePublish = PublishSubject.create();
+        selectAllPhotoPublish = PublishSubject.create();
+
+        uploadFileSubscribe = new CompositeDisposable();
+        uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile));
+
+        downloadFileSubscribe = new CompositeDisposable();
+        downloadFileSubscribe.add(firebaseHelper.getDownloadFileDisposable().subscribe(this::downloadFile));
 
         for (Game game : getGameList(0, 0)) fixSpecializationsForOldInvestigators(game);
     }
@@ -94,13 +117,45 @@ public class Repository {
         if (update) insertGame(game);
     }
 
+    /*public void saveGameDraft() {
+        if (getGame() != null) {
+            Game draftGame = new Game(getGame());
+            draftGame.setParentId(draftGame.getId());
+            draftGame.setId(userDataDB.gameDAO().getDraftGame(draftGame.getParentId()) == null ? draftGame.getId() : userDataDB.gameDAO().getDraftGame(draftGame.getParentId()).getId());
+            insertGame(draftGame);
+        }
+    }
+
+    public void loadGameDraft() {
+        Game draftGame = userDataDB.gameDAO().getDraftGame();
+        if (draftGame != null) {
+            draftGame.setInvList(userDataDB.investigatorDAO().getByGameID(draftGame.getId()));
+            Game game = new Game(draftGame);
+            game.setId(game.getParentId());
+            game.setParentId(0);
+            this.game = game;
+        } else this.game = new Game();
+    }
+
+    public void deleteAllDraftGames() {
+        for (Game game : userDataDB.gameDAO().getDraftGameList()) {
+            game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
+            deleteGame(game, false);
+        }
+    }*/
+
     public Game getGame() {
-        if (game == null) context.startActivity(new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        return game;
+    }
+
+    public Game getGame(long id) {
+        Game game = userDataDB.gameDAO().getGame(id);
+        if (game != null) game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
         return game;
     }
 
     public void setGame(Game game) {
-        this.game = game;
+        this.game = new Game(game);
         this.game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
     }
 
@@ -276,34 +331,67 @@ public class Repository {
 
     public void initFirebaseHelper() {
         firebaseHelper.initReference(user);
-        firebaseSubscribe = new CompositeDisposable();
-        firebaseSubscribe.add(firebaseHelper.getChildEventDisposable().subscribe(this::processDataFromFirebase, e -> Log.w("FIREBASE", e)));
+        firebaseDBSubscribe = new CompositeDisposable();
+        firebaseDBSubscribe.add(firebaseHelper.getChildEventDisposable().subscribe(this::processDataFromFirebase, e -> Log.w("FIREBASE", e)));
+
         for (Game game : userDataDB.gameDAO().getGameListSortedDateAscending()) {
             if (game.getUserID() == null) insertGame(game);
+        }
+
+        firebaseFilesSubscribe = new CompositeDisposable();
+        firebaseFilesSubscribe.add(firebaseHelper.getFileEventDisposable().subscribe(this::processFilesDataFromFirebase, e -> Log.w("FIREBASE", e)));
+
+        for (ImageFile file : userDataDB.imageFileDAO().getAllImageFiles()) {
+            if (file.getUserID() == null) {
+                file.setLastModified(new Date().getTime());
+                file.setUserID(user.getUid());
+                addImageFile(file);
+            }
+            if (file.getMd5Hash() == null) sendFileToStorage(Uri.fromFile(fileHelper.getImageFile(file.getName(), file.getGameId())), file.getGameId());
         }
     }
 
     public void setUser(FirebaseUser user) {
         this.user = user;
+        if (user == null) firebaseHelper.signOut();
     }
 
-    private void processDataFromFirebase(RxFirebaseChildEvent<Game> data) {
+    private void processDataFromFirebase(List<RxFirebaseChildEvent<Game>> data) {
+        for (RxFirebaseChildEvent<Game> event : data)
+            switch (event.getEventType()) {
+                case ADDED:
+                    changeGame(event.getValue());
+                    break;
+                case CHANGED:
+                    changeGame(event.getValue());
+                    break;
+                case REMOVED: {
+                    removeGame(event.getValue());
+                    break;
+                }
+        }
+        if (data.size() > 0) gameListOnNext();
+    }
+
+    private void processFilesDataFromFirebase(RxFirebaseChildEvent<ImageFile> data) {
         switch (data.getEventType()) {
             case ADDED:
-                changeGame(data.getValue());
+                changeImageFile(data.getValue());
                 break;
             case CHANGED:
-                changeGame(data.getValue());
+                changeImageFile(data.getValue());
                 break;
             case REMOVED: {
-                removeGame(data.getValue());
+                removeImageFile(data.getValue());
                 break;
             }
         }
     }
 
     public void firebaseSubscribeDispose() {
-        if (firebaseSubscribe != null) firebaseSubscribe.dispose();
+        if (firebaseDBSubscribe != null) firebaseDBSubscribe.dispose();
+        if (firebaseFilesSubscribe != null) firebaseFilesSubscribe.dispose();
+        if (uploadFileSubscribe != null) uploadFileSubscribe.dispose();
     }
 
     private void changeGame(Game game) {
@@ -311,14 +399,21 @@ public class Repository {
         if (this.game != null && this.game.getId() == game.getId()) this.game = game;
         if (getGameById(game.getId()) == null || game.getLastModified() != getGameById(game.getId()).getLastModified()) {
             insertGameToDB(game);
-            gameListOnNext();
+            //gameListOnNext();
         }
     }
 
     private void removeGame(Game game) {
         if (game != null) {
             deleteGameFromDB(game);
-            gameListOnNext();
+            //gameListOnNext();
+        }
+    }
+
+    private void changeImageFile(ImageFile file) {
+        if (file != null && getGame(file.getGameId()) != null) {
+            if (getImageFile(file.getName()) == null) userDataDB.imageFileDAO().insertImageFile(file);
+            if (file.getMd5Hash() != null) getFileFromStorage(file);
         }
     }
 
@@ -342,9 +437,13 @@ public class Repository {
         userDataDB.investigatorDAO().insertInvestigatorList(game.getInvList());
     }
 
-    public void deleteGame(Game game) {
+    public void deleteGame(Game game, boolean showToast) {
         deleteGameFromDB(game);
-        Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
+        removeImageFile(game.getId());
+        deleteRecursiveFiles(Objects.requireNonNull(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + game.getId())));
+        if (showToast) {
+            Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
+        }
         firebaseHelper.removeGame(game);
     }
 
@@ -359,6 +458,7 @@ public class Repository {
                 deleteGameFromDB(game);
             }
         }
+        userDataDB.imageFileDAO().deleteAllImageFiles();
     }
 
     public PublishSubject<List<Game>> getGameListPublish() {
@@ -472,5 +572,104 @@ public class Repository {
 
     public int getEnabledSpecializationCount() {
         return staticDataDB.specializationDAO().getEnabledSpecializationCount();
+    }
+
+    // GamePhoto
+
+    public List<String> getImages() {
+        return fileHelper.getImages(getGame().getId());
+    }
+
+    public PublishSubject<Boolean> getClickPhotoButtonPublish() {
+        return clickPhotoButtonPublish;
+    }
+
+    public void clickPhotoButtonOnNext(boolean value) {
+        clickPhotoButtonPublish.onNext(value);
+    }
+
+    public PublishSubject<Boolean> getUpdatePhotoGalleryPublish() {
+        return updatePhotoGalleryPublish;
+    }
+
+    public void updatePhotoGalleryOnNext(boolean value) {
+        updatePhotoGalleryPublish.onNext(value);
+    }
+
+    public PublishSubject<Boolean> getSelectModePublish() {
+        return selectModePublish;
+    }
+
+    public void selectModeOnNext(boolean value) {
+        selectModePublish.onNext(value);
+    }
+
+    public PublishSubject<Boolean> getSelectAllPhotoPublish() {
+        return selectAllPhotoPublish;
+    }
+
+    public void selectAllPhotoOnNext(boolean value) {
+        selectAllPhotoPublish.onNext(value);
+    }
+
+    public File getPhotoFile(String fileName) {
+        return fileHelper.getImageFile(fileName, getGame().getId());
+    }
+
+    public void addImageFile(ImageFile file) {
+        userDataDB.imageFileDAO().insertImageFile(file);
+        firebaseHelper.addFile(file);
+    }
+
+    public ImageFile getImageFile(String name) {
+        return userDataDB.imageFileDAO().getImageFile(name);
+    }
+
+    public void removeImageFile(ImageFile file) {
+        if (file != null && userDataDB.imageFileDAO().getImageFile(file.getName()) != null) {
+            userDataDB.imageFileDAO().deleteImageFile(file);
+            firebaseHelper.removeFile(file);
+            firebaseHelper.deleteFileFromFirebaseStorage(file);
+        }
+    }
+
+    public void deleteRecursiveFiles(File fileOrDirectory) {
+        fileHelper.deleteRecursiveFiles(fileOrDirectory);
+    }
+
+    public void removeImageFile(long gameId) {
+        for (ImageFile file : userDataDB.imageFileDAO().getImageFileList(gameId)) {
+            removeImageFile(file);
+        }
+    }
+
+    public void sendFileToStorage(Uri file, long gameId) {
+        firebaseHelper.sendFileToFirebaseStorage(file, gameId);
+    }
+
+    private void getFileFromStorage(ImageFile imageFile) {
+        boolean exist = false;
+        for (String filePath : fileHelper.getImages(imageFile.getGameId())) {
+            if (filePath.contains(imageFile.getName())) exist = true;
+        }
+        if (!exist) firebaseHelper.getFileFromFirebaseStorage(imageFile, fileHelper.getImageFile(imageFile.getName(), imageFile.getGameId()));
+    }
+
+    private void uploadFile(ImageFile file) {
+        try {
+            ImageFile imageFile = getImageFile(file.getName());
+            imageFile.setMd5Hash(file.getMd5Hash());
+            imageFile.setLastModified(new Date().getTime());
+            addImageFile(imageFile);
+        } catch (Exception e) {
+            firebaseHelper.deleteFileFromFirebaseStorage(file);
+            Log.d("UPLOAD", e.getMessage());
+        }
+    }
+
+    private void downloadFile(ImageFile imageFile) {
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        imagePipeline.clearCaches();
+        if (getGame() != null && getGame().getId() == imageFile.getGameId()) updatePhotoGalleryOnNext(true);
     }
 }

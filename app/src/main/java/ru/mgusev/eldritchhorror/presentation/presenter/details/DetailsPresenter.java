@@ -16,6 +16,7 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @InjectViewState
 public class DetailsPresenter extends MvpPresenter<DetailsView> {
@@ -24,12 +25,20 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     Repository repository;
     private Game game;
     private CompositeDisposable gameListSubscribe;
+    private CompositeDisposable photoSubscribe;
     private static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+    private int currentPosition;
 
     public DetailsPresenter() {
         App.getComponent().inject(this);
+        //if (repository.getGame() == null) repository.loadGameDraft();
+
+        //if (!MainActivity.initialized) repository.loadGameDraft();
+
         gameListSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData));
+        photoSubscribe = new CompositeDisposable();
+        photoSubscribe.add(repository.getUpdatePhotoGalleryPublish().subscribe(this::initPhotoList));
     }
 
     @Override
@@ -40,12 +49,15 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
 
     private void initGameData(List<Game> list) {
         game = repository.getGame();
-        initHeader();
-        initStartData();
-        initInvestigatorList();
-        initMysteriesCount();
-        if (game.getIsWinGame()) initVictory();
-        else initDefeat();
+        if (game != null) {
+            initHeader();
+            initStartData();
+            initInvestigatorList();
+            initMysteriesCount();
+            if (game.getIsWinGame()) initVictory();
+            else initDefeat();
+            initPhotoList(true);
+        }
     }
 
     private void initHeader() {
@@ -62,6 +74,12 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         List<Investigator> investigatorList = game.getInvList();
         getViewState().hideInvestigatorsNotSelected(investigatorList.isEmpty());
         getViewState().setInvestigatorsList(investigatorList);
+    }
+
+    private void initPhotoList(boolean value) {
+        List<String> photoList = repository.getImages();
+        getViewState().showPhotoNoneMessage(photoList.isEmpty());
+        getViewState().setPhotoList(photoList);
     }
 
     private void initMysteriesCount() {
@@ -95,7 +113,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     }
 
     public void deleteGame() {
-        repository.deleteGame(game);
+        repository.deleteGame(game, true);
         gameListSubscribe.dispose();
         repository.gameListOnNext();
     }
@@ -108,9 +126,26 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         repository.setGame(game);
     }
 
+    public void openFullScreenPhotoViewer() {
+        getViewState().openFullScreenPhotoViewer();
+    }
+
+    public void closeFullScreenPhotoViewer() {
+        getViewState().closeFullScreenPhotoViewer();
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
+    }
+
     @Override
     public void onDestroy() {
         gameListSubscribe.dispose();
+        photoSubscribe.dispose();
         repository.clearGame();
         super.onDestroy();
     }
