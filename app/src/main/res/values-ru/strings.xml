@@ -122,4 +122,6 @@
     <string name="create_file_error">Не удалось создать файл</string>
     <string name="donate_error_header">Ошибка! Попробуйте позже.</string>
     <string name="donate_success_header">Спасибо за поддержку!</string>
+    <string name="select_image_header">Выберите фото</string>
+    <string name="folders_header">Папки</string>
 </resources>

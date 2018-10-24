@@ -139,4 +139,6 @@
     <string name="d100" translatable="false">100$</string>
     <string name="donate_error_header">Error! Try again later.</string>
     <string name="donate_success_header">Thanks for the support!</string>
+    <string name="select_image_header">Tap to select</string>
+    <string name="folders_header">Folders</string>
 </resources>

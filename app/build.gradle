@@ -111,7 +111,7 @@ dependencies {
 
     implementation 'com.android.billingclient:billing:1.1'
 
-    implementation 'com.github.vansikrishna:Multimager:1.0.8'
+    implementation 'com.github.esafirm.android-image-picker:imagepicker:1.13.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

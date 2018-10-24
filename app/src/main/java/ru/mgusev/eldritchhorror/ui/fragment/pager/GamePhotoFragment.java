@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,14 +24,12 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ReturnMode;
+import com.esafirm.imagepicker.model.Image;
 import com.stfalcon.frescoimageviewer.ImageViewer;
-import com.vlk.multimager.activities.GalleryActivity;
-import com.vlk.multimager.utils.Constants;
-import com.vlk.multimager.utils.Image;
-import com.vlk.multimager.utils.Params;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,7 +55,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @BindView(R.id.recyclerViewGallery) RecyclerView recyclerViewGallery;
 
     static final int REQUEST_TAKE_PHOTO = 1;
-    static final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 3;
+    static final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 553;
     private static final int RC_READ_STORAGE = 5;
 
     private Unbinder unbinder;
@@ -115,14 +114,15 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         System.out.println("12345 " + requestCode);
         //if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
         if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
             //gamePhotoPresenter.changeGallery();
             //gamePhotoPresenter.addImageFile();
 
-            ArrayList<Image> imagesList = intent.getParcelableArrayListExtra(Constants.KEY_BUNDLE_LIST);
-            for (Image item : imagesList) System.out.println(item.uri);
+            List<Image> images = ImagePicker.getImages(data);
+            for (Image item : images) System.out.println(item.getPath());
 
 
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
@@ -252,14 +252,24 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
 
     @Override
     public void openImagePicker() {
-        intent = new Intent(this.getContext(), GalleryActivity.class);
-        Params params = new Params();
-        params.setCaptureLimit(10);
-        params.setPickerLimit(10);
-        //params.setToolbarColor(selectedColor);
-        //params.setActionButtonColor(selectedColor);
-        //params.setButtonTextColor(selectedColor);
-        intent.putExtra(Constants.KEY_PARAMS, params);
-        startActivityForResult(intent, Constants.TYPE_MULTI_PICKER);
+        ImagePicker.create(this) // Activity or Fragment
+                .returnMode(ReturnMode.NONE) // set whether pick and / or camera action should return immediate result or not.
+                .folderMode(true) // folder mode (false by default)
+                .toolbarFolderTitle(getString(R.string.folders_header)) // folder selection title
+                .toolbarImageTitle(getString(R.string.select_image_header)) // image selection title
+                .toolbarArrowColor(Color.WHITE) // Toolbar 'up' arrow color
+                .includeVideo(false) // Show video on image picker
+                //.single() // single mode
+                //.multi() // multi mode (default mode)
+                .limit(10) // max images can be selected (99 by default)
+                .showCamera(false) // show camera or not (true by default)
+                //.imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
+                //.origin(images) // original selected images, used in multi mode
+                //.exclude(images) // exclude anything that in image.getPath()
+                //.excludeFiles(files) // same as exclude but using ArrayList<File>
+                //.theme(R.style.CustomImagePickerTheme) // must inherit ef_BaseTheme. please refer to sample
+                .enableLog(false) // disabling log
+                //.imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable
+                .start(); // start image picker activity with request code
     }
 }
