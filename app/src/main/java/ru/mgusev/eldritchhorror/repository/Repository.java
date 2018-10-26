@@ -11,6 +11,7 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -614,6 +615,10 @@ public class Repository {
 
     public File getPhotoFile(String fileName) {
         return fileHelper.getImageFile(fileName, getGame().getId());
+    }
+
+    public void copyFile(File source, File dest) throws IOException {
+        fileHelper.copyFile(source, dest);
     }
 
     public void addImageFile(ImageFile file) {

@@ -4,8 +4,10 @@ import android.net.Uri;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,17 +76,31 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     }
 
     private void makePhoto(boolean value) {
-        /*if (value) {
+        if (value) {
             if (selectedPhotoList.isEmpty()) {
-                String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + "_" + new Date().getTime() + ".jpg";
-                getViewState().dispatchTakePictureIntent(repository.getPhotoFile(imageFileName));
+                getViewState().openImagePicker();
+
+                //getViewState().dispatchTakePictureIntent(repository.getPhotoFile(getNewImageFileName()));
             }
             else getViewState().showDeleteDialog();
-        }*/
+        }
+    }
 
+    private String getNewImageFileName() {
+        return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + "_" + new Date().getTime() + ".jpg";
+    }
 
-        getViewState().openImagePicker();
-
+    public void onSelectImagesFromImagePicker(List<Image> images) {
+        for (Image image : images) {
+            try {
+                File source = new File(image.getPath());
+                repository.copyFile(source, repository.getPhotoFile(getNewImageFileName()));
+                currentPhotoURI = Uri.fromFile(source);
+                addImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void dismissDeleteDialog() {

@@ -114,17 +114,12 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        System.out.println("12345 " + requestCode);
-        //if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-        if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
-            //gamePhotoPresenter.changeGallery();
-            //gamePhotoPresenter.addImageFile();
-
-            List<Image> images = ImagePicker.getImages(data);
-            for (Image item : images) System.out.println(item.getPath());
-
-
+        
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            gamePhotoPresenter.changeGallery();
+            gamePhotoPresenter.addImageFile();
+        } else if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
+            gamePhotoPresenter.onSelectImagesFromImagePicker(ImagePicker.getImages(data));
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
             gamePhotoPresenter.deleteFile(new File(gamePhotoPresenter.getCurrentPhotoURI().getPath()));
         }
