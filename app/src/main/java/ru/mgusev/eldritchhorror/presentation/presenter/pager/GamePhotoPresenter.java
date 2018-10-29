@@ -101,6 +101,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
                 e.printStackTrace();
             }
         }
+        if (images.size() > 0) repository.updatePhotoGalleryOnNext(true);
     }
 
     public void dismissDeleteDialog() {

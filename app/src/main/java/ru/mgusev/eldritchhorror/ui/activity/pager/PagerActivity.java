@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +25,8 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.PagerAdapter;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -46,7 +47,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @BindView(R.id.games_pager_win_icon) ImageView winIcon;
     @BindView(R.id.games_pager_toolbar) Toolbar toolbar;
     @BindView(R.id.games_pager_viewpager) ViewPager pager;
-    @BindView(R.id.games_pager_add_photo) FloatingActionButton addPhotoButton;
+    @BindView(R.id.games_pager_add_photo) FabSpeedDial addImageFab;
 
     private int currentPosition = 0;
     private PagerAdapter pagerAdapter;
@@ -96,6 +97,22 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+        addImageFab.setMenuListener(new SimpleMenuListenerAdapter() {
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_camera:
+                        pagerPresenter.actionSave();
+                        return false;
+                    case R.id.action_gallery:
+                        pagerPresenter.actionClear(currentPosition);
+                        return false;
+                }
+                return false;
+            }
+        });
+
     }
 
     private void initToolbar() {
@@ -179,14 +196,14 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     private void showAddPhotoButton() {
-        if (currentPosition == 3) addPhotoButton.show();
-        else addPhotoButton.hide();
+        if (currentPosition == 3) addImageFab.show();
+        else addImageFab.hide();
     }
 
     @Override
     public void setAddPhotoButtonIcon(boolean selectedMode) {
-        addPhotoButton.setImageResource(selectedMode ? R.drawable.delete_white : R.drawable.camera);
-        addPhotoButton.setBackgroundTintList(selectedMode ? ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark)) : ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+        //addImageFab.setImageResource(selectedMode ? R.drawable.delete_white : R.drawable.camera);
+        addImageFab.setBackgroundTintList(selectedMode ? ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark)) : ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
         showActionSelectCancelButton();
     }
 

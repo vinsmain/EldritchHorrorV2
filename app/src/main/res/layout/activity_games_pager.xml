@@ -108,7 +108,21 @@
 
     </android.support.v4.view.ViewPager>
 
-    <android.support.design.widget.FloatingActionButton
+    <io.github.yavski.fabspeeddial.FabSpeedDial
+        android:id="@+id/games_pager_add_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="86dp"
+        android:layout_marginEnd="16dp"
+        app:fabGravity="bottom_end"
+        app:fabMenu="@menu/menu_add_image_fab"
+        app:fabSize="normal"
+        app:miniFabBackgroundTint="@android:color/white"
+        app:miniFabDrawableTint="@color/colorPrimaryDark"
+        app:miniFabTitleTextColor="@color/colorPrimaryDark" />
+
+    <!--android.support.design.widget.FloatingActionButton
         android:id="@+id/games_pager_add_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -118,7 +132,7 @@
         app:fabSize="normal"
         app:layout_anchor="@id/games_pager_viewpager"
         app:layout_anchorGravity="bottom|right|end"
-        app:srcCompat="@drawable/camera" />
+        app:srcCompat="@drawable/camera" /-->
 
 
 </android.support.design.widget.CoordinatorLayout>
