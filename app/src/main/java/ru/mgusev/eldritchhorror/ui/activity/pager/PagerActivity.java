@@ -3,8 +3,8 @@ package ru.mgusev.eldritchhorror.ui.activity.pager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -47,7 +47,8 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @BindView(R.id.games_pager_win_icon) ImageView winIcon;
     @BindView(R.id.games_pager_toolbar) Toolbar toolbar;
     @BindView(R.id.games_pager_viewpager) ViewPager pager;
-    @BindView(R.id.games_pager_add_photo) FabSpeedDial addImageFab;
+    @BindView(R.id.games_pager_add_image) FabSpeedDial addImageFab;
+    @BindView(R.id.games_pager_delete_image) FloatingActionButton deleteImageFab;
 
     private int currentPosition = 0;
     private PagerAdapter pagerAdapter;
@@ -103,16 +104,15 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             public boolean onMenuItemSelected(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_camera:
-                        pagerPresenter.actionSave();
+                        pagerPresenter.clickOnAddPhotoButton(true);
                         return false;
                     case R.id.action_gallery:
-                        pagerPresenter.actionClear(currentPosition);
+                        pagerPresenter.clickOnAddPhotoButton(false);
                         return false;
                 }
                 return false;
             }
         });
-
     }
 
     private void initToolbar() {
@@ -196,15 +196,26 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     private void showAddPhotoButton() {
-        if (currentPosition == 3) addImageFab.show();
-        else addImageFab.hide();
+        addImageFab.setVisibility(currentPosition == 3 ? View.VISIBLE : View.GONE);
+        if (currentPosition != 3) deleteImageFab.setVisibility(View.GONE);
     }
 
     @Override
     public void setAddPhotoButtonIcon(boolean selectedMode) {
-        //addImageFab.setImageResource(selectedMode ? R.drawable.delete_white : R.drawable.camera);
-        addImageFab.setBackgroundTintList(selectedMode ? ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark)) : ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+        if (selectedMode) {
+            deleteImageFab.setVisibility(View.VISIBLE);
+            addImageFab.setVisibility(View.GONE);
+        } else {
+            deleteImageFab.setVisibility(View.GONE);
+            addImageFab.setVisibility(View.VISIBLE);
+        }
         showActionSelectCancelButton();
+    }
+
+    @OnClick({R.id.games_pager_delete_image})
+    public void onClick(View view) {
+        System.out.println("CLICK");
+        pagerPresenter.clickOnDeletePhotoButton();
     }
 
     private void showActionSelectCancelButton() {
@@ -289,11 +300,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @Override
     public void onBackPressed() {
         pagerPresenter.showBackDialog();
-    }
-
-    @OnClick(R.id.games_pager_add_photo)
-    public void onClick() {
-        pagerPresenter.clickOnAddPhotoButton();
     }
 
     @Override

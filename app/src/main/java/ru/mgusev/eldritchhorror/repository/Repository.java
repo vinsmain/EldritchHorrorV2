@@ -62,6 +62,7 @@ public class Repository {
     private PublishSubject<Boolean> updatePhotoGalleryPublish;
     private PublishSubject<Boolean> selectModePublish;
     private PublishSubject<Boolean> selectAllPhotoPublish;
+    private PublishSubject<Boolean> deleteSelectImagesPublish;
 
     private CompositeDisposable firebaseDBSubscribe;
     private CompositeDisposable firebaseFilesSubscribe;
@@ -97,6 +98,7 @@ public class Repository {
         updatePhotoGalleryPublish = PublishSubject.create();
         selectModePublish = PublishSubject.create();
         selectAllPhotoPublish = PublishSubject.create();
+        deleteSelectImagesPublish = PublishSubject.create();
 
         uploadFileSubscribe = new CompositeDisposable();
         uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile));
@@ -607,6 +609,14 @@ public class Repository {
 
     public PublishSubject<Boolean> getSelectAllPhotoPublish() {
         return selectAllPhotoPublish;
+    }
+
+    public void deleteSelectImagesOnNext(boolean value) {
+        deleteSelectImagesPublish.onNext(value);
+    }
+
+    public PublishSubject<Boolean> getDeleteSelectImagesPublish() {
+        return deleteSelectImagesPublish;
     }
 
     public void selectAllPhotoOnNext(boolean value) {

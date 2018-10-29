@@ -105,14 +105,16 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         getViewState().hideBackDialog();
     }
 
-    public void clickOnAddPhotoButton() {
-        repository.clickPhotoButtonOnNext(true);
+    public void clickOnAddPhotoButton(boolean isCamera) {
+        repository.clickPhotoButtonOnNext(isCamera);
+    }
+
+    public void clickOnDeletePhotoButton() {
+        repository.deleteSelectImagesOnNext(true);
     }
 
     public void deleteFilesIfGameNotCreated() {
-        System.out.println("PAGER DELETE GAME 111 " + repository.getGame().getId());
         if (repository.getGame(repository.getGame().getId()) == null) {
-            System.out.println("PAGER DELETE GAME " + repository.getGame().getId());
             repository.removeImageFile(repository.getGame().getId());
             repository.deleteRecursiveFiles(repository.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + repository.getGame().getId()));
         }

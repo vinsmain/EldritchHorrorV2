@@ -124,4 +124,6 @@
     <string name="donate_success_header">Спасибо за поддержку!</string>
     <string name="select_image_header">Выберите фото</string>
     <string name="folders_header">Папки</string>
+    <string name="camera_header">Камера</string>
+    <string name="gallery_header">Галерея</string>
 </resources>

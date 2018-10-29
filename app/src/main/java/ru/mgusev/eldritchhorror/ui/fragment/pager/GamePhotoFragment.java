@@ -26,7 +26,6 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
-import com.esafirm.imagepicker.model.Image;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
@@ -65,8 +64,6 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     private ImageViewer imageViewer;
     private boolean imageViewerIsOpen;
     private AlertDialog deleteDialog;
-
-    Intent intent;
 
     public static GamePhotoFragment newInstance(int page) {
         GamePhotoFragment pageFragment = new GamePhotoFragment();
@@ -262,7 +259,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
                 //.origin(images) // original selected images, used in multi mode
                 //.exclude(images) // exclude anything that in image.getPath()
                 //.excludeFiles(files) // same as exclude but using ArrayList<File>
-                //.theme(R.style.CustomImagePickerTheme) // must inherit ef_BaseTheme. please refer to sample
+                .theme(R.style.AppTheme) // must inherit ef_BaseTheme. please refer to sample
                 .enableLog(false) // disabling log
                 //.imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable
                 .start(); // start image picker activity with request code

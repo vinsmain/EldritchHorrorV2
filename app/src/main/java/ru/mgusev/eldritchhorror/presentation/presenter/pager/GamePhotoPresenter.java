@@ -33,6 +33,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     private CompositeDisposable clickPhotoButtonSubscribe;
     private CompositeDisposable updatePhotoGallerySubscribe;
     private CompositeDisposable selectAllPhotoSubscribe;
+    private CompositeDisposable deleteSelectImagesSubscribe;
     private List<String> selectedPhotoList;
     private boolean selectMode = false;
     private Uri currentPhotoURI;
@@ -44,11 +45,13 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         clickPhotoButtonSubscribe = new CompositeDisposable();
-        clickPhotoButtonSubscribe.add(repository.getClickPhotoButtonPublish().subscribe(this::makePhoto));
+        clickPhotoButtonSubscribe.add(repository.getClickPhotoButtonPublish().subscribe(this::addImage));
         updatePhotoGallerySubscribe = new CompositeDisposable();
         updatePhotoGallerySubscribe.add(repository.getUpdatePhotoGalleryPublish().subscribe(this::changeGallery));
         selectAllPhotoSubscribe = new CompositeDisposable();
         selectAllPhotoSubscribe.add(repository.getSelectAllPhotoPublish().subscribe(this::selectAllPhoto));
+        deleteSelectImagesSubscribe = new CompositeDisposable();
+        deleteSelectImagesSubscribe.add(repository.getDeleteSelectImagesPublish().subscribe(this::deleteSelectImages));
         selectedPhotoList = new ArrayList<>();
     }
 
@@ -75,15 +78,14 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         repository.sendFileToStorage(currentPhotoURI, repository.getGame().getId());
     }
 
-    private void makePhoto(boolean value) {
-        if (value) {
-            if (selectedPhotoList.isEmpty()) {
-                getViewState().openImagePicker();
+    private void addImage(boolean isCamera) {
+        if (isCamera) getViewState().dispatchTakePictureIntent(repository.getPhotoFile(getNewImageFileName()));
+        else getViewState().openImagePicker();
+    }
 
-                //getViewState().dispatchTakePictureIntent(repository.getPhotoFile(getNewImageFileName()));
-            }
-            else getViewState().showDeleteDialog();
-        }
+    private void deleteSelectImages(boolean value) {
+        System.out.println("DELETE " + value);
+        if (value) getViewState().showDeleteDialog();
     }
 
     private String getNewImageFileName() {
@@ -184,5 +186,6 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         clickPhotoButtonSubscribe.dispose();
         updatePhotoGallerySubscribe.dispose();
         selectAllPhotoSubscribe.dispose();
+        deleteSelectImagesSubscribe.dispose();
     }
 }
