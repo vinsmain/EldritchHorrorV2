@@ -119,7 +119,8 @@
         app:fabSize="normal"
         app:miniFabBackgroundTint="@android:color/white"
         app:miniFabDrawableTint="@color/colorPrimaryDark"
-        app:miniFabTitleTextColor="@color/colorPrimaryDark" />
+        app:miniFabTitleTextColor="@color/colorPrimaryDark"
+        app:touchGuard="false" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/games_pager_delete_image"

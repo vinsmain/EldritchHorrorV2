@@ -60,6 +60,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private MenuItem actionSelectAll;
     private MenuItem actionSelectCancel;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +75,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         }
 
         initToolbar();
+        deleteImageFab = findViewById(R.id.games_pager_delete_image);
         showAddPhotoButton();
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
         pager.setOffscreenPageLimit(3);
@@ -214,7 +216,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @OnClick({R.id.games_pager_delete_image})
     public void onClick(View view) {
-        System.out.println("CLICK");
         pagerPresenter.clickOnDeletePhotoButton();
     }
 
