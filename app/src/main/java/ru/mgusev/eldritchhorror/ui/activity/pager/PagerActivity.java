@@ -50,7 +50,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @BindView(R.id.games_pager_add_image) FabSpeedDial addImageFab;
     @BindView(R.id.games_pager_delete_image) FloatingActionButton deleteImageFab;
 
-    private int currentPosition = 0;
     private PagerAdapter pagerAdapter;
     private AlertDialog backDialog;
     private MenuItem actionEditExpansion;
@@ -75,7 +74,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         }
 
         initToolbar();
-        deleteImageFab = findViewById(R.id.games_pager_delete_image);
         showAddPhotoButton();
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
         pager.setOffscreenPageLimit(3);
@@ -86,7 +84,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             @Override
             public void onPageSelected(int position) {
                 Log.d("PAGER", "onPageSelected, position = " + position);
-                currentPosition = position;
+                pagerPresenter.setCurrentPosition(position);
                 showMenuItem();
                 showAddPhotoButton();
                 hideKeyboard();
@@ -128,7 +126,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     private void hideKeyboard() {
         View view = getCurrentFocus();
-        if (currentPosition != 2 && view != null) {
+        if (pagerPresenter.getCurrentPosition() != 2 && view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
@@ -188,6 +186,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     private void showMenuItem() {
+        int currentPosition = pagerPresenter.getCurrentPosition();
         if (actionRandom != null) actionRandom.setVisible(currentPosition <= 1);
         if (actionClear != null) actionClear.setVisible(currentPosition == 1);
         if (actionRandomSettings != null) actionRandomSettings.setVisible(currentPosition == 1);
@@ -198,18 +197,21 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     private void showAddPhotoButton() {
-        addImageFab.setVisibility(currentPosition == 3 ? View.VISIBLE : View.GONE);
-        if (currentPosition != 3) deleteImageFab.setVisibility(View.GONE);
+        if (pagerPresenter.getCurrentPosition() != 3) pagerPresenter.clickSelectPhoto(false);
+        addImageFab.setVisibility(pagerPresenter.getCurrentPosition() == 3 ? View.VISIBLE : View.GONE);
+        if (pagerPresenter.getCurrentPosition() != 3) deleteImageFab.setVisibility(View.GONE);
     }
 
     @Override
     public void setAddPhotoButtonIcon(boolean selectedMode) {
-        if (selectedMode) {
-            deleteImageFab.setVisibility(View.VISIBLE);
-            addImageFab.setVisibility(View.GONE);
-        } else {
-            deleteImageFab.setVisibility(View.GONE);
-            addImageFab.setVisibility(View.VISIBLE);
+        if (pagerPresenter.getCurrentPosition() == 3) {
+            if (selectedMode) {
+                deleteImageFab.setVisibility(View.VISIBLE);
+                addImageFab.setVisibility(View.GONE);
+            } else {
+                deleteImageFab.setVisibility(View.GONE);
+                addImageFab.setVisibility(View.VISIBLE);
+            }
         }
         showActionSelectCancelButton();
     }
@@ -221,7 +223,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     private void showActionSelectCancelButton() {
         if (actionSelectCancel != null) {
-            if (currentPosition == 3) actionSelectCancel.setVisible(pagerPresenter.isSelectedMode());
+            if (pagerPresenter.getCurrentPosition() == 3) actionSelectCancel.setVisible(pagerPresenter.isSelectedMode());
             else actionSelectCancel.setVisible(false);
         }
     }
@@ -233,10 +235,10 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 pagerPresenter.actionSave();
                 return true;
             case R.id.action_clear:
-                pagerPresenter.actionClear(currentPosition);
+                pagerPresenter.actionClear(pagerPresenter.getCurrentPosition());
                 return true;
             case R.id.action_random:
-                pagerPresenter.actionRandom(currentPosition);
+                pagerPresenter.actionRandom(pagerPresenter.getCurrentPosition());
                 return true;
             case R.id.action_random_settings:
                 Intent randomSettingsIntent = new Intent(this, SpecializationChoiceActivity.class);

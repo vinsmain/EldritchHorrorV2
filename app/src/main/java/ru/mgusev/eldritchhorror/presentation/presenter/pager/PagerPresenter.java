@@ -28,6 +28,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     private CompositeDisposable selectModeSubscribe;
     private boolean selectedMode;
     private boolean backDialogShow;
+    private int currentPosition = 0;
 
     public PagerPresenter() {
         App.getComponent().inject(this);
@@ -50,8 +51,17 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getViewState().setCurrentPosition(repository.getPagerPosition());
+        setCurrentPosition(repository.getPagerPosition());
+        getViewState().setCurrentPosition(currentPosition);
         if (repository.getGame().getLastModified() != 0) getViewState().setEditToolbarHeader();
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
     private void setResultIcon(boolean isWin) {

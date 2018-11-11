@@ -145,7 +145,8 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void dispatchTakePictureIntent(File photoFile) {
         //check for read storage permission
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             // Ensure that there's a camera activity to handle the intent
             if (takePictureIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
@@ -158,7 +159,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
             }
         } else {
             //request permission
-            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RC_READ_STORAGE);
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RC_READ_STORAGE);
         }
     }
 
@@ -178,9 +179,9 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == RC_READ_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                gamePhotoPresenter.changeGallery();
+                Toast.makeText(getContext(), "Permission granted", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Storage Permission denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
