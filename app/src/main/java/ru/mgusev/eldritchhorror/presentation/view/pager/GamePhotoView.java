@@ -25,7 +25,7 @@ public interface GamePhotoView extends MvpView {
     void hideDeleteDialog();
 
     @StateStrategyType(OneExecutionStateStrategy.class)
-    void dispatchTakePictureIntent(File photoFile);
+    void dispatchTakePictureIntent();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void selectGalleryItem(List<String> list, int position);
@@ -35,4 +35,7 @@ public interface GamePhotoView extends MvpView {
 
     @StateStrategyType(value = DismissDialogStrategy.class, tag = IMAGE_VIEWER_TAG)
     void closeFullScreenPhotoViewer();
+
+    @StateStrategyType(OneExecutionStateStrategy.class)
+    void openImagePicker();
 }

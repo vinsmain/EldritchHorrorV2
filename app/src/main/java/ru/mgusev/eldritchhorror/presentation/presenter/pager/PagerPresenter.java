@@ -28,6 +28,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     private CompositeDisposable selectModeSubscribe;
     private boolean selectedMode;
     private boolean backDialogShow;
+    private int currentPosition = 0;
 
     public PagerPresenter() {
         App.getComponent().inject(this);
@@ -50,8 +51,17 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getViewState().setCurrentPosition(repository.getPagerPosition());
+        setCurrentPosition(repository.getPagerPosition());
+        getViewState().setCurrentPosition(currentPosition);
         if (repository.getGame().getLastModified() != 0) getViewState().setEditToolbarHeader();
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
     private void setResultIcon(boolean isWin) {
@@ -105,14 +115,16 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         getViewState().hideBackDialog();
     }
 
-    public void clickOnAddPhotoButton() {
-        repository.clickPhotoButtonOnNext(true);
+    public void clickOnAddPhotoButton(boolean isCamera) {
+        repository.clickPhotoButtonOnNext(isCamera);
+    }
+
+    public void clickOnDeletePhotoButton() {
+        repository.deleteSelectImagesOnNext(true);
     }
 
     public void deleteFilesIfGameNotCreated() {
-        System.out.println("PAGER DELETE GAME 111 " + repository.getGame().getId());
         if (repository.getGame(repository.getGame().getId()) == null) {
-            System.out.println("PAGER DELETE GAME " + repository.getGame().getId());
             repository.removeImageFile(repository.getGame().getId());
             repository.deleteRecursiveFiles(repository.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + repository.getGame().getId()));
         }

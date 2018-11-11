@@ -4,8 +4,10 @@ import android.net.Uri;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +33,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     private CompositeDisposable clickPhotoButtonSubscribe;
     private CompositeDisposable updatePhotoGallerySubscribe;
     private CompositeDisposable selectAllPhotoSubscribe;
+    private CompositeDisposable deleteSelectImagesSubscribe;
     private List<String> selectedPhotoList;
     private boolean selectMode = false;
     private Uri currentPhotoURI;
@@ -42,11 +45,13 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         clickPhotoButtonSubscribe = new CompositeDisposable();
-        clickPhotoButtonSubscribe.add(repository.getClickPhotoButtonPublish().subscribe(this::makePhoto));
+        clickPhotoButtonSubscribe.add(repository.getClickPhotoButtonPublish().subscribe(this::addImage));
         updatePhotoGallerySubscribe = new CompositeDisposable();
         updatePhotoGallerySubscribe.add(repository.getUpdatePhotoGalleryPublish().subscribe(this::changeGallery));
         selectAllPhotoSubscribe = new CompositeDisposable();
         selectAllPhotoSubscribe.add(repository.getSelectAllPhotoPublish().subscribe(this::selectAllPhoto));
+        deleteSelectImagesSubscribe = new CompositeDisposable();
+        deleteSelectImagesSubscribe.add(repository.getDeleteSelectImagesPublish().subscribe(this::deleteSelectImages));
         selectedPhotoList = new ArrayList<>();
     }
 
@@ -54,6 +59,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         changeGallery();
+        setSelectMode(selectMode);
     }
 
     public void changeGallery() {
@@ -73,14 +79,36 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         repository.sendFileToStorage(currentPhotoURI, repository.getGame().getId());
     }
 
-    private void makePhoto(boolean value) {
-        if (value) {
-            if (selectedPhotoList.isEmpty()) {
-                String imageFileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + "_" + new Date().getTime() + ".jpg";
-                getViewState().dispatchTakePictureIntent(repository.getPhotoFile(imageFileName));
+    private void addImage(boolean isCamera) {
+        if (isCamera) getViewState().dispatchTakePictureIntent();
+        else getViewState().openImagePicker();
+    }
+
+    private void deleteSelectImages(boolean value) {
+        System.out.println("DELETE " + value);
+        if (value) getViewState().showDeleteDialog();
+    }
+
+    public File getNewImageFile(){
+        return repository.getPhotoFile(getNewImageFileName());
+    }
+
+    private String getNewImageFileName() {
+        return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + "_" + new Date().getTime() + ".jpg";
+    }
+
+    public void onSelectImagesFromImagePicker(List<Image> images) {
+        for (Image image : images) {
+            try {
+                File dest = repository.getPhotoFile(getNewImageFileName());
+                repository.copyFile(new File(image.getPath()), dest);
+                currentPhotoURI = Uri.fromFile(dest);
+                addImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            else getViewState().showDeleteDialog();
         }
+        if (images.size() > 0) repository.updatePhotoGalleryOnNext(true);
     }
 
     public void dismissDeleteDialog() {
@@ -163,5 +191,6 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         clickPhotoButtonSubscribe.dispose();
         updatePhotoGallerySubscribe.dispose();
         selectAllPhotoSubscribe.dispose();
+        deleteSelectImagesSubscribe.dispose();
     }
 }

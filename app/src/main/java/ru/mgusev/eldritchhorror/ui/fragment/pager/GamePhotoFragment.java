@@ -5,12 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ReturnMode;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.io.File;
@@ -51,6 +53,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @BindView(R.id.recyclerViewGallery) RecyclerView recyclerViewGallery;
 
     static final int REQUEST_TAKE_PHOTO = 1;
+    static final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 553;
     private static final int RC_READ_STORAGE = 5;
 
     private Unbinder unbinder;
@@ -107,9 +110,12 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             gamePhotoPresenter.changeGallery();
             gamePhotoPresenter.addImageFile();
+        } else if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
+            gamePhotoPresenter.onSelectImagesFromImagePicker(ImagePicker.getImages(data));
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
             gamePhotoPresenter.deleteFile(new File(gamePhotoPresenter.getCurrentPhotoURI().getPath()));
         }
@@ -136,22 +142,27 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     }
 
     @Override
-    public void dispatchTakePictureIntent(File photoFile) {
+    public void dispatchTakePictureIntent() {
         //check for read storage permission
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            // Ensure that there's a camera activity to handle the intent
-            if (takePictureIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), "com.example.android.provider", photoFile));
-                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                    gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(photoFile));
-                }
-            }
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            startCameraIntent();
         } else {
-            //request permission
-            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RC_READ_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RC_READ_STORAGE);
+        }
+    }
+
+    private void startCameraIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
+            // Continue only if the File was successfully created
+            File file = gamePhotoPresenter.getNewImageFile();
+            if (file != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), "com.example.android.provider", file));
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(file));
+            }
         }
     }
 
@@ -170,10 +181,10 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == RC_READ_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                gamePhotoPresenter.changeGallery();
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                startCameraIntent();
             } else {
-                Toast.makeText(getContext(), "Storage Permission denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -232,5 +243,29 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @Override
     public void onImageChange(int position) {
         gamePhotoPresenter.setCurrentPosition(position);
+    }
+
+
+    @Override
+    public void openImagePicker() {
+        ImagePicker.create(this) // Activity or Fragment
+                .returnMode(ReturnMode.NONE) // set whether pick and / or camera action should return immediate result or not.
+                .folderMode(true) // folder mode (false by default)
+                .toolbarFolderTitle(getString(R.string.folders_header)) // folder selection title
+                .toolbarImageTitle(getString(R.string.select_image_header)) // image selection title
+                .toolbarArrowColor(Color.WHITE) // Toolbar 'up' arrow color
+                .includeVideo(false) // Show video on image picker
+                //.single() // single mode
+                //.multi() // multi mode (default mode)
+                .limit(10) // max images can be selected (99 by default)
+                .showCamera(false) // show camera or not (true by default)
+                //.imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
+                //.origin(images) // original selected images, used in multi mode
+                //.exclude(images) // exclude anything that in image.getPath()
+                //.excludeFiles(files) // same as exclude but using ArrayList<File>
+                .theme(R.style.AppTheme) // must inherit ef_BaseTheme. please refer to sample
+                .enableLog(false) // disabling log
+                //.imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable
+                .start(); // start image picker activity with request code
     }
 }

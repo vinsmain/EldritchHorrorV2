@@ -11,6 +11,7 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +62,7 @@ public class Repository {
     private PublishSubject<Boolean> updatePhotoGalleryPublish;
     private PublishSubject<Boolean> selectModePublish;
     private PublishSubject<Boolean> selectAllPhotoPublish;
+    private PublishSubject<Boolean> deleteSelectImagesPublish;
 
     private CompositeDisposable firebaseDBSubscribe;
     private CompositeDisposable firebaseFilesSubscribe;
@@ -96,6 +98,7 @@ public class Repository {
         updatePhotoGalleryPublish = PublishSubject.create();
         selectModePublish = PublishSubject.create();
         selectAllPhotoPublish = PublishSubject.create();
+        deleteSelectImagesPublish = PublishSubject.create();
 
         uploadFileSubscribe = new CompositeDisposable();
         uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile));
@@ -608,12 +611,24 @@ public class Repository {
         return selectAllPhotoPublish;
     }
 
+    public void deleteSelectImagesOnNext(boolean value) {
+        deleteSelectImagesPublish.onNext(value);
+    }
+
+    public PublishSubject<Boolean> getDeleteSelectImagesPublish() {
+        return deleteSelectImagesPublish;
+    }
+
     public void selectAllPhotoOnNext(boolean value) {
         selectAllPhotoPublish.onNext(value);
     }
 
     public File getPhotoFile(String fileName) {
         return fileHelper.getImageFile(fileName, getGame().getId());
+    }
+
+    public void copyFile(File source, File dest) throws IOException {
+        fileHelper.copyFile(source, dest);
     }
 
     public void addImageFile(ImageFile file) {

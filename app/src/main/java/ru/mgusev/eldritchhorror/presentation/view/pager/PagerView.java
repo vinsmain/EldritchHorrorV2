@@ -13,6 +13,7 @@ public interface PagerView extends MvpView {
 
     String BACK_DIALOG_TAG = "backDialog";
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setAddPhotoButtonIcon(boolean selectedMode);
 
     @StateStrategyType(AddToEndSingleStrategy.class)

@@ -7,6 +7,12 @@ import android.util.Log;
 import com.facebook.common.util.UriUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +42,14 @@ public class FileHelper {
     public File getImageFile(String imageFileName, long gameId) {
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + gameId);
         return new File(storageDir, imageFileName);
+    }
+
+    public void copyFile(File source, File dest) throws IOException {
+        FileChannel sourceChannel = new FileInputStream(source).getChannel();
+        FileChannel destChannel = new FileOutputStream(dest).getChannel();
+        destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+        sourceChannel.close();
+        destChannel.close();
     }
 
     public void deleteRecursiveFiles(File fileOrDirectory) {
