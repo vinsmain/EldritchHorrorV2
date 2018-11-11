@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -143,23 +142,27 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     }
 
     @Override
-    public void dispatchTakePictureIntent(File photoFile) {
+    public void dispatchTakePictureIntent() {
         //check for read storage permission
         if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            // Ensure that there's a camera activity to handle the intent
-            if (takePictureIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), "com.example.android.provider", photoFile));
-                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                    gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(photoFile));
-                }
-            }
+            startCameraIntent();
         } else {
-            //request permission
-            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RC_READ_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RC_READ_STORAGE);
+        }
+    }
+
+    private void startCameraIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
+            // Continue only if the File was successfully created
+            File file = gamePhotoPresenter.getNewImageFile();
+            if (file != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), "com.example.android.provider", file));
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(file));
+            }
         }
     }
 
@@ -178,8 +181,8 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == RC_READ_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getContext(), "Permission granted", Toast.LENGTH_SHORT).show();
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                startCameraIntent();
             } else {
                 Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
             }

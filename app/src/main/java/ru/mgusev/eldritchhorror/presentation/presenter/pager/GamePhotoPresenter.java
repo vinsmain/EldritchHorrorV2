@@ -59,6 +59,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         changeGallery();
+        setSelectMode(selectMode);
     }
 
     public void changeGallery() {
@@ -79,13 +80,17 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     }
 
     private void addImage(boolean isCamera) {
-        if (isCamera) getViewState().dispatchTakePictureIntent(repository.getPhotoFile(getNewImageFileName()));
+        if (isCamera) getViewState().dispatchTakePictureIntent();
         else getViewState().openImagePicker();
     }
 
     private void deleteSelectImages(boolean value) {
         System.out.println("DELETE " + value);
         if (value) getViewState().showDeleteDialog();
+    }
+
+    public File getNewImageFile(){
+        return repository.getPhotoFile(getNewImageFileName());
     }
 
     private String getNewImageFileName() {
@@ -95,9 +100,9 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     public void onSelectImagesFromImagePicker(List<Image> images) {
         for (Image image : images) {
             try {
-                File source = new File(image.getPath());
-                repository.copyFile(source, repository.getPhotoFile(getNewImageFileName()));
-                currentPhotoURI = Uri.fromFile(source);
+                File dest = repository.getPhotoFile(getNewImageFileName());
+                repository.copyFile(new File(image.getPath()), dest);
+                currentPhotoURI = Uri.fromFile(dest);
                 addImageFile();
             } catch (IOException e) {
                 e.printStackTrace();

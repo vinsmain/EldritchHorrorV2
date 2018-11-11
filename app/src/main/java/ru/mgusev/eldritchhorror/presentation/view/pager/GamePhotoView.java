@@ -25,7 +25,7 @@ public interface GamePhotoView extends MvpView {
     void hideDeleteDialog();
 
     @StateStrategyType(OneExecutionStateStrategy.class)
-    void dispatchTakePictureIntent(File photoFile);
+    void dispatchTakePictureIntent();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void selectGalleryItem(List<String> list, int position);
