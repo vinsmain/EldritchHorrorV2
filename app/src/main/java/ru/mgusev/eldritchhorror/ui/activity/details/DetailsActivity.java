@@ -80,6 +80,8 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.photo_details_recycle_view) RecyclerView photoRV;
     @BindView(R.id.photo_details_none) TextView photoNoneMessage;
 
+    @BindView(R.id.comment_tv) TextView commentTV;
+
     private DetailsAdapter adapter;
     private GalleryAdapter galleryAdapter;
     private AlertDialog deleteDialog;
@@ -160,7 +162,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         }
     }
 
-    @OnClick({R.id.start_data_result_edit_button, R.id.investigator_result_edit_button, R.id.victory_result_edit_button, R.id.defeat_reason_edit_button, R.id.photo_details_edit_button})
+    @OnClick({R.id.start_data_result_edit_button, R.id.investigator_result_edit_button, R.id.victory_result_edit_button, R.id.defeat_reason_edit_button, R.id.comment_edit_button, R.id.photo_details_edit_button})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.start_data_result_edit_button:
@@ -255,6 +257,11 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     public void showDefeatCard() {
         includedVictoryResultCard.setVisibility(View.GONE);
         includedDefeatReasonCard.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setComment(String text) {
+        commentTV.setText(text);
     }
 
     @Override

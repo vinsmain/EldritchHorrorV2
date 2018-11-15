@@ -42,4 +42,7 @@ public interface ResultGameView extends MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3);
+
+    @StateStrategyType(SkipStrategy.class)
+    void setCommentValue(String text);
 }

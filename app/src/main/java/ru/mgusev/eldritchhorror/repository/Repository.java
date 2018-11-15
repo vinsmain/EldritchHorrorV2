@@ -583,6 +583,10 @@ public class Repository {
         return fileHelper.getImages(getGame().getId());
     }
 
+    public List<String> getImages(long id) {
+        return fileHelper.getImages(id);
+    }
+
     public PublishSubject<Boolean> getClickPhotoButtonPublish() {
         return clickPhotoButtonPublish;
     }

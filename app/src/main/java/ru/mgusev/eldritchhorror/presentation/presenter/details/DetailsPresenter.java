@@ -11,12 +11,12 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
-import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 
 @InjectViewState
 public class DetailsPresenter extends MvpPresenter<DetailsView> {
@@ -31,9 +31,6 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
 
     public DetailsPresenter() {
         App.getComponent().inject(this);
-        //if (repository.getGame() == null) repository.loadGameDraft();
-
-        //if (!MainActivity.initialized) repository.loadGameDraft();
 
         gameListSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData));
@@ -56,6 +53,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
             initMysteriesCount();
             if (game.getIsWinGame()) initVictory();
             else initDefeat();
+            initComment();
             initPhotoList(true);
         }
     }
@@ -102,6 +100,11 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         else getViewState().setDefeatByAwakenedAncientOneIcon();
         getViewState().showDefeatCard();
         getViewState().setDefeatReason(game.getIsDefeatByElimination(), game.getIsDefeatByMythosDepletion(), game.getIsDefeatByAwakenedAncientOne());
+    }
+
+    private void initComment() {
+        String comment = game.getComment();
+        getViewState().setComment(comment == null || comment.trim().equals("") ? repository.getContext().getResources().getString(R.string.comment_none) : comment);
     }
 
     public void showDeleteDialog() {

@@ -50,4 +50,11 @@ public class Migrations {
             database.execSQL("UPDATE preludes SET name_ru = 'Дивное любопытство' WHERE _id = 40;");
         }
     };
+
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("UPDATE expansions SET name_ru = 'Мир грёз' WHERE _id = 7;");
+        }
+    };
 }

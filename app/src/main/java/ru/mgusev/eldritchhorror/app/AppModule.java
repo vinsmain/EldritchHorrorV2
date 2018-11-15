@@ -49,6 +49,7 @@ public class AppModule {
         return Room.databaseBuilder(context, StaticDataDB.class, "StaticDataDB.db")
                 .openHelperFactory(new AssetSQLiteOpenHelperFactory())
                 .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_1_2)
+                .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_2_3)
                 .allowMainThreadQueries()
                 .build();
     }
@@ -59,6 +60,7 @@ public class AppModule {
         return Room.databaseBuilder(context, UserDataDB.class, "UserDataDB.db")
                 .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_1_2)
                 .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_2_3)
+                .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_3_4)
                 .allowMainThreadQueries()
                 .build();
     }

@@ -83,6 +83,26 @@
                 app:layout_constraintRight_toRightOf="parent"
                 tools:srcCompat="@drawable/under_the_pyramids" />
 
+            <ImageView
+                android:id="@+id/gallery_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/gallery_black" />
+
+            <ImageView
+                android:id="@+id/comment_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/gallery_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/comment_black" />
+
             <LinearLayout
                 android:id="@+id/linearLayout4"
                 android:layout_width="0dp"

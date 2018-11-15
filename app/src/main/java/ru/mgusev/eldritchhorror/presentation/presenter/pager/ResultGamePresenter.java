@@ -24,8 +24,6 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
 
         if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
-        System.out.println("RESULT START");
-
         ancientOneSubscribe = new CompositeDisposable();
         ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne ->  getViewState().showMysteriesRadioGroup(ancientOne)));
 
@@ -38,6 +36,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         super.onFirstViewAttach();
         getViewState().setResultSwitchChecked(repository.getGame().getIsWinGame());
         getViewState().setMysteryValue(repository.getGame().getSolvedMysteriesCount());
+        getViewState().setCommentValue(repository.getGame().getComment() == null ? "" : repository.getGame().getComment());
         setResultValues();
         repository.scoreOnNext(); //устанавливаем счет при первом запуске
         getViewState().setDefeatReasonSwitchChecked(repository.getGame().getIsDefeatByElimination(), repository.getGame().getIsDefeatByMythosDepletion(), repository.getGame().getIsDefeatByAwakenedAncientOne());
@@ -94,5 +93,9 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
 
     public void setSolvedMysteriesCount(int mysteryCount) {
         repository.getGame().setSolvedMysteriesCount(mysteryCount);
+    }
+
+    public void setComment(String text) {
+        repository.getGame().setComment(text);
     }
 }

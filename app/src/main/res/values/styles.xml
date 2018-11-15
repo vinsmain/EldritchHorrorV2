@@ -69,4 +69,9 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <!--Hint size -->
+    <style name="TextLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

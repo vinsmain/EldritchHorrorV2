@@ -84,4 +84,7 @@ public interface DetailsView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void showPhotoNoneMessage(boolean isShow);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setComment(String text);
 }
