@@ -436,7 +436,10 @@ public class Game {
         if(obj == this) return true;
         Game game = new Game();
         if(obj instanceof Game) game = (Game) obj;
-        //Log.d("EQUALS", getComment() + " " + game.getComment());
+        String comment1 = getComment();
+        String comment2 = game.getComment();
+        if (comment1 == null) comment1 = "";
+        if (comment2 == null) comment2 = "";
         return getId() == game.getId() &&
                 getDate() == game.getDate() &&
                 getAncientOneID() == game.getAncientOneID() &&
@@ -462,7 +465,7 @@ public class Game {
                 getLastModified() == game.getLastModified() &&
                 getAdventureID() == game.getAdventureID() &&
                 getParentId() == game.getParentId() &&
-                getComment().equals(game.getComment().trim()) &&
+                comment1.equals(comment2.trim()) &&
                 equalsInvList(getInvList(), game.getInvList());
     }
 
