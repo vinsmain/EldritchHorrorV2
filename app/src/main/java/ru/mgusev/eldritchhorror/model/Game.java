@@ -41,6 +41,7 @@ public class Game {
     public static final String GAME_FIELD_LAST_MODIFIED = "last_modified";
     public static final String GAME_FIELD_ADVENTURE_ID = "adventure_id";
     public static final String GAME_FIELD_PARENT_ID = "parent_id";
+    public static final String GAME_FIELD_COMMENT = "comment";
 
     @PrimaryKey
     @ColumnInfo(name = GAME_FIELD_ID)
@@ -121,6 +122,9 @@ public class Game {
     @ColumnInfo(name = GAME_FIELD_PARENT_ID)
     private long parentId;
 
+    @ColumnInfo(name = GAME_FIELD_COMMENT)
+    private String comment;
+
     @Ignore
     private List<Investigator> invList;
 
@@ -151,6 +155,7 @@ public class Game {
         lastModified = 0;
         adventureID = 0;
         parentId = 0;
+        comment = "";
         invList = new ArrayList<>();
     }
 
@@ -181,6 +186,7 @@ public class Game {
         this.lastModified = game.lastModified;
         this.adventureID = game.adventureID;
         this.parentId = game.getParentId();
+        this.comment = game.getComment();
         this.invList = game.invList;
     }
 
@@ -392,6 +398,14 @@ public class Game {
         this.parentId = parentId;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public List<Investigator> getInvList() {
         return invList;
     }
@@ -413,11 +427,19 @@ public class Game {
         }
     }
 
+    public void trimCommentText() {
+        setComment(getComment().trim());
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == this) return true;
         Game game = new Game();
         if(obj instanceof Game) game = (Game) obj;
+        String comment1 = getComment();
+        String comment2 = game.getComment();
+        if (comment1 == null) comment1 = "";
+        if (comment2 == null) comment2 = "";
         return getId() == game.getId() &&
                 getDate() == game.getDate() &&
                 getAncientOneID() == game.getAncientOneID() &&
@@ -443,6 +465,7 @@ public class Game {
                 getLastModified() == game.getLastModified() &&
                 getAdventureID() == game.getAdventureID() &&
                 getParentId() == game.getParentId() &&
+                comment1.equals(comment2.trim()) &&
                 equalsInvList(getInvList(), game.getInvList());
     }
 
@@ -483,6 +506,7 @@ public class Game {
                  Log.d("GAME", String.valueOf(getSolvedMysteriesCount() == game.getSolvedMysteriesCount()));
                  Log.d("GAME", String.valueOf(getLastModified() == game.getLastModified()));
                  Log.d("GAME", String.valueOf(getAdventureID() == game.getAdventureID()));
+                 Log.d("GAME", String.valueOf(getComment().equals(game.getComment().trim())));
                  Log.d("GAME", String.valueOf(equalsInvList(getInvList(), game.getInvList())));
     }
 }

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,6 +54,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @BindView(R.id.result_game_blessed_count) EditText blessedCountTV;
     @BindView(R.id.result_game_doom_count) EditText doomCountTV;
     @BindView(R.id.result_game_victory_table) TableLayout victoryTable;
+    @BindView(R.id.result_game_comment_tiet) TextInputEditText commentTIED;
 
     private static final int EDIT_TEXT_INDEX = 1; //Индекс EditText в строке TableRow
     private Unbinder unbinder;
@@ -196,6 +198,11 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
                 getResultFromField(cluesCountTV), getResultFromField(blessedCountTV), getResultFromField(doomCountTV));
     }
 
+    @OnTextChanged(R.id.result_game_comment_tiet)
+    public void onCommentTextChanged() {
+        resultGamePresenter.setComment(String.valueOf(commentTIED.getText()));
+    }
+
     @OnClick({R.id.gatesCountRow, R.id.monstersCountRow, R.id.curseCountRow, R.id.rumorsCountRow, R.id.cluesCountRow, R.id.blessedCountRow, R.id.doomCountRow})
     public void inClick(View view) {
         showSoftKeyboardOnView(view);
@@ -214,6 +221,11 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     private int getResultFromField(EditText editText) {
         if (editText.getText().toString().equals("")) return 0;
         else return Integer.parseInt(editText.getText().toString());
+    }
+
+    @Override
+    public void setCommentValue(String text) {
+        commentTIED.setText(text);
     }
 
     @Override

@@ -18,4 +18,11 @@ public class Migrations {
             database.execSQL("ALTER TABLE `games` ADD COLUMN `parent_id` INTEGER NOT NULL DEFAULT 0;");
         }
     };
+
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `games` ADD COLUMN `comment` TEXT;");
+        }
+    };
 }

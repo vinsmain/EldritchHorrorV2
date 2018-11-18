@@ -33,6 +33,7 @@ import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
+import ru.mgusev.eldritchhorror.repository.Repository;
 
 public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder> {
 
@@ -49,6 +50,8 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
         @BindView(R.id.swipeLayout) SwipeLayout swipeLayout;
         @BindView(R.id.editImgSwipe) ImageView editImgSwipe;
         @BindView(R.id.deleteImgSwipe) ImageView deleteImgSwipe;
+        @BindView(R.id.gallery_icon) ImageView galleryIW;
+        @BindView(R.id.comment_icon) ImageView commentIW;
 
         MainViewHolder(View itemView) {
             super(itemView);
@@ -64,6 +67,8 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
         return R.id.swipeLayout;
     }
 
+    @Inject
+    Repository repository;
     @Inject
     List<AncientOne> ancientOneList;
     @Inject
@@ -134,6 +139,12 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
             else if (gameList.get(position).getIsDefeatByMythosDepletion()) holder.winImage.setImageResource(R.drawable.mythos_empty);
             holder.score.setVisibility(View.GONE);
         }
+
+        if (repository.getImages(gameList.get(position).getId()).isEmpty()) holder.galleryIW.setVisibility(View.GONE);
+        else holder.galleryIW.setVisibility(View.VISIBLE);
+
+        if (gameList.get(position).getComment() != null && !gameList.get(position).getComment().equals("")) holder.commentIW.setVisibility(View.VISIBLE);
+        else holder.commentIW.setVisibility(View.GONE);
 
         holder.cardView.setOnClickListener(v -> {
             //v.startAnimation(animAlpha);

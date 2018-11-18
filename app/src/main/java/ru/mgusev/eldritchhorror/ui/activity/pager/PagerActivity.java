@@ -75,6 +75,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
         initToolbar();
         showAddPhotoButton();
+        hideKeyboard();
         pagerAdapter = new PagerAdapter(this, getSupportFragmentManager());
         pager.setOffscreenPageLimit(3);
         pager.setAdapter(pagerAdapter);
@@ -126,7 +127,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     private void hideKeyboard() {
         View view = getCurrentFocus();
-        if (pagerPresenter.getCurrentPosition() != 2 && view != null) {
+        if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
@@ -207,6 +208,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         if (pagerPresenter.getCurrentPosition() == 3) {
             if (selectedMode) {
                 deleteImageFab.setVisibility(View.VISIBLE);
+                addImageFab.closeMenu();
                 addImageFab.setVisibility(View.GONE);
             } else {
                 deleteImageFab.setVisibility(View.GONE);

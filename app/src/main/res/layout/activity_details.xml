@@ -121,6 +121,10 @@
                 android:id="@+id/defeat_reason_card" />
 
             <include
+                layout="@layout/comment_card"
+                android:id="@+id/comment_card" />
+
+            <include
                 layout="@layout/photo_details_card"
                 android:id="@+id/photo_details_card" />
 

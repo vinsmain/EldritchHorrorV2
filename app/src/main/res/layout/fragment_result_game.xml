@@ -153,6 +153,39 @@
 
                     </TableRow>
 
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:padding="8dp"
+                        android:paddingEnd="16dp"
+                        android:paddingStart="16dp"
+                        android:theme="@style/AppTheme.ColorHighlight">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/result_game_comment_til"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:counterEnabled="true"
+                            app:counterMaxLength="200"
+                            android:hint="@string/comment_header"
+                            app:hintTextAppearance="@style/TextLabel"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/result_game_comment_tiet"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine"
+                                android:maxLength="200"
+                                android:textSize="16sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                    </TableRow>
+
                     <TableLayout
                         android:id="@+id/result_game_defeat_table"
                         android:layout_width="match_parent"
