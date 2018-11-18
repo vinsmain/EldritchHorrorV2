@@ -120,6 +120,17 @@ public class Repository {
         if (update) insertGame(game);
     }
 
+    private void fixInvestigatorsLocalization(Game game) {
+        boolean update = false;
+        for (Investigator investigator : game.getInvList()) {
+            if (investigator.getSpecialization() == 0) {
+                investigator.setSpecialization(staticDataDB.investigatorDAO().getByName(investigator.getName()).getSpecialization());
+                update = true;
+            }
+        }
+        if (update) insertGame(game);
+    }
+
     /*public void saveGameDraft() {
         if (getGame() != null) {
             Game draftGame = new Game(getGame());
