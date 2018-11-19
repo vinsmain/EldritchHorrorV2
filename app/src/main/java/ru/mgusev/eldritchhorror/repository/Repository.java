@@ -106,7 +106,10 @@ public class Repository {
         downloadFileSubscribe = new CompositeDisposable();
         downloadFileSubscribe.add(firebaseHelper.getDownloadFileDisposable().subscribe(this::downloadFile));
 
-        for (Game game : getGameList(0, 0)) fixSpecializationsForOldInvestigators(game);
+        for (Game game : getGameList(0, 0)) {
+            fixSpecializationsForOldInvestigators(game);
+            fixInvestigatorsLocalization(game);
+        }
     }
 
     private void fixSpecializationsForOldInvestigators(Game game) {
@@ -122,9 +125,51 @@ public class Repository {
 
     private void fixInvestigatorsLocalization(Game game) {
         boolean update = false;
+        game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
         for (Investigator investigator : game.getInvList()) {
-            if (investigator.getSpecialization() == 0) {
-                investigator.setSpecialization(staticDataDB.investigatorDAO().getByName(investigator.getName()).getSpecialization());
+            if (investigator.getNameRU().equals("Агнес Бэйкер")) {
+                investigator.setNameRU("Агнес Бейкер");
+                update = true;
+            } else if (investigator.getNameRU().equals("Дэйзи Уокер")) {
+                investigator.setNameRU("Дейзи Уокер");
+                update = true;
+            } else if (investigator.getOccupationRU().equals("Юрист")) {
+                investigator.setOccupationRU("Законник");
+                update = true;
+            } else if (investigator.getNameRU().equals("Патрисия Хэтэуэй")) {
+                investigator.setNameRU("Патрис Хатауэй");
+                update = true;
+            } else if (investigator.getOccupationRU().equals("Новобранец")) {
+                investigator.setOccupationRU("Юный полицейский");
+                update = true;
+            } else if (investigator.getOccupationRU().equals("Разнорабочий")) {
+                investigator.setOccupationRU("Умелец");
+                update = true;
+            } else if (investigator.getNameRU().equals("Дарелл Симмонс")) {
+                investigator.setNameRU("Даррелл Симмонс");
+                update = true;
+            } else if (investigator.getNameRU().equals("Глория Голдберг") || investigator.getOccupationRU().equals("Писатель")) {
+                investigator.setNameRU("Глория Гольдберг");
+                investigator.setOccupationRU("Писательница");
+                update = true;
+            } else if (investigator.getNameRU().equals("Кейт Уинторп")) {
+                investigator.setNameRU("Кейт Уинтроп");
+                update = true;
+            } else if (investigator.getOccupationRU().equals("Провидец")) {
+                investigator.setOccupationRU("Сновидец");
+                update = true;
+            } else if (investigator.getOccupationRU().equals("Врач")) {
+                investigator.setOccupationRU("Доктор");
+                update = true;
+            } else if (investigator.getNameRU().equals("Декстер Дрэйк") || investigator.getOccupationRU().equals("Фокусник")) {
+                investigator.setNameRU("Декстер Дрейк");
+                investigator.setOccupationRU("Иллюзионист");
+                update = true;
+            } else if (investigator.getOccupationRU().equals("Дилетант")) {
+                investigator.setOccupationRU("Дилетантка");
+                update = true;
+            } else if (investigator.getNameRU().equals("Майкл МакГлен")) {
+                investigator.setNameRU("Майкл Макглен");
                 update = true;
             }
         }
@@ -411,7 +456,7 @@ public class Repository {
     private void changeGame(Game game) {
         fixSpecializationsForOldInvestigators(game);
         if (this.game != null && this.game.getId() == game.getId()) this.game = game;
-        if (getGameById(game.getId()) == null || game.getLastModified() != getGameById(game.getId()).getLastModified()) {
+        if (getGameById(game.getId()) == null || game.getLastModified() > getGameById(game.getId()).getLastModified()) {
             insertGameToDB(game);
             //gameListOnNext();
         }
