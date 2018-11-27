@@ -50,6 +50,7 @@ public class AppModule {
                 .openHelperFactory(new AssetSQLiteOpenHelperFactory())
                 .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_1_2)
                 .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_2_3)
+                .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_3_4)
                 .allowMainThreadQueries()
                 .build();
     }

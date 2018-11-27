@@ -57,4 +57,36 @@ public class Migrations {
             database.execSQL("UPDATE expansions SET name_ru = 'Мир грёз' WHERE _id = 7;");
         }
     };
+
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("UPDATE preludes SET name_ru = 'Предначертано звездами' WHERE _id = 21;");
+            database.execSQL("UPDATE preludes SET name_ru = 'Шпион среди нас' WHERE _id = 22;");
+            database.execSQL("UPDATE preludes SET name_ru = 'Нечестивые близнецы Черной Козы' WHERE _id = 23;");
+            database.execSQL("UPDATE preludes SET name_ru = 'Сны об Ином мире' WHERE _id = 25;");
+            database.execSQL("UPDATE preludes SET name_ru = 'Интенсивное обучение' WHERE _id = 26;");
+
+            database.execSQL("UPDATE ancient_ones SET name_ru = 'Йог-Сотот' WHERE _id = 4;");
+            database.execSQL("UPDATE ancient_ones SET name_ru = 'Шуб-Ниггурат' WHERE _id = 7;");
+            database.execSQL("UPDATE ancient_ones SET name_ru = 'Возрождение Старцев' WHERE _id = 8;");
+            database.execSQL("UPDATE ancient_ones SET name_ru = 'Итакуа' WHERE _id = 9;");
+            database.execSQL("UPDATE ancient_ones SET name_ru = 'Гипнос' WHERE _id = 12;");
+
+            database.execSQL("UPDATE investigators SET name_ru = 'Агнес Бейкер' WHERE _id = 21;");
+            database.execSQL("UPDATE investigators SET name_ru = 'Дейзи Уокер' WHERE _id = 23;");
+            database.execSQL("UPDATE investigators SET occupation_ru = 'Законник' WHERE _id = 24;");
+            database.execSQL("UPDATE investigators SET name_ru = 'Патрис Хатауэй' WHERE _id = 25;");
+            database.execSQL("UPDATE investigators SET occupation_ru = 'Юный полицейский' WHERE _id = 26;");
+            database.execSQL("UPDATE investigators SET occupation_ru = 'Умелец' WHERE _id = 28;");
+            database.execSQL("UPDATE investigators SET name_ru = 'Даррелл Симмонс' WHERE _id = 31;");
+            database.execSQL("UPDATE investigators SET name_ru = 'Глория Гольдберг', occupation_ru = 'Писательница' WHERE _id = 32;");
+            database.execSQL("UPDATE investigators SET name_ru = 'Кейт Уинтроп' WHERE _id = 33;");
+            database.execSQL("UPDATE investigators SET occupation_ru = 'Сновидец' WHERE _id = 34;");
+            database.execSQL("UPDATE investigators SET occupation_ru = 'Доктор' WHERE _id = 35;");
+            database.execSQL("UPDATE investigators SET name_ru = 'Декстер Дрейк', occupation_ru = 'Иллюзионист' WHERE _id = 41;");
+            database.execSQL("UPDATE investigators SET occupation_ru = 'Дилетантка' WHERE _id = 42;");
+            database.execSQL("UPDATE investigators SET name_ru = 'Майкл Макглен' WHERE _id = 43;");
+        }
+    };
 }
