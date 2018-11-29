@@ -93,61 +93,18 @@ public class Migrations {
     public static final Migration MIGRATION_4_5 = new Migration(4, 5) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE `rumors` (`_id` INTEGER NOT NULL, `name_en` TEXT, `name_ru` TEXT, `expansion_id` INTEGER NOT NULL)");
-            database.execSQL("INSERT INTO rumors (\n" +
-                    "                       expansion_id,\n" +
-                    "                       name_ru,\n" +
-                    "                       name_en,\n" +
-                    "                       _id\n" +
-                    "                   )\n" +
-                    "                   VALUES (\n" +
-                    "                       6,\n" +
-                    "                       NULL,\n" +
-                    "                       'Bargain With Nyarlathotep',\n" +
-                    "                       1\n" +
-                    "                   ),\n" +
-                    "                   (\n" +
-                    "                       1,\n" +
-                    "                       NULL,\n" +
-                    "                       'Dimensions Collide',\n" +
-                    "                       2\n" +
-                    "                   ),\n" +
-                    "                   (\n" +
-                    "                       4,\n" +
-                    "                       NULL,\n" +
-                    "                       'Eye of the Storm',\n" +
-                    "                       3\n" +
-                    "                   ),\n" +
-                    "                   (\n" +
-                    "                       4,\n" +
-                    "                       NULL,\n" +
-                    "                       'Far Corners of the Globe',\n" +
-                    "                       4\n" +
-                    "                   ),\n" +
-                    "                   (\n" +
-                    "                       1,\n" +
-                    "                       NULL,\n" +
-                    "                       'Secrets of the Past',\n" +
-                    "                       5\n" +
-                    "                   ),\n" +
-                    "                   (\n" +
-                    "                       7,\n" +
-                    "                       NULL,\n" +
-                    "                       'Song of Spheres',\n" +
-                    "                       6\n" +
-                    "                   ),\n" +
-                    "                   (\n" +
-                    "                       3,\n" +
-                    "                       NULL,\n" +
-                    "                       'Time Is Running Out',\n" +
-                    "                       7\n" +
-                    "                   ),\n" +
-                    "                   (\n" +
-                    "                       1,\n" +
-                    "                       NULL,\n" +
-                    "                       'Web Between Worlds',\n" +
-                    "                       8\n" +
-                    "                   );");
+            database.execSQL("CREATE TABLE `rumors` (`_id` INTEGER NOT NULL, `name_en` TEXT, `name_ru` TEXT, `expansion_id` INTEGER NOT NULL, PRIMARY KEY(`_id`))");
+            database.execSQL("INSERT INTO rumors (expansion_id, name_ru, name_en, _id) " +
+                    "VALUES (6, 'Договор с Ньярлатхотепом', 'Bargain With Nyarlathotep', 1), " +
+                        "(1, 'Миры сталкиваются', 'Dimensions Collide', 2), " +
+                        "(4, 'Око бури', 'Eye of the Storm', 3), " +
+                        "(4, 'Дальние уголки земного шара', 'Far Corners of the Globe', 4), " +
+                        "(1, 'Тайны прошлого', 'Secrets of the Past', 5), " +
+                        "(7, 'Песнь сфер', 'Song of Spheres', 6), " +
+                        "(3, 'Время на исходе', 'Time Is Running Out', 7), " +
+                        "(1, 'Паутина между мирами', 'Web Between Worlds', 8);");
+
+            database.execSQL("UPDATE ancient_ones SET name_ru = 'Ньярлатхотеп' WHERE _id = 15;");
         }
     };
 }

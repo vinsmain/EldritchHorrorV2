@@ -265,13 +265,44 @@
                             android:padding="8dp">
 
                             <Switch
-                                android:id="@+id/result_game_defeat_by_runmor_switch"
+                                android:id="@+id/result_game_defeat_by_rumor_switch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="16dp"
                                 android:checked="false"
                                 android:text="@string/defeat_by_awakened_ancient_one"
                                 android:textColor="@color/colorSecondaryText" />
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/result_game_defeat_rumor_spinner_row"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:gravity="center_vertical"
+                            android:padding="8dp"
+                            android:paddingEnd="16dp"
+                            android:paddingStart="16dp"
+                            android:theme="@style/AppTheme.ColorHighlight">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/rumor"
+                                android:textColor="@color/colorSecondaryText"
+                                android:textSize="14sp" />
+
+                            <Spinner
+                                android:id="@+id/result_game_defeat_rumor_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_span="2"
+                                android:layout_weight="1"
+                                android:dropDownWidth="match_parent"
+                                android:gravity="start" />
+
                         </TableRow>
 
                     </TableLayout>

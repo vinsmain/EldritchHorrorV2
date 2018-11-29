@@ -42,6 +42,10 @@ public class Game {
     public static final String GAME_FIELD_ADVENTURE_ID = "adventure_id";
     public static final String GAME_FIELD_PARENT_ID = "parent_id";
     public static final String GAME_FIELD_COMMENT = "comment";
+    public static final String GAME_FIELD_DEFEAT_BY_RUMOR = "defeat_by_rumor";
+    public static final String GAME_FIELD_DEFEAT_RUMOR_ID = "defeat_rumor_id";
+
+    public static final int DEFAULT_DEFEAT_RUMOR_ID = 2;
 
     @PrimaryKey
     @ColumnInfo(name = GAME_FIELD_ID)
@@ -125,6 +129,12 @@ public class Game {
     @ColumnInfo(name = GAME_FIELD_COMMENT)
     private String comment;
 
+    @ColumnInfo(name = GAME_FIELD_DEFEAT_BY_RUMOR)
+    private boolean isDefeatByRumor;
+
+    @ColumnInfo(name = GAME_FIELD_DEFEAT_RUMOR_ID)
+    private int defeatRumorID;
+
     @Ignore
     private List<Investigator> invList;
 
@@ -156,6 +166,8 @@ public class Game {
         adventureID = 0;
         parentId = 0;
         comment = "";
+        isDefeatByRumor = false;
+        defeatRumorID = DEFAULT_DEFEAT_RUMOR_ID;
         invList = new ArrayList<>();
     }
 
@@ -187,6 +199,8 @@ public class Game {
         this.adventureID = game.adventureID;
         this.parentId = game.getParentId();
         this.comment = game.getComment();
+        this.isDefeatByRumor = game.isDefeatByRumor;
+        this.defeatRumorID = game.defeatRumorID;
         this.invList = game.invList;
     }
 
@@ -406,6 +420,22 @@ public class Game {
         this.comment = comment;
     }
 
+    public boolean getIsDefeatByRumor() {
+        return isDefeatByRumor;
+    }
+
+    public void setIsDefeatByRumor(boolean defeatByRumor) {
+        isDefeatByRumor = defeatByRumor;
+    }
+
+    public int getDefeatRumorID() {
+        return defeatRumorID;
+    }
+
+    public void setDefeatRumorID(int defeatRumorID) {
+        this.defeatRumorID = defeatRumorID;
+    }
+
     public List<Investigator> getInvList() {
         return invList;
     }
@@ -440,6 +470,7 @@ public class Game {
         String comment2 = game.getComment();
         if (comment1 == null) comment1 = "";
         if (comment2 == null) comment2 = "";
+        if (!game.getIsDefeatByRumor()) game.setDefeatRumorID(DEFAULT_DEFEAT_RUMOR_ID);
         return getId() == game.getId() &&
                 getDate() == game.getDate() &&
                 getAncientOneID() == game.getAncientOneID() &&
@@ -466,6 +497,8 @@ public class Game {
                 getAdventureID() == game.getAdventureID() &&
                 getParentId() == game.getParentId() &&
                 comment1.equals(comment2.trim()) &&
+                getIsDefeatByRumor() == game.getIsDefeatByRumor() &&
+                getDefeatRumorID() == game.getDefeatRumorID() &&
                 equalsInvList(getInvList(), game.getInvList());
     }
 

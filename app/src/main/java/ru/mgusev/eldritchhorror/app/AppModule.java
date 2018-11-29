@@ -63,6 +63,7 @@ public class AppModule {
                 .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_1_2)
                 .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_2_3)
                 .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_3_4)
+                .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_4_5)
                 .allowMainThreadQueries()
                 .build();
     }

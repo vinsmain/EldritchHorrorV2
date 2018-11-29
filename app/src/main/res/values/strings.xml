@@ -146,4 +146,5 @@
     <string name="gallery_header">Gallery</string>
     <string name="comment_header">Comment</string>
     <string name="comment_none">None</string>
+    <string name="rumor">Rumor</string>
 </resources>
