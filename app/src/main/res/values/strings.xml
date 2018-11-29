@@ -50,12 +50,13 @@
     <string name="initial_conditions">Initial conditions</string>
     <string name="investigators">Investigators</string>
     <string name="investigators_none">None</string>
-    <string name="success_deleting_message">Result successfully deleated!</string>
+    <string name="success_deleting_message">Result successfully deleted!</string>
     <string name="defeat_header">Defeat</string>
     <string name="win_header">Victory</string>
     <string name="defeat_by_elimination">All investigators have been eliminated</string>
     <string name="defeat_by_mythos_depletion">A Mythos card cannot be drawn</string>
     <string name="defeat_by_awakened_ancient_one">Indication on the Ancient One sheet</string>
+    <string name="defeat_by_rumor">Indication on the Rumor sheet</string>
 
     <string name="add_new_game">Create a new game</string>
     <string name="edit_game">Edit game</string>

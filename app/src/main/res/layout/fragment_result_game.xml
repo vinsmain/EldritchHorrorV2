@@ -258,6 +258,22 @@
                                 android:textColor="@color/colorSecondaryText" />
                         </TableRow>
 
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:padding="8dp">
+
+                            <Switch
+                                android:id="@+id/result_game_defeat_by_runmor_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="16dp"
+                                android:checked="false"
+                                android:text="@string/defeat_by_awakened_ancient_one"
+                                android:textColor="@color/colorSecondaryText" />
+                        </TableRow>
+
                     </TableLayout>
 
                     <TableLayout
