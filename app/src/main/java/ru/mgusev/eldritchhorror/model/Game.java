@@ -461,6 +461,10 @@ public class Game {
         setComment(getComment().trim());
     }
 
+    public void clearDefeatRumorID() {
+        if (!getIsDefeatByRumor()) setDefeatRumorID(DEFAULT_DEFEAT_RUMOR_ID);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == this) return true;
@@ -470,7 +474,6 @@ public class Game {
         String comment2 = game.getComment();
         if (comment1 == null) comment1 = "";
         if (comment2 == null) comment2 = "";
-        if (!game.getIsDefeatByRumor()) game.setDefeatRumorID(DEFAULT_DEFEAT_RUMOR_ID);
         return getId() == game.getId() &&
                 getDate() == game.getDate() &&
                 getAncientOneID() == game.getAncientOneID() &&

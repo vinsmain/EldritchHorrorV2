@@ -89,6 +89,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         if (isCorrectActiveInvestigatorsCount()) {
             repository.getGame().clearResultValuesIfDefeat();
             repository.getGame().trimCommentText();
+            repository.getGame().clearDefeatRumorID();
             repository.insertGame(repository.getGame());
             repository.gameListOnNext();
             repository.rateOnNext();

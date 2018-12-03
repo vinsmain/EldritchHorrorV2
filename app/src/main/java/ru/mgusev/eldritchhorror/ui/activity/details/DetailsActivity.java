@@ -77,7 +77,6 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.defeat_reason_by_mythos_depletion_row) TableRow defeatReasonByMythosDepletion;
     @BindView(R.id.defeat_reason_by_awakened_ancient_one_row) TableRow defeatReasonByAwakenedAncientOne;
     @BindView(R.id.defeat_reason_by_rumor_row) TableRow defeatReasonByRumor;
-    @BindView(R.id.defeat_reason_by_rumor_name_row) TableRow defeatReasonByRumorName;
     @BindView(R.id.defeat_reason_by_rumor_name_tv) TextView rumorName;
 
     @BindView(R.id.photo_details_recycle_view) RecyclerView photoRV;
@@ -241,7 +240,6 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void setDefeatByRumorName(String name) {
-        defeatReasonByRumorName.setVisibility(View.VISIBLE);
         rumorName.setText(name);
     }
 
@@ -311,7 +309,6 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         defeatReasonByMythosDepletion.setVisibility(isDefeatReasonByMythosDepletion ? View.VISIBLE : View.GONE);
         defeatReasonByAwakenedAncientOne.setVisibility(isDefeatReasonByAwakenedAncientOne ? View.VISIBLE : View.GONE);
         defeatReasonByRumor.setVisibility(isDefeatReasonByRumor ? View.VISIBLE : View.GONE);
-        defeatReasonByRumorName.setVisibility(isDefeatReasonByRumor ? View.VISIBLE : View.GONE);
     }
 
     @Override

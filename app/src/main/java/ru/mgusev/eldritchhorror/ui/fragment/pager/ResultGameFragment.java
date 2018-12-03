@@ -242,6 +242,11 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         rumorSpinnerTR.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
+    @OnClick(R.id.result_game_defeat_rumor_spinner_row)
+    public void onRumorRowClick() {
+        rumorSpinner.performClick();
+    }
+
     @OnClick({R.id.gatesCountRow, R.id.monstersCountRow, R.id.curseCountRow, R.id.rumorsCountRow, R.id.cluesCountRow, R.id.blessedCountRow, R.id.doomCountRow})
     public void inClick(View view) {
         showSoftKeyboardOnView(view);
