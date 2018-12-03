@@ -35,6 +35,12 @@ public interface DetailsView extends MvpView {
     void setDefeatByAwakenedAncientOneIcon();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
+    void setDefeatByRumorIcon();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setDefeatByRumorName(String name);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void showScore();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
@@ -59,7 +65,7 @@ public interface DetailsView extends MvpView {
     void setVictoryResult(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void setDefeatReason(boolean isDefeatReasonByElimination, boolean isDefeatReasonByMythosDepletion, boolean isDefeatReasonByAwakenedAncientOne);
+    void setDefeatReason(boolean isDefeatReasonByElimination, boolean isDefeatReasonByMythosDepletion, boolean isDefeatReasonByAwakenedAncientOne, boolean isDefeatReasonByRumor);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void hideInvestigatorsNotSelected(boolean isHide);

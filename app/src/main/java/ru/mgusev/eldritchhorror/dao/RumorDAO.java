@@ -10,10 +10,10 @@ import ru.mgusev.eldritchhorror.model.Rumor;
 @Dao
 public interface RumorDAO {
 
-    @Query("SELECT * FROM rumors WHERE _id = 0 UNION ALL SELECT * FROM (SELECT * FROM preludes WHERE _id > 0 ORDER BY name_en)")
+    @Query("SELECT * FROM rumors ORDER BY name_en")
     List<Rumor> getAllEN();
 
-    @Query("SELECT * FROM rumors WHERE _id = 0 UNION ALL SELECT * FROM (SELECT * FROM preludes WHERE _id > 0 ORDER BY name_ru)")
+    @Query("SELECT * FROM rumors ORDER BY name_ru")
     List<Rumor> getAllRU();
 
     @Query("SELECT * FROM rumors WHERE _id IS :id")

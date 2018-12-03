@@ -72,6 +72,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
             getViewState().hideScore();
             if (repository.getGame().getIsDefeatByElimination()) getViewState().setDefeatByEliminationIcon();
             else if (repository.getGame().getIsDefeatByMythosDepletion()) getViewState().setDefeatByMythosDepletionIcon();
+            else if (repository.getGame().getIsDefeatByRumor()) getViewState().setDefeatByRumorIcon();
             else getViewState().setDefeatByAwakenedAncientOneIcon();
         }
     }

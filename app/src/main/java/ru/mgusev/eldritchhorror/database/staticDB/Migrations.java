@@ -105,6 +105,8 @@ public class Migrations {
                         "(1, 'Паутина между мирами', 'Web Between Worlds', 8);");
 
             database.execSQL("UPDATE ancient_ones SET name_ru = 'Ньярлатхотеп' WHERE _id = 15;");
+
+            database.execSQL("UPDATE expansions SET name_ru = 'Маски Ньярлатхотепа' WHERE _id = 9;");
         }
     };
 }

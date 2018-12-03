@@ -6,6 +6,8 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
+import java.util.List;
+
 import ru.mgusev.eldritchhorror.model.AncientOne;
 
 public interface ResultGameView extends MvpView {
@@ -35,13 +37,22 @@ public interface ResultGameView extends MvpView {
     void showMysteriesRadioGroup(AncientOne ancientOne);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
+    void initRumorSpinner(List<String> rumorList);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setRumorSpinnerPosition(int rumorPosition);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setResultValues(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount);
 
     @StateStrategyType(SkipStrategy.class)
     void setMysteryValue(int i);
 
     @StateStrategyType(OneExecutionStateStrategy.class)
-    void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3);
+    void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3, boolean v4);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setVisibilityRumorSpinnerTR(boolean visible);
 
     @StateStrategyType(SkipStrategy.class)
     void setCommentValue(String text);

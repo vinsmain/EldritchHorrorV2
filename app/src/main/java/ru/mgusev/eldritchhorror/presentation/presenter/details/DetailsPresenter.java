@@ -97,9 +97,13 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         getViewState().hideScore();
         if (game.getIsDefeatByElimination()) getViewState().setDefeatByEliminationIcon();
         else if (game.getIsDefeatByMythosDepletion()) getViewState().setDefeatByMythosDepletionIcon();
+        else if (game.getIsDefeatByRumor()) {
+            getViewState().setDefeatByRumorIcon();
+            getViewState().setDefeatByRumorName(repository.getRumor(repository.getGame().getDefeatRumorID()).getName());
+        }
         else getViewState().setDefeatByAwakenedAncientOneIcon();
         getViewState().showDefeatCard();
-        getViewState().setDefeatReason(game.getIsDefeatByElimination(), game.getIsDefeatByMythosDepletion(), game.getIsDefeatByAwakenedAncientOne());
+        getViewState().setDefeatReason(game.getIsDefeatByElimination(), game.getIsDefeatByMythosDepletion(), game.getIsDefeatByAwakenedAncientOne(), game.getIsDefeatByRumor());
     }
 
     private void initComment() {
