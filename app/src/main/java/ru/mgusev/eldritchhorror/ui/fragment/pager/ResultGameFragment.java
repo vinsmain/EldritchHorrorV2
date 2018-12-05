@@ -11,20 +11,27 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.R;
@@ -45,6 +52,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @BindView(R.id.result_game_defeat_by_elimination_switch) Switch defeatByEliminationSwitch;
     @BindView(R.id.result_game_defeat_by_mythos_deplition_switch) Switch defeatByMythosDepletionSwitch;
     @BindView(R.id.result_game_defeat_by_awakened_ancient_one_switch) Switch defeatByAwakenedAncientOneSwitch;
+    @BindView(R.id.result_game_defeat_by_rumor_switch) Switch defeatByRumorSwitch;
     @BindView(R.id.result_game_defeat_table) TableLayout defeatTable;
     @BindView(R.id.result_game_gates_count) EditText gatesCountTV;
     @BindView(R.id.result_game_monsters_count) EditText monstersCountTV;
@@ -55,11 +63,14 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @BindView(R.id.result_game_doom_count) EditText doomCountTV;
     @BindView(R.id.result_game_victory_table) TableLayout victoryTable;
     @BindView(R.id.result_game_comment_tiet) TextInputEditText commentTIED;
+    @BindView(R.id.result_game_defeat_rumor_spinner) Spinner rumorSpinner;
+    @BindView(R.id.result_game_defeat_rumor_spinner_row) TableRow rumorSpinnerTR;
 
     private static final int EDIT_TEXT_INDEX = 1; //Индекс EditText в строке TableRow
     private Unbinder unbinder;
     private Switch[] switchArray;
     private int[] idArray;
+    private ArrayAdapter<String> rumorAdapter;
 
     public static ResultGameFragment newInstance(int page) {
         ResultGameFragment pageFragment = new ResultGameFragment();
@@ -87,9 +98,25 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
 
         View view = inflater.inflate(R.layout.fragment_result_game, null);
         unbinder = ButterKnife.bind(this, view);
-        switchArray = new Switch[]{defeatByEliminationSwitch, defeatByMythosDepletionSwitch, defeatByAwakenedAncientOneSwitch};
-        idArray = new int[]{R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch};
+        rumorAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.spinner);
+        rumorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        rumorSpinner.setAdapter(rumorAdapter);
+
+        switchArray = new Switch[]{defeatByEliminationSwitch, defeatByMythosDepletionSwitch, defeatByAwakenedAncientOneSwitch, defeatByRumorSwitch};
+        idArray = new int[]{R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_rumor_switch};
         return view;
+    }
+
+    @Override
+    public void initRumorSpinner(List<String> rumorList) {
+        rumorAdapter.clear();
+        rumorAdapter.addAll(rumorList);
+        rumorAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setRumorSpinnerPosition(int rumorPosition) {
+        rumorSpinner.setSelection(rumorPosition, false);
     }
 
     public void setResultValues(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount) {
@@ -138,7 +165,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     }
 
     @OnCheckedChanged({R.id.result_game_result_switch, R.id.result_game_defeat_by_elimination_switch,
-            R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch})
+            R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_rumor_switch})
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.result_game_result_switch:
@@ -158,7 +185,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
                 switchArray[i].setChecked(false);
             }
         }
-        resultGamePresenter.setDefeatReasons(defeatByEliminationSwitch.isChecked(), defeatByMythosDepletionSwitch.isChecked(), defeatByAwakenedAncientOneSwitch.isChecked());
+        resultGamePresenter.setDefeatReasons(defeatByEliminationSwitch.isChecked(), defeatByMythosDepletionSwitch.isChecked(), defeatByAwakenedAncientOneSwitch.isChecked(), defeatByRumorSwitch.isChecked());
     }
 
     @Override
@@ -180,10 +207,11 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     }
 
     @Override
-    public void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3) {
+    public void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3, boolean v4) {
         defeatByEliminationSwitch.setChecked(v1);
         defeatByMythosDepletionSwitch.setChecked(v2);
         defeatByAwakenedAncientOneSwitch.setChecked(v3);
+        defeatByRumorSwitch.setChecked(v4);
     }
 
     @Override
@@ -201,6 +229,22 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @OnTextChanged(R.id.result_game_comment_tiet)
     public void onCommentTextChanged() {
         resultGamePresenter.setComment(String.valueOf(commentTIED.getText()));
+    }
+
+    @OnItemSelected(R.id.result_game_defeat_rumor_spinner)
+    public void onItemSelected() {
+        resultGamePresenter.setCurrentRumor((String) rumorSpinner.getSelectedItem());
+        resultGamePresenter.setRumorSpinnerPosition();
+    }
+
+    @Override
+    public void setVisibilityRumorSpinnerTR(boolean visible) {
+        rumorSpinnerTR.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @OnClick(R.id.result_game_defeat_rumor_spinner_row)
+    public void onRumorRowClick() {
+        rumorSpinner.performClick();
     }
 
     @OnClick({R.id.gatesCountRow, R.id.monstersCountRow, R.id.curseCountRow, R.id.rumorsCountRow, R.id.cluesCountRow, R.id.blessedCountRow, R.id.doomCountRow})

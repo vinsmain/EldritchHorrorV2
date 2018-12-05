@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/defeat_reason_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -45,8 +46,8 @@
                 android:id="@+id/defeat_reason_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_span="2"
+                android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/defeat_table_header"
                 android:textColor="@color/colorPrimaryText"
@@ -58,20 +59,21 @@
             android:id="@+id/defeat_reason_mysteries_count_row"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="3"
             android:padding="8dp">
 
             <TextView
                 android:id="@+id/defeat_reason_mysteries_count_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:text="@string/solved_mysteries_header" />
 
             <TextView
                 android:id="@+id/defeat_reason_mysteries_count"
-                android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="end" />
 
         </TableRow>
@@ -86,6 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_span="2"
+                android:layout_weight="1"
                 android:text="@string/defeat_by_elimination" />
 
         </TableRow>
@@ -100,6 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_span="2"
+                android:layout_weight="1"
                 android:text="@string/defeat_by_mythos_depletion" />
 
         </TableRow>
@@ -114,7 +118,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_span="2"
+                android:layout_weight="1"
                 android:text="@string/defeat_by_awakened_ancient_one" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/defeat_reason_by_rumor_row"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/defeat_by_rumor" />
+
+            <TextView
+                android:id="@+id/defeat_reason_by_rumor_name_tv"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textAlignment="textEnd" />
 
         </TableRow>
     </TableLayout>

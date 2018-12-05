@@ -190,21 +190,25 @@
                         android:id="@+id/result_game_defeat_table"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
+                        android:layout_marginBottom="@dimen/keyline_1_minus_8dp"
+                        android:layout_marginTop="@dimen/keyline_1_minus_8dp"
                         android:shrinkColumns="*"
-                        android:stretchColumns="*"
-                        android:visibility="gone">
+                        android:stretchColumns="*">
+                        <!--android:visibility="gone"-->
 
                         <TableRow
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:padding="8dp">
+                            android:paddingBottom="8dp"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="8dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_weight="2"
                                 android:gravity="center_horizontal"
                                 android:text="@string/defeat_table_header"
                                 android:textColor="@color/colorPrimaryText"
@@ -216,13 +220,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:padding="8dp">
+                            android:paddingBottom="8dp"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="8dp">
 
                             <Switch
                                 android:id="@+id/result_game_defeat_by_elimination_switch"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="16dp"
+                                android:layout_marginEnd="32dp"
+                                android:layout_span="2"
                                 android:text="@string/defeat_by_elimination"
                                 android:textColor="@color/colorSecondaryText" />
                         </TableRow>
@@ -231,13 +239,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:padding="8dp">
+                            android:paddingBottom="8dp"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="8dp">
 
                             <Switch
                                 android:id="@+id/result_game_defeat_by_mythos_deplition_switch"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="16dp"
+                                android:layout_marginEnd="32dp"
+                                android:layout_span="2"
                                 android:text="@string/defeat_by_mythos_depletion"
                                 android:textColor="@color/colorSecondaryText" />
                         </TableRow>
@@ -246,16 +258,71 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:padding="8dp">
+                            android:paddingBottom="8dp"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="8dp">
 
                             <Switch
                                 android:id="@+id/result_game_defeat_by_awakened_ancient_one_switch"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="16dp"
+                                android:layout_marginEnd="32dp"
+                                android:layout_span="2"
                                 android:checked="false"
                                 android:text="@string/defeat_by_awakened_ancient_one"
                                 android:textColor="@color/colorSecondaryText" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:paddingBottom="@dimen/keyline_1_minus_8dp"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="@dimen/keyline_1_minus_8dp">
+
+                            <Switch
+                                android:id="@+id/result_game_defeat_by_rumor_switch"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="32dp"
+                                android:layout_span="2"
+                                android:checked="false"
+                                android:text="@string/defeat_by_rumor"
+                                android:textColor="@color/colorSecondaryText" />
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/result_game_defeat_rumor_spinner_row"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:gravity="center_vertical"
+                            android:paddingBottom="@dimen/keyline_1_minus_8dp"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="@dimen/keyline_1_minus_8dp"
+                            android:theme="@style/AppTheme.ColorHighlight"
+                            android:weightSum="5">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/rumor"
+                                android:textColor="@color/colorSecondaryText"
+                                android:textSize="14sp" />
+
+                            <Spinner
+                                android:id="@+id/result_game_defeat_rumor_spinner"
+                                android:layout_width="300dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="32dp"
+                                android:dropDownWidth="match_parent"
+                                android:gravity="start" />
+
                         </TableRow>
 
                     </TableLayout>

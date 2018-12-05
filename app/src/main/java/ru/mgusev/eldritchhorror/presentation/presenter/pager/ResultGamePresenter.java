@@ -3,11 +3,16 @@ package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
+import ru.mgusev.eldritchhorror.model.Rumor;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
@@ -18,6 +23,9 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     Repository repository;
     private CompositeDisposable ancientOneSubscribe;
     private CompositeDisposable resultSwitchSubscribe;
+    private CompositeDisposable expansionSubscribe;
+    private Rumor currentRumor;
+    private List<Rumor> rumorList;
 
     public ResultGamePresenter() {
         App.getComponent().inject(this);
@@ -29,6 +37,12 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
 
         resultSwitchSubscribe = new CompositeDisposable();
         resultSwitchSubscribe.add(repository.getObservableIsWin().subscribe(this::initResultViews));
+
+        expansionSubscribe = new CompositeDisposable();
+        expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners));
+
+        rumorList = repository.getRumorList();
+        currentRumor = repository.getRumor(repository.getGame().getDefeatRumorID());
     }
 
     @Override
@@ -39,7 +53,9 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         getViewState().setCommentValue(repository.getGame().getComment() == null ? "" : repository.getGame().getComment());
         setResultValues();
         repository.scoreOnNext(); //устанавливаем счет при первом запуске
-        getViewState().setDefeatReasonSwitchChecked(repository.getGame().getIsDefeatByElimination(), repository.getGame().getIsDefeatByMythosDepletion(), repository.getGame().getIsDefeatByAwakenedAncientOne());
+        getViewState().setDefeatReasonSwitchChecked(repository.getGame().getIsDefeatByElimination(), repository.getGame().getIsDefeatByMythosDepletion(),
+                repository.getGame().getIsDefeatByAwakenedAncientOne(), repository.getGame().getIsDefeatByRumor());
+        setRumorSpinnerPosition();
     }
 
     private void setResultValues() {
@@ -62,14 +78,8 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
             getViewState().setDefeatSwitchText();
             getViewState().showDefeatTable();
             getViewState().hideVictoryTable();
+            getViewState().setVisibilityRumorSpinnerTR(repository.getGame().getIsDefeatByRumor());
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        ancientOneSubscribe.dispose();
-        resultSwitchSubscribe.dispose();
-        super.onDestroy();
     }
 
     public void setResult(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount) {
@@ -84,10 +94,11 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         repository.scoreOnNext();
     }
 
-    public void setDefeatReasons(boolean v1, boolean v2, boolean v3) {
+    public void setDefeatReasons(boolean v1, boolean v2, boolean v3, boolean v4) {
         repository.getGame().setIsDefeatByElimination(v1);
         repository.getGame().setIsDefeatByMythosDepletion(v2);
         repository.getGame().setIsDefeatByAwakenedAncientOne(v3);
+        repository.getGame().setIsDefeatByRumor(v4);
         repository.isWinOnNext();
     }
 
@@ -97,5 +108,37 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
 
     public void setComment(String text) {
         repository.getGame().setComment(text);
+    }
+
+    public void setCurrentRumor(String value) {
+        currentRumor = repository.getRumor(value);
+        repository.getGame().setDefeatRumorID(currentRumor.getId());
+    }
+
+    private void initSpinners(List<Expansion> expansionList) {
+        setRumorSpinnerPosition();
+    }
+
+    public void setRumorSpinnerPosition() {
+        getViewState().initRumorSpinner(getRumorNameList());
+        getViewState().setRumorSpinnerPosition(getRumorNameList().indexOf(currentRumor.getName()));
+    }
+
+    private List<String> getRumorNameList() {
+        List<String> list = new ArrayList<>();
+        for (Rumor rumor : rumorList) {
+            if (repository.getExpansion(rumor.getExpansionID()).isEnable() || (currentRumor != null && rumor.getId() == currentRumor.getId()))
+                list.add(rumor.getName());
+        }
+        if (currentRumor == null) currentRumor = repository.getRumor(list.get(0));
+        return list;
+    }
+
+    @Override
+    public void onDestroy() {
+        ancientOneSubscribe.dispose();
+        resultSwitchSubscribe.dispose();
+        expansionSubscribe.dispose();
+        super.onDestroy();
     }
 }

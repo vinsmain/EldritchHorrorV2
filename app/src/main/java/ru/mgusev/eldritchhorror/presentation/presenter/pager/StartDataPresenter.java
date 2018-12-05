@@ -78,11 +78,7 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     }
 
     private void getRandomAncientOne() {
-        String randomName;
-        do {
-            randomName = getAncientOneNameList().get(new Random().nextInt(getAncientOneNameList().size()));
-        } while (repository.getAncientOne(randomName).getId() == currentAncientOne.getId());
-        currentAncientOne = repository.getAncientOne(randomName);
+        currentAncientOne = repository.getAncientOne(getAncientOneNameList().get(new Random().nextInt(getAncientOneNameList().size())));
     }
 
     private void getRandomPrelude() {

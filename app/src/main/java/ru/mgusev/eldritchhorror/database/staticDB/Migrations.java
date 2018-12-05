@@ -89,4 +89,24 @@ public class Migrations {
             database.execSQL("UPDATE investigators SET name_ru = 'Майкл Макглен' WHERE _id = 43;");
         }
     };
+
+    public static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE `rumors` (`_id` INTEGER NOT NULL, `name_en` TEXT, `name_ru` TEXT, `expansion_id` INTEGER NOT NULL, PRIMARY KEY(`_id`))");
+            database.execSQL("INSERT INTO rumors (expansion_id, name_ru, name_en, _id) " +
+                    "VALUES (6, 'Договор с Ньярлатхотепом', 'Bargain With Nyarlathotep', 1), " +
+                        "(1, 'Миры сталкиваются', 'Dimensions Collide', 2), " +
+                        "(4, 'Око бури', 'Eye of the Storm', 3), " +
+                        "(4, 'Дальние уголки земного шара', 'Far Corners of the Globe', 4), " +
+                        "(1, 'Тайны прошлого', 'Secrets of the Past', 5), " +
+                        "(7, 'Песнь сфер', 'Song of Spheres', 6), " +
+                        "(3, 'Время на исходе', 'Time Is Running Out', 7), " +
+                        "(1, 'Паутина между мирами', 'Web Between Worlds', 8);");
+
+            database.execSQL("UPDATE ancient_ones SET name_ru = 'Ньярлатхотеп' WHERE _id = 15;");
+
+            database.execSQL("UPDATE expansions SET name_ru = 'Маски Ньярлатхотепа' WHERE _id = 9;");
+        }
+    };
 }

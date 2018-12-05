@@ -25,4 +25,12 @@ public class Migrations {
             database.execSQL("ALTER TABLE `games` ADD COLUMN `comment` TEXT;");
         }
     };
+
+    public static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `games` ADD COLUMN `defeat_by_rumor` INTEGER NOT NULL DEFAULT 0;");
+            database.execSQL("ALTER TABLE `games` ADD COLUMN `defeat_rumor_id` INTEGER NOT NULL DEFAULT 2;");
+        }
+    };
 }

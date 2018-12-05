@@ -35,6 +35,7 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.app.AppModule;
+import ru.mgusev.eldritchhorror.model.Rumor;
 import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
 
@@ -314,6 +315,23 @@ public class Repository {
         return staticDataDB.preludeDAO().getPreludeByName(name);
     }
 
+
+    //Rumor
+
+    public List<Rumor> getRumorList() {
+        if (Localization.getInstance().isRusLocale()) return staticDataDB.rumorDAO().getAllRU();
+        else return staticDataDB.rumorDAO().getAllEN();
+    }
+
+    public Rumor getRumor(String name) {
+        System.out.println("GET RUMOR " + staticDataDB.rumorDAO().getRumorByName(name));
+        return staticDataDB.rumorDAO().getRumorByName(name);
+    }
+
+    public Rumor getRumor(int id) {
+        return staticDataDB.rumorDAO().getRumorByID(id);
+    }
+
     // InvestigatorChoiceFragment
 
     public List<Investigator> getInvestigatorList() {
@@ -576,6 +594,10 @@ public class Repository {
 
     public int getDefeatByAwakenedAncientOneCount(int ancientOneId) {
         return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatByAwakenedAncientOneCount() : userDataDB.gameDAO().getDefeatByAwakenedAncientOneCount(ancientOneId);
+    }
+
+    public int getDefeatByRumorCount(int ancientOneId) {
+        return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatByRumorCount() : userDataDB.gameDAO().getDefeatByRumorCount(ancientOneId);
     }
 
     public List<StatisticsInvestigator> getStatisticsInvestigatorList(int ancientOneId) {

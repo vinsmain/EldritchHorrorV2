@@ -128,4 +128,6 @@
     <string name="gallery_header">Галерея</string>
     <string name="comment_header">Комментарий</string>
     <string name="comment_none">Отсутствует</string>
+    <string name="rumor">Слух</string>
+    <string name="defeat_by_rumor">По указанию карты Слуха</string>
 </resources>
