@@ -109,4 +109,42 @@ public class Migrations {
             database.execSQL("UPDATE expansions SET name_ru = 'Маски Ньярлатхотепа' WHERE _id = 9;");
         }
     };
+
+    public static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("INSERT INTO expansions (is_enable, name_ru, name_en, image_resource, _id) VALUES (1, 'Фанатские прелюдии', 'Fan preludes', 'fan_preludes', 10);");
+
+            database.execSQL("INSERT INTO preludes (expansion_id, name_ru, name_en, _id) " +
+                    "VALUES (10, 'Космический ужас', 'Cosmic Horror', 41), " +
+                    "(10, 'Давящие стены', 'Walls Collapsing', 42), " +
+                    "(10, 'Наблюдение за Древними', 'Look to the Ancients.', 43), " +
+                    "(10, 'Изгои', 'Outcasts', 44), " +
+                    "(10, 'Знания – сила', 'Knowledge is Power', 45), " +
+                    "(10, 'Да придет Царствие Твое', 'Thy Kingdom Come', 46), " +
+                    "(10, 'Путешественники', 'World Travelers', 47), " +
+                    "(10, 'Блаженные бедняки', 'Blessed are the Poor', 48), " +
+                    "(10, 'Богатый и мудрый', 'Wealthy and Wise', 49), " +
+                    "(10, 'Связи', 'Connected', 50), " +
+                    "(10, 'Тайная академия', 'Arcane Academy', 51), " +
+                    "(10, 'Призраки прошлого', 'Ghosts of the Past', 52), " +
+                    "(10, 'Пандемия', 'Pandemic', 53), " +
+                    "(10, 'Психический резонанс', 'Psychic Resonance', 54), " +
+                    "(10, 'Цепкие врата', 'Clutching Gates', 55), " +
+                    "(10, 'Падение в безумие', 'Slide Into Insanity', 56), " +
+                    "(10, 'Крах цивилизации', 'Civilizational Collapse', 57), " +
+                    "(10, 'Поток и хаос', 'Flux and Chaos', 58);");
+
+            database.execSQL("CREATE TABLE `prelude_details` (`_id` INTEGER NOT NULL, `prelude_id` INTEGER NOT NULL, `name_en` TEXT, `name_ru` TEXT, PRIMARY KEY(`_id`))");
+            database.execSQL("INSERT INTO rumors (name_ru, name_en, expansion_id, _id) " +
+                    "VALUES (6, 'Договор с Ньярлатхотепом', 'Bargain With Nyarlathotep', 41, 1), " +
+                    "(1, 'Миры сталкиваются', 'Dimensions Collide', 42, 2), " +
+                    "(4, 'Око бури', 'Eye of the Storm', 43, 3), " +
+                    "(4, 'Дальние уголки земного шара', 'Far Corners of the Globe', 4), " +
+                    "(1, 'Тайны прошлого', 'Secrets of the Past', 5), " +
+                    "(7, 'Песнь сфер', 'Song of Spheres', 6), " +
+                    "(3, 'Время на исходе', 'Time Is Running Out', 7), " +
+                    "(1, 'Паутина между мирами', 'Web Between Worlds', 8);");
+        }
+    };
 }
