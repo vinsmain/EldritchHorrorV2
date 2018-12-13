@@ -412,7 +412,10 @@ public class Repository {
         firebaseDBSubscribe.add(firebaseHelper.getChildEventDisposable().subscribe(this::processDataFromFirebase, e -> Log.w("FIREBASE", e)));
 
         for (Game game : userDataDB.gameDAO().getGameListSortedDateAscending()) {
-            if (game.getUserID() == null) insertGame(game);
+            if (game.getUserID() == null) {
+                game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
+                insertGame(game);
+            }
         }
 
         firebaseFilesSubscribe = new CompositeDisposable();
