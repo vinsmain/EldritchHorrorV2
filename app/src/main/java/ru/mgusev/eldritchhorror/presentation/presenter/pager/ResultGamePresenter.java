@@ -54,7 +54,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         setResultValues();
         repository.scoreOnNext(); //устанавливаем счет при первом запуске
         getViewState().setDefeatReasonSwitchChecked(repository.getGame().getIsDefeatByElimination(), repository.getGame().getIsDefeatByMythosDepletion(),
-                repository.getGame().getIsDefeatByAwakenedAncientOne(), repository.getGame().getIsDefeatByRumor());
+                repository.getGame().getIsDefeatByAwakenedAncientOne(), repository.getGame().getIsDefeatByRumor(), repository.getGame().getIsDefeatBySurrender());
         setRumorSpinnerPosition();
     }
 
@@ -94,11 +94,12 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         repository.scoreOnNext();
     }
 
-    public void setDefeatReasons(boolean v1, boolean v2, boolean v3, boolean v4) {
+    public void setDefeatReasons(boolean v1, boolean v2, boolean v3, boolean v4, boolean v5) {
         repository.getGame().setIsDefeatByElimination(v1);
         repository.getGame().setIsDefeatByMythosDepletion(v2);
         repository.getGame().setIsDefeatByAwakenedAncientOne(v3);
         repository.getGame().setIsDefeatByRumor(v4);
+        repository.getGame().setIsDefeatBySurrender(v5);
         repository.isWinOnNext();
     }
 

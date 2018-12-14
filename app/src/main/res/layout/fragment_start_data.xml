@@ -146,6 +146,27 @@
                 </TableRow>
 
                 <TableRow
+                    android:id="@+id/start_data_prelude_text_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical"
+                    android:padding="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp" >
+
+                    <TextView
+                        android:id="@+id/start_data_prelude_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_span="3"
+                        android:textColor="@color/colorSecondaryText"
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow
                     android:id="@+id/players_count_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

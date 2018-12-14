@@ -44,6 +44,7 @@ public class Game {
     public static final String GAME_FIELD_COMMENT = "comment";
     public static final String GAME_FIELD_DEFEAT_BY_RUMOR = "defeat_by_rumor";
     public static final String GAME_FIELD_DEFEAT_RUMOR_ID = "defeat_rumor_id";
+    public static final String GAME_FIELD_DEFEAT_BY_SURRENDER = "defeat_by_surrender";
 
     public static final int DEFAULT_DEFEAT_RUMOR_ID = 2;
 
@@ -135,6 +136,9 @@ public class Game {
     @ColumnInfo(name = GAME_FIELD_DEFEAT_RUMOR_ID)
     private int defeatRumorID;
 
+    @ColumnInfo(name = GAME_FIELD_DEFEAT_BY_SURRENDER)
+    private boolean isDefeatBySurrender;
+
     @Ignore
     private List<Investigator> invList;
 
@@ -168,6 +172,7 @@ public class Game {
         comment = "";
         isDefeatByRumor = false;
         defeatRumorID = DEFAULT_DEFEAT_RUMOR_ID;
+        isDefeatBySurrender = false;
         invList = new ArrayList<>();
     }
 
@@ -201,6 +206,7 @@ public class Game {
         this.comment = game.getComment();
         this.isDefeatByRumor = game.isDefeatByRumor;
         this.defeatRumorID = game.defeatRumorID;
+        this.isDefeatBySurrender = game.isDefeatBySurrender;
         this.invList = game.invList;
     }
 
@@ -436,6 +442,14 @@ public class Game {
         this.defeatRumorID = defeatRumorID;
     }
 
+    public boolean getIsDefeatBySurrender() {
+        return isDefeatBySurrender;
+    }
+
+    public void setIsDefeatBySurrender(boolean defeatBySurrender) {
+        isDefeatBySurrender = defeatBySurrender;
+    }
+
     public List<Investigator> getInvList() {
         return invList;
     }
@@ -502,6 +516,7 @@ public class Game {
                 comment1.equals(comment2.trim()) &&
                 getIsDefeatByRumor() == game.getIsDefeatByRumor() &&
                 getDefeatRumorID() == game.getDefeatRumorID() &&
+                getIsDefeatBySurrender() == game.getIsDefeatBySurrender() &&
                 equalsInvList(getInvList(), game.getInvList());
     }
 

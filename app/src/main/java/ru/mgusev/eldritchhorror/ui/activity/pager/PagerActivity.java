@@ -298,6 +298,11 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     @Override
+    public void setDefeatBySurrenderIcon() {
+        winIcon.setImageDrawable(getResources().getDrawable(R.drawable.defeat_by_surrender));
+    }
+
+    @Override
     public void showScore() {
         scoreTV.setVisibility(View.VISIBLE);
     }
