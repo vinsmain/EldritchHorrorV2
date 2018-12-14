@@ -168,6 +168,7 @@
         android:paddingRight="100dp"
         android:paddingTop="16dp"
         android:text="@string/message_starting"
+        android:textColor="@color/colorPrimaryText"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton

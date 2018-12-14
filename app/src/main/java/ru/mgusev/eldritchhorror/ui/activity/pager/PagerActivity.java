@@ -174,6 +174,11 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     @Override
+    public void clearViewState() {
+        //None, just clear view state queue
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_games_pager_activity, menu);
         actionRandom = menu.findItem(R.id.action_random);

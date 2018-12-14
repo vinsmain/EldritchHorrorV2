@@ -11,19 +11,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageButton
-        android:id="@+id/comment_edit_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginTop="0dp"
-        android:background="@color/colorTransparent"
-        android:foreground="?attr/selectableItemBackground"
-        android:padding="8dp"
-        android:theme="@style/AppTheme.ColorHighlight"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/fragment_edit" />
+        <ImageButton
+            android:id="@+id/comment_edit_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/colorTransparent"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="8dp"
+            android:theme="@style/AppTheme.ColorHighlight"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/fragment_edit" />
 
     <TableLayout
         android:layout_width="0dp"

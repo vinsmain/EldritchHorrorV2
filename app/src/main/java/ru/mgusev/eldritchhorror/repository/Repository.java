@@ -215,8 +215,10 @@ public class Repository {
     }
 
     public void setGame(Game game) {
-        this.game = new Game(game);
-        this.game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
+        if (game != null) {
+            this.game = new Game(game);
+            this.game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
+        }
     }
 
     public PublishSubject<String> getUserIconPublish() {
@@ -528,8 +530,10 @@ public class Repository {
     }
 
     private void deleteGameFromDB(Game game) {
-        userDataDB.gameDAO().deleteGame(game);
-        userDataDB.investigatorDAO().deleteByGameID(game.getId());
+        if (game != null) {
+            userDataDB.gameDAO().deleteGame(game);
+            userDataDB.investigatorDAO().deleteByGameID(game.getId());
+        }
     }
 
     public void deleteSynchGames() {

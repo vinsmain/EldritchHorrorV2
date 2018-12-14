@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.presentation.view.pager;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
@@ -63,4 +64,7 @@ public interface PagerView extends MvpView {
 
     @StateStrategyType(value = DismissDialogStrategy.class, tag = BACK_DIALOG_TAG)
     void hideBackDialog();
+
+    @StateStrategyType(SingleStateStrategy.class)
+    void clearViewState();
 }

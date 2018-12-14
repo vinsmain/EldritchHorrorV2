@@ -197,9 +197,11 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     @Override
     public void onDestroy() {
-        repository.getGame().setPlayersCount(currentPlayersCount);
-        repository.getGame().setAncientOneID(currentAncientOne.getId());
-        repository.getGame().setPreludeID(currentPrelude.getId());
+        if (repository.getGame() != null) {
+            repository.getGame().setPlayersCount(currentPlayersCount);
+            repository.getGame().setAncientOneID(currentAncientOne.getId());
+            repository.getGame().setPreludeID(currentPrelude.getId());
+        }
         expansionSubscribe.dispose();
         randomSubscribe.dispose();
         super.onDestroy();

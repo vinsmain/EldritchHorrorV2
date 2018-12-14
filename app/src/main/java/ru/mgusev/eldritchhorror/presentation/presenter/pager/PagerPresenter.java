@@ -27,13 +27,15 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     private CompositeDisposable isWinSubscribe;
     private CompositeDisposable selectModeSubscribe;
     private boolean selectedMode;
-    private boolean backDialogShow;
     private int currentPosition = 0;
 
     public PagerPresenter() {
         App.getComponent().inject(this);
 
-        if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
+        if (repository.getGame() == null && !MainActivity.initialized) {
+            repository.setGame(new Game());
+            getViewState().clearViewState();
+        }
 
         ancientOneSubscribe = new CompositeDisposable();
         ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne, repository.getExpansion(ancientOne.getExpansionID()))));
@@ -108,14 +110,14 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     }
 
     public void showBackDialog() {
-        backDialogShow = true;
-        Game game = repository.getGame(repository.getGame().getId());
-        if (game == null || !game.equals(repository.getGame())) getViewState().showBackDialog();
-        else getViewState().finishActivity();
+        if (repository.getGame() != null) {
+            Game game = repository.getGame(repository.getGame().getId());
+            if (game == null || !game.equals(repository.getGame())) getViewState().showBackDialog();
+            else getViewState().finishActivity();
+        }
     }
 
     public void dismissBackDialog() {
-        backDialogShow = false;
         getViewState().hideBackDialog();
     }
 
