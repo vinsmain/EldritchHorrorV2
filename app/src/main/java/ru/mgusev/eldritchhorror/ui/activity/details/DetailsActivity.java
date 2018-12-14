@@ -76,6 +76,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.defeat_reason_by_elimination_row) TableRow defeatReasonByElimination;
     @BindView(R.id.defeat_reason_by_mythos_depletion_row) TableRow defeatReasonByMythosDepletion;
     @BindView(R.id.defeat_reason_by_awakened_ancient_one_row) TableRow defeatReasonByAwakenedAncientOne;
+    @BindView(R.id.defeat_reason_by_surrender_row) TableRow defeatReasonBySurrender;
     @BindView(R.id.defeat_reason_by_rumor_row) TableRow defeatReasonByRumor;
     @BindView(R.id.defeat_reason_by_rumor_name_tv) TextView rumorName;
 
@@ -239,6 +240,11 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     @Override
+    public void setDefeatBySurrenderIcon() {
+        victoryIcon.setImageDrawable(getResources().getDrawable(R.drawable.defeat_by_surrender));
+    }
+
+    @Override
     public void setDefeatByRumorName(String name) {
         rumorName.setText(name);
     }
@@ -304,10 +310,11 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     @Override
-    public void setDefeatReason(boolean isDefeatReasonByElimination, boolean isDefeatReasonByMythosDepletion, boolean isDefeatReasonByAwakenedAncientOne, boolean isDefeatReasonByRumor) {
+    public void setDefeatReason(boolean isDefeatReasonByElimination, boolean isDefeatReasonByMythosDepletion, boolean isDefeatReasonByAwakenedAncientOne, boolean isDefeatReasonBySurrender, boolean isDefeatReasonByRumor) {
         defeatReasonByElimination.setVisibility(isDefeatReasonByElimination ? View.VISIBLE : View.GONE);
         defeatReasonByMythosDepletion.setVisibility(isDefeatReasonByMythosDepletion ? View.VISIBLE : View.GONE);
         defeatReasonByAwakenedAncientOne.setVisibility(isDefeatReasonByAwakenedAncientOne ? View.VISIBLE : View.GONE);
+        defeatReasonBySurrender.setVisibility(isDefeatReasonBySurrender ? View.VISIBLE : View.GONE);
         defeatReasonByRumor.setVisibility(isDefeatReasonByRumor ? View.VISIBLE : View.GONE);
     }
 

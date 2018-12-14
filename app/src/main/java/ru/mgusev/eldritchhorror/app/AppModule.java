@@ -52,6 +52,7 @@ public class AppModule {
                 .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_2_3)
                 .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_3_4)
                 .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_4_5)
+                .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_5_6)
                 .allowMainThreadQueries()
                 .build();
     }
@@ -64,6 +65,7 @@ public class AppModule {
                 .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_2_3)
                 .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_3_4)
                 .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_4_5)
+                .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_5_6)
                 .allowMainThreadQueries()
                 .build();
     }

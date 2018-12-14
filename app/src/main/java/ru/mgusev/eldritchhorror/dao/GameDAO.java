@@ -103,6 +103,12 @@ public interface GameDAO {
     @Query("SELECT count(*) FROM games WHERE win_game = 0 AND defeat_by_awakened_ancient_one = 1 AND ancient_one_id = :id AND parent_id = 0")
     int getDefeatByAwakenedAncientOneCount(int id);
 
+    @Query("SELECT count(*) FROM games WHERE win_game = 0 AND defeat_by_surrender = 1 AND parent_id = 0")
+    int getDefeatBySurrenderCount();
+
+    @Query("SELECT count(*) FROM games WHERE win_game = 0 AND defeat_by_surrender = 1 AND ancient_one_id = :id AND parent_id = 0")
+    int getDefeatBySurrenderCount(int id);
+
     @Query("SELECT count(*) FROM games WHERE win_game = 0 AND defeat_by_rumor = 1 AND parent_id = 0")
     int getDefeatByRumorCount();
 

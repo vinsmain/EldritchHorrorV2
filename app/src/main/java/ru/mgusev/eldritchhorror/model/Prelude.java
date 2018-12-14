@@ -11,6 +11,8 @@ public class Prelude {
     public static final String PRELUDE_FIELD_NAME_EN = "name_en";
     public static final String PRELUDE_FIELD_NAME_RU = "name_ru";
     public static final String PRELUDE_FIELD_EXPANSION_ID = "expansion_id";
+    public static final String PRELUDE_FIELD_TEXT_EN = "text_en";
+    public static final String PRELUDE_FIELD_TEXT_RU = "text_ru";
 
     @PrimaryKey
     @ColumnInfo(name = PRELUDE_FIELD_ID)
@@ -24,6 +26,12 @@ public class Prelude {
 
     @ColumnInfo(name = PRELUDE_FIELD_EXPANSION_ID)
     private int expansionID;
+
+    @ColumnInfo(name = PRELUDE_FIELD_TEXT_EN)
+    private String textEN;
+
+    @ColumnInfo(name = PRELUDE_FIELD_TEXT_RU)
+    private String textRU;
 
     public Prelude() {
     }
@@ -60,8 +68,29 @@ public class Prelude {
         this.expansionID = expansionID;
     }
 
+    public String getTextEN() {
+        return textEN;
+    }
+
+    public void setTextEN(String textEN) {
+        this.textEN = textEN;
+    }
+
+    public String getTextRU() {
+        return textRU;
+    }
+
+    public void setTextRU(String textRU) {
+        this.textRU = textRU;
+    }
+
     public String getName() {
         if (Localization.getInstance().isRusLocale()) return nameRU;
         else return nameEN;
+    }
+
+    public String getText() {
+        if (Localization.getInstance().isRusLocale()) return textRU;
+        else return textEN;
     }
 }

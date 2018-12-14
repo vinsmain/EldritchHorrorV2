@@ -124,6 +124,21 @@
         </TableRow>
 
         <TableRow
+            android:id="@+id/defeat_reason_by_surrender_row"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:layout_weight="1"
+                android:text="@string/defeat_by_surrender" />
+
+        </TableRow>
+
+        <TableRow
             android:id="@+id/defeat_reason_by_rumor_row"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

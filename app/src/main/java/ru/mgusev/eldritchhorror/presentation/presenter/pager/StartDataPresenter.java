@@ -169,6 +169,15 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
     public void setSpinnerPosition() {
         getViewState().initAncientOneSpinner(getAncientOneNameList());
         getViewState().initPreludeSpinner(getPreludeNameList());
+
+        if (currentPrelude.getText() == null || currentPrelude.getText().equals("")) {
+            getViewState().setPreludeText("");
+            getViewState().setPreludeTextRowVisibility(false);
+        } else {
+            getViewState().setPreludeText(currentPrelude.getText());
+            getViewState().setPreludeTextRowVisibility(true);
+        }
+
         getViewState().initPlayersCountSpinner(playersCountList);
         getViewState().setSpinnerPosition(getAncientOneNameList().indexOf(currentAncientOne.getName()),
                 getPreludeNameList().indexOf(currentPrelude.getName()), playersCountList.indexOf(String.valueOf(currentPlayersCount)));

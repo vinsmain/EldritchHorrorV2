@@ -596,6 +596,10 @@ public class Repository {
         return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatByAwakenedAncientOneCount() : userDataDB.gameDAO().getDefeatByAwakenedAncientOneCount(ancientOneId);
     }
 
+    public int getDefeatBySurrenderCount(int ancientOneId) {
+        return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatBySurrenderCount() : userDataDB.gameDAO().getDefeatBySurrenderCount(ancientOneId);
+    }
+
     public int getDefeatByRumorCount(int ancientOneId) {
         return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatByRumorCount() : userDataDB.gameDAO().getDefeatByRumorCount(ancientOneId);
     }

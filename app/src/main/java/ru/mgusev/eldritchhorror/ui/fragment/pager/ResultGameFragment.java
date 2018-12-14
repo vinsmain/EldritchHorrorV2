@@ -52,6 +52,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @BindView(R.id.result_game_defeat_by_elimination_switch) Switch defeatByEliminationSwitch;
     @BindView(R.id.result_game_defeat_by_mythos_deplition_switch) Switch defeatByMythosDepletionSwitch;
     @BindView(R.id.result_game_defeat_by_awakened_ancient_one_switch) Switch defeatByAwakenedAncientOneSwitch;
+    @BindView(R.id.result_game_defeat_by_surrender_switch) Switch defeatBySurrenderSwitch;
     @BindView(R.id.result_game_defeat_by_rumor_switch) Switch defeatByRumorSwitch;
     @BindView(R.id.result_game_defeat_table) TableLayout defeatTable;
     @BindView(R.id.result_game_gates_count) EditText gatesCountTV;
@@ -102,8 +103,8 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         rumorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         rumorSpinner.setAdapter(rumorAdapter);
 
-        switchArray = new Switch[]{defeatByEliminationSwitch, defeatByMythosDepletionSwitch, defeatByAwakenedAncientOneSwitch, defeatByRumorSwitch};
-        idArray = new int[]{R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_rumor_switch};
+        switchArray = new Switch[]{defeatByEliminationSwitch, defeatByMythosDepletionSwitch, defeatByAwakenedAncientOneSwitch, defeatBySurrenderSwitch, defeatByRumorSwitch};
+        idArray = new int[]{R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_surrender_switch, R.id.result_game_defeat_by_rumor_switch};
         return view;
     }
 
@@ -164,8 +165,8 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         resultSwitch.setText(R.string.defeat_header);
     }
 
-    @OnCheckedChanged({R.id.result_game_result_switch, R.id.result_game_defeat_by_elimination_switch,
-            R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_rumor_switch})
+    @OnCheckedChanged({R.id.result_game_result_switch, R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch,
+            R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_surrender_switch, R.id.result_game_defeat_by_rumor_switch})
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.result_game_result_switch:
@@ -185,7 +186,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
                 switchArray[i].setChecked(false);
             }
         }
-        resultGamePresenter.setDefeatReasons(defeatByEliminationSwitch.isChecked(), defeatByMythosDepletionSwitch.isChecked(), defeatByAwakenedAncientOneSwitch.isChecked(), defeatByRumorSwitch.isChecked());
+        resultGamePresenter.setDefeatReasons(defeatByEliminationSwitch.isChecked(), defeatByMythosDepletionSwitch.isChecked(), defeatByAwakenedAncientOneSwitch.isChecked(), defeatByRumorSwitch.isChecked(), defeatBySurrenderSwitch.isChecked());
     }
 
     @Override
@@ -207,11 +208,12 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     }
 
     @Override
-    public void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3, boolean v4) {
+    public void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3, boolean v4, boolean v5) {
         defeatByEliminationSwitch.setChecked(v1);
         defeatByMythosDepletionSwitch.setChecked(v2);
         defeatByAwakenedAncientOneSwitch.setChecked(v3);
         defeatByRumorSwitch.setChecked(v4);
+        defeatBySurrenderSwitch.setChecked(v5);
     }
 
     @Override

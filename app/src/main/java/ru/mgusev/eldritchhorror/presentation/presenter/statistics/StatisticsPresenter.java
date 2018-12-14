@@ -196,6 +196,10 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
             chartValues.add((float) repository.getDefeatByAwakenedAncientOneCount(currentAncientOneId));
             chartLabels.add(repository.getContext().getResources().getString(R.string.defeat_by_awakened_ancient_one));
         }
+        if (repository.getDefeatBySurrenderCount(currentAncientOneId) != 0) {
+            chartValues.add((float) repository.getDefeatBySurrenderCount(currentAncientOneId));
+            chartLabels.add(repository.getContext().getResources().getString(R.string.defeat_by_surrender));
+        }
         if (repository.getDefeatByRumorCount(currentAncientOneId) != 0) {
             chartValues.add((float) repository.getDefeatByRumorCount(currentAncientOneId));
             chartLabels.add(repository.getContext().getResources().getString(R.string.defeat_by_rumor));

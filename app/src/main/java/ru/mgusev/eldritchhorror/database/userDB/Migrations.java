@@ -33,4 +33,11 @@ public class Migrations {
             database.execSQL("ALTER TABLE `games` ADD COLUMN `defeat_rumor_id` INTEGER NOT NULL DEFAULT 2;");
         }
     };
+
+    public static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `games` ADD COLUMN `defeat_by_surrender` INTEGER NOT NULL DEFAULT 0;");
+        }
+    };
 }

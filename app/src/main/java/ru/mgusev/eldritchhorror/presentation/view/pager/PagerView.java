@@ -38,6 +38,9 @@ public interface PagerView extends MvpView {
     void setDefeatByRumorIcon();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
+    void setDefeatBySurrenderIcon();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void showScore();
 
     @StateStrategyType(AddToEndSingleStrategy.class)

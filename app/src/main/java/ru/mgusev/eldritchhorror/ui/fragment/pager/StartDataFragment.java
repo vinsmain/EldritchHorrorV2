@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
@@ -51,6 +52,8 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     @BindView(R.id.start_data_normal_mythos) Switch normalMythosSwitch;
     @BindView(R.id.start_data_hard_mythos) Switch hardMythosSwitch;
     @BindView(R.id.start_data_starting_rumor) Switch startingRumorSwitch;
+    @BindView(R.id.start_data_prelude_text_row) TableRow preludeTextRow;
+    @BindView(R.id.start_data_prelude_text) TextView preludeTextTV;
 
     public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     private Unbinder unbinder;
@@ -61,6 +64,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     public static StartDataFragment newInstance(int page) {
         StartDataFragment pageFragment = new StartDataFragment();
+
         Bundle arguments = new Bundle();
         arguments.putInt(ARGUMENT_PAGE_NUMBER, page);
         pageFragment.setArguments(arguments);
@@ -222,6 +226,16 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         }
         startDataPresenter.setSwitchValueToGame(easyMythosSwitch.isChecked(), normalMythosSwitch.isChecked(), hardMythosSwitch.isChecked(), startingRumorSwitch.isChecked());
         startDataPresenter.setSwitchValue();
+    }
+
+    @Override
+    public void setPreludeText(String text) {
+        preludeTextTV.setText(text);
+    }
+
+    @Override
+    public void setPreludeTextRowVisibility(boolean visible) {
+        preludeTextRow.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override

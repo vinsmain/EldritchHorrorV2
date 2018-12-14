@@ -37,4 +37,9 @@ public interface StartDataView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setSwitchValue(boolean easyMythosValue, boolean normalMythosValue, boolean hardMythosValue, boolean startingRumorValue);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setPreludeText(String text);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setPreludeTextRowVisibility(boolean visible);
 }

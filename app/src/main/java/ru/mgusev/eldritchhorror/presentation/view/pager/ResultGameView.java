@@ -49,7 +49,7 @@ public interface ResultGameView extends MvpView {
     void setMysteryValue(int i);
 
     @StateStrategyType(OneExecutionStateStrategy.class)
-    void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3, boolean v4);
+    void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3, boolean v4, boolean v5);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setVisibilityRumorSpinnerTR(boolean visible);
