@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.util.IabHelper;
+import ru.mgusev.eldritchhorror.util.Purchase;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -31,8 +32,6 @@ public class AboutActivity extends AppCompatActivity {
 
     // Код для обратного вызова
     static final int REQUEST_CODE = 505;
-    // Код при отмене пользователем
-    static final int USER_CANCELED_CODE = -1005;
     // Экземпляр класса для работы с магазином
     private IabHelper helper;
     private IabHelper.OnIabPurchaseFinishedListener purchaseFinishedListener;
@@ -78,16 +77,26 @@ public class AboutActivity extends AppCompatActivity {
 
         purchaseFinishedListener = (result, purchase) -> {
             Log.d("DONATE_ANSWER",result.getMessage() + " " + result.getResponse() + " " + purchase);
-            if (result.isFailure() && result.getResponse() != USER_CANCELED_CODE) {
+            if (result.isFailure() && result.getResponse() != IabHelper.IABHELPER_USER_CANCELLED) {
                 // Обработка произошедшей ошибки покупки
                 Toast.makeText(this, R.string.donate_error_header, Toast.LENGTH_SHORT).show();
+                if (result.getResponse() == IabHelper.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED) clearPurchase(purchase);
                 return;
             }
             if (purchase != null) {
                 // Говорим пользователю спасибо за перечисление средств
                 Toast.makeText(this, R.string.donate_success_header, Toast.LENGTH_SHORT).show();
+                clearPurchase(purchase);
             }
         };
+    }
+
+    private void clearPurchase(Purchase purchase) {
+        try {
+            helper.consumeAsync(purchase, (purchase1, result1) -> Log.d("DONATE_ANSWER",purchase1 + " " + result1));
+        } catch (IabHelper.IabAsyncInProgressException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initToolbar() {

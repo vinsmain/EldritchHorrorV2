@@ -39,6 +39,7 @@ import ru.mgusev.eldritchhorror.support.IconPowerMenuItem;
 import ru.mgusev.eldritchhorror.support.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
+import ru.mgusev.eldritchhorror.ui.activity.donate.DonateActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 
@@ -340,6 +341,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public void showErrorSnackBar() {
         Snackbar.make(findViewById(R.id.main_coordinator), R.string.auth_error, Snackbar.LENGTH_LONG).show();
+    }
+
+    @OnClick({R.id.main_donate_button})
+    public void onClick() {
+        startActivity(new Intent(this, DonateActivity.class));
     }
 
     @Override

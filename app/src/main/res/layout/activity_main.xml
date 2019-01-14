@@ -119,6 +119,13 @@
 
             </android.support.v7.widget.Toolbar>
 
+            <ImageButton
+                android:id="@+id/main_donate_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorTransparent"
+                app:srcCompat="@drawable/rate_star" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>

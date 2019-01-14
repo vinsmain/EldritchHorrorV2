@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
@@ -17,8 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".ui.activity.main.MainActivity"
+        <activity
+            android:name=".ui.activity.main.MainActivity"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,19 +26,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.activity.pager.PagerActivity">
-        </activity>
-
-        <activity android:name=".ui.activity.pager.InvestigatorActivity"
-            android:theme="@style/DialogTheme">
-        </activity>
-        <activity android:name=".ui.activity.pager.ExpansionChoiceActivity" android:theme="@style/DialogTheme"/>
+        <activity android:name=".ui.activity.pager.PagerActivity"></activity>
+        <activity
+            android:name=".ui.activity.pager.InvestigatorActivity"
+            android:theme="@style/DialogTheme"></activity>
+        <activity
+            android:name=".ui.activity.pager.ExpansionChoiceActivity"
+            android:theme="@style/DialogTheme" />
         <activity android:name=".ui.activity.details.DetailsActivity" />
         <activity android:name=".ui.activity.statistics.StatisticsActivity" />
-        <activity android:name=".ui.activity.pager.SpecializationChoiceActivity" android:theme="@style/DialogTheme"/>
+        <activity
+            android:name=".ui.activity.pager.SpecializationChoiceActivity"
+            android:theme="@style/DialogTheme" />
         <activity android:name=".ui.activity.about.AboutActivity" />
-
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -53,6 +53,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name=".ui.activity.donate.DonateActivity"></activity>
     </application>
 
 </manifest>
