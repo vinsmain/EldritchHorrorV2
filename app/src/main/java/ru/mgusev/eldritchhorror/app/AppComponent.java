@@ -8,6 +8,7 @@ import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.adapter.StatisticsAdapter;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
+import ru.mgusev.eldritchhorror.presentation.presenter.forgotten_endings.ForgottenEndingsPresenter;
 import ru.mgusev.eldritchhorror.repository.FirebaseHelper;
 import ru.mgusev.eldritchhorror.database.oldDB.DatabaseHelperOld;
 import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
@@ -36,6 +37,7 @@ public interface AppComponent {
     void inject(ExpansionChoicePresenter presenter);
     void inject(SpecializationChoicePresenter presenter);
     void inject(GamePhotoPresenter presenter);
+    void inject(ForgottenEndingsPresenter forgottenEndingsPresenter);
 
     void inject(MainAdapter adapter);
     void inject(InvestigatorChoiceAdapter adapter);

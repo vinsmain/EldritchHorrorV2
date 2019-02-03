@@ -3,7 +3,6 @@ package ru.mgusev.eldritchhorror.repository;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -12,6 +11,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +28,7 @@ import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.model.Ending;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.ImageFile;
@@ -38,8 +39,9 @@ import ru.mgusev.eldritchhorror.app.AppModule;
 import ru.mgusev.eldritchhorror.model.Rumor;
 import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
+import timber.log.Timber;
 
-@Module (includes = AppModule.class)
+@Module(includes = AppModule.class)
 public class Repository {
 
     private final Context context;
@@ -296,7 +298,8 @@ public class Repository {
     }
 
     public List<AncientOne> getAncientOneList() {
-        if (Localization.getInstance().isRusLocale()) return staticDataDB.ancientOneDAO().getAllRU();
+        if (Localization.getInstance().isRusLocale())
+            return staticDataDB.ancientOneDAO().getAllRU();
         else return staticDataDB.ancientOneDAO().getAllEN();
     }
 
@@ -337,7 +340,8 @@ public class Repository {
     // InvestigatorChoiceFragment
 
     public List<Investigator> getInvestigatorList() {
-        if (Localization.getInstance().isRusLocale()) return staticDataDB.investigatorDAO().getAllRU();
+        if (Localization.getInstance().isRusLocale())
+            return staticDataDB.investigatorDAO().getAllRU();
         else return staticDataDB.investigatorDAO().getAllEN();
     }
 
@@ -411,7 +415,7 @@ public class Repository {
     public void initFirebaseHelper() {
         firebaseHelper.initReference(user);
         firebaseDBSubscribe = new CompositeDisposable();
-        firebaseDBSubscribe.add(firebaseHelper.getChildEventDisposable().subscribe(this::processDataFromFirebase, e -> Log.w("FIREBASE", e)));
+        firebaseDBSubscribe.add(firebaseHelper.getChildEventDisposable().subscribe(this::processDataFromFirebase, e -> Timber.tag("FIREBASE").w(e)));
 
         for (Game game : userDataDB.gameDAO().getGameListSortedDateAscending()) {
             if (game.getUserID() == null) {
@@ -421,7 +425,7 @@ public class Repository {
         }
 
         firebaseFilesSubscribe = new CompositeDisposable();
-        firebaseFilesSubscribe.add(firebaseHelper.getFileEventDisposable().subscribe(this::processFilesDataFromFirebase, e -> Log.w("FIREBASE", e)));
+        firebaseFilesSubscribe.add(firebaseHelper.getFileEventDisposable().subscribe(this::processFilesDataFromFirebase, e -> Timber.tag("FIREBASE").w(e)));
 
         for (ImageFile file : userDataDB.imageFileDAO().getAllImageFiles()) {
             if (file.getUserID() == null) {
@@ -429,7 +433,8 @@ public class Repository {
                 file.setUserID(user.getUid());
                 addImageFile(file);
             }
-            if (file.getMd5Hash() == null) sendFileToStorage(Uri.fromFile(fileHelper.getImageFile(file.getName(), file.getGameId())), file.getGameId());
+            if (file.getMd5Hash() == null)
+                sendFileToStorage(Uri.fromFile(fileHelper.getImageFile(file.getName(), file.getGameId())), file.getGameId());
         }
     }
 
@@ -451,7 +456,7 @@ public class Repository {
                     removeGame(event.getValue());
                     break;
                 }
-        }
+            }
         if (data.size() > 0) gameListOnNext();
     }
 
@@ -494,7 +499,8 @@ public class Repository {
 
     private void changeImageFile(ImageFile file) {
         if (file != null && getGame(file.getGameId()) != null) {
-            if (getImageFile(file.getName()) == null) userDataDB.imageFileDAO().insertImageFile(file);
+            if (getImageFile(file.getName()) == null)
+                userDataDB.imageFileDAO().insertImageFile(file);
             if (file.getMd5Hash() != null) getFileFromStorage(file);
         }
     }
@@ -556,7 +562,7 @@ public class Repository {
     // Statistics
 
     public int getGameCount(int ancientOneId) {
-        return ancientOneId ==0 ? userDataDB.gameDAO().getGameCount() : userDataDB.gameDAO().getGameCount(ancientOneId);
+        return ancientOneId == 0 ? userDataDB.gameDAO().getGameCount() : userDataDB.gameDAO().getGameCount(ancientOneId);
     }
 
     public int getVictoryGameCount(int ancientOneId) {
@@ -760,7 +766,8 @@ public class Repository {
         for (String filePath : fileHelper.getImages(imageFile.getGameId())) {
             if (filePath.contains(imageFile.getName())) exist = true;
         }
-        if (!exist) firebaseHelper.getFileFromFirebaseStorage(imageFile, fileHelper.getImageFile(imageFile.getName(), imageFile.getGameId()));
+        if (!exist)
+            firebaseHelper.getFileFromFirebaseStorage(imageFile, fileHelper.getImageFile(imageFile.getName(), imageFile.getGameId()));
     }
 
     private void uploadFile(ImageFile file) {
@@ -771,13 +778,31 @@ public class Repository {
             addImageFile(imageFile);
         } catch (Exception e) {
             firebaseHelper.deleteFileFromFirebaseStorage(file);
-            Log.d("UPLOAD", e.getMessage());
+            Timber.d(e);
         }
     }
 
     private void downloadFile(ImageFile imageFile) {
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
         imagePipeline.clearCaches();
-        if (getGame() != null && getGame().getId() == imageFile.getGameId()) updatePhotoGalleryOnNext(true);
+        if (getGame() != null && getGame().getId() == imageFile.getGameId())
+            updatePhotoGalleryOnNext(true);
+    }
+
+    //Forgotten endings
+
+    public List<Ending> getEndingListByAncientOneId(int ancientOneId) {
+        return staticDataDB.endingDAO().getEndingListByAncientOneId(ancientOneId);
+    }
+
+    public List<Integer> getAncientOneIdFromForgottenEndings() {
+        return staticDataDB.endingDAO().getAncientOneIdList();
+    }
+
+    public List<String> getConditionList(int ancientOneId, boolean victory) {
+        List<String> conditionList = new ArrayList<>();
+        conditionList.addAll(staticDataDB.endingDAO().getCondition1List(ancientOneId, victory));
+        conditionList.addAll(staticDataDB.endingDAO().getCondition2List(ancientOneId, victory));
+        return conditionList;
     }
 }

@@ -1,9 +1,9 @@
-package ru.mgusev.eldritchhorror.database.staticDB;
+package ru.mgusev.eldritchhorror.database.staticDB.migrations;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.migration.Migration;
 
-public class Migrations {
+public class StaticDBMigrations {
 
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override

@@ -39,6 +39,7 @@ import ru.mgusev.eldritchhorror.support.IconPowerMenuItem;
 import ru.mgusev.eldritchhorror.support.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
+import ru.mgusev.eldritchhorror.ui.activity.forgotten_endings.ForgottenEndingsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 
@@ -128,6 +129,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
             case R.id.action_music:
                 Intent browserIntentYandex = new Intent(Intent.ACTION_VIEW, Uri.parse(MUSIC_URL));
                 startActivity(browserIntentYandex);
+                return true;
+            case R.id.action_forgotten_endings:
+                Intent forgottenEndingsIntent = new Intent(this, ForgottenEndingsActivity.class);
+                startActivity(forgottenEndingsIntent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
