@@ -1,6 +1,7 @@
 package ru.mgusev.eldritchhorror.ui.activity.forgotten_endings;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,8 @@ import android.widget.Switch;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -27,7 +27,7 @@ import ru.mgusev.eldritchhorror.presentation.presenter.forgotten_endings.Forgott
 import ru.mgusev.eldritchhorror.presentation.view.forgotten_endings.ForgottenEndingsView;
 import timber.log.Timber;
 
-public class ForgottenEndingsActivity extends MvpAppCompatActivity implements ForgottenEndingsView {
+public class ForgottenEndingsActivity extends MvpAppCompatActivity implements ForgottenEndingsView, CompoundButton.OnCheckedChangeListener {
 
     @InjectPresenter
     ForgottenEndingsPresenter forgottenEndingsPresenter;
@@ -41,7 +41,6 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
     @BindView(R.id.forgotten_endings_switch_container)
     LinearLayout conditionsContainer;
 
-    private List<Switch> conditionSwitchList;
     private ArrayAdapter<String> ancientOneAdapter;
     private boolean skipCheckedChangedSpinner;
 
@@ -77,6 +76,11 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         ancientOneAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void setAncientOneSpinnerError(String text, int time) {
+        new Handler().postDelayed(() -> ancientOneSpinner.setError(text), time);
+    }
+
     @OnItemSelected({R.id.forgotten_endings_ancient_one_spinner})
     public void onItemSelected() {
         if (!skipCheckedChangedSpinner) {
@@ -90,21 +94,12 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
 
     @OnCheckedChanged({R.id.forgotten_endings_result_switch})
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        switch (compoundButton.getId()) {
-            case R.id.forgotten_endings_result_switch:
-                forgottenEndingsPresenter.onResultCheckedChanged(b);
-                break;
-//            case R.id.forgotten_endings_awakening_switch:
-//                if (!b && !easyMythosSwitch.isChecked() && !hardMythosSwitch.isChecked())
-//                    easyMythosSwitch.setChecked(true);
-//                break;
-//            case R.id.start_data_hard_mythos:
-//                if (!b && !easyMythosSwitch.isChecked() && !normalMythosSwitch.isChecked())
-//                    easyMythosSwitch.setChecked(true);
-//                break;
-            default:
-                break;
-        }
+        if (compoundButton.getId() == R.id.forgotten_endings_result_switch) {
+            Timber.d("Result checked %b", b);
+            forgottenEndingsPresenter.onResultCheckedChanged(b);
+        } else
+            forgottenEndingsPresenter.onConditionCheckedChanged((String) compoundButton.getText(), b);
+        Timber.d("OnChecked id %s, value %b, text %s", compoundButton.getId(), b, compoundButton.getText());
     }
 
     @Override
@@ -112,6 +107,12 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         Timber.d(String.valueOf(position));
         skipCheckedChangedSpinner = true;
         ancientOneSpinner.setSelection(position);
+    }
+
+    @Override
+    public void setResultSwitchVisibility(boolean visible) {
+        if (visible) resultSwitch.setVisibility(View.VISIBLE);
+        else resultSwitch.setVisibility(View.GONE);
     }
 
     @Override
@@ -127,28 +128,13 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
     }
 
     @Override
-    public void createConditionSwitch(List<String> conditionList) {
+    public void createConditionSwitch(Map<String, Boolean> map) {
         conditionsContainer.removeAllViews();
-        conditionSwitchList = new ArrayList<>();
-        for (String condition : conditionList) {
-            Timber.d("Условие: %s", condition);
-            if (conditionsContainer != null) {
-                Switch sw = createSwitch(condition);
-                conditionsContainer.addView(sw);
-                conditionSwitchList.add(sw);
-            }
+        for (Map.Entry<String, Boolean> entry : map.entrySet()) {
+            conditionsContainer.addView(createSwitch(entry.getKey(), entry.getValue()));
         }
-        forgottenEndingsPresenter.setConditionSwitchList(conditionSwitchList);
     }
 
-    @Override
-    public void addConditionSwitch(List<Switch> list) {
-        for (Switch sw : list) {
-            if (conditionsContainer != null) {
-                conditionsContainer.addView(sw);
-            }
-        }
-    }
 
     //C:\Users\vinsm\AppData\Local\Android\Sdk\platform-tools>adb tcpip 5555
     //restarting in TCP mode port: 5555
@@ -160,13 +146,20 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         conditionsContainer.removeAllViews();
     }
 
-    private Switch createSwitch(String text) {
+    private Switch createSwitch(String text, boolean value) {
         Switch sw = new Switch(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         //layoutParams.setMargins(30, 30, 30, 30);
         sw.setLayoutParams(layoutParams);
         sw.setText(text);
+        sw.setChecked(value);
         sw.setId(View.generateViewId());
+        sw.setOnCheckedChangeListener(this);
         return sw;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

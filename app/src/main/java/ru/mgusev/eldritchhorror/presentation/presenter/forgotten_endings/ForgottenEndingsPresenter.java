@@ -37,6 +37,7 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
     public ForgottenEndingsPresenter() {
         App.getComponent().inject(this);
         conditionSwitchList = new ArrayList<>();
+        conditionMap = new HashMap<>();
     }
 
     @Override
@@ -58,41 +59,43 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
         // -1 - позиция hitn'а = "Древний"
         Timber.d(String.valueOf(position));
         oldAncientOneId = ancientOneId;
-        if (position != -1)
+        if (position != -1) {
             ancientOneId = repository.getAncientOne(ancientOneNameList.get(position)).getId();
-        else
+            getViewState().setResultSwitchVisibility(true);
+            getViewState().setAncientOneSpinnerError(null, 0);
+        } else {
             ancientOneId = 0;
+            getViewState().setResultSwitchVisibility(false);
+            getViewState().setAncientOneSpinnerError("Выберите Древнего", 400); //500ms - задержка при показе ошибки, чтобы избежать IllegalArgumentException
+        }
         getViewState().setAncientOneSpinnerPosition(position + 1); // +1 - поправка на hint
-        initConditions(ancientOneId, resultValue);
+        if (oldAncientOneId != ancientOneId)
+            initConditions(ancientOneId, resultValue);
     }
 
     public void onResultCheckedChanged(boolean checked) {
-        oldResultValue = resultValue;
-        resultValue = checked;
-        getViewState().setResultSwitchText(checked);
-        initConditions(ancientOneId, resultValue);
-    }
-
-    private void initConditions(int ancientOneId, boolean victory) {
-        //getViewState().clearConditionsContainer();
-        //conditionMap = new HashMap<>();
-
-//        for (String condition : repository.getConditionList(ancientOneId, victory)) {
-//            if (condition != null && !condition.equals(""))
-//                conditionMap.put(condition, )
-//        });
-        Timber.d("%s %s %s %s", oldAncientOneId, ancientOneId, oldResultValue, resultValue);
-        if (oldAncientOneId != ancientOneId) {
-            Timber.d("TRUE");
-            getViewState().createConditionSwitch(repository.getConditionList(ancientOneId, victory));
-        } else {
-            getViewState().addConditionSwitch(conditionSwitchList);
+        Timber.d("%s %s", oldResultValue, resultValue);
+        if (resultValue != checked) {
+            resultValue = checked;
+            Timber.d("%s", resultValue);
+            getViewState().setResultSwitchText(checked);
+            initConditions(ancientOneId, resultValue);
         }
     }
 
-    public void setConditionSwitchList(List<Switch> list) {
-        conditionSwitchList.clear();
-        conditionSwitchList.addAll(list);
+    private void initConditions(int ancientOneId, boolean victory) {
+        getViewState().clearConditionsContainer();
+
+        conditionMap.clear();
+        for (String condition : repository.getConditionList(ancientOneId, victory)) {
+            conditionMap.put(condition, false);
+        }
+
+        getViewState().createConditionSwitch(conditionMap);
+    }
+
+    public void onConditionCheckedChanged(String text, boolean checked) {
+        conditionMap.put(text, checked);
     }
 
     @Override

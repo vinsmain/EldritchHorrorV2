@@ -9,6 +9,7 @@ import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ForgottenEndingsView extends MvpView {
 
@@ -16,7 +17,13 @@ public interface ForgottenEndingsView extends MvpView {
     void initAncientOneSpinner(List<String> ancientOneNameList);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
+    void setAncientOneSpinnerError(String text, int time);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setAncientOneSpinnerPosition(int position);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setResultSwitchVisibility(boolean visible);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setResultSwitchText(boolean victory);
@@ -25,10 +32,7 @@ public interface ForgottenEndingsView extends MvpView {
     void setVisibilityAwakeningSwitch(boolean visible);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void createConditionSwitch(List<String> conditionList);
-
-    @StateStrategyType(AddToEndSingleStrategy.class)
-    void addConditionSwitch(List<Switch> list);
+    void createConditionSwitch(Map<String, Boolean> map);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void clearConditionsContainer();
