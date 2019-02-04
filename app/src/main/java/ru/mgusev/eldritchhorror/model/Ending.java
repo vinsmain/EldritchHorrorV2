@@ -11,10 +11,8 @@ public class Ending {
     public static final String ENDING_FIELD_ANCIENT_ONE_ID = "ancient_one_id";
     public static final String ENDING_FIELD_VICTORY = "victory";
     public static final String ENDING_FIELD_DICE_VALUE = "dice_value";
-    public static final String ENDING_FIELD_CONDITION_1_TEXT_EN = "condition_1_text_en";
-    public static final String ENDING_FIELD_CONDITION_1_TEXT_RU = "condition_1_text_ru";
-    public static final String ENDING_FIELD_CONDITION_2_TEXT_EN = "condition_2_text_en";
-    public static final String ENDING_FIELD_CONDITION_2_TEXT_RU = "condition_2_text_ru";
+    public static final String ENDING_FIELD_CONDITION_TEXT_EN = "condition_text_en";
+    public static final String ENDING_FIELD_CONDITION_TEXT_RU = "condition_text_ru";
     public static final String ENDING_FIELD_HEADER_EN = "header_en";
     public static final String ENDING_FIELD_HEADER_RU = "header_ru";
     public static final String ENDING_FIELD_TEXT_EN = "text_en";
@@ -33,17 +31,11 @@ public class Ending {
     @ColumnInfo(name = ENDING_FIELD_DICE_VALUE)
     private int diceValue;
 
-    @ColumnInfo(name = ENDING_FIELD_CONDITION_1_TEXT_EN)
-    private String condition1EN;
+    @ColumnInfo(name = ENDING_FIELD_CONDITION_TEXT_EN)
+    private String conditionEN;
 
-    @ColumnInfo(name = ENDING_FIELD_CONDITION_1_TEXT_RU)
-    private String condition1RU;
-
-    @ColumnInfo(name = ENDING_FIELD_CONDITION_2_TEXT_EN)
-    private String condition2EN;
-
-    @ColumnInfo(name = ENDING_FIELD_CONDITION_2_TEXT_RU)
-    private String condition2RU;
+    @ColumnInfo(name = ENDING_FIELD_CONDITION_TEXT_RU)
+    private String conditionRU;
 
     @ColumnInfo(name = ENDING_FIELD_HEADER_EN)
     private String headerEN;
@@ -92,36 +84,20 @@ public class Ending {
         this.diceValue = diceValue;
     }
 
-    public String getCondition1EN() {
-        return condition1EN;
+    public String getConditionEN() {
+        return conditionEN;
     }
 
-    public void setCondition1EN(String condition1EN) {
-        this.condition1EN = condition1EN;
+    public void setConditionEN(String conditionEN) {
+        this.conditionEN = conditionEN;
     }
 
-    public String getCondition1RU() {
-        return condition1RU;
+    public String getConditionRU() {
+        return conditionRU;
     }
 
-    public void setCondition1RU(String condition1RU) {
-        this.condition1RU = condition1RU;
-    }
-
-    public String getCondition2EN() {
-        return condition2EN;
-    }
-
-    public void setCondition2EN(String condition2EN) {
-        this.condition2EN = condition2EN;
-    }
-
-    public String getCondition2RU() {
-        return condition2RU;
-    }
-
-    public void setCondition2RU(String condition2RU) {
-        this.condition2RU = condition2RU;
+    public void setConditionRU(String conditionRU) {
+        this.conditionRU = conditionRU;
     }
 
     public String getHeaderEN() {
@@ -156,14 +132,9 @@ public class Ending {
         this.textRU = textRU;
     }
 
-    public String getCondition1() {
-        if (Localization.getInstance().isRusLocale()) return condition1RU;
-        else return condition1RU;
-    }
-
-    public String getCondition2() {
-        if (Localization.getInstance().isRusLocale()) return condition2RU;
-        else return condition2RU;
+    public String getCondition() {
+        if (Localization.getInstance().isRusLocale()) return conditionRU;
+        else return conditionRU;
     }
 
     public String getHeader() {

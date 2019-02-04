@@ -45,6 +45,8 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
     LinearLayout conditionsContainer;
     @BindView(R.id.forgotten_endings_read_text_btn)
     Button readTextBtn;
+    @BindView(R.id.forgotten_endings_header_tv)
+    TextView headerTV;
     @BindView(R.id.forgotten_endings_text_tv)
     TextView textTV;
 
@@ -85,7 +87,11 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
 
     @Override
     public void setAncientOneSpinnerError(String text, int time) {
-        new Handler().postDelayed(() -> ancientOneSpinner.setError(text), time);
+        try {
+            new Handler().postDelayed(() -> ancientOneSpinner.setError(text), time);
+        } catch (IllegalArgumentException e) {
+            Timber.d(e);
+        }
     }
 
     @OnItemSelected({R.id.forgotten_endings_ancient_one_spinner})
@@ -115,14 +121,18 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
     }
 
     @Override
-    public void showText(String text) {
+    public void showText(String header, String text) {
+        headerTV.setText(header);
         textTV.setText(text);
+        headerTV.setVisibility(View.VISIBLE);
         textTV.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideText() {
+        headerTV.setText("");
         textTV.setText("");
+        headerTV.setVisibility(View.GONE);
         textTV.setVisibility(View.GONE);
     }
 
@@ -143,12 +153,6 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
     public void setResultSwitchText(boolean victory) {
         if (victory) resultSwitch.setText(R.string.win_header);
         else resultSwitch.setText(R.string.defeat_header);
-    }
-
-    @Override
-    public void setVisibilityAwakeningSwitch(boolean visible) {
-//        if (visible) awakeningSwitch.setVisibility(View.VISIBLE);
-//        else awakeningSwitch.setVisibility(View.GONE);
     }
 
     @Override
@@ -182,8 +186,5 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         return sw;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+    //TODO Закрывать sinner drop down при перевороте
 }

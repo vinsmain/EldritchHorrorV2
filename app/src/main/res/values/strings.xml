@@ -240,6 +240,6 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="forgotten_endings_header">Forgotten endings</string>
-    <string name="forgotten_endings_awakening_ancient_one">Ancient One awakened</string>
-    <string name="forgotten_endings_read_header">Read</string>
+    <string name="forgotten_endings_read_header">Random ending</string>
+    <string name="forgotten_endings_select_ancient_one_header">Выберите Древнего</string>
 </resources>

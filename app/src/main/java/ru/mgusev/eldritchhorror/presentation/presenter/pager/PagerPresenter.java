@@ -103,7 +103,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     private boolean isCorrectActiveInvestigatorsCount() {
         int invCount = 0;
-        for (Investigator inv : repository.getGame().getInvList()) {
+        for (Investigator inv : repository.getGame().getInvList()) { //TODO Запретить открытие второй активити при быстром клике
             if (inv.getIsStarting()) invCount++;
         }
         return repository.getGame().getPlayersCount() >= invCount;

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "85ea4c433d430e458b68e8a9e6324548",
+    "identityHash": "f01074ed9a44cc5a344ac21d0ff203a2",
     "entities": [
       {
         "tableName": "ancient_ones",
@@ -324,7 +324,7 @@
       },
       {
         "tableName": "forgotten_endings",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `ancient_one_id` INTEGER NOT NULL, `victory` INTEGER NOT NULL, `dice_value` INTEGER NOT NULL, `condition_1_text_en` TEXT, `condition_1_text_ru` TEXT, `condition_2_text_en` TEXT, `condition_2_text_ru` TEXT, `header_en` TEXT, `header_ru` TEXT, `text_en` TEXT, `text_ru` TEXT, PRIMARY KEY(`_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `ancient_one_id` INTEGER NOT NULL, `victory` INTEGER NOT NULL, `dice_value` INTEGER NOT NULL, `condition_text_en` TEXT, `condition_text_ru` TEXT, `header_en` TEXT, `header_ru` TEXT, `text_en` TEXT, `text_ru` TEXT, PRIMARY KEY(`_id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -351,26 +351,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "condition1EN",
-            "columnName": "condition_1_text_en",
+            "fieldPath": "conditionEN",
+            "columnName": "condition_text_en",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "condition1RU",
-            "columnName": "condition_1_text_ru",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "condition2EN",
-            "columnName": "condition_2_text_en",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "condition2RU",
-            "columnName": "condition_2_text_ru",
+            "fieldPath": "conditionRU",
+            "columnName": "condition_text_ru",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -411,7 +399,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"85ea4c433d430e458b68e8a9e6324548\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f01074ed9a44cc5a344ac21d0ff203a2\")"
     ]
   }
 }

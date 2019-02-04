@@ -33,6 +33,7 @@ import ru.mgusev.eldritchhorror.adapter.IconMenuAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Game;
+import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
 import ru.mgusev.eldritchhorror.support.IconPowerMenuItem;
@@ -64,6 +65,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private MenuItem sortItem;
     private MenuItem authItem;
     private MenuItem statItem;
+    private MenuItem forgottenEndingsItem;
     private CustomPowerMenu authPopupMenu;
 
     private int columnsCount = 1;
@@ -103,10 +105,16 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         sortItem = menu.findItem(R.id.action_sort);
         authItem = menu.findItem(R.id.action_auth);
         statItem = menu.findItem(R.id.action_statistics);
+        forgottenEndingsItem = menu.findItem(R.id.action_forgotten_endings);
         mainPresenter.setSortModeIcon();
         mainPresenter.setVisibilityStatisticsMenuItem();
         mainPresenter.startUpdateUserIcon();
+        setVisibilityForgottenEndingsItem();
         return true;
+    }
+
+    private void setVisibilityForgottenEndingsItem() {
+        forgottenEndingsItem.setVisible(Localization.getInstance().isRusLocale());
     }
 
     @Override

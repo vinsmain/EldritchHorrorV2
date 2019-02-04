@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Ending;
 import ru.mgusev.eldritchhorror.presentation.view.forgotten_endings.ForgottenEndingsView;
@@ -28,6 +29,7 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
     private Map<String, Boolean> conditionMap;
     private int ancientOneId;
     private boolean resultValue = true;
+    private int randomIndex = -1;
 
     public ForgottenEndingsPresenter() {
         App.getComponent().inject(this);
@@ -60,7 +62,8 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
         } else {
             ancientOneId = 0;
             getViewState().setResultSwitchVisibility(false);
-            getViewState().setAncientOneSpinnerError("Выберите Древнего", 400); //500ms - задержка при показе ошибки, чтобы избежать IllegalArgumentException
+            getViewState().setAncientOneSpinnerError(repository.getContext().getResources().getString(R.string.forgotten_endings_select_ancient_one_header), 400); //400ms - задержка при показе ошибки, чтобы избежать IllegalArgumentException
+            getViewState().hideText();
         }
         getViewState().setAncientOneSpinnerPosition(position + 1); // +1 - поправка на hint
         if (oldAncientOneId != ancientOneId)
@@ -83,12 +86,17 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
             conditionMap.put(condition, false);
         }
         getViewState().createConditionSwitch(conditionMap);
+        getViewState().hideText();
     }
 
     public void onConditionCheckedChanged(String text, boolean checked) {
-        getViewState().clearConditionsContainer(); //TODO Проверить необходимость этой строки
-        conditionMap.put(text, checked);
-        getViewState().createConditionSwitch(conditionMap); //TODO Проверить необходимость этой строки
+        if (checked) {
+            getViewState().clearConditionsContainer();
+            conditionMap.clear();
+            conditionMap.put(text, true);
+            getViewState().createConditionSwitch(conditionMap);
+            getViewState().hideText();
+        } else initConditions(ancientOneId, resultValue);
     }
 
     public void onReadTextBtnClick() {
@@ -98,8 +106,15 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
                 conditionList.add(entry.getKey());
         }
         endingList = repository.getEndingList(ancientOneId, resultValue, conditionList);
-        for (Ending ending : endingList) {
-            Timber.d(ending.getHeader());
+
+        if (!endingList.isEmpty()) {
+            int newRandomIndex;
+            do {
+               newRandomIndex = (int)(Math.random() * endingList.size());
+            } while (endingList.size() > 1 && randomIndex == newRandomIndex);
+            randomIndex = newRandomIndex;
+            Ending randomEnding = endingList.get(randomIndex);
+            getViewState().showText(randomEnding.getHeader(), randomEnding.getText());
         }
     }
 
