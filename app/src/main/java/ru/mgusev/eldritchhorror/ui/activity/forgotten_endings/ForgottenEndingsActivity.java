@@ -6,9 +6,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -20,6 +22,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import ir.hamsaa.RtlMaterialSpinner;
 import ru.mgusev.eldritchhorror.R;
@@ -40,6 +43,10 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
     Switch resultSwitch;
     @BindView(R.id.forgotten_endings_switch_container)
     LinearLayout conditionsContainer;
+    @BindView(R.id.forgotten_endings_read_text_btn)
+    Button readTextBtn;
+    @BindView(R.id.forgotten_endings_text_tv)
+    TextView textTV;
 
     private ArrayAdapter<String> ancientOneAdapter;
     private boolean skipCheckedChangedSpinner;
@@ -102,6 +109,23 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         Timber.d("OnChecked id %s, value %b, text %s", compoundButton.getId(), b, compoundButton.getText());
     }
 
+    @OnClick({R.id.forgotten_endings_read_text_btn})
+    public void onClick() {
+        forgottenEndingsPresenter.onReadTextBtnClick();
+    }
+
+    @Override
+    public void showText(String text) {
+        textTV.setText(text);
+        textTV.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideText() {
+        textTV.setText("");
+        textTV.setVisibility(View.GONE);
+    }
+
     @Override
     public void setAncientOneSpinnerPosition(int position) {
         Timber.d(String.valueOf(position));
@@ -129,7 +153,7 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
 
     @Override
     public void createConditionSwitch(Map<String, Boolean> map) {
-        conditionsContainer.removeAllViews();
+        //conditionsContainer.removeAllViews();
         for (Map.Entry<String, Boolean> entry : map.entrySet()) {
             conditionsContainer.addView(createSwitch(entry.getKey(), entry.getValue()));
         }

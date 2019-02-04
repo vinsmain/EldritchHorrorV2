@@ -20,6 +20,12 @@ public interface ForgottenEndingsView extends MvpView {
     void setAncientOneSpinnerError(String text, int time);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
+    void showText(String text);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void hideText();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setAncientOneSpinnerPosition(int position);
 
     @StateStrategyType(AddToEndSingleStrategy.class)

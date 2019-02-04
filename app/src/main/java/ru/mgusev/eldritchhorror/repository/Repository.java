@@ -791,8 +791,17 @@ public class Repository {
 
     //Forgotten endings
 
-    public List<Ending> getEndingListByAncientOneId(int ancientOneId) {
-        return staticDataDB.endingDAO().getEndingListByAncientOneId(ancientOneId);
+    public List<Ending> getEndingList(int ancientOneId, boolean result, List<String> conditionList) {
+        List<Ending> list = new ArrayList<>();
+        if (result && !conditionList.isEmpty())
+            list.addAll(staticDataDB.endingDAO().getEndingListWithCondition(ancientOneId, true, conditionList));
+        else if (result) {
+            list.addAll(staticDataDB.endingDAO().getEndingListWithoutCondition(ancientOneId, true));
+        } else {
+            list.addAll(staticDataDB.endingDAO().getEndingListWithCondition(ancientOneId, false, conditionList));
+            list.addAll(staticDataDB.endingDAO().getEndingListWithoutCondition(ancientOneId, false));
+        }
+        return list;
     }
 
     public List<Integer> getAncientOneIdFromForgottenEndings() {
@@ -801,8 +810,8 @@ public class Repository {
 
     public List<String> getConditionList(int ancientOneId, boolean victory) {
         List<String> conditionList = new ArrayList<>();
-        conditionList.addAll(staticDataDB.endingDAO().getCondition1List(ancientOneId, victory));
-        conditionList.addAll(staticDataDB.endingDAO().getCondition2List(ancientOneId, victory));
+        conditionList.addAll(staticDataDB.endingDAO().getConditionList(ancientOneId, victory));
+        //conditionList.addAll(staticDataDB.endingDAO().getCondition2List(ancientOneId, victory));
         return conditionList;
     }
 }

@@ -1,7 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.forgotten_endings;
 
-import android.widget.Switch;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
@@ -27,16 +25,12 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
 
     private List<String> ancientOneNameList;
     private List<Ending> endingList;
-    private List<Switch> conditionSwitchList;
     private Map<String, Boolean> conditionMap;
-    private int oldAncientOneId;
     private int ancientOneId;
-    private boolean oldResultValue = true;
     private boolean resultValue = true;
 
     public ForgottenEndingsPresenter() {
         App.getComponent().inject(this);
-        conditionSwitchList = new ArrayList<>();
         conditionMap = new HashMap<>();
     }
 
@@ -58,7 +52,7 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
     public void onAncientOneSelected(int position) {
         // -1 - позиция hitn'а = "Древний"
         Timber.d(String.valueOf(position));
-        oldAncientOneId = ancientOneId;
+        int oldAncientOneId = ancientOneId;
         if (position != -1) {
             ancientOneId = repository.getAncientOne(ancientOneNameList.get(position)).getId();
             getViewState().setResultSwitchVisibility(true);
@@ -74,7 +68,6 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
     }
 
     public void onResultCheckedChanged(boolean checked) {
-        Timber.d("%s %s", oldResultValue, resultValue);
         if (resultValue != checked) {
             resultValue = checked;
             Timber.d("%s", resultValue);
@@ -85,17 +78,29 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
 
     private void initConditions(int ancientOneId, boolean victory) {
         getViewState().clearConditionsContainer();
-
         conditionMap.clear();
         for (String condition : repository.getConditionList(ancientOneId, victory)) {
             conditionMap.put(condition, false);
         }
-
         getViewState().createConditionSwitch(conditionMap);
     }
 
     public void onConditionCheckedChanged(String text, boolean checked) {
+        getViewState().clearConditionsContainer(); //TODO Проверить необходимость этой строки
         conditionMap.put(text, checked);
+        getViewState().createConditionSwitch(conditionMap); //TODO Проверить необходимость этой строки
+    }
+
+    public void onReadTextBtnClick() {
+        List<String> conditionList = new ArrayList<>();
+        for (Map.Entry<String, Boolean> entry : conditionMap.entrySet()) {
+            if (entry.getValue())
+                conditionList.add(entry.getKey());
+        }
+        endingList = repository.getEndingList(ancientOneId, resultValue, conditionList);
+        for (Ending ending : endingList) {
+            Timber.d(ending.getHeader());
+        }
     }
 
     @Override
