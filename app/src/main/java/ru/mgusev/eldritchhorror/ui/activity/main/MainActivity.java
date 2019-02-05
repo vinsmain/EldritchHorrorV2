@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -57,6 +60,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @BindView(R.id.main_game_count) TextView gameCount;
     @BindView(R.id.main_best_score) TextView bestScore;
     @BindView(R.id.main_worst_score) TextView worstScore;
+    @BindView(R.id.main_add_game) FloatingActionButton addGameFAB;
+    @BindView(R.id.main_loader) LinearLayout loader;
 
     private static final int RC_SIGN_IN = 9001;
     private static final String MUSIC_URL = "https://melodice.org/playlist/eldritch-horror-2013/";
@@ -121,6 +126,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
+                showLoader();
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
                 return true;
@@ -131,20 +137,30 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 mainPresenter.changeSortMode();
                 return true;
             case R.id.action_statistics:
+                showLoader();
                 Intent intentStatistics = new Intent(this, StatisticsActivity.class);
                 startActivity(intentStatistics);
                 return true;
             case R.id.action_music:
-                Intent browserIntentYandex = new Intent(Intent.ACTION_VIEW, Uri.parse(MUSIC_URL));
-                startActivity(browserIntentYandex);
+                showLoader();
+                Intent musicIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MUSIC_URL));
+                startActivity(musicIntent);
                 return true;
             case R.id.action_forgotten_endings:
+                showLoader();
                 Intent forgottenEndingsIntent = new Intent(this, ForgottenEndingsActivity.class);
                 startActivity(forgottenEndingsIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loader.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     @Override
@@ -244,18 +260,21 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void intentToPager() {
+        showLoader();
         Intent pagerIntent = new Intent(this, PagerActivity.class);
         startActivity(pagerIntent);
     }
 
     @Override
     public void intentToDetails() {
+        showLoader();
         Intent detailsIntent = new Intent(this, DetailsActivity.class);
         startActivity(detailsIntent);
     }
 
     @Override
     public void intentToGooglePlay() {
+        showLoader();
         Uri uri = Uri.parse(GOOGLE_PLAY_URL + getPackageName()); // Go to Android market
         Intent googlePlayIntent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(googlePlayIntent);
@@ -263,11 +282,18 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @OnClick({R.id.main_add_game})
     public void onClick(View view) {
+        //showLoader();
         mainPresenter.addGame();
+    }
+
+    private void showLoader() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        loader.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onItemClick(int position) {
+        //showLoader();
         mainPresenter.setCurrentGame(position);
         intentToDetails();
     }
@@ -279,12 +305,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void onEditClick(int position) {
+        //showLoader();
         mainPresenter.setCurrentGame(position);
         intentToPager();
     }
 
     @Override
     public void onDeleteClick(int position) {
+        //showLoader();
         mainPresenter.showDeleteDialog(position);
     }
 

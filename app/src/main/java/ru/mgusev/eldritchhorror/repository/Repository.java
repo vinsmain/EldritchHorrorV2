@@ -809,9 +809,6 @@ public class Repository {
     }
 
     public List<String> getConditionList(int ancientOneId, boolean victory) {
-        List<String> conditionList = new ArrayList<>();
-        conditionList.addAll(staticDataDB.endingDAO().getConditionList(ancientOneId, victory));
-        //conditionList.addAll(staticDataDB.endingDAO().getCondition2List(ancientOneId, victory));
-        return conditionList;
+        return staticDataDB.endingDAO().getConditionList(ancientOneId, victory);
     }
 }

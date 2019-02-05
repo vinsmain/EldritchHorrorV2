@@ -58,7 +58,6 @@
 
         <activity
             android:name=".ui.activity.forgotten_endings.ForgottenEndingsActivity"
-            android:label="@string/title_activity_forgotten_endings"
             android:theme="@style/AppTheme"></activity>
     </application>
 

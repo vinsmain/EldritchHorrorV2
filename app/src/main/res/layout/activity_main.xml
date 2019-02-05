@@ -154,4 +154,9 @@
         app:srcCompat="@drawable/cross" />
 
     <!--app:layout_scrollFlags="scroll|exitUntilCollapsed"-->
+
+    <include
+        layout="@layout/loader"
+        android:id="@+id/loader" />
+
 </android.support.design.widget.CoordinatorLayout>
