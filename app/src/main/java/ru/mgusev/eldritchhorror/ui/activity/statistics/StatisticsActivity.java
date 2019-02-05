@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,6 +47,7 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
     @BindView(R.id.statistics_background) ImageView background;
     @BindView(R.id.statistics_last_game) TextView lastGameTV;
     @BindView(R.id.statistics_best_game) TextView bestGameTV;
+    @BindView(R.id.loader) LinearLayout loader;
 
     @InjectPresenter
     StatisticsPresenter statisticsPresenter;
@@ -79,6 +81,12 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         investigatorsRV.setAdapter(statisticsAdapter);
 
         initFragments();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideLoader();
     }
 
     private void initToolbar() {
@@ -135,6 +143,16 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         }
     }
 
+    private void showLoader() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        loader.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoader() {
+        loader.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
     @Override
     public void setBestResult(String value) {
         bestGameTV.setText(value);
@@ -149,9 +167,11 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.statistics_last_game_row :
+                showLoader();
                 statisticsPresenter.goToDetailsActivity(true);
                 break;
             case R.id.statistics_best_game_row :
+                showLoader();
                 statisticsPresenter.goToDetailsActivity(false);
                 break;
             case R.id.statistics_filter_card :

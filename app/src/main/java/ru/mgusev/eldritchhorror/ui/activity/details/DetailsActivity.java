@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -37,6 +41,7 @@ import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
+import timber.log.Timber;
 
 public class DetailsActivity extends MvpAppCompatActivity implements DetailsView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener {
 
@@ -84,6 +89,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.photo_details_none) TextView photoNoneMessage;
 
     @BindView(R.id.comment_tv) TextView commentTV;
+    @BindView(R.id.loader) LinearLayout loader;
 
     private DetailsAdapter adapter;
     private GalleryAdapter galleryAdapter;
@@ -108,6 +114,12 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         initToolbar();
         initInvestigatorRV();
         initPhotoRV();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideLoader();
     }
 
     private void initToolbar() {
@@ -139,10 +151,21 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     private void startIntent(int position) {
+        showLoader();
         detailsPresenter.setCurrentPagerPosition(position);
         detailsPresenter.setGameToRepository();
         Intent editIntent = new Intent(this, PagerActivity.class);
         startActivity(editIntent);
+    }
+
+    private void showLoader() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        loader.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoader() {
+        loader.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     @Override
@@ -350,8 +373,15 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void onItemClick(int position) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         detailsPresenter.setCurrentPosition(position);
         detailsPresenter.openFullScreenPhotoViewer();
+        try {
+            new Handler().postDelayed(() -> getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE), 500);
+        } catch (IllegalArgumentException e) {
+            hideLoader();
+            Timber.d(e);
+        }
     }
 
     @Override
@@ -376,6 +406,12 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
                 .setOnDismissListener(this)
                 .setStartPosition(detailsPresenter.getCurrentPosition())
                 .show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Timber.d("OnPause");
     }
 
     @Override

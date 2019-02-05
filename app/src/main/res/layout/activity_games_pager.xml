@@ -136,4 +136,8 @@
         app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@drawable/delete_white" />
 
+    <include
+        layout="@layout/loader"
+        android:id="@+id/loader" />
+
 </android.support.design.widget.CoordinatorLayout>

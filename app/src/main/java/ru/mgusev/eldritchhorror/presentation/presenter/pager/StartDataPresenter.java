@@ -1,5 +1,7 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
+import android.view.WindowManager;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 

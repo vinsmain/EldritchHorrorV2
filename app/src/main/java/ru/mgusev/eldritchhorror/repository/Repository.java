@@ -174,37 +174,20 @@ public class Repository {
             } else if (investigator.getNameRU().equals("Майкл МакГлен")) {
                 investigator.setNameRU("Майкл Макглен");
                 update = true;
+            } else if (investigator.getOccupationRU().equals("Эстрадная артистка")) {
+                investigator.setOccupationRU("Певица");
+                update = true;
+            } else if (investigator.getNameRU().equals("\"Скидс\" О'Тул")) {
+                investigator.setNameRU("Скат О'Тул");
+                update = true;
+            } else if (investigator.getNameRU().equals("Зоуи Самарас") || investigator.getOccupationRU().equals("Шеф-повар")) {
+                investigator.setNameRU("Зои Самарас");
+                investigator.setOccupationRU("Повар");
+                update = true;
             }
         }
         if (update) insertGame(game);
     }
-
-    /*public void saveGameDraft() {
-        if (getGame() != null) {
-            Game draftGame = new Game(getGame());
-            draftGame.setParentId(draftGame.getId());
-            draftGame.setId(userDataDB.gameDAO().getDraftGame(draftGame.getParentId()) == null ? draftGame.getId() : userDataDB.gameDAO().getDraftGame(draftGame.getParentId()).getId());
-            insertGame(draftGame);
-        }
-    }
-
-    public void loadGameDraft() {
-        Game draftGame = userDataDB.gameDAO().getDraftGame();
-        if (draftGame != null) {
-            draftGame.setInvList(userDataDB.investigatorDAO().getByGameID(draftGame.getId()));
-            Game game = new Game(draftGame);
-            game.setId(game.getParentId());
-            game.setParentId(0);
-            this.game = game;
-        } else this.game = new Game();
-    }
-
-    public void deleteAllDraftGames() {
-        for (Game game : userDataDB.gameDAO().getDraftGameList()) {
-            game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
-            deleteGame(game, false);
-        }
-    }*/
 
     public Game getGame() {
         return game;

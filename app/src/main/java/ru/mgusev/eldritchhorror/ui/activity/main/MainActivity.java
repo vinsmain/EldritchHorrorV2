@@ -61,7 +61,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @BindView(R.id.main_best_score) TextView bestScore;
     @BindView(R.id.main_worst_score) TextView worstScore;
     @BindView(R.id.main_add_game) FloatingActionButton addGameFAB;
-    @BindView(R.id.main_loader) LinearLayout loader;
+    @BindView(R.id.loader) LinearLayout loader;
 
     private static final int RC_SIGN_IN = 9001;
     private static final String MUSIC_URL = "https://melodice.org/playlist/eldritch-horror-2013/";
@@ -159,8 +159,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     protected void onResume() {
         super.onResume();
-        loader.setVisibility(View.GONE);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        hideLoader();
     }
 
     @Override
@@ -282,13 +281,17 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @OnClick({R.id.main_add_game})
     public void onClick(View view) {
-        //showLoader();
         mainPresenter.addGame();
     }
 
     private void showLoader() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         loader.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoader() {
+        loader.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     @Override

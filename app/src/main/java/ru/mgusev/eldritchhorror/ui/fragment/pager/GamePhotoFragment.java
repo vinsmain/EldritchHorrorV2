@@ -34,12 +34,14 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.GamePhotoPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -159,7 +161,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
             // Continue only if the File was successfully created
             File file = gamePhotoPresenter.getNewImageFile();
             if (file != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), "com.example.android.provider", file));
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID  + ".provider", file));
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                 gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(file));
             }

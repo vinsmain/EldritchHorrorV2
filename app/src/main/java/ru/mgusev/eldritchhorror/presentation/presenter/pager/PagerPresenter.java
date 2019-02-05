@@ -103,7 +103,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     private boolean isCorrectActiveInvestigatorsCount() {
         int invCount = 0;
-        for (Investigator inv : repository.getGame().getInvList()) { //TODO Запретить открытие второй активити при быстром клике
+        for (Investigator inv : repository.getGame().getInvList()) {
             if (inv.getIsStarting()) invCount++;
         }
         return repository.getGame().getPlayersCount() >= invCount;
@@ -147,10 +147,6 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
 
     public boolean isSelectedMode() {
         return selectedMode;
-    }
-
-    public void activityOnStop() {
-        //if (!backDialogShow) repository.saveGameDraft();
     }
 
     @Override

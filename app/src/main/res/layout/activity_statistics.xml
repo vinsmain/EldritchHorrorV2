@@ -239,4 +239,8 @@
         </LinearLayout>
     </ScrollView>
 
+    <include
+        layout="@layout/loader"
+        android:id="@+id/loader" />
+
 </android.support.constraint.ConstraintLayout>
