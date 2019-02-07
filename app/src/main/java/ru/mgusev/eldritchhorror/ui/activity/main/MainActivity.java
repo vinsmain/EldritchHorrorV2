@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,6 +63,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @BindView(R.id.main_best_score) TextView bestScore;
     @BindView(R.id.main_worst_score) TextView worstScore;
     @BindView(R.id.main_add_game) FloatingActionButton addGameFAB;
+    @BindView(R.id.main_drawer) DrawerLayout drawer;
     @BindView(R.id.loader) LinearLayout loader;
 
     private static final int RC_SIGN_IN = 9001;
@@ -78,6 +81,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private ScrollListener scrollListener;
     private AlertDialog deleteDialog;
     private AlertDialog rateDialog;
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +106,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
         setSupportActionBar(toolbar);
         setTitle(R.string.main_header);
+
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.about, R.string.main_header);
+        //drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
     }
 
     @Override
