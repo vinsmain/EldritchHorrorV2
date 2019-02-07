@@ -148,4 +148,7 @@
     <string name="comment_header">Comment</string>
     <string name="comment_none">None</string>
     <string name="rumor">Rumor</string>
+    <string name="forgotten_endings_header">Forgotten endings</string>
+    <string name="forgotten_endings_read_header">Random ending</string>
+    <string name="forgotten_endings_select_ancient_one_header">Select Ancient One</string>
 </resources>

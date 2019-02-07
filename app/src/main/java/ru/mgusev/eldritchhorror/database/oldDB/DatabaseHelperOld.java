@@ -19,9 +19,9 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import ru.mgusev.eldritchhorror.app.App;
-import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.model.Investigator;
+import timber.log.Timber;
 
 public class DatabaseHelperOld extends OrmLiteSqliteOpenHelper {
 
@@ -55,18 +55,18 @@ public class DatabaseHelperOld extends OrmLiteSqliteOpenHelper {
     //Выполняется, когда БД имеет версию отличную от текущей
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        System.out.println("OLD VERSION " + oldVersion);
-        System.out.println("NEW VERSION " + newVersion);
+        Timber.d("OLD VERSION %s", oldVersion);
+        Timber.d("NEW VERSION %s", newVersion);
         try {
             if (oldVersion < 2) {
-                Log.e(TAG, "Update 1 - 2");
+                Timber.e("Update 1 - 2");
                 getGameOldDAO().executeRaw("ALTER TABLE '" + GameOld.GAME_TABLE_NAME + "' ADD COLUMN " + GameOld.GAME_FIELD_PRELUDE_ID + " INTEGER DEFAULT 0;");
                 getGameOldDAO().executeRaw("ALTER TABLE '" + GameOld.GAME_TABLE_NAME + "' ADD COLUMN " + GameOld.GAME_FIELD_SOLVED_MYSTERIES_COUNT + " INTEGER DEFAULT 3;");
-                Log.e(TAG, "Finish update 1 - 2");
+                Timber.e("Finish update 1 - 2");
             }
 
             if (oldVersion < 3) {
-                Log.e(TAG, "Update 2 - 3");
+                Timber.e("Update 2 - 3");
                 String queryGamesUpgrade = "PRAGMA foreign_keys = 0;\n" +
                         "\n" +
                         "CREATE TABLE games_temp_table AS SELECT *\n" +
@@ -207,25 +207,25 @@ public class DatabaseHelperOld extends OrmLiteSqliteOpenHelper {
 
                 getGameOldDAO().queryRaw(queryGamesUpgrade);
                 getInvestigatorOldDAO().queryRaw(queryInvUpgrade);
-                Log.e(TAG, "Finish update 2 - 3");
+                Timber.tag(TAG).e("Finish update 2 - 3");
             }
 
             if (oldVersion < 4) {
-                Log.e(TAG, "Update 3 - 4");
+                Timber.e("Update 3 - 4");
                 getGameOldDAO().executeRaw("ALTER TABLE '" + GameOld.GAME_TABLE_NAME + "' ADD COLUMN " + GameOld.GAME_FIELD_USER_ID + " STRING DEFAULT null;");
-                Log.e(TAG, "Finish update 3 - 4");
+                Timber.e("Finish update 3 - 4");
             }
 
             if (oldVersion < 7) {
-                Log.e(TAG, "Update 4 - 7");
+                Timber.e("Update 4 - 7");
                 getGameOldDAO().executeRaw("ALTER TABLE '" + GameOld.GAME_TABLE_NAME + "' ADD COLUMN " + GameOld.GAME_FIELD_LAST_MODIFIED + " BIGINT DEFAULT 0;");
                 Date currentDate = new Date();
                 getGameOldDAO().executeRaw("UPDATE '" + GameOld.GAME_TABLE_NAME + "' SET " + GameOld.GAME_FIELD_LAST_MODIFIED + " = " + currentDate.getTime() + ";");
-                Log.e(TAG, "Finish update 4 - 7");
+                Timber.e("Finish update 4 - 7");
             }
 
             if (oldVersion < 8) {
-                Log.e(TAG, "Update 7 - 8");
+                Timber.e("Update 7 - 8");
                 String queryGamesUpgradeV8 = "PRAGMA foreign_keys = 0;\n" +
                         "\n" +
                         "CREATE TABLE games_temp_table AS SELECT *\n" +
@@ -335,11 +335,11 @@ public class DatabaseHelperOld extends OrmLiteSqliteOpenHelper {
                 getGameOldDAO().queryRaw(queryGamesUpgradeV8);
                 Date currentDate = new Date();
                 getGameOldDAO().executeRaw("UPDATE '" + GameOld.GAME_TABLE_NAME + "' SET " + GameOld.GAME_FIELD_LAST_MODIFIED + " = " + currentDate.getTime() + ";");
-                Log.e(TAG, "Finish update 7 - 8");
+                Timber.e("Finish update 7 - 8");
             }
 
             if (oldVersion < 9) {
-                Log.e(TAG, "Update 8 - 9");
+                Timber.e("Update 8 - 9");
                 getGameOldDAO().executeRaw("ALTER TABLE '" + GameOld.GAME_TABLE_NAME + "' ADD COLUMN " + GameOld.GAME_FIELD_ADVENTURE_ID + " INTEGER DEFAULT 0;");
                 getInvestigatorOldDAO().executeRaw("ALTER TABLE '" + Investigator.INVESTIGATOR_TABLE_NAME + "' ADD COLUMN " + Investigator.INVESTIGATOR_FIELD_SPECIALIZATION_ID + " INTEGER DEFAULT 0;");
                 List<Investigator> invList = repository.getInvestigatorList();
@@ -347,11 +347,11 @@ public class DatabaseHelperOld extends OrmLiteSqliteOpenHelper {
                     getInvestigatorOldDAO().executeRaw("UPDATE '" + Investigator.INVESTIGATOR_TABLE_NAME + "' SET " + Investigator.INVESTIGATOR_FIELD_SPECIALIZATION_ID + " = " + investigator.getSpecialization() +
                             " WHERE " + Investigator.INVESTIGATOR_FIELD_ID + " = " + investigator.getId() + ";");
                 }
-                Log.e(TAG, "Finish update 8 - 9");
+                Timber.e("Finish update 8 - 9");
             }
 
             if (oldVersion < 12) {
-                Log.e(TAG, "Update 9 - 12");
+                Timber.e("Update 9 - 12");
                 List<GameOld> gameOldList = getGameOldDAO().getGamesSortDateUp();
                 for (GameOld gameOld : gameOldList) {
                     if (!gameOld.getIsDefeatByAwakenedAncientOne() && !gameOld.getIsDefeatByMythosDepletion() && !gameOld.getIsDefeatByElimination()) {
@@ -364,23 +364,23 @@ public class DatabaseHelperOld extends OrmLiteSqliteOpenHelper {
                         getGameOldDAO().writeGameToDB(gameOld);
                     }
                 }
-                Log.e(TAG, "Finish update 9 - 12");
+                Timber.e("Finish update 9 - 12");
             }
 
             if (oldVersion < 13) {
-                Log.e(TAG, "Update 12 - 13");
+                Timber.e("Update 12 - 13");
                 List<GameOld> gameOldList = getGameOldDAO().getGamesSortDateUp();
                 for (GameOld gameOld : gameOldList) {
                     gameOld.setInvList(getInvestigatorOldDAO().getInvestigatorsListByGameID(gameOld.id));
                     repository.insertGameToDB(gameOld.convert());
                 }
                 repository.gameListOnNext();
-                Log.e(TAG, "Finish update 12 - 13");
+                Timber.e("Finish update 12 - 13");
             }
 
-            Log.e(TAG, "Update DB");
+            Timber.e("Update DB");
         } catch (SQLException e){
-            Log.e(TAG, "Error upgrading db " + DATABASE_NAME + " from ver " + oldVersion);
+            Timber.e("Error upgrading db " + DATABASE_NAME + " from ver " + oldVersion);
             throw new RuntimeException(e);
         }
     }

@@ -12,7 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -84,6 +86,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.photo_details_none) TextView photoNoneMessage;
 
     @BindView(R.id.comment_tv) TextView commentTV;
+    @BindView(R.id.loader) LinearLayout loader;
 
     private DetailsAdapter adapter;
     private GalleryAdapter galleryAdapter;
@@ -108,6 +111,12 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         initToolbar();
         initInvestigatorRV();
         initPhotoRV();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideLoader();
     }
 
     private void initToolbar() {
@@ -139,10 +148,21 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     private void startIntent(int position) {
+        showLoader();
         detailsPresenter.setCurrentPagerPosition(position);
         detailsPresenter.setGameToRepository();
         Intent editIntent = new Intent(this, PagerActivity.class);
         startActivity(editIntent);
+    }
+
+    private void showLoader() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        loader.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoader() {
+        loader.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     @Override
@@ -185,21 +205,24 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void showDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        builder.setTitle(R.string.dialogAlert);
-        builder.setMessage(R.string.deleteDialogMessage);
-        builder.setIcon(R.drawable.delete);
-        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
-            detailsPresenter.deleteGame();
-            finish();
-        });
-        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> detailsPresenter.hideDeleteDialog());
-        deleteDialog = builder.show();
+        if (deleteDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(R.string.dialogAlert);
+            builder.setMessage(R.string.deleteDialogMessage);
+            builder.setIcon(R.drawable.delete);
+            builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+                detailsPresenter.deleteGame();
+                finish();
+            });
+            builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> detailsPresenter.hideDeleteDialog());
+            deleteDialog = builder.show();
+        }
     }
 
     @Override
     public void hideDeleteDialog() {
+        deleteDialog = null;
         //Delete showDeleteDialog() from currentState with DismissDialogStrategy
     }
 

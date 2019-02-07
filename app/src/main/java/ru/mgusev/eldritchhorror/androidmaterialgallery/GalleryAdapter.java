@@ -10,7 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +23,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
-import ru.mgusev.eldritchhorror.ui.fragment.pager.GamePhotoFragment;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryItemHolder> {
 
@@ -65,7 +68,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryI
 
     @Override
     public void onBindViewHolder(@NonNull GalleryItemHolder holder, int position) {
-        holder.photo.setImageURI(Uri.parse(galleryItems.get(holder.getAdapterPosition())));
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(galleryItems.get(holder.getAdapterPosition())))
+                .setResizeOptions(new ResizeOptions(300, 300))
+                .build();
+        holder.photo.setController(
+                Fresco.newDraweeControllerBuilder()
+                        .setOldController(holder.photo.getController())
+                        .setImageRequest(request)
+                        .build());
 
         if (selectedGalleryItems.contains(galleryItems.get(holder.getAdapterPosition()))) holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.color_starting_investigator));
         else holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.colorText));

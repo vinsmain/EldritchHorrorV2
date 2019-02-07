@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import timber.log.Timber;
+
 public class FileHelper {
 
     private Context context;
@@ -35,7 +37,8 @@ public class FileHelper {
                 uriFileList.add(UriUtil.getUriForFile(file).toString());
             }
         }
-        if (uriFileList.size() == 0) Log.d("DELETE FILE DIR", Objects.requireNonNull(dir).getPath() + " " + dir.delete());
+        if (uriFileList.size() == 0)
+            Timber.tag("DELETE FILE DIR").d(Objects.requireNonNull(dir).getPath() + " " + dir.delete());
         return uriFileList;
     }
 
@@ -56,9 +59,9 @@ public class FileHelper {
         if (fileOrDirectory.isDirectory()) {
             for (File child : fileOrDirectory.listFiles()) deleteRecursiveFiles(child);
         }
-        Log.d("DELETE FILE", fileOrDirectory.getPath() + " " + fileOrDirectory.delete());
+        Timber.tag("DELETE FILE").d(fileOrDirectory.getPath() + " " + fileOrDirectory.delete());
         if (!fileOrDirectory.isDirectory() && fileOrDirectory.getParentFile().listFiles().length == 0) {
-            Log.d("DELETE FILE", fileOrDirectory.getPath() + " " + fileOrDirectory.getParentFile().delete());
+            Timber.tag("DELETE FILE").d(fileOrDirectory.getPath() + " " + fileOrDirectory.getParentFile().delete());
         }
     }
 }

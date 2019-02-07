@@ -11,6 +11,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
+import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration6to7;
+import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration7to8;
+import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigrations;
+import ru.mgusev.eldritchhorror.database.userDB.Migrations;
 import ru.mgusev.eldritchhorror.repository.FirebaseHelper;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
@@ -48,11 +52,13 @@ public class AppModule {
     public StaticDataDB provideStaticDataDB(Context context) {
         return Room.databaseBuilder(context, StaticDataDB.class, "StaticDataDB.db")
                 .openHelperFactory(new AssetSQLiteOpenHelperFactory())
-                .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_1_2)
-                .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_2_3)
-                .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_3_4)
-                .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_4_5)
-                .addMigrations(ru.mgusev.eldritchhorror.database.staticDB.Migrations.MIGRATION_5_6)
+                .addMigrations(StaticDBMigrations.MIGRATION_1_2)
+                .addMigrations(StaticDBMigrations.MIGRATION_2_3)
+                .addMigrations(StaticDBMigrations.MIGRATION_3_4)
+                .addMigrations(StaticDBMigrations.MIGRATION_4_5)
+                .addMigrations(StaticDBMigrations.MIGRATION_5_6)
+                .addMigrations(StaticDBMigration6to7.MIGRATION_6_7)
+                .addMigrations(StaticDBMigration7to8.MIGRATION_7_8)
                 .allowMainThreadQueries()
                 .build();
     }
@@ -61,11 +67,11 @@ public class AppModule {
     @Singleton
     public UserDataDB provideUserDataDB(Context context) {
         return Room.databaseBuilder(context, UserDataDB.class, "UserDataDB.db")
-                .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_1_2)
-                .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_2_3)
-                .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_3_4)
-                .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_4_5)
-                .addMigrations(ru.mgusev.eldritchhorror.database.userDB.Migrations.MIGRATION_5_6)
+                .addMigrations(Migrations.MIGRATION_1_2)
+                .addMigrations(Migrations.MIGRATION_2_3)
+                .addMigrations(Migrations.MIGRATION_3_4)
+                .addMigrations(Migrations.MIGRATION_4_5)
+                .addMigrations(Migrations.MIGRATION_5_6)
                 .allowMainThreadQueries()
                 .build();
     }

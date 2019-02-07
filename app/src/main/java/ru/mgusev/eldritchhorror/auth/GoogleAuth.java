@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import timber.log.Timber;
 
 public class GoogleAuth {
 
@@ -63,14 +64,14 @@ public class GoogleAuth {
         mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // Sign in success, update UI with the signed-in user's information
-                Log.d(TAG, "signInWithCredential:success");
+                Timber.tag(TAG).d("signInWithCredential:success");
                 currentUser = mAuth.getCurrentUser();
                 repository.setUser(currentUser);
                 repository.initFirebaseHelper();
                 repository.userIconOnNext(Objects.requireNonNull(Objects.requireNonNull(currentUser).getPhotoUrl()).toString());
             } else {
                 // If sign in fails, display a message to the user.
-                Log.w(TAG, "signInWithCredential:failure", task.getException());
+                Timber.tag(TAG).w(task.getException(), "signInWithCredential:failure");
                 repository.authOnNext(true);
             }
         });

@@ -23,6 +23,7 @@ import ru.mgusev.eldritchhorror.model.ImageFile;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 @InjectViewState
 public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
@@ -85,7 +86,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     }
 
     private void deleteSelectImages(boolean value) {
-        System.out.println("DELETE " + value);
+        Timber.d("DELETE %s", value);
         if (value) getViewState().showDeleteDialog();
     }
 

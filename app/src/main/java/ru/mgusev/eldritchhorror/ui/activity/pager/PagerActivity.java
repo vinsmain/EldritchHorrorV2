@@ -12,8 +12,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
 import ru.mgusev.eldritchhorror.support.AndroidBug5497Workaround;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
@@ -49,6 +52,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @BindView(R.id.games_pager_viewpager) ViewPager pager;
     @BindView(R.id.games_pager_add_image) FabSpeedDial addImageFab;
     @BindView(R.id.games_pager_delete_image) FloatingActionButton deleteImageFab;
+    @BindView(R.id.loader) LinearLayout loader;
 
     private PagerAdapter pagerAdapter;
     private AlertDialog backDialog;
@@ -84,7 +88,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
             @Override
             public void onPageSelected(int position) {
-                Log.d("PAGER", "onPageSelected, position = " + position);
+                Timber.d("onPageSelected, position = %s", position);
                 pagerPresenter.setCurrentPosition(position);
                 showMenuItem();
                 showAddPhotoButton();
@@ -103,6 +107,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         addImageFab.setMenuListener(new SimpleMenuListenerAdapter() {
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 switch (menuItem.getItemId()) {
                     case R.id.action_camera:
                         pagerPresenter.clickOnAddPhotoButton(true);
@@ -114,6 +119,12 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideLoader();
     }
 
     private void initToolbar() {
@@ -145,17 +156,19 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     public void showBackDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        builder.setTitle(R.string.dialogBackAlert);
-        builder.setMessage(R.string.backDialogMessage);
-        builder.setIcon(R.drawable.back_icon);
-        builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
-            pagerPresenter.deleteFilesIfGameNotCreated();
-            finishActivity();
-        });
-        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
-        backDialog = builder.show();
+        if (backDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(R.string.dialogBackAlert);
+            builder.setMessage(R.string.backDialogMessage);
+            builder.setIcon(R.drawable.back_icon);
+            builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
+                pagerPresenter.deleteFilesIfGameNotCreated();
+                finishActivity();
+            });
+            builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
+            backDialog = builder.show();
+        }
     }
 
     @Override
@@ -170,6 +183,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     public void hideBackDialog() {
+        backDialog = null;
         //Delete showBackDialog() from currentState with DismissDialogStrategy
     }
 
@@ -248,10 +262,12 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 pagerPresenter.actionRandom(pagerPresenter.getCurrentPosition());
                 return true;
             case R.id.action_random_settings:
+                showLoader();
                 Intent randomSettingsIntent = new Intent(this, SpecializationChoiceActivity.class);
                 startActivity(randomSettingsIntent);
                 return true;
             case R.id.action_edit_expansion:
+                showLoader();
                 Intent expansionChoiceIntent = new Intent(this, ExpansionChoiceActivity.class);
                 startActivity(expansionChoiceIntent);
                 return true;
@@ -264,6 +280,16 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void showLoader() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        loader.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoader() {
+        loader.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     @Override
@@ -320,13 +346,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @Override
     public void onBackPressed() {
         pagerPresenter.showBackDialog();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        pagerPresenter.activityOnStop();
-        Log.d("PAGER", "On Stop");
     }
 
     @Override

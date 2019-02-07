@@ -34,6 +34,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
@@ -123,21 +124,24 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
 
     @Override
     public void showDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-        builder.setCancelable(false);
-        builder.setTitle(R.string.dialogAlert);
-        builder.setMessage(R.string.delete_photo_dialog_message);
-        builder.setIcon(R.drawable. delete);
-        builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
-            gamePhotoPresenter.deleteSelectedFiles();
-            gamePhotoPresenter.dismissDeleteDialog();
-        });
-        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> gamePhotoPresenter.dismissDeleteDialog());
-        deleteDialog = builder.show();
+        if (deleteDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+            builder.setCancelable(false);
+            builder.setTitle(R.string.dialogAlert);
+            builder.setMessage(R.string.delete_photo_dialog_message);
+            builder.setIcon(R.drawable.delete);
+            builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
+                gamePhotoPresenter.deleteSelectedFiles();
+                gamePhotoPresenter.dismissDeleteDialog();
+            });
+            builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> gamePhotoPresenter.dismissDeleteDialog());
+            deleteDialog = builder.show();
+        }
     }
 
     @Override
     public void hideDeleteDialog() {
+        deleteDialog = null;
         //Delete showDeleteDialog() from currentState with DismissDialogStrategy
     }
 
@@ -159,7 +163,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
             // Continue only if the File was successfully created
             File file = gamePhotoPresenter.getNewImageFile();
             if (file != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), "com.example.android.provider", file));
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID  + ".provider", file));
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                 gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(file));
             }

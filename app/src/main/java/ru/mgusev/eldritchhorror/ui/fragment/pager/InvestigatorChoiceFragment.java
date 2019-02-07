@@ -141,21 +141,24 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
 
     @Override
     public void showClearInvListDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-        builder.setCancelable(false);
-        builder.setTitle(R.string.dialogAlert);
-        builder.setMessage(R.string.cleanDialogMessage);
-        builder.setIcon(R.drawable.cancel_select);
-        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
-            investigatorChoicePresenter.clearInvestigatorList();
-            investigatorChoicePresenter.dismissDialog();
-        });
-        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> investigatorChoicePresenter.dismissDialog());
-        clearDialog = builder.show();
+        if (clearDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+            builder.setCancelable(false);
+            builder.setTitle(R.string.dialogAlert);
+            builder.setMessage(R.string.cleanDialogMessage);
+            builder.setIcon(R.drawable.cancel_select);
+            builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+                investigatorChoicePresenter.clearInvestigatorList();
+                investigatorChoicePresenter.dismissDialog();
+            });
+            builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> investigatorChoicePresenter.dismissDialog());
+            clearDialog = builder.show();
+        }
     }
 
     @Override
     public void hideClearInvListDialog() {
+        clearDialog = null;
         //Delete showDialog() from currentState with DismissDialogStrategy
     }
 

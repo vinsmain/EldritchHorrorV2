@@ -131,4 +131,8 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
+    <include
+        layout="@layout/loader"
+        android:id="@+id/loader" />
+
 </android.support.design.widget.CoordinatorLayout>

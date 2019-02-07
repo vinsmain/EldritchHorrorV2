@@ -131,4 +131,7 @@
     <string name="rumor">Слух</string>
     <string name="defeat_by_rumor">По указанию карты Слуха</string>
     <string name="defeat_by_surrender">Сыщики сдались</string>
+    <string name="forgotten_endings_header">Забытые концовки</string>
+    <string name="forgotten_endings_read_header">Случайная концовка</string>
+    <string name="forgotten_endings_select_ancient_one_header">Выберите Древнего</string>
 </resources>

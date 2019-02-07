@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -33,12 +36,14 @@ import ru.mgusev.eldritchhorror.adapter.IconMenuAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Game;
+import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
 import ru.mgusev.eldritchhorror.support.IconPowerMenuItem;
 import ru.mgusev.eldritchhorror.support.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
+import ru.mgusev.eldritchhorror.ui.activity.forgotten_endings.ForgottenEndingsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 
@@ -55,6 +60,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @BindView(R.id.main_game_count) TextView gameCount;
     @BindView(R.id.main_best_score) TextView bestScore;
     @BindView(R.id.main_worst_score) TextView worstScore;
+    @BindView(R.id.main_add_game) FloatingActionButton addGameFAB;
+    @BindView(R.id.loader) LinearLayout loader;
 
     private static final int RC_SIGN_IN = 9001;
     private static final String MUSIC_URL = "https://melodice.org/playlist/eldritch-horror-2013/";
@@ -63,6 +70,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private MenuItem sortItem;
     private MenuItem authItem;
     private MenuItem statItem;
+    private MenuItem forgottenEndingsItem;
     private CustomPowerMenu authPopupMenu;
 
     private int columnsCount = 1;
@@ -102,10 +110,16 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         sortItem = menu.findItem(R.id.action_sort);
         authItem = menu.findItem(R.id.action_auth);
         statItem = menu.findItem(R.id.action_statistics);
+        forgottenEndingsItem = menu.findItem(R.id.action_forgotten_endings);
         mainPresenter.setSortModeIcon();
         mainPresenter.setVisibilityStatisticsMenuItem();
         mainPresenter.startUpdateUserIcon();
+        setVisibilityForgottenEndingsItem();
         return true;
+    }
+
+    private void setVisibilityForgottenEndingsItem() {
+        forgottenEndingsItem.setVisible(Localization.getInstance().isRusLocale());
     }
 
     @Override
@@ -126,11 +140,22 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 startActivity(intentStatistics);
                 return true;
             case R.id.action_music:
-                Intent browserIntentYandex = new Intent(Intent.ACTION_VIEW, Uri.parse(MUSIC_URL));
-                startActivity(browserIntentYandex);
+                Intent musicIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MUSIC_URL));
+                startActivity(musicIntent);
+                return true;
+            case R.id.action_forgotten_endings:
+                Intent forgottenEndingsIntent = new Intent(this, ForgottenEndingsActivity.class);
+                startActivity(forgottenEndingsIntent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideLoader();
     }
 
     @Override
@@ -161,21 +186,24 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void showDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        builder.setTitle(R.string.dialogAlert);
-        builder.setMessage(R.string.deleteDialogMessage);
-        builder.setIcon(R.drawable.delete);
-        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
-            mainPresenter.deleteGame();
-            mainPresenter.hideDeleteDialog();
-        });
-        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> mainPresenter.hideDeleteDialog());
-        deleteDialog = builder.show();
+        if (deleteDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(R.string.dialogAlert);
+            builder.setMessage(R.string.deleteDialogMessage);
+            builder.setIcon(R.drawable.delete);
+            builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+                mainPresenter.deleteGame();
+                mainPresenter.hideDeleteDialog();
+            });
+            builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> mainPresenter.hideDeleteDialog());
+            deleteDialog = builder.show();
+        }
     }
 
     @Override
     public void hideDeleteDialog() {
+        deleteDialog = null;
         //Delete showDeleteDialog() from currentState with DismissDialogStrategy
     }
 
@@ -230,12 +258,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void intentToPager() {
+        showLoader();
         Intent pagerIntent = new Intent(this, PagerActivity.class);
         startActivity(pagerIntent);
     }
 
     @Override
     public void intentToDetails() {
+        showLoader();
         Intent detailsIntent = new Intent(this, DetailsActivity.class);
         startActivity(detailsIntent);
     }
@@ -250,6 +280,16 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @OnClick({R.id.main_add_game})
     public void onClick(View view) {
         mainPresenter.addGame();
+    }
+
+    private void showLoader() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        loader.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoader() {
+        loader.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     @Override

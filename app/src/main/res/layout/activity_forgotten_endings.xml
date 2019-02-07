@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
+    tools:context="ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:theme="@style/aboutTheme" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="0dp"
+        android:background="@color/colorPrimaryLight"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/keyline_1_minus_8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/keyline_1_minus_8dp"
+                android:orientation="vertical">
+
+                <ir.hamsaa.RtlMaterialSpinner
+                    android:id="@+id/forgotten_endings_ancient_one_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/keyline_1_minus_8dp"
+                    app:ms_baseColor="@color/colorPrimaryText"
+                    app:ms_floatingLabelColor="@color/colorPrimaryText"
+                    app:ms_hint="@string/ancientOne"
+                    app:ms_hintColor="@color/colorSecondaryText"
+                    app:ms_hintTextSize="12"
+                    app:ms_thickness="0.5dp" />
+
+                <Switch
+                    android:id="@+id/forgotten_endings_result_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/keyline_1_minus_8dp"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="@string/win_header" />
+
+                <LinearLayout
+                    android:id="@+id/forgotten_endings_switch_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:orientation="vertical" />
+
+                <Button
+                    android:id="@+id/forgotten_endings_read_text_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="16dp"
+                    android:text="@string/forgotten_endings_read_header" />
+
+                <TextView
+                    android:id="@+id/forgotten_endings_header_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/forgotten_endings_text_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/colorPrimaryText" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.constraint.ConstraintLayout>

@@ -149,10 +149,6 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         return selectedMode;
     }
 
-    public void activityOnStop() {
-        //if (!backDialogShow) repository.saveGameDraft();
-    }
-
     @Override
     public void onDestroy() {
         ancientOneSubscribe.dispose();

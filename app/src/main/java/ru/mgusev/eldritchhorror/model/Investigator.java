@@ -4,6 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import timber.log.Timber;
+
 @Entity(tableName = "investigators")
 public class Investigator {
 
@@ -223,10 +225,10 @@ public class Investigator {
     }
 
     public void printLog(Investigator inv) {
-        System.out.println(getNameEN().equals(inv.getNameEN()));
-        System.out.println(getOccupationEN().equals(inv.getOccupationEN()));
-        System.out.println(getIsStarting() == inv.getIsStarting());
-        System.out.println(getIsReplacement() == inv.getIsReplacement());
-        System.out.println(getIsDead() == inv.getIsDead());
+        Timber.d(String.valueOf(getNameEN().equals(inv.getNameEN())));
+        Timber.d(String.valueOf(getOccupationEN().equals(inv.getOccupationEN())));
+        Timber.d(String.valueOf(getIsStarting() == inv.getIsStarting()));
+        Timber.d(String.valueOf(getIsReplacement() == inv.getIsReplacement()));
+        Timber.d(String.valueOf(getIsDead() == inv.getIsDead()));
     }
 }

@@ -183,4 +183,8 @@
         app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@drawable/cross" />
 
+    <include
+        layout="@layout/loader"
+        android:id="@+id/loader" />
+
 </android.support.design.widget.CoordinatorLayout>

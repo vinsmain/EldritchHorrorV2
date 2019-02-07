@@ -54,6 +54,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     @BindView(R.id.start_data_starting_rumor) Switch startingRumorSwitch;
     @BindView(R.id.start_data_prelude_text_row) TableRow preludeTextRow;
     @BindView(R.id.start_data_prelude_text) TextView preludeTextTV;
+    @BindView(R.id.start_data_date_row) TableRow dateRow;
 
     public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     private Unbinder unbinder;
@@ -105,8 +106,9 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        //super.onSaveInstanceState(outState);
+    public void onResume() {
+
+        super.onResume();
     }
 
     @Override
@@ -127,6 +129,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Override
     public void dismissDatePicker() {
+        dateRow.setEnabled(true);
         datePickerDialog = null;
         startDataPresenter.clearTempDate();
         //Delete showDatePicker() from currentState with DismissDialogStrategy
@@ -188,10 +191,11 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         startDataPresenter.setSpinnerPosition();
     }
 
-    @OnClick({R.id.date_row, R.id.ancient_one_row, R.id.prelude_row, R.id.players_count_row})
+    @OnClick({R.id.start_data_date_row, R.id.ancient_one_row, R.id.prelude_row, R.id.players_count_row})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.date_row:
+            case R.id.start_data_date_row:
+                dateRow.setEnabled(false);
                 startDataPresenter.showDatePicker();
                 break;
             case R.id.ancient_one_row:
