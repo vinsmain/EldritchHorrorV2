@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -41,7 +39,6 @@ import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
-import timber.log.Timber;
 
 public class DetailsActivity extends MvpAppCompatActivity implements DetailsView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener {
 
@@ -208,21 +205,24 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void showDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        builder.setTitle(R.string.dialogAlert);
-        builder.setMessage(R.string.deleteDialogMessage);
-        builder.setIcon(R.drawable.delete);
-        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
-            detailsPresenter.deleteGame();
-            finish();
-        });
-        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> detailsPresenter.hideDeleteDialog());
-        deleteDialog = builder.show();
+        if (deleteDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(R.string.dialogAlert);
+            builder.setMessage(R.string.deleteDialogMessage);
+            builder.setIcon(R.drawable.delete);
+            builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+                detailsPresenter.deleteGame();
+                finish();
+            });
+            builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> detailsPresenter.hideDeleteDialog());
+            deleteDialog = builder.show();
+        }
     }
 
     @Override
     public void hideDeleteDialog() {
+        deleteDialog = null;
         //Delete showDeleteDialog() from currentState with DismissDialogStrategy
     }
 
@@ -373,15 +373,8 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void onItemClick(int position) {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         detailsPresenter.setCurrentPosition(position);
         detailsPresenter.openFullScreenPhotoViewer();
-        try {
-            new Handler().postDelayed(() -> getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE), 500);
-        } catch (IllegalArgumentException e) {
-            hideLoader();
-            Timber.d(e);
-        }
     }
 
     @Override
@@ -406,12 +399,6 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
                 .setOnDismissListener(this)
                 .setStartPosition(detailsPresenter.getCurrentPosition())
                 .show();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Timber.d("OnPause");
     }
 
     @Override

@@ -40,14 +40,14 @@
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/date_row"
+                    android:id="@+id/start_data_date_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="6"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
-                    android:paddingEnd="16dp"
                     android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
                     android:theme="@style/AppTheme.ColorHighlight">
 
                     <TextView

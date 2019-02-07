@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
@@ -91,7 +90,6 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
 
     @Override
     public void onItemClick(int position) {
-        Objects.requireNonNull(getActivity()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         investigatorChoicePresenter.itemClick(position);
     }
 
@@ -143,21 +141,24 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
 
     @Override
     public void showClearInvListDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-        builder.setCancelable(false);
-        builder.setTitle(R.string.dialogAlert);
-        builder.setMessage(R.string.cleanDialogMessage);
-        builder.setIcon(R.drawable.cancel_select);
-        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
-            investigatorChoicePresenter.clearInvestigatorList();
-            investigatorChoicePresenter.dismissDialog();
-        });
-        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> investigatorChoicePresenter.dismissDialog());
-        clearDialog = builder.show();
+        if (clearDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+            builder.setCancelable(false);
+            builder.setTitle(R.string.dialogAlert);
+            builder.setMessage(R.string.cleanDialogMessage);
+            builder.setIcon(R.drawable.cancel_select);
+            builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+                investigatorChoicePresenter.clearInvestigatorList();
+                investigatorChoicePresenter.dismissDialog();
+            });
+            builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> investigatorChoicePresenter.dismissDialog());
+            clearDialog = builder.show();
+        }
     }
 
     @Override
     public void hideClearInvListDialog() {
+        clearDialog = null;
         //Delete showDialog() from currentState with DismissDialogStrategy
     }
 

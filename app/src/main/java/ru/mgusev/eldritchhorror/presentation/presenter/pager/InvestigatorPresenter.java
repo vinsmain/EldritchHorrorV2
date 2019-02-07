@@ -6,7 +6,6 @@ import com.arellomobile.mvp.MvpPresenter;
 import javax.inject.Inject;
 
 import ru.mgusev.eldritchhorror.app.App;
-import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorView;
 import ru.mgusev.eldritchhorror.repository.Repository;

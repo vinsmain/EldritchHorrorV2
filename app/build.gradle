@@ -8,7 +8,7 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
-//apply plugin: 'io.fabric'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -16,8 +16,8 @@ android {
         applicationId "ru.mgusev.eldritchhorror"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 38
-        versionName "1.7.1"
+        versionCode 39
+        versionName "1.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -94,7 +94,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.google.firebase:firebase-database:16.0.5'
+    implementation 'com.google.firebase:firebase-database:16.0.6'
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
 

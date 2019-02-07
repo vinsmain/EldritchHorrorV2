@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.util.IabHelper;
+import timber.log.Timber;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -77,7 +78,7 @@ public class AboutActivity extends AppCompatActivity {
         });
 
         purchaseFinishedListener = (result, purchase) -> {
-            Log.d("DONATE_ANSWER",result.getMessage() + " " + result.getResponse() + " " + purchase);
+            Timber.tag("DONATE_ANSWER").d(result.getMessage() + " " + result.getResponse() + " " + purchase);
             if (result.isFailure() && result.getResponse() != USER_CANCELED_CODE) {
                 // Обработка произошедшей ошибки покупки
                 Toast.makeText(this, R.string.donate_error_header, Toast.LENGTH_SHORT).show();

@@ -37,6 +37,8 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 
 /**
  * Provides convenience methods for in-app billing. You can create one instance of this
@@ -1103,14 +1105,14 @@ public class IabHelper {
     }
 
     void logDebug(String msg) {
-        if (mDebugLog) Log.d(mDebugTag, msg);
+        if (mDebugLog) Timber.tag(mDebugTag).d(msg);
     }
 
     void logError(String msg) {
-        Log.e(mDebugTag, "In-app billing error: " + msg);
+        Timber.tag(mDebugTag).e("In-app billing error: %s", msg);
     }
 
     void logWarn(String msg) {
-        Log.w(mDebugTag, "In-app billing warning: " + msg);
+        Timber.tag(mDebugTag).w("In-app billing warning: %s", msg);
     }
 }

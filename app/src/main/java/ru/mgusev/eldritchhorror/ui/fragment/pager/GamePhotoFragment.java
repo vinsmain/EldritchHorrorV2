@@ -41,7 +41,6 @@ import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.GamePhotoPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
-import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -125,21 +124,24 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
 
     @Override
     public void showDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-        builder.setCancelable(false);
-        builder.setTitle(R.string.dialogAlert);
-        builder.setMessage(R.string.delete_photo_dialog_message);
-        builder.setIcon(R.drawable. delete);
-        builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
-            gamePhotoPresenter.deleteSelectedFiles();
-            gamePhotoPresenter.dismissDeleteDialog();
-        });
-        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> gamePhotoPresenter.dismissDeleteDialog());
-        deleteDialog = builder.show();
+        if (deleteDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+            builder.setCancelable(false);
+            builder.setTitle(R.string.dialogAlert);
+            builder.setMessage(R.string.delete_photo_dialog_message);
+            builder.setIcon(R.drawable.delete);
+            builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
+                gamePhotoPresenter.deleteSelectedFiles();
+                gamePhotoPresenter.dismissDeleteDialog();
+            });
+            builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> gamePhotoPresenter.dismissDeleteDialog());
+            deleteDialog = builder.show();
+        }
     }
 
     @Override
     public void hideDeleteDialog() {
+        deleteDialog = null;
         //Delete showDeleteDialog() from currentState with DismissDialogStrategy
     }
 

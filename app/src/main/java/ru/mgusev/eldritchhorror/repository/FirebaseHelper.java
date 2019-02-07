@@ -25,6 +25,7 @@ import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.ImageFile;
+import timber.log.Timber;
 
 public class FirebaseHelper {
 
@@ -93,14 +94,14 @@ public class FirebaseHelper {
 
             // Register observers to listen for when the download is done or if it fails
             uploadTask.addOnFailureListener(exception -> {
-                Log.d("FIRESTORAGE UPLOAD", "FAIL " + exception.getLocalizedMessage());
+                Timber.tag("FIRESTORAGE UPLOAD").d("FAIL %s", exception.getLocalizedMessage());
             }).addOnSuccessListener(taskSnapshot -> {
                 ImageFile imageFile = new ImageFile();
                 imageFile.setName(Objects.requireNonNull(taskSnapshot.getMetadata()).getName());
                 imageFile.setGameId(gameId);
                 imageFile.setMd5Hash(taskSnapshot.getMetadata().getMd5Hash());
                 successUploadFilePublish.onNext(imageFile);
-                Log.d("FIRESTORAGE UPLOAD", Objects.requireNonNull(taskSnapshot.getMetadata()).getMd5Hash());
+                Timber.tag("FIRESTORAGE UPLOAD").d(Objects.requireNonNull(taskSnapshot.getMetadata()).getMd5Hash());
             });
         }
     }
@@ -112,9 +113,9 @@ public class FirebaseHelper {
             RxFirebaseStorage.getFile(fileReference, localFile)
                     .subscribe(taskSnapshot -> {
                         downloadFileDisposable.onNext(imageFile);
-                        Log.i("RxFirebaseSample", "transferred: " + taskSnapshot.getBytesTransferred() + " bytes " + localFile.getAbsolutePath());
+                        Timber.tag("RxFirebaseSample").i(String.format("transferred: %d, bytes %s", taskSnapshot.getBytesTransferred(), localFile.getAbsolutePath()));
                     }, throwable -> {
-                        Log.e("RxFirebaseSample", throwable.toString());
+                        Timber.tag("RxFirebaseSample").e(throwable.toString());
                     });
         }
     }
@@ -124,9 +125,9 @@ public class FirebaseHelper {
             StorageReference deleteReference = storageReference.child(String.valueOf(file.getGameId())).child(file.getName());
 
             deleteReference.delete().addOnSuccessListener(aVoid -> {
-                Log.d("FIRESTORAGE DELETE", "SUCCESS");
+                Timber.tag("FIRESTORAGE DELETE").d("SUCCESS");
             }).addOnFailureListener(exception -> {
-                Log.d("FIRESTORAGE UPLOAD", "FAIL " + exception.getLocalizedMessage());
+                Timber.tag("FIRESTORAGE UPLOAD").d("FAIL %s", exception.getLocalizedMessage());
             });
         }
     }

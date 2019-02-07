@@ -126,7 +126,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
-                showLoader();
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
                 return true;
@@ -137,17 +136,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 mainPresenter.changeSortMode();
                 return true;
             case R.id.action_statistics:
-                showLoader();
                 Intent intentStatistics = new Intent(this, StatisticsActivity.class);
                 startActivity(intentStatistics);
                 return true;
             case R.id.action_music:
-                showLoader();
                 Intent musicIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MUSIC_URL));
                 startActivity(musicIntent);
                 return true;
             case R.id.action_forgotten_endings:
-                showLoader();
                 Intent forgottenEndingsIntent = new Intent(this, ForgottenEndingsActivity.class);
                 startActivity(forgottenEndingsIntent);
                 return true;
@@ -190,21 +186,24 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void showDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        builder.setTitle(R.string.dialogAlert);
-        builder.setMessage(R.string.deleteDialogMessage);
-        builder.setIcon(R.drawable.delete);
-        builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
-            mainPresenter.deleteGame();
-            mainPresenter.hideDeleteDialog();
-        });
-        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> mainPresenter.hideDeleteDialog());
-        deleteDialog = builder.show();
+        if (deleteDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(R.string.dialogAlert);
+            builder.setMessage(R.string.deleteDialogMessage);
+            builder.setIcon(R.drawable.delete);
+            builder.setPositiveButton(R.string.messageOK, (dialog, which) -> {
+                mainPresenter.deleteGame();
+                mainPresenter.hideDeleteDialog();
+            });
+            builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> mainPresenter.hideDeleteDialog());
+            deleteDialog = builder.show();
+        }
     }
 
     @Override
     public void hideDeleteDialog() {
+        deleteDialog = null;
         //Delete showDeleteDialog() from currentState with DismissDialogStrategy
     }
 
@@ -273,7 +272,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void intentToGooglePlay() {
-        showLoader();
         Uri uri = Uri.parse(GOOGLE_PLAY_URL + getPackageName()); // Go to Android market
         Intent googlePlayIntent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(googlePlayIntent);
@@ -296,7 +294,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void onItemClick(int position) {
-        //showLoader();
         mainPresenter.setCurrentGame(position);
         intentToDetails();
     }
@@ -308,14 +305,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void onEditClick(int position) {
-        //showLoader();
         mainPresenter.setCurrentGame(position);
         intentToPager();
     }
 
     @Override
     public void onDeleteClick(int position) {
-        //showLoader();
         mainPresenter.showDeleteDialog(position);
     }
 

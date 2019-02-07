@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -55,6 +54,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     @BindView(R.id.start_data_starting_rumor) Switch startingRumorSwitch;
     @BindView(R.id.start_data_prelude_text_row) TableRow preludeTextRow;
     @BindView(R.id.start_data_prelude_text) TextView preludeTextTV;
+    @BindView(R.id.start_data_date_row) TableRow dateRow;
 
     public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     private Unbinder unbinder;
@@ -129,7 +129,7 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
 
     @Override
     public void dismissDatePicker() {
-        Objects.requireNonNull(getActivity()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        dateRow.setEnabled(true);
         datePickerDialog = null;
         startDataPresenter.clearTempDate();
         //Delete showDatePicker() from currentState with DismissDialogStrategy
@@ -191,11 +191,11 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
         startDataPresenter.setSpinnerPosition();
     }
 
-    @OnClick({R.id.date_row, R.id.ancient_one_row, R.id.prelude_row, R.id.players_count_row})
+    @OnClick({R.id.start_data_date_row, R.id.ancient_one_row, R.id.prelude_row, R.id.players_count_row})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.date_row:
-                Objects.requireNonNull(getActivity()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            case R.id.start_data_date_row:
+                dateRow.setEnabled(false);
                 startDataPresenter.showDatePicker();
                 break;
             case R.id.ancient_one_row:

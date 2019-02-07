@@ -34,6 +34,7 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.support.CircularTransformation;
+import timber.log.Timber;
 
 import static android.content.ContentValues.TAG;
 
@@ -208,7 +209,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
             googleAuth.firebaseAuthWithGoogle(account);
         } catch (ApiException e) {
             // Google Sign In failed, update UI appropriately
-            Log.w(TAG, "Google sign in failed", e);
+            Timber.w(e, "Google sign in failed");
             tempIconUrl = googleAuth.getDefaultIconUrl();
             getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
             getViewState().showErrorSnackBar();

@@ -312,7 +312,7 @@ public class Repository {
     }
 
     public Rumor getRumor(String name) {
-        System.out.println("GET RUMOR " + staticDataDB.rumorDAO().getRumorByName(name));
+        Timber.d("RUMOR %s", staticDataDB.rumorDAO().getRumorByName(name));
         return staticDataDB.rumorDAO().getRumorByName(name);
     }
 

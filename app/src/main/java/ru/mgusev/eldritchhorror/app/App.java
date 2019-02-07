@@ -17,7 +17,7 @@ public class App extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        //Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
 
         if (BuildConfig.DEBUG) {

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import timber.log.Timber;
+
 @Entity(tableName = "games")
 public class Game {
 
@@ -533,31 +535,31 @@ public class Game {
     }
     
     public void printLog(Game game) {
-        Log.d("GAME", String.valueOf(getId() == game.getId()));
-                 Log.d("GAME", String.valueOf(getDate() == game.getDate()));
-                 Log.d("GAME", String.valueOf(getAncientOneID() == game.getAncientOneID()));
-                 Log.d("GAME", String.valueOf(getPlayersCount() == game.getPlayersCount()));
-                 Log.d("GAME", String.valueOf(getIsSimpleMyths() == game.getIsSimpleMyths()));
-                 Log.d("GAME", String.valueOf(getIsNormalMyths() == game.getIsNormalMyths()));
-                 Log.d("GAME", String.valueOf(getIsHardMyths() == game.getIsHardMyths()));
-                 Log.d("GAME", String.valueOf(getIsStartingRumor() == game.getIsStartingRumor()));
-                 Log.d("GAME", String.valueOf(getIsWinGame() == game.getIsWinGame()));
-                 Log.d("GAME", String.valueOf(getIsDefeatByElimination() == game.getIsDefeatByElimination()));
-                 Log.d("GAME", String.valueOf(getIsDefeatByMythosDepletion() == game.getIsDefeatByMythosDepletion()));
-                 Log.d("GAME", String.valueOf(getIsDefeatByAwakenedAncientOne() == game.getIsDefeatByAwakenedAncientOne()));
-                 Log.d("GAME", String.valueOf(getGatesCount() == game.getGatesCount()));
-                 Log.d("GAME", String.valueOf(getMonstersCount() == game.getMonstersCount()));
-                 Log.d("GAME", String.valueOf(getCurseCount() == game.getCurseCount()));
-                 Log.d("GAME", String.valueOf(getRumorsCount() == game.getRumorsCount()));
-                 Log.d("GAME", String.valueOf(getCluesCount() == game.getCluesCount()));
-                 Log.d("GAME", String.valueOf(getBlessedCount() == game.getBlessedCount()));
-                 Log.d("GAME", String.valueOf(getDoomCount() == game.getDoomCount()));
-                 Log.d("GAME", String.valueOf(getScore() == game.getScore()));
-                 Log.d("GAME", String.valueOf(getPreludeID() == game.getPreludeID()));
-                 Log.d("GAME", String.valueOf(getSolvedMysteriesCount() == game.getSolvedMysteriesCount()));
-                 Log.d("GAME", String.valueOf(getLastModified() == game.getLastModified()));
-                 Log.d("GAME", String.valueOf(getAdventureID() == game.getAdventureID()));
-                 Log.d("GAME", String.valueOf(getComment().equals(game.getComment().trim())));
-                 Log.d("GAME", String.valueOf(equalsInvList(getInvList(), game.getInvList())));
+        Timber.tag("GAME").d(String.valueOf(getId() == game.getId()));
+        Timber.tag("GAME").d(String.valueOf(getDate() == game.getDate()));
+        Timber.tag("GAME").d(String.valueOf(getAncientOneID() == game.getAncientOneID()));
+        Timber.tag("GAME").d(String.valueOf(getPlayersCount() == game.getPlayersCount()));
+        Timber.tag("GAME").d(String.valueOf(getIsSimpleMyths() == game.getIsSimpleMyths()));
+        Timber.tag("GAME").d(String.valueOf(getIsNormalMyths() == game.getIsNormalMyths()));
+        Timber.tag("GAME").d(String.valueOf(getIsHardMyths() == game.getIsHardMyths()));
+        Timber.tag("GAME").d(String.valueOf(getIsStartingRumor() == game.getIsStartingRumor()));
+        Timber.tag("GAME").d(String.valueOf(getIsWinGame() == game.getIsWinGame()));
+        Timber.tag("GAME").d(String.valueOf(getIsDefeatByElimination() == game.getIsDefeatByElimination()));
+        Timber.tag("GAME").d(String.valueOf(getIsDefeatByMythosDepletion() == game.getIsDefeatByMythosDepletion()));
+        Timber.tag("GAME").d(String.valueOf(getIsDefeatByAwakenedAncientOne() == game.getIsDefeatByAwakenedAncientOne()));
+        Timber.tag("GAME").d(String.valueOf(getGatesCount() == game.getGatesCount()));
+        Timber.tag("GAME").d(String.valueOf(getMonstersCount() == game.getMonstersCount()));
+        Timber.tag("GAME").d(String.valueOf(getCurseCount() == game.getCurseCount()));
+        Timber.tag("GAME").d(String.valueOf(getRumorsCount() == game.getRumorsCount()));
+        Timber.tag("GAME").d(String.valueOf(getCluesCount() == game.getCluesCount()));
+        Timber.tag("GAME").d(String.valueOf(getBlessedCount() == game.getBlessedCount()));
+        Timber.tag("GAME").d(String.valueOf(getDoomCount() == game.getDoomCount()));
+        Timber.tag("GAME").d(String.valueOf(getScore() == game.getScore()));
+        Timber.tag("GAME").d(String.valueOf(getPreludeID() == game.getPreludeID()));
+        Timber.tag("GAME").d(String.valueOf(getSolvedMysteriesCount() == game.getSolvedMysteriesCount()));
+        Timber.tag("GAME").d(String.valueOf(getLastModified() == game.getLastModified()));
+        Timber.tag("GAME").d(String.valueOf(getAdventureID() == game.getAdventureID()));
+        Timber.tag("GAME").d(String.valueOf(getComment().equals(game.getComment().trim())));
+        Timber.tag("GAME").d(String.valueOf(equalsInvList(getInvList(), game.getInvList())));
     }
 }

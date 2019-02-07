@@ -88,7 +88,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
             @Override
             public void onPageSelected(int position) {
-                Timber.d("onPageSelected, position = %i", position);
+                Timber.d("onPageSelected, position = %s", position);
                 pagerPresenter.setCurrentPosition(position);
                 showMenuItem();
                 showAddPhotoButton();
@@ -156,17 +156,19 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     public void showBackDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        builder.setTitle(R.string.dialogBackAlert);
-        builder.setMessage(R.string.backDialogMessage);
-        builder.setIcon(R.drawable.back_icon);
-        builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
-            pagerPresenter.deleteFilesIfGameNotCreated();
-            finishActivity();
-        });
-        builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
-        backDialog = builder.show();
+        if (backDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(R.string.dialogBackAlert);
+            builder.setMessage(R.string.backDialogMessage);
+            builder.setIcon(R.drawable.back_icon);
+            builder.setPositiveButton(R.string.messageOK, (DialogInterface dialog, int which) -> {
+                pagerPresenter.deleteFilesIfGameNotCreated();
+                finishActivity();
+            });
+            builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
+            backDialog = builder.show();
+        }
     }
 
     @Override
@@ -181,6 +183,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     public void hideBackDialog() {
+        backDialog = null;
         //Delete showBackDialog() from currentState with DismissDialogStrategy
     }
 
