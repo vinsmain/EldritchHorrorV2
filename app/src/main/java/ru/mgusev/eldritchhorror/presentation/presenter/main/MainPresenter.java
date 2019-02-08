@@ -3,6 +3,7 @@ package ru.mgusev.eldritchhorror.presentation.presenter.main;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -89,28 +90,39 @@ public class MainPresenter extends MvpPresenter<MainView> {
         updateUserIcon(tempIconUrl);
     }
 
+//    private void updateUserIcon1(String iconUrl) {
+//        tempIconUrl = iconUrl;
+//        if (!iconUrl.equals(googleAuth.getDefaultIconUrl())) {
+//            ImageRequest imageRequest = ImageRequest.fromUri(tempIconUrl);
+//            ImagePipeline imagePipeline = Fresco.getImagePipeline();
+//            DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, null);
+//
+//            dataSource.subscribe(
+//                    new BaseBitmapDataSubscriber() {
+//
+//                        @Override
+//                        protected void onNewResultImpl(Bitmap bitmap) {
+//                            getViewState().setUserIcon(new BitmapDrawable(repository.getContext().getResources(), CircularTransformation.getCroppedBitmap(bitmap)));
+//                        }
+//
+//                        @Override
+//                        protected void onFailureImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
+//                            getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_signed_in));
+//                        }
+//                    },
+//                    UiThreadImmediateExecutorService.getInstance());
+//        } else getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
+//    }
+
     private void updateUserIcon(String iconUrl) {
         tempIconUrl = iconUrl;
-        if (!iconUrl.equals(googleAuth.getDefaultIconUrl())) {
-            ImageRequest imageRequest = ImageRequest.fromUri(tempIconUrl);
-            ImagePipeline imagePipeline = Fresco.getImagePipeline();
-            DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, null);
-
-            dataSource.subscribe(
-                    new BaseBitmapDataSubscriber() {
-
-                        @Override
-                        protected void onNewResultImpl(Bitmap bitmap) {
-                            getViewState().setUserIcon(new BitmapDrawable(repository.getContext().getResources(), CircularTransformation.getCroppedBitmap(bitmap)));
-                        }
-
-                        @Override
-                        protected void onFailureImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
-                            getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_signed_in));
-                        }
-                    },
-                    UiThreadImmediateExecutorService.getInstance());
-        } else getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
+        if (googleAuth.getCurrentUser() != null) {
+            getViewState().setUserIcon(googleAuth.getCurrentUser().getPhotoUrl());
+            getViewState().setUserInfo(googleAuth.getCurrentUser().getDisplayName(), googleAuth.getCurrentUser().getEmail());
+        } else {
+            //getViewState().setUserIcon(googleAuth.getCurrentUser().getPhotoUrl());
+            getViewState().setUserInfo(null, null);
+        }
     }
 
     public void setSortModeIcon() {
@@ -211,7 +223,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
             // Google Sign In failed, update UI appropriately
             Timber.w(e, "Google sign in failed");
             tempIconUrl = googleAuth.getDefaultIconUrl();
-            getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
+            //getViewState().setUserIcon(repository.getContext().getResources().getDrawable(R.drawable.google_icon));
             getViewState().showErrorSnackBar();
         }
     }

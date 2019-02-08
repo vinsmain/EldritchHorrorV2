@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.presentation.view.main;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
@@ -77,7 +78,10 @@ public interface MainView extends MvpView {
     void signOut();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void setUserIcon(Drawable icon);
+    void setUserIcon(Uri iconUri);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setUserInfo(String name, String email);
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void showErrorSnackBar();

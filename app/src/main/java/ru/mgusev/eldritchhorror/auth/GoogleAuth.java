@@ -1,7 +1,6 @@
 package ru.mgusev.eldritchhorror.auth;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -86,7 +85,7 @@ public class GoogleAuth {
         // Google sign out
         googleSignInClient.signOut().addOnCompleteListener(
             task -> {
-                Log.d(TAG, "signInWithCredential:sign out");
+                Timber.tag(TAG).d("signInWithCredential:sign out");
                 repository.userIconOnNext(defaultIconUrl);
                 repository.deleteSynchGames();
                 repository.gameListOnNext();

@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,11 +20,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.skydoves.powermenu.CustomPowerMenu;
 import com.skydoves.powermenu.MenuAnimation;
 import com.skydoves.powermenu.OnMenuItemClickListener;
@@ -48,6 +54,7 @@ import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.forgotten_endings.ForgottenEndingsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
+import timber.log.Timber;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked, LifecycleOwner, OnMenuItemClickListener {
 
@@ -64,6 +71,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @BindView(R.id.main_worst_score) TextView worstScore;
     @BindView(R.id.main_add_game) FloatingActionButton addGameFAB;
     @BindView(R.id.main_drawer) DrawerLayout drawer;
+    @BindView(R.id.main_nav_view) NavigationView navigationView;
     @BindView(R.id.loader) LinearLayout loader;
 
     private static final int RC_SIGN_IN = 9001;
@@ -82,6 +90,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private AlertDialog deleteDialog;
     private AlertDialog rateDialog;
     private ActionBarDrawerToggle toggle;
+    private HeaderViewHolder headerViewHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,11 +116,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         setSupportActionBar(toolbar);
         setTitle(R.string.main_header);
 
-        toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.about, R.string.main_header);
-        //drawer.setDrawerListener(toggle);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.about, R.string.main_header);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        headerViewHolder = new HeaderViewHolder(navigationView.getHeaderView(0));
     }
 
     @Override
@@ -383,8 +392,25 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
-    public void setUserIcon(Drawable icon) {
-        if (authItem != null) authItem.setIcon(icon);
+    public void setUserIcon(Uri iconUri) {
+        RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+        roundingParams.setRoundAsCircle(true);
+
+        GenericDraweeHierarchy hierarchy =
+                GenericDraweeHierarchyBuilder.newInstance(getResources())
+                        .setFailureImage(R.drawable.google_signed_in)
+                        .setPlaceholderImage(R.drawable.google_icon)
+                        .setRoundingParams(roundingParams)
+                        .build();
+        headerViewHolder.iconImage.setHierarchy(hierarchy);
+        headerViewHolder.iconImage.setImageURI(iconUri);
+        Timber.d(String.valueOf(iconUri));
+    }
+
+    @Override
+    public void setUserInfo(String name, String email) {
+        headerViewHolder.nameTV.setText(name);
+        headerViewHolder.emailTV.setText(email);
     }
 
     @Override
