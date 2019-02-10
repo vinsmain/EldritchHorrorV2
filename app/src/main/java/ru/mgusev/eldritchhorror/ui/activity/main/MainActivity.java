@@ -1,15 +1,15 @@
 package ru.mgusev.eldritchhorror.ui.activity.main;
 
-import android.arch.lifecycle.LifecycleOwner;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -20,19 +20,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.skydoves.powermenu.CustomPowerMenu;
-import com.skydoves.powermenu.MenuAnimation;
-import com.skydoves.powermenu.OnMenuItemClickListener;
 
 import java.util.List;
 
@@ -40,14 +36,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.adapter.IconMenuAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
-import ru.mgusev.eldritchhorror.support.IconPowerMenuItem;
 import ru.mgusev.eldritchhorror.support.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
@@ -56,7 +50,7 @@ import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 import timber.log.Timber;
 
-public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked, LifecycleOwner, OnMenuItemClickListener {
+public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked, NavigationView.OnNavigationItemSelectedListener {
 
     public static boolean initialized;
 
@@ -64,11 +58,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     MainPresenter mainPresenter;
 
     @BindView(R.id.main_start_message) TextView startMessageTV;
-    @BindView(R.id.main_game_list) RecyclerView gameListRV;
-    @BindView(R.id.main_toolbar) Toolbar toolbar;
     @BindView(R.id.main_game_count) TextView gameCount;
     @BindView(R.id.main_best_score) TextView bestScore;
     @BindView(R.id.main_worst_score) TextView worstScore;
+    @BindView(R.id.main_game_list) RecyclerView gameListRV;
+    @BindView(R.id.main_toolbar) Toolbar toolbar;
     @BindView(R.id.main_add_game) FloatingActionButton addGameFAB;
     @BindView(R.id.main_drawer) DrawerLayout drawer;
     @BindView(R.id.main_nav_view) NavigationView navigationView;
@@ -82,7 +76,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private MenuItem authItem;
     private MenuItem statItem;
     private MenuItem forgottenEndingsItem;
-    private CustomPowerMenu authPopupMenu;
 
     private int columnsCount = 1;
     private MainAdapter adapter;
@@ -116,24 +109,30 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         setSupportActionBar(toolbar);
         setTitle(R.string.main_header);
 
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.about, R.string.main_header);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         headerViewHolder = new HeaderViewHolder(navigationView.getHeaderView(0));
+        navigationView.setNavigationItemSelectedListener(this);
+
+        initDrawerMenu();
+    }
+
+    private void initDrawerMenu() {
+        forgottenEndingsItem = navigationView.getMenu().getItem(1);
+        statItem = navigationView.getMenu().getItem(0);
+        authItem = navigationView.getMenu().getItem(4);
+        mainPresenter.setVisibilityStatisticsMenuItem();
+        mainPresenter.initAuthMenuItem();
+        setVisibilityForgottenEndingsItem();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
         sortItem = menu.findItem(R.id.action_sort);
-        authItem = menu.findItem(R.id.action_auth);
-        statItem = menu.findItem(R.id.action_statistics);
-        forgottenEndingsItem = menu.findItem(R.id.action_forgotten_endings);
         mainPresenter.setSortModeIcon();
-        mainPresenter.setVisibilityStatisticsMenuItem();
-        mainPresenter.startUpdateUserIcon();
-        setVisibilityForgottenEndingsItem();
         return true;
     }
 
@@ -144,30 +143,68 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_sort:
+                mainPresenter.changeSortMode();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.action_about:
+                closeDrawer();
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.action_auth:
+                closeDrawer();
                 mainPresenter.actionAuth();
                 return true;
-            case R.id.action_sort:
-                mainPresenter.changeSortMode();
-                return true;
             case R.id.action_statistics:
+                closeDrawer();
                 Intent intentStatistics = new Intent(this, StatisticsActivity.class);
                 startActivity(intentStatistics);
                 return true;
             case R.id.action_music:
+                closeDrawer();
                 Intent musicIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MUSIC_URL));
                 startActivity(musicIntent);
                 return true;
             case R.id.action_forgotten_endings:
+                closeDrawer();
                 Intent forgottenEndingsIntent = new Intent(this, ForgottenEndingsActivity.class);
                 startActivity(forgottenEndingsIntent);
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return true;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void closeDrawer() {
+        drawer.closeDrawer(GravityCompat.START);
+
+    }
+
+    @Override
+    public void changeAuthItem(boolean signedIn) {
+        if (signedIn) {
+           authItem.setTitle(R.string.sign_out_menu_header);
+           authItem.setIcon(R.drawable.sign_out);
+        } else {
+            authItem.setTitle(R.string.auth_header);
+            authItem.setIcon(R.drawable.sign_in);
         }
     }
 
@@ -296,9 +333,22 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         startActivity(googlePlayIntent);
     }
 
-    @OnClick({R.id.main_add_game})
+    @OnClick({R.id.main_add_game, R.id.main_count_game_linear, R.id.main_best_score_linear, R.id.main_worst_score_linear})
     public void onClick(View view) {
-        mainPresenter.addGame();
+        switch (view.getId()) {
+            case R.id.main_add_game:
+                mainPresenter.addGame();
+                break;
+            case R.id.main_count_game_linear:
+                Toast.makeText(this, R.string.games_count, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.main_best_score_linear:
+                Toast.makeText(this, R.string.best_result, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.main_worst_score_linear:
+                Toast.makeText(this, R.string.worst_result, Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     private void showLoader() {
@@ -348,37 +398,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public void setStatistics(int gameCount) {
         this.gameCount.setText(String.valueOf(gameCount));
-        this.bestScore.setText("");
-        this.worstScore.setText("");
-    }
-
-    @Override
-    public void showSignOutMenu() {
-        authPopupMenu = new CustomPowerMenu.Builder<>(this, new IconMenuAdapter())
-                .addItem(new IconPowerMenuItem(getResources().getDrawable(R.drawable.sign_out), getResources().getString(R.string.sign_out_menu_header)))
-                .setOnMenuItemClickListener(this)
-                .setAnimation(MenuAnimation.SHOWUP_TOP_RIGHT)
-                .setMenuRadius(0f)
-                .setMenuShadow(10f)
-                .setLifecycleOwner(this)
-                .build();
-        authPopupMenu.showAsDropDown(findViewById(R.id.action_auth));
-    }
-
-    @Override
-    public void onItemClick(int position, Object item) {
-        mainPresenter.signOut();
-        authPopupMenu.dismiss();
+        this.bestScore.setText("-");
+        this.worstScore.setText("-");
     }
 
     @Override
     public void signIn(Intent signInIntent) {
         startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    @Override
-    public void signOut() {
-        mainPresenter.signOut();
     }
 
     @Override
@@ -398,8 +424,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
         GenericDraweeHierarchy hierarchy =
                 GenericDraweeHierarchyBuilder.newInstance(getResources())
-                        .setFailureImage(R.drawable.google_signed_in)
-                        .setPlaceholderImage(R.drawable.google_icon)
+                        .setFailureImage(R.drawable.user_signed)
+                        .setPlaceholderImage(R.drawable.user_signed)
                         .setRoundingParams(roundingParams)
                         .build();
         headerViewHolder.iconImage.setHierarchy(hierarchy);
@@ -415,7 +441,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public void showErrorSnackBar() {
-        Snackbar.make(findViewById(R.id.main_coordinator), R.string.auth_error, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.main_drawer), R.string.auth_error, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

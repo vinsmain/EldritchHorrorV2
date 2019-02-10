@@ -11,8 +11,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 import ru.mgusev.eldritchhorror.R;
@@ -32,7 +30,6 @@ public class GoogleAuth {
     private GoogleSignInClient googleSignInClient;
     private GoogleSignInOptions gso;
     private FirebaseUser currentUser;
-    private String defaultIconUrl;
 
     public GoogleAuth(Context context) {
         App.getComponent().inject(this);
@@ -40,7 +37,6 @@ public class GoogleAuth {
         configGoogleSignIn();
         googleSignInClient = GoogleSignIn.getClient(context, gso);
         mAuth = FirebaseAuth.getInstance();
-        defaultIconUrl = "sign_out";
     }
 
     private void configGoogleSignIn() {
@@ -67,11 +63,12 @@ public class GoogleAuth {
                 currentUser = mAuth.getCurrentUser();
                 repository.setUser(currentUser);
                 repository.initFirebaseHelper();
-                repository.userIconOnNext(Objects.requireNonNull(Objects.requireNonNull(currentUser).getPhotoUrl()).toString());
+                repository.authOnNext(true);
+                //repository.userIconOnNext(currentUser.getPhotoUrl());
             } else {
                 // If sign in fails, display a message to the user.
                 Timber.tag(TAG).w(task.getException(), "signInWithCredential:failure");
-                repository.authOnNext(true);
+                repository.authOnNext(false);
             }
         });
     }
@@ -86,14 +83,10 @@ public class GoogleAuth {
         googleSignInClient.signOut().addOnCompleteListener(
             task -> {
                 Timber.tag(TAG).d("signInWithCredential:sign out");
-                repository.userIconOnNext(defaultIconUrl);
+                repository.authOnNext(false);
                 repository.deleteSynchGames();
                 repository.gameListOnNext();
                 repository.setUser(currentUser);
             });
-    }
-
-    public String getDefaultIconUrl() {
-        return defaultIconUrl;
     }
 }

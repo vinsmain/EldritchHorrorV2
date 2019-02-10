@@ -32,6 +32,9 @@ public interface MainView extends MvpView {
     @StateStrategyType(SkipStrategy.class)
     void intentToDetails();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void changeAuthItem(boolean signedIn);
+
     @StateStrategyType(SkipStrategy.class)
     void setSortIcon(int sortMode);
 
@@ -68,14 +71,8 @@ public interface MainView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setStatistics(int gameCount);
 
-    @StateStrategyType(SkipStrategy.class)
-    void showSignOutMenu();
-
     @StateStrategyType(OneExecutionStateStrategy.class)
     void signIn(Intent signInIntent);
-
-    @StateStrategyType(OneExecutionStateStrategy.class)
-    void signOut();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setUserIcon(Uri iconUri);

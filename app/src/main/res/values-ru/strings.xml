@@ -134,4 +134,8 @@
     <string name="forgotten_endings_header">Забытые концовки</string>
     <string name="forgotten_endings_read_header">Случайная концовка</string>
     <string name="forgotten_endings_select_ancient_one_header">Выберите Древнего</string>
+    <string name="navigation_drawer_open">Drawer open</string>
+    <string name="navigation_drawer_close">Drawer close</string>
+    <string name="drawer_header_sign_in">Авторизуйтесь</string>
+    <string name="drawer_header_sync">для синхронизации данных</string>
 </resources>

@@ -58,7 +58,6 @@ public class Repository {
     private PublishSubject<Integer> randomPublish;
     private PublishSubject<Integer> clearPublish;
     private PublishSubject<List<Game>> gameListPublish;
-    private PublishSubject<String> userIconPublish;
     private PublishSubject<Boolean> authPublish;
     private PublishSubject<Boolean> ratePublish;
     private PublishSubject<Boolean> clickPhotoButtonPublish;
@@ -94,7 +93,6 @@ public class Repository {
         randomPublish = PublishSubject.create();
         clearPublish = PublishSubject.create();
         gameListPublish = PublishSubject.create();
-        userIconPublish = PublishSubject.create();
         authPublish = PublishSubject.create();
         ratePublish = PublishSubject.create();
         clickPhotoButtonPublish = PublishSubject.create();
@@ -204,14 +202,6 @@ public class Repository {
             this.game = new Game(game);
             this.game.setInvList(userDataDB.investigatorDAO().getByGameID(game.getId()));
         }
-    }
-
-    public PublishSubject<String> getUserIconPublish() {
-        return userIconPublish;
-    }
-
-    public void userIconOnNext(String iconUrl) {
-        userIconPublish.onNext(iconUrl);
     }
 
     public int getPagerPosition() {

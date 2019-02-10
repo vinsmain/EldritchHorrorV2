@@ -3,37 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_forgotten_endings"
-        android:title="@string/forgotten_endings_header"
-        android:icon="@drawable/forgotten_endings"
-        app:showAsAction="always|collapseActionView" />
-    <item
-        android:id="@+id/action_music"
-        android:title="@string/music_header"
-        android:icon="@drawable/music"
-        app:showAsAction="always|collapseActionView" />
-    <item
-        android:id="@+id/action_statistics"
-        android:title="@string/statistics_header"
-        android:icon="@drawable/statistics_icon"
-        app:showAsAction="always|collapseActionView" />
-
-    <item
         android:id="@+id/action_sort"
         android:icon="@drawable/calendar_sort_up"
         android:title="@string/sort_mode_message_1"
-        app:showAsAction="always|collapseActionView" />
-
-    <item
-        android:id="@+id/action_about"
-        android:title="@string/about"
-        android:icon="@drawable/about"
-        app:showAsAction="always|collapseActionView" />
-
-    <item
-        android:id="@+id/action_auth"
-        android:title="@string/auth_header"
-        android:icon="@drawable/loader"
         app:showAsAction="always|collapseActionView" />
 
 </menu>
