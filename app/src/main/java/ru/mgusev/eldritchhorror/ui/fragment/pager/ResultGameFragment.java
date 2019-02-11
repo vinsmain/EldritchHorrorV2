@@ -1,12 +1,13 @@
 package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TimePicker;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -38,11 +40,13 @@ import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ResultGamePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
+import ru.mgusev.eldritchhorror.support.FixedTextInputEditText;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class ResultGameFragment extends MvpAppCompatFragment implements ResultGameView {
+public class ResultGameFragment extends MvpAppCompatFragment implements ResultGameView, TimePickerDialog.OnTimeSetListener {
 
     @InjectPresenter
     ResultGamePresenter resultGamePresenter;
@@ -63,7 +67,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @BindView(R.id.result_game_blessed_count) EditText blessedCountTV;
     @BindView(R.id.result_game_doom_count) EditText doomCountTV;
     @BindView(R.id.result_game_victory_table) TableLayout victoryTable;
-    @BindView(R.id.result_game_comment_tiet) TextInputEditText commentTIED;
+    @BindView(R.id.result_game_comment_tiet) FixedTextInputEditText commentTIED;
     @BindView(R.id.result_game_defeat_rumor_spinner) Spinner rumorSpinner;
     @BindView(R.id.result_game_defeat_rumor_spinner_row) TableRow rumorSpinnerTR;
 
@@ -72,6 +76,11 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     private Switch[] switchArray;
     private int[] idArray;
     private ArrayAdapter<String> rumorAdapter;
+
+    private TimePickerDialog timePickerDialog;
+    private int DIALOG_TIME = 1;
+    private int hour = 14;
+    private int minute = 35;
 
     public static ResultGameFragment newInstance(int page) {
         ResultGameFragment pageFragment = new ResultGameFragment();
@@ -254,6 +263,11 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         showSoftKeyboardOnView(view);
     }
 
+    @OnClick({R.id.result_game_time_row})
+    public void onTimeRowClick() {
+        resultGamePresenter.onTimeRowClick();
+    }
+
     private void showSoftKeyboardOnView(View view) {
         EditText editText = (EditText) ((ViewGroup)view).getChildAt(EDIT_TEXT_INDEX);
         (new Handler()).postDelayed(() -> {
@@ -272,6 +286,25 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @Override
     public void setCommentValue(String text) {
         commentTIED.setText(text);
+    }
+
+    @Override
+    public void showTimePickerDialog(int hour, int minute) {
+        //Calendar currentDate;
+//        if (startDataPresenter.getTempDate() != null) currentDate = startDataPresenter.getTempDate();
+//        else currentDate = date;
+        timePickerDialog = new TimePickerDialog(getContext(), this, hour, minute, true);
+        //timePickerDialog.setOnCancelListener(this);
+        timePickerDialog.setCancelable(false);
+        timePickerDialog.show();
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+        hour = i;
+        minute = i1;
+        //tvTime.setText("Time is " + hour + " hours " + ResultGameFragment.this.minute + " minutes");
+        Timber.d("Time is " + hour + " hours " + ResultGameFragment.this.minute + " minutes");
     }
 
     @Override

@@ -47,9 +47,9 @@ public class MainPresenter extends MvpPresenter<MainView> {
         gameListSubscribe = new CompositeDisposable();
         authSubscribe = new CompositeDisposable();
         rateSubscribe = new CompositeDisposable();
-        gameListSubscribe.add(repository.getGameListPublish().subscribe(this::updateGameList));
-        authSubscribe.add(repository.getAuthPublish().subscribe(this::authStatusChange));
-        rateSubscribe.add(repository.getRatePublish().subscribe(this::showRateDialog));
+        gameListSubscribe.add(repository.getGameListPublish().subscribe(this::updateGameList, Timber::d));
+        authSubscribe.add(repository.getAuthPublish().subscribe(this::authStatusChange, Timber::d));
+        rateSubscribe.add(repository.getRatePublish().subscribe(this::showRateDialog, Timber::d));
     }
 
     @Override

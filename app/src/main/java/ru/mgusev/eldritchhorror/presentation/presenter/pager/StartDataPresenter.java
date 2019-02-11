@@ -21,6 +21,7 @@ import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 @InjectViewState
 public class StartDataPresenter extends MvpPresenter<StartDataView> {
@@ -48,9 +49,9 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         expansionSubscribe = new CompositeDisposable();
-        expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners));
+        expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners, Timber::d));
         randomSubscribe = new CompositeDisposable();
-        randomSubscribe.add(repository.getRandomPublish().subscribe(this::setRandomValues));
+        randomSubscribe.add(repository.getRandomPublish().subscribe(this::setRandomValues, Timber::d));
         date = Calendar.getInstance();
         playersCountList = repository.getPlayersCountArray();
         ancientOneList = repository.getAncientOneList();

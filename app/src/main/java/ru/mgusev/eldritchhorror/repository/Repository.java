@@ -102,10 +102,10 @@ public class Repository {
         deleteSelectImagesPublish = PublishSubject.create();
 
         uploadFileSubscribe = new CompositeDisposable();
-        uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile));
+        uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile, Timber::d));
 
         downloadFileSubscribe = new CompositeDisposable();
-        downloadFileSubscribe.add(firebaseHelper.getDownloadFileDisposable().subscribe(this::downloadFile));
+        downloadFileSubscribe.add(firebaseHelper.getDownloadFileDisposable().subscribe(this::downloadFile, Timber::d));
 
         for (Game game : getGameList(0, 0)) {
             fixSpecializationsForOldInvestigators(game);

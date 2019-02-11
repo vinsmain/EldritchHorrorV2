@@ -56,4 +56,7 @@ public interface ResultGameView extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
     void setCommentValue(String text);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showTimePickerDialog(int hour, int minute);
 }

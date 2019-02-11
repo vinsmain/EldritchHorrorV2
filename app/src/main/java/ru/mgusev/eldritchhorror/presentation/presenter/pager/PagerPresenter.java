@@ -16,6 +16,7 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 @InjectViewState
 public class PagerPresenter extends MvpPresenter<PagerView> {
@@ -38,16 +39,16 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         }
 
         ancientOneSubscribe = new CompositeDisposable();
-        ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne, repository.getExpansion(ancientOne.getExpansionID()))));
+        ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne -> getViewState().setHeadBackground(ancientOne, repository.getExpansion(ancientOne.getExpansionID())), Timber::d));
 
         scoreSubscribe = new CompositeDisposable();
-        scoreSubscribe.add(repository.getObservableScore().subscribe(score -> getViewState().setScore(score)));
+        scoreSubscribe.add(repository.getObservableScore().subscribe(score -> getViewState().setScore(score), Timber::d));
 
         isWinSubscribe = new CompositeDisposable();
-        isWinSubscribe.add(repository.getObservableIsWin().subscribe(this::setResultIcon));
+        isWinSubscribe.add(repository.getObservableIsWin().subscribe(this::setResultIcon, Timber::d));
 
         selectModeSubscribe = new CompositeDisposable();
-        selectModeSubscribe.add(repository.getSelectModePublish().subscribe(this::updateSelectedMode));
+        selectModeSubscribe.add(repository.getSelectModePublish().subscribe(this::updateSelectedMode, Timber::d));
     }
 
     @Override
