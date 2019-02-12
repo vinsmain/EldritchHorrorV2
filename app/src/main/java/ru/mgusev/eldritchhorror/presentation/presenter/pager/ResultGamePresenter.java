@@ -27,6 +27,8 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     private CompositeDisposable expansionSubscribe;
     private Rumor currentRumor;
     private List<Rumor> rumorList;
+    private int time;
+    private int tempTime;
 
     public ResultGamePresenter() {
         App.getComponent().inject(this);
@@ -138,6 +140,27 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
 
     public void onTimeRowClick() {
         getViewState().showTimePickerDialog(0, 0);
+    }
+
+    public void setTime(int hour, int minute) {
+        time = hour * 60 + minute;
+        repository.getGame().setTime(time);
+    }
+
+    public void setTimeToField() {
+        getViewState().setTimeToField(String.valueOf(time / 60), String.valueOf(time % 60));
+    }
+
+    public void dismissTimePicker() {
+        getViewState().dismissTimePicker();
+    }
+
+    public int getTempTime() {
+        return tempTime;
+    }
+
+    public void clearTempTime() {
+        tempTime = 0;
     }
 
     @Override

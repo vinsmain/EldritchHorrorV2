@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -21,11 +23,13 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,7 +50,7 @@ import timber.log.Timber;
 
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class ResultGameFragment extends MvpAppCompatFragment implements ResultGameView, TimePickerDialog.OnTimeSetListener {
+public class ResultGameFragment extends MvpAppCompatFragment implements ResultGameView, TimePickerDialog.OnTimeSetListener, DialogInterface.OnCancelListener {
 
     @InjectPresenter
     ResultGamePresenter resultGamePresenter;
@@ -70,6 +74,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @BindView(R.id.result_game_comment_tiet) FixedTextInputEditText commentTIED;
     @BindView(R.id.result_game_defeat_rumor_spinner) Spinner rumorSpinner;
     @BindView(R.id.result_game_defeat_rumor_spinner_row) TableRow rumorSpinnerTR;
+    @BindView(R.id.result_game_time_tv) TextView timeTV;
 
     private static final int EDIT_TEXT_INDEX = 1; //Индекс EditText в строке TableRow
     private Unbinder unbinder;
@@ -81,6 +86,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     private int DIALOG_TIME = 1;
     private int hour = 14;
     private int minute = 35;
+    private int currentTime;
 
     public static ResultGameFragment newInstance(int page) {
         ResultGameFragment pageFragment = new ResultGameFragment();
@@ -290,21 +296,37 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
 
     @Override
     public void showTimePickerDialog(int hour, int minute) {
-        //Calendar currentDate;
-//        if (startDataPresenter.getTempDate() != null) currentDate = startDataPresenter.getTempDate();
-//        else currentDate = date;
+        if (resultGamePresenter.getTempTime() != 0) currentTime = resultGamePresenter.getTempTime();
+        else currentTime = 0;
         timePickerDialog = new TimePickerDialog(getContext(), this, hour, minute, true);
-        //timePickerDialog.setOnCancelListener(this);
+        timePickerDialog.setOnCancelListener(this);
         timePickerDialog.setCancelable(false);
         timePickerDialog.show();
     }
 
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-        hour = i;
-        minute = i1;
-        //tvTime.setText("Time is " + hour + " hours " + ResultGameFragment.this.minute + " minutes");
+        resultGamePresenter.setTime(i, i1);
+        resultGamePresenter.setTimeToField();
+        timePickerDialog.cancel();
         Timber.d("Time is " + hour + " hours " + ResultGameFragment.this.minute + " minutes");
+    }
+
+    @Override
+    public void setTimeToField(String hour, String minute) {
+        timeTV.setText(hour + ":" + minute);
+    }
+
+    @Override
+    public void dismissTimePicker() {
+        timePickerDialog = null;
+        resultGamePresenter.clearTempTime();
+        //Delete showDatePicker() from currentState with DismissDialogStrategy
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialogInterface) {
+        timePickerDialog.dismiss();
     }
 
     @Override

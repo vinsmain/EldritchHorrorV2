@@ -106,12 +106,6 @@ public class StartDataFragment extends MvpAppCompatFragment implements StartData
     }
 
     @Override
-    public void onResume() {
-
-        super.onResume();
-    }
-
-    @Override
     public void showDatePicker(Calendar date) {
         Calendar currentDate;
         if (startDataPresenter.getTempDate() != null) currentDate = startDataPresenter.getTempDate();
