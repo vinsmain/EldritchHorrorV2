@@ -1,9 +1,9 @@
 package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -29,7 +28,7 @@ import android.widget.TimePicker;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.util.Calendar;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
 
@@ -83,9 +82,6 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     private ArrayAdapter<String> rumorAdapter;
 
     private TimePickerDialog timePickerDialog;
-    private int DIALOG_TIME = 1;
-    private int hour = 14;
-    private int minute = 35;
     private int currentTime;
 
     public static ResultGameFragment newInstance(int page) {
@@ -295,10 +291,10 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     }
 
     @Override
-    public void showTimePickerDialog(int hour, int minute) {
+    public void showTimePickerDialog(int time) {
         if (resultGamePresenter.getTempTime() != 0) currentTime = resultGamePresenter.getTempTime();
-        else currentTime = 0;
-        timePickerDialog = new TimePickerDialog(getContext(), this, hour, minute, true);
+        else currentTime = time;
+        timePickerDialog = new TimePickerDialog(getContext(), this, currentTime / 60, currentTime % 60, true);
         timePickerDialog.setOnCancelListener(this);
         timePickerDialog.setCancelable(false);
         timePickerDialog.show();
@@ -309,12 +305,12 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         resultGamePresenter.setTime(i, i1);
         resultGamePresenter.setTimeToField();
         timePickerDialog.cancel();
-        Timber.d("Time is " + hour + " hours " + ResultGameFragment.this.minute + " minutes");
+        Timber.d("Time is " + i + " hours " + i1 + " minutes");
     }
 
     @Override
-    public void setTimeToField(String hour, String minute) {
-        timeTV.setText(hour + ":" + minute);
+    public void setTimeToField(String time) {
+        timeTV.setText(time);
     }
 
     @Override
@@ -326,12 +322,26 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
 
     @Override
     public void onCancel(DialogInterface dialogInterface) {
-        timePickerDialog.dismiss();
+        resultGamePresenter.dismissTimePicker();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (timePickerDialog != null) {
+            try {
+                Class<?> timePickerDialogClass = timePickerDialog.getClass();
+                Field TimePickerField = timePickerDialogClass.getDeclaredField("mTimePicker");
+                TimePickerField.setAccessible(true);
+                TimePicker timePicker = (TimePicker) TimePickerField.get(timePickerDialog);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    resultGamePresenter.setTempTime(timePicker.getHour(), timePicker.getMinute());
+                } else resultGamePresenter.setTempTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                Timber.e(e);
+            }
+            timePickerDialog.dismiss();
+        }
         unbinder.unbind();
     }
 }

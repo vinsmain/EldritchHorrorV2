@@ -155,4 +155,7 @@
     <string name="navigation_drawer_close">Drawer close</string>
     <string name="drawer_header_sign_in">Sign in</string>
     <string name="drawer_header_sync">to sync data</string>
+    <string name="time_header">Time</string>
+    <string name="time_hour">h</string>
+    <string name="time_minute">m</string>
 </resources>

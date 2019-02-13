@@ -137,4 +137,7 @@
     <string name="navigation_drawer_close">Drawer close</string>
     <string name="drawer_header_sign_in">Авторизуйтесь</string>
     <string name="drawer_header_sync">для синхронизации данных</string>
+    <string name="time_header">Время партии</string>
+    <string name="time_hour">ч</string>
+    <string name="time_minute">м</string>
 </resources>

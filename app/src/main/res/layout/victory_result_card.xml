@@ -24,18 +24,15 @@
             app:srcCompat="@drawable/fragment_edit" />
 
         <TableLayout
+            android:id="@+id/victory_result_table"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
             android:shrinkColumns="*"
             android:stretchColumns="*"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -58,6 +55,46 @@
                     android:textSize="16sp" />
 
             </TableRow>
+
+            <TableRow
+                android:id="@+id/victory_result_time_row"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/victory_result_time_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="@string/time_header" />
+
+                <TextView
+                    android:id="@+id/victory_result_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:maxLines="1" />
+
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:shrinkColumns="*"
+            android:stretchColumns="*"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/victory_result_table">
 
             <TableRow
                 android:layout_width="match_parent"

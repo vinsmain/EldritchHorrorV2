@@ -1,7 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
-import android.view.WindowManager;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
@@ -62,6 +60,14 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         date.setTimeInMillis(repository.getGame().getDate());
     }
 
+    @Override
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+        setDateToField();
+        setSpinnerPosition();
+        setSwitchValue();
+    }
+
     private void initCurrentValues() {
         currentAncientOne = repository.getAncientOne(repository.getGame().getAncientOneID());
         currentPrelude = repository.getPrelude(repository.getGame().getPreludeID());
@@ -90,14 +96,6 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
             randomName = getPreludeNameList().get(new Random().nextInt(getPreludeNameList().size()));
         } while (getPreludeNameList().size() != 1 && repository.getPrelude(randomName).getId() == currentPrelude.getId());
         currentPrelude = repository.getPrelude(randomName);
-    }
-
-    @Override
-    protected void onFirstViewAttach() {
-        super.onFirstViewAttach();
-        setDateToField();
-        setSpinnerPosition();
-        setSwitchValue();
     }
 
     public void setTempDate(int year, int month, int day) {

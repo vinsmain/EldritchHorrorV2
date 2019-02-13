@@ -16,8 +16,8 @@ android {
         applicationId "ru.mgusev.eldritchhorror"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 39
-        versionName "1.8"
+        versionCode 40
+        versionName "1.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

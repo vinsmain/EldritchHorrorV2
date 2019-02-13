@@ -72,6 +72,7 @@ public class AppModule {
                 .addMigrations(Migrations.MIGRATION_3_4)
                 .addMigrations(Migrations.MIGRATION_4_5)
                 .addMigrations(Migrations.MIGRATION_5_6)
+                .addMigrations(Migrations.MIGRATION_6_7)
                 .allowMainThreadQueries()
                 .build();
     }

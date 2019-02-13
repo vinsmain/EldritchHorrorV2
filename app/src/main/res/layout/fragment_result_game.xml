@@ -200,14 +200,17 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal">
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingTop="@dimen/keyline_1_minus_8dp"
+                            android:paddingBottom="@dimen/keyline_1_minus_8dp">
 
                             <TextView
                                 android:id="@+id/textView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Time"
+                                android:text="@string/time_header"
                                 android:textColor="@color/colorSecondaryText"
                                 android:textSize="14sp" />
 
@@ -216,20 +219,18 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:gravity="start"
-                                android:textAlignment="textStart"
+                                android:paddingEnd="16dp"
+                                android:textAlignment="textEnd"
                                 android:textColor="@color/colorSecondaryText"
                                 android:textSize="14sp" />
 
                             <ImageView
-                                android:id="@+id/start_data_date_button"
+                                android:id="@+id/result_game_time_icon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:layout_weight="1"
+                                android:layout_weight="0.01"
                                 android:background="@color/colorTransparent"
-                                android:padding="8dp"
-                                android:src="@drawable/calendar" />
+                                android:src="@drawable/clock" />
                         </LinearLayout>
 
                     </TableRow>

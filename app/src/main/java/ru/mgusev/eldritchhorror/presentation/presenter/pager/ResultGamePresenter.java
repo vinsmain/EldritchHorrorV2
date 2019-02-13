@@ -15,6 +15,7 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Rumor;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.support.FormattedTime;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import timber.log.Timber;
 
@@ -46,6 +47,8 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
 
         rumorList = repository.getRumorList();
         currentRumor = repository.getRumor(repository.getGame().getDefeatRumorID());
+
+        time = repository.getGame().getTime();
     }
 
     @Override
@@ -59,6 +62,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         getViewState().setDefeatReasonSwitchChecked(repository.getGame().getIsDefeatByElimination(), repository.getGame().getIsDefeatByMythosDepletion(),
                 repository.getGame().getIsDefeatByAwakenedAncientOne(), repository.getGame().getIsDefeatByRumor(), repository.getGame().getIsDefeatBySurrender());
         setRumorSpinnerPosition();
+        setTimeToField();
     }
 
     private void setResultValues() {
@@ -139,7 +143,11 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     }
 
     public void onTimeRowClick() {
-        getViewState().showTimePickerDialog(0, 0);
+        getViewState().showTimePickerDialog(time);
+    }
+
+    public void setTempTime(int hour, int minute) {
+        tempTime = hour * 60 + minute;
     }
 
     public void setTime(int hour, int minute) {
@@ -148,7 +156,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     }
 
     public void setTimeToField() {
-        getViewState().setTimeToField(String.valueOf(time / 60), String.valueOf(time % 60));
+        getViewState().setTimeToField(FormattedTime.getTime(repository.getContext(), time));
     }
 
     public void dismissTimePicker() {

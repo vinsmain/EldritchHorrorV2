@@ -9,8 +9,11 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import java.util.List;
 
 import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 
 public interface ResultGameView extends MvpView {
+
+    String TIME_PICKER_DIALOG_TAG = "timePickerDialog";
 
     @StateStrategyType(SkipStrategy.class)
     void setResultSwitchChecked(boolean value);
@@ -57,10 +60,12 @@ public interface ResultGameView extends MvpView {
     @StateStrategyType(SkipStrategy.class)
     void setCommentValue(String text);
 
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = TIME_PICKER_DIALOG_TAG)
+    void showTimePickerDialog(int time);
+
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void showTimePickerDialog(int hour, int minute);
+    void setTimeToField(String time);
 
-    void setTimeToField(String hour, String minute);
-
+    @StateStrategyType(value = DismissDialogStrategy.class, tag = TIME_PICKER_DIALOG_TAG)
     void dismissTimePicker();
 }

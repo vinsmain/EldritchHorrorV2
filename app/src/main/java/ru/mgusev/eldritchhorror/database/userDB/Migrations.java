@@ -40,4 +40,11 @@ public class Migrations {
             database.execSQL("ALTER TABLE `games` ADD COLUMN `defeat_by_surrender` INTEGER NOT NULL DEFAULT 0;");
         }
     };
+
+    public static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `games` ADD COLUMN `time` INTEGER NOT NULL DEFAULT 0;");
+        }
+    };
 }
