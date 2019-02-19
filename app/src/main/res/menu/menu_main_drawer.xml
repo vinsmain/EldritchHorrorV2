@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/action_statistics"
+            android:icon="@drawable/statistics_icon"
+            android:title="@string/statistics_header"
+            app:showAsAction="always|collapseActionView" />
+
+        <item
+            android:id="@+id/action_forgotten_endings"
+            android:icon="@drawable/forgotten_endings"
+            android:title="@string/forgotten_endings_header"
+            app:showAsAction="always|collapseActionView" />
+        <item
+            android:id="@+id/action_music"
+            android:icon="@drawable/music"
+            android:title="@string/music_header"
+            app:showAsAction="always|collapseActionView" />
+
+        <item
+            android:id="@+id/action_about"
+            android:icon="@drawable/about"
+            android:title="@string/about"
+            app:showAsAction="always|collapseActionView" />
+    </group>
+
+    <group
+        android:id="@+id/menu_auth"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/action_auth"
+            android:icon="@drawable/sign_in"
+            android:title="@string/auth_header"
+            app:showAsAction="always|collapseActionView" />
+    </group>
+</menu>

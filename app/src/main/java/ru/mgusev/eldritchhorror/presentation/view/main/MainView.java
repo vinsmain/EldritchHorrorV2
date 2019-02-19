@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.presentation.view.main;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
@@ -30,6 +31,9 @@ public interface MainView extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
     void intentToDetails();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void changeAuthItem(boolean signedIn);
 
     @StateStrategyType(SkipStrategy.class)
     void setSortIcon(int sortMode);
@@ -67,17 +71,14 @@ public interface MainView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setStatistics(int gameCount);
 
-    @StateStrategyType(SkipStrategy.class)
-    void showSignOutMenu();
-
     @StateStrategyType(OneExecutionStateStrategy.class)
     void signIn(Intent signInIntent);
 
-    @StateStrategyType(OneExecutionStateStrategy.class)
-    void signOut();
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setUserIcon(Uri iconUri);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void setUserIcon(Drawable icon);
+    void setUserInfo(String name, String email);
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void showErrorSnackBar();

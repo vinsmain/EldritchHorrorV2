@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.27.0'
+        classpath 'io.fabric.tools:gradle:1.27.1'
     }
 }
 apply plugin: 'com.android.application'
@@ -16,8 +16,8 @@ android {
         applicationId "ru.mgusev.eldritchhorror"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 39
-        versionName "1.8"
+        versionCode 40
+        versionName "1.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -93,12 +93,10 @@ dependencies {
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
-    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-database:16.0.6'
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-
-    implementation 'com.github.skydoves:powermenu:2.0.4'
 
     implementation 'com.github.FrangSierra:RxFirebase:1.5.0'
 

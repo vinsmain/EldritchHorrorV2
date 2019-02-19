@@ -175,7 +175,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
-                            <android.support.design.widget.TextInputEditText
+                            <ru.mgusev.eldritchhorror.support.FixedTextInputEditText
                                 android:id="@+id/result_game_comment_tiet"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -183,6 +183,55 @@
                                 android:maxLength="200"
                                 android:textSize="16sp" />
                         </android.support.design.widget.TextInputLayout>
+
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/result_game_time_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:padding="8dp"
+                        android:paddingEnd="16dp"
+                        android:paddingStart="16dp"
+                        android:theme="@style/AppTheme.ColorHighlight">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingTop="@dimen/keyline_1_minus_8dp"
+                            android:paddingBottom="@dimen/keyline_1_minus_8dp">
+
+                            <TextView
+                                android:id="@+id/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/time_header"
+                                android:textColor="@color/colorSecondaryText"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/result_game_time_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:paddingEnd="16dp"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/colorSecondaryText"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:id="@+id/result_game_time_icon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.01"
+                                android:background="@color/colorTransparent"
+                                android:src="@drawable/clock" />
+                        </LinearLayout>
 
                     </TableRow>
 

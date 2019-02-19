@@ -1,7 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
-import android.view.WindowManager;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
@@ -21,6 +19,7 @@ import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.presentation.view.pager.StartDataView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 @InjectViewState
 public class StartDataPresenter extends MvpPresenter<StartDataView> {
@@ -48,9 +47,9 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         expansionSubscribe = new CompositeDisposable();
-        expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners));
+        expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners, Timber::d));
         randomSubscribe = new CompositeDisposable();
-        randomSubscribe.add(repository.getRandomPublish().subscribe(this::setRandomValues));
+        randomSubscribe.add(repository.getRandomPublish().subscribe(this::setRandomValues, Timber::d));
         date = Calendar.getInstance();
         playersCountList = repository.getPlayersCountArray();
         ancientOneList = repository.getAncientOneList();
@@ -59,6 +58,14 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
         initCurrentValues();
 
         date.setTimeInMillis(repository.getGame().getDate());
+    }
+
+    @Override
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+        setDateToField();
+        setSpinnerPosition();
+        setSwitchValue();
     }
 
     private void initCurrentValues() {
@@ -89,14 +96,6 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
             randomName = getPreludeNameList().get(new Random().nextInt(getPreludeNameList().size()));
         } while (getPreludeNameList().size() != 1 && repository.getPrelude(randomName).getId() == currentPrelude.getId());
         currentPrelude = repository.getPrelude(randomName);
-    }
-
-    @Override
-    protected void onFirstViewAttach() {
-        super.onFirstViewAttach();
-        setDateToField();
-        setSpinnerPosition();
-        setSwitchValue();
     }
 
     public void setTempDate(int year, int month, int day) {

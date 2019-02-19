@@ -1,7 +1,6 @@
 package ru.mgusev.eldritchhorror.auth;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -11,8 +10,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -33,7 +30,6 @@ public class GoogleAuth {
     private GoogleSignInClient googleSignInClient;
     private GoogleSignInOptions gso;
     private FirebaseUser currentUser;
-    private String defaultIconUrl;
 
     public GoogleAuth(Context context) {
         App.getComponent().inject(this);
@@ -41,7 +37,6 @@ public class GoogleAuth {
         configGoogleSignIn();
         googleSignInClient = GoogleSignIn.getClient(context, gso);
         mAuth = FirebaseAuth.getInstance();
-        defaultIconUrl = "sign_out";
     }
 
     private void configGoogleSignIn() {
@@ -68,11 +63,12 @@ public class GoogleAuth {
                 currentUser = mAuth.getCurrentUser();
                 repository.setUser(currentUser);
                 repository.initFirebaseHelper();
-                repository.userIconOnNext(Objects.requireNonNull(Objects.requireNonNull(currentUser).getPhotoUrl()).toString());
+                repository.authOnNext(true);
+                //repository.userIconOnNext(currentUser.getPhotoUrl());
             } else {
                 // If sign in fails, display a message to the user.
                 Timber.tag(TAG).w(task.getException(), "signInWithCredential:failure");
-                repository.authOnNext(true);
+                repository.authOnNext(false);
             }
         });
     }
@@ -86,15 +82,11 @@ public class GoogleAuth {
         // Google sign out
         googleSignInClient.signOut().addOnCompleteListener(
             task -> {
-                Log.d(TAG, "signInWithCredential:sign out");
-                repository.userIconOnNext(defaultIconUrl);
+                Timber.tag(TAG).d("signInWithCredential:sign out");
+                repository.authOnNext(false);
                 repository.deleteSynchGames();
                 repository.gameListOnNext();
                 repository.setUser(currentUser);
             });
-    }
-
-    public String getDefaultIconUrl() {
-        return defaultIconUrl;
     }
 }

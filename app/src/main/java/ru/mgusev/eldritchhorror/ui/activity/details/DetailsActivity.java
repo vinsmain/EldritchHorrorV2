@@ -64,6 +64,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.investigator_result_recycle_view) RecyclerView investigatorsRV;
 
     @BindView(R.id.victory_result_card) View includedVictoryResultCard;
+    @BindView(R.id.victory_result_time) TextView victoryTime;
     @BindView(R.id.victory_result_mysteries_count) TextView victoryMysteriesCount;
     @BindView(R.id.victory_result_gates_count) TextView gatesCount;
     @BindView(R.id.victory_result_monsters_count) TextView monstersCount;
@@ -74,6 +75,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.victory_result_doom_count) TextView doomCount;
 
     @BindView(R.id.defeat_reason_card) View includedDefeatReasonCard;
+    @BindView(R.id.defeat_reason_time) TextView defeatTime;
     @BindView(R.id.defeat_reason_mysteries_count) TextView defeatMysteriesCount;
     @BindView(R.id.defeat_reason_by_elimination_row) TableRow defeatReasonByElimination;
     @BindView(R.id.defeat_reason_by_mythos_depletion_row) TableRow defeatReasonByMythosDepletion;
@@ -280,6 +282,12 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @Override
     public void hideScore() {
         score.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setTime(String time) {
+        victoryTime.setText(time);
+        defeatTime.setText(time);
     }
 
     @Override

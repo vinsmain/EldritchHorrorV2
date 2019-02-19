@@ -50,6 +50,9 @@ public interface DetailsView extends MvpView {
     void hideScore();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
+    void setTime(String time);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setMysteriesCount(String mysteriesCount);
 
     @StateStrategyType(AddToEndSingleStrategy.class)

@@ -1,6 +1,9 @@
 package ru.mgusev.eldritchhorror.app;
 
 import android.app.Application;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.net.Uri;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -31,5 +34,12 @@ public class App extends Application{
 
     public static AppComponent getComponent() {
         return component;
+    }
+
+    public static Uri resourceToUri(Context context, int resID) {
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                context.getResources().getResourcePackageName(resID) + '/' +
+                context.getResources().getResourceTypeName(resID) + '/' +
+                context.getResources().getResourceEntryName(resID));
     }
 }

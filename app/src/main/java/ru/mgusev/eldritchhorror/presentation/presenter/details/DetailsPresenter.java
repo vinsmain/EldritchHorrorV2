@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -17,6 +18,8 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.support.FormattedTime;
+import timber.log.Timber;
 
 @InjectViewState
 public class DetailsPresenter extends MvpPresenter<DetailsView> {
@@ -33,9 +36,9 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         App.getComponent().inject(this);
 
         gameListSubscribe = new CompositeDisposable();
-        gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData));
+        gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData, Timber::d));
         photoSubscribe = new CompositeDisposable();
-        photoSubscribe.add(repository.getUpdatePhotoGalleryPublish().subscribe(this::initPhotoList));
+        photoSubscribe.add(repository.getUpdatePhotoGalleryPublish().subscribe(this::initPhotoList, Timber::d));
     }
 
     @Override
@@ -50,6 +53,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
             initHeader();
             initStartData();
             initInvestigatorList();
+            initTime();
             initMysteriesCount();
             if (game.getIsWinGame()) initVictory();
             else initDefeat();
@@ -78,6 +82,10 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         List<String> photoList = repository.getImages();
         getViewState().showPhotoNoneMessage(photoList.isEmpty());
         getViewState().setPhotoList(photoList);
+    }
+
+    private void initTime() {
+        getViewState().setTime(FormattedTime.getTime(repository.getContext(), game.getTime()));
     }
 
     private void initMysteriesCount() {

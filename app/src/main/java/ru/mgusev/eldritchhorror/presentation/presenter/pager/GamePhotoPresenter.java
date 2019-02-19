@@ -46,13 +46,13 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         clickPhotoButtonSubscribe = new CompositeDisposable();
-        clickPhotoButtonSubscribe.add(repository.getClickPhotoButtonPublish().subscribe(this::addImage));
+        clickPhotoButtonSubscribe.add(repository.getClickPhotoButtonPublish().subscribe(this::addImage, Timber::d));
         updatePhotoGallerySubscribe = new CompositeDisposable();
-        updatePhotoGallerySubscribe.add(repository.getUpdatePhotoGalleryPublish().subscribe(this::changeGallery));
+        updatePhotoGallerySubscribe.add(repository.getUpdatePhotoGalleryPublish().subscribe(this::changeGallery, Timber::d));
         selectAllPhotoSubscribe = new CompositeDisposable();
-        selectAllPhotoSubscribe.add(repository.getSelectAllPhotoPublish().subscribe(this::selectAllPhoto));
+        selectAllPhotoSubscribe.add(repository.getSelectAllPhotoPublish().subscribe(this::selectAllPhoto, Timber::d));
         deleteSelectImagesSubscribe = new CompositeDisposable();
-        deleteSelectImagesSubscribe.add(repository.getDeleteSelectImagesPublish().subscribe(this::deleteSelectImages));
+        deleteSelectImagesSubscribe.add(repository.getDeleteSelectImagesPublish().subscribe(this::deleteSelectImages, Timber::d));
         selectedPhotoList = new ArrayList<>();
     }
 

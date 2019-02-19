@@ -19,6 +19,7 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorChoiceView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 @InjectViewState
 public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoiceView> {
@@ -40,17 +41,17 @@ public class InvestigatorChoicePresenter extends MvpPresenter<InvestigatorChoice
         if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         expansionSubscribe = new CompositeDisposable();
-        expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::updateInvListByExpansion));
+        expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::updateInvListByExpansion, Timber::d));
         activeInvestigatorList = new ArrayList<>();
         activeInvestigatorList.addAll(repository.getGame().getInvList());
         investigatorList = new ArrayList<>();
         updateInvListByExpansion(repository.getExpansionList());
         investigatorSubscribe = new CompositeDisposable();
-        investigatorSubscribe.add(repository.getInvestigatorPublish().subscribe(this::updateInvListByCurrentInv));
+        investigatorSubscribe.add(repository.getInvestigatorPublish().subscribe(this::updateInvListByCurrentInv, Timber::d));
         randomSubscribe = new CompositeDisposable();
-        randomSubscribe.add(repository.getRandomPublish().subscribe(this::setRandomValues));
+        randomSubscribe.add(repository.getRandomPublish().subscribe(this::setRandomValues, Timber::d));
         clearSubscribe = new CompositeDisposable();
-        clearSubscribe.add(repository.getClearPublish().subscribe(this::clearValues));
+        clearSubscribe.add(repository.getClearPublish().subscribe(this::clearValues, Timber::d));
     }
 
     private void updateInvListByExpansion(List<Expansion> list) {

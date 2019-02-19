@@ -8,14 +8,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
     static class MainViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.itemCV) CardView cardView;
-        @BindView(R.id.background) ImageView background;
+        @BindView(R.id.background) SimpleDraweeView background;
         @BindView(R.id.expansion_image) ImageView expansionImage;
         @BindView(R.id.date) TextView date;
         @BindView(R.id.ancientOne) TextView ancientOne;
@@ -79,13 +82,11 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
 
     private Context context;
     private SwipeLayout currentSwipeLayout;
-    private Animation animAlpha;
 
     public MainAdapter(Context context) {
         App.getComponent().inject(this);
         this.context = context;
         this.gameList = new ArrayList<>();
-        animAlpha = AnimationUtils.loadAnimation(context, R.anim.alpha);
     }
 
     public void updateGameList(List<Game> gameList) {
@@ -123,7 +124,16 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
         holder.date.setText(formatter.format(gameList.get(position).getDate()));
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier(Objects.requireNonNull(getAncientOne(gameList.get(position).getAncientOneID())).getImageResource(), "drawable", context.getPackageName());
-        holder.background.setImageResource(resourceId);
+
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(App.resourceToUri(context, resourceId))
+                .setResizeOptions(new ResizeOptions(400, 100))
+                .build();
+        holder.background.setController(
+                Fresco.newDraweeControllerBuilder()
+                        .setOldController(holder.background.getController())
+                        .setImageRequest(request)
+                        .build());
+
         resourceId = resources.getIdentifier(Objects.requireNonNull(getExpansion(Objects.requireNonNull(getAncientOne(gameList.get(position).getAncientOneID())).getExpansionID())).getImageResource(), "drawable", context.getPackageName());
         holder.expansionImage.setImageResource(resourceId);
         holder.ancientOne.setText(Objects.requireNonNull(getAncientOne(gameList.get(position).getAncientOneID())).getName());

@@ -21,6 +21,7 @@ import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
 import ru.mgusev.eldritchhorror.presentation.view.statistics.StatisticsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import timber.log.Timber;
 
 @InjectViewState
 public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
@@ -43,7 +44,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     public StatisticsPresenter() {
         App.getComponent().inject(this);
         gameListSubscribe = new CompositeDisposable();
-        gameListSubscribe.add(repository.getGameListPublish().subscribe(this::updateAllCharts));
+        gameListSubscribe.add(repository.getGameListPublish().subscribe(this::updateAllCharts, Timber::d));
     }
 
     @Override

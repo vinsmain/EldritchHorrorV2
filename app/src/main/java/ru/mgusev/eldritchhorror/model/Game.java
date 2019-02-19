@@ -4,7 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +46,7 @@ public class Game {
     public static final String GAME_FIELD_DEFEAT_BY_RUMOR = "defeat_by_rumor";
     public static final String GAME_FIELD_DEFEAT_RUMOR_ID = "defeat_rumor_id";
     public static final String GAME_FIELD_DEFEAT_BY_SURRENDER = "defeat_by_surrender";
+    public static final String GAME_FIELD_TIME = "time";
 
     public static final int DEFAULT_DEFEAT_RUMOR_ID = 2;
 
@@ -141,6 +141,9 @@ public class Game {
     @ColumnInfo(name = GAME_FIELD_DEFEAT_BY_SURRENDER)
     private boolean isDefeatBySurrender;
 
+    @ColumnInfo(name = GAME_FIELD_TIME)
+    private int time;
+
     @Ignore
     private List<Investigator> invList;
 
@@ -175,6 +178,7 @@ public class Game {
         isDefeatByRumor = false;
         defeatRumorID = DEFAULT_DEFEAT_RUMOR_ID;
         isDefeatBySurrender = false;
+        time = 0;
         invList = new ArrayList<>();
     }
 
@@ -209,6 +213,7 @@ public class Game {
         this.isDefeatByRumor = game.isDefeatByRumor;
         this.defeatRumorID = game.defeatRumorID;
         this.isDefeatBySurrender = game.isDefeatBySurrender;
+        this.time = game.time;
         this.invList = game.invList;
     }
 
@@ -452,6 +457,14 @@ public class Game {
         isDefeatBySurrender = defeatBySurrender;
     }
 
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
     public List<Investigator> getInvList() {
         return invList;
     }
@@ -519,6 +532,7 @@ public class Game {
                 getIsDefeatByRumor() == game.getIsDefeatByRumor() &&
                 getDefeatRumorID() == game.getDefeatRumorID() &&
                 getIsDefeatBySurrender() == game.getIsDefeatBySurrender() &&
+                getTime() == game.getTime() &&
                 equalsInvList(getInvList(), game.getInvList());
     }
 
@@ -560,6 +574,7 @@ public class Game {
         Timber.tag("GAME").d(String.valueOf(getLastModified() == game.getLastModified()));
         Timber.tag("GAME").d(String.valueOf(getAdventureID() == game.getAdventureID()));
         Timber.tag("GAME").d(String.valueOf(getComment().equals(game.getComment().trim())));
+        Timber.tag("GAME").d(String.valueOf(getTime() == game.getTime()));
         Timber.tag("GAME").d(String.valueOf(equalsInvList(getInvList(), game.getInvList())));
     }
 }

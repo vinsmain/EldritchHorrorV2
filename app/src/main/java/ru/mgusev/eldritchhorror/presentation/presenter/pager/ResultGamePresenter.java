@@ -15,7 +15,9 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Rumor;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import ru.mgusev.eldritchhorror.support.FormattedTime;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 @InjectViewState
 public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
@@ -26,6 +28,8 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     private CompositeDisposable expansionSubscribe;
     private Rumor currentRumor;
     private List<Rumor> rumorList;
+    private int time;
+    private int tempTime;
 
     public ResultGamePresenter() {
         App.getComponent().inject(this);
@@ -33,16 +37,18 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         if (repository.getGame() == null && !MainActivity.initialized) repository.setGame(new Game());
 
         ancientOneSubscribe = new CompositeDisposable();
-        ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne ->  getViewState().showMysteriesRadioGroup(ancientOne)));
+        ancientOneSubscribe.add(repository.getObservableAncientOne().subscribe(ancientOne ->  getViewState().showMysteriesRadioGroup(ancientOne), Timber::d));
 
         resultSwitchSubscribe = new CompositeDisposable();
-        resultSwitchSubscribe.add(repository.getObservableIsWin().subscribe(this::initResultViews));
+        resultSwitchSubscribe.add(repository.getObservableIsWin().subscribe(this::initResultViews, Timber::d));
 
         expansionSubscribe = new CompositeDisposable();
-        expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners));
+        expansionSubscribe.add(repository.getExpansionPublish().subscribe(this::initSpinners, Timber::d));
 
         rumorList = repository.getRumorList();
         currentRumor = repository.getRumor(repository.getGame().getDefeatRumorID());
+
+        time = repository.getGame().getTime();
     }
 
     @Override
@@ -56,6 +62,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         getViewState().setDefeatReasonSwitchChecked(repository.getGame().getIsDefeatByElimination(), repository.getGame().getIsDefeatByMythosDepletion(),
                 repository.getGame().getIsDefeatByAwakenedAncientOne(), repository.getGame().getIsDefeatByRumor(), repository.getGame().getIsDefeatBySurrender());
         setRumorSpinnerPosition();
+        setTimeToField();
     }
 
     private void setResultValues() {
@@ -133,6 +140,35 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         }
         if (currentRumor == null) currentRumor = repository.getRumor(list.get(0));
         return list;
+    }
+
+    public void onTimeRowClick() {
+        getViewState().showTimePickerDialog(time);
+    }
+
+    public void setTempTime(int hour, int minute) {
+        tempTime = hour * 60 + minute;
+    }
+
+    public void setTime(int hour, int minute) {
+        time = hour * 60 + minute;
+        repository.getGame().setTime(time);
+    }
+
+    public void setTimeToField() {
+        getViewState().setTimeToField(FormattedTime.getTime(repository.getContext(), time));
+    }
+
+    public void dismissTimePicker() {
+        getViewState().dismissTimePicker();
+    }
+
+    public int getTempTime() {
+        return tempTime;
+    }
+
+    public void clearTempTime() {
+        tempTime = 0;
     }
 
     @Override
