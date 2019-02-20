@@ -158,4 +158,5 @@
     <string name="time_header">Time</string>
     <string name="time_hour">h</string>
     <string name="time_minute">m</string>
+    <string name="faq_header">FAQ</string>
 </resources>

@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FaqAPI {
 
-    private final static String BASE_URL = "https://mgusevstudio.ru/&id=2&key=526b11779725fcceef927b69f2035ed7";
+    private final static String BASE_URL = "https://mgusevstudio.ru/";
 
     private static Retrofit retrofit = null;
 

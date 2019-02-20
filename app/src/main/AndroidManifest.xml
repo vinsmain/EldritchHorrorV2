@@ -18,7 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".ui.activity.faq.FaqActivity"></activity>
         <activity
             android:name=".ui.activity.main.MainActivity"
             android:theme="@style/AppTheme.Launcher">
@@ -28,10 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.pager.PagerActivity"></activity>
+        <activity android:name=".ui.activity.pager.PagerActivity" />
         <activity
             android:name=".ui.activity.pager.InvestigatorActivity"
-            android:theme="@style/DialogTheme"></activity>
+            android:theme="@style/DialogTheme" />
         <activity
             android:name=".ui.activity.pager.ExpansionChoiceActivity"
             android:theme="@style/DialogTheme" />
@@ -58,7 +58,7 @@
 
         <activity
             android:name=".ui.activity.forgotten_endings.ForgottenEndingsActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

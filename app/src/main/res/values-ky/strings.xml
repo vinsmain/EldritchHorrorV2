@@ -140,4 +140,5 @@
     <string name="time_header">Время партии</string>
     <string name="time_hour">ч</string>
     <string name="time_minute">м</string>
+    <string name="faq_header">Частые вопросы</string>
 </resources>

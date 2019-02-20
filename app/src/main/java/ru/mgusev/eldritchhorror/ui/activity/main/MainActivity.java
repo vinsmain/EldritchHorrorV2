@@ -45,6 +45,7 @@ import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
 import ru.mgusev.eldritchhorror.support.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
+import ru.mgusev.eldritchhorror.ui.activity.faq.FaqActivity;
 import ru.mgusev.eldritchhorror.ui.activity.forgotten_endings.ForgottenEndingsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
@@ -122,7 +123,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private void initDrawerMenu() {
         forgottenEndingsItem = navigationView.getMenu().getItem(1);
         statItem = navigationView.getMenu().getItem(0);
-        authItem = navigationView.getMenu().getItem(4);
+        authItem = navigationView.getMenu().getItem(5);
         mainPresenter.setVisibilityStatisticsMenuItem();
         mainPresenter.initAuthMenuItem();
         setVisibilityForgottenEndingsItem();
@@ -158,6 +159,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 closeDrawer();
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.action_faq:
+                closeDrawer();
+                Intent faqIntent = new Intent(this, FaqActivity.class);
+                startActivity(faqIntent);
                 return true;
             case R.id.action_auth:
                 closeDrawer();
