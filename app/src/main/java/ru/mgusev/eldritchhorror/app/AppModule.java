@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
+import ru.mgusev.eldritchhorror.api.FaqAPIService;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration6to7;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration7to8;
@@ -119,5 +120,11 @@ public class AppModule {
     @Singleton
     public FirebaseHelper provideFirebaseHelper() {
         return new FirebaseHelper();
+    }
+
+    @Provides
+    @Singleton
+    public FaqAPIService provideFaqAPIService(Context context) {
+        return new FaqAPIService(context);
     }
 }
