@@ -4,8 +4,8 @@ import com.arellomobile.mvp.MvpView;
 
 import java.util.List;
 
-import ru.mgusev.eldritchhorror.api.model.article.Result;
+import ru.mgusev.eldritchhorror.api.json_model.Article;
 
 public interface FaqView extends MvpView {
-    void setDataToAdapter(List<Result> articleList);
+    void setDataToAdapter(List<Article> articleList);
 }

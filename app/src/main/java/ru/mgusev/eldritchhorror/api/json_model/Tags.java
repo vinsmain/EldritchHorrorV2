@@ -1,5 +1,6 @@
-package ru.mgusev.eldritchhorror.api.model.category;
+package ru.mgusev.eldritchhorror.api.json_model;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,9 +9,9 @@ public class Tags {
     @SerializedName("typeAlias")
     @Expose
     private Object typeAlias;
-    @SerializedName("tags")
+    @SerializedName("itemTags")
     @Expose
-    private String tags;
+    private List<Object> itemTags = null;
 
     public Object getTypeAlias() {
         return typeAlias;
@@ -20,11 +21,11 @@ public class Tags {
         this.typeAlias = typeAlias;
     }
 
-    public String getTags() {
-        return tags;
+    public List<Object> getItemTags() {
+        return itemTags;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setItemTags(List<Object> itemTags) {
+        this.itemTags = itemTags;
     }
 }

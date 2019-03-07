@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.api.model.article.Result;
+import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 
 public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
@@ -32,14 +34,14 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
     }
 
     private OnItemClicked onClick;
-    private List<Result> articleList;
+    private List<Article> articleList;
 
     public FaqAdapter() {
         //App.getComponent().inject(this);
         this.articleList = new ArrayList<>();
     }
 
-    public void updateAllFaqCards(List<Result> list) {
+    public void updateAllFaqCards(List<Article> list) {
         notifyItemRangeRemoved(0, getItemCount());
         this.articleList = list;
         notifyItemRangeInserted(0, getItemCount());
@@ -74,9 +76,17 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
         Context context = holder.itemView.getContext();
 
         holder.faqQuestion.setText(articleList.get(position).getTitle());
-        holder.faqAnswer.setText(android.text.Html.fromHtml(articleList.get(position).getIntrotext()).toString());
+        holder.faqAnswer.setText(trim(Html.fromHtml(articleList.get(position).getIntrotext())));
+        holder.faqAnswer.setMovementMethod(LinkMovementMethod.getInstance());
 
         //holder.invCardView.setOnClickListener(v -> onClick.onItemClick(holder.getAdapterPosition()));
+    }
+
+    private CharSequence trim(CharSequence text) {
+        while (text.charAt(text.length() - 1) == '\n') {
+            text = text.subSequence(0, text.length() - 1);
+        }
+        return text;
     }
 
     @Override

@@ -1,9 +1,9 @@
-package ru.mgusev.eldritchhorror.api.model.article;
+package ru.mgusev.eldritchhorror.api.json_model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Article {
+public class Response {
 
     @SerializedName("err_msg")
     @Expose

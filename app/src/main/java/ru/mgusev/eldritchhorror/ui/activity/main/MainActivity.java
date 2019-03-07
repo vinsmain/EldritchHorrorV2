@@ -417,7 +417,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        // Article returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
             mainPresenter.startAuthTask(data);
         }

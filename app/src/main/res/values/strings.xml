@@ -89,7 +89,7 @@
     <string name="message_rate">Rate now</string>
     <string name="message_later">Remind Me Later</string>
 
-    <string name="message_starting">So far there are no results of the game.\nTo add the result of the game, click on the big orange button.</string>
+    <string name="message_starting">So far there are no articles of the game.\nTo add the result of the game, click on the big orange button.</string>
 
     <string name="random_button_header">Random selection</string>
     <string name="alert_investigators_limit">"Number of initial investigators exceeded!"</string>
@@ -114,7 +114,7 @@
     <string name="win_stat_label">Victory</string>
     <string name="defeat_stat_label">Defeat</string>
 
-    <string name="all_results">All results</string>
+    <string name="all_results">All articles</string>
     <string name="other_results">Others</string>
     <string name="last_game_header">Last game</string>
     <string name="popular_investigators_header">Popular investigators</string>

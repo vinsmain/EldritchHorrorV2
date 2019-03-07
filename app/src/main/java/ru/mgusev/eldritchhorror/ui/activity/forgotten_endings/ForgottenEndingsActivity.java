@@ -108,7 +108,7 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
     @OnCheckedChanged({R.id.forgotten_endings_result_switch})
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (compoundButton.getId() == R.id.forgotten_endings_result_switch) {
-            Timber.d("Result checked %b", b);
+            Timber.d("Article checked %b", b);
             forgottenEndingsPresenter.onResultCheckedChanged(b);
         } else
             forgottenEndingsPresenter.onConditionCheckedChanged((String) compoundButton.getText(), b);
