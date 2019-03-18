@@ -18,7 +18,7 @@ public class FaqAPIService {
     private final static String OPTION = "com_api";
     private final static String APP = "articles";
     private final static String RESOURCE = "article";
-    private final static long CATEGORY_ID_RU = 9;
+    private final static long CATEGORY_ID_RU = 10;
     private final static long CATEGORY_ID_EN = 10;
     private final static String API_KEY = "526b11779725fcceef927b69f2035ed7";
 

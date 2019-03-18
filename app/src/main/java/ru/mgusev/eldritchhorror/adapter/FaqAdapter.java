@@ -27,7 +27,6 @@ import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.support.ArticleDiffUtilCallback;
-import timber.log.Timber;
 
 import static android.support.v4.util.Preconditions.checkNotNull;
 
@@ -61,8 +60,13 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
 
     private void initIconMap() {
         iconMap = new HashMap<>();
+        iconMap.put("#reckoning", context.getResources().getDrawable(R.drawable.reckoning));
+        iconMap.put("#number of players", context.getResources().getDrawable(R.drawable.number_of_players));
         iconMap.put("#lore", context.getResources().getDrawable(R.drawable.lore));
         iconMap.put("#influence", context.getResources().getDrawable(R.drawable.influence));
+        iconMap.put("#observation", context.getResources().getDrawable(R.drawable.observation));
+        iconMap.put("#strength", context.getResources().getDrawable(R.drawable.strength));
+        iconMap.put("#will", context.getResources().getDrawable(R.drawable.will));
     }
 
     public void setData(List<Article> list) {
@@ -81,34 +85,34 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final FaqViewHolder holder, int position) {
         holder.faqQuestion.setText(articleList.get(position).getTitle());
-        replaceTestIcon(articleList.get(position).getIntrotext(), holder.faqAnswer);
+        holder.faqQuestion.setVisibility(articleList.get(position).getTitle().contains("#errata") ? View.GONE : View.VISIBLE);
+
+        holder.faqAnswer.setText(trimSpannable(getSpannableFormText(articleList.get(position).getIntrotext())), TextView.BufferType.SPANNABLE);
+        holder.faqAnswer.setMovementMethod(LinkMovementMethod.getInstance());
 
         //holder.invCardView.setOnClickListener(v -> onClick.onItemClick(holder.getAdapterPosition()));
     }
 
-    private void replaceTestIcon(String text, TextView textView) {
-        StringBuilder textSB = new StringBuilder(text);
-        SpannableStringBuilder ss = (SpannableStringBuilder) Html.fromHtml(text);
+    private SpannableStringBuilder getSpannableFormText(String text) {
+        String textFormHtml = Html.fromHtml(text).toString();
+        SpannableStringBuilder spannable = (SpannableStringBuilder) Html.fromHtml(text);
 
         for(Map.Entry<String, Drawable> entry : iconMap.entrySet()) {
             String key = entry.getKey();
             Drawable value = entry.getValue();
             value.setBounds(0, 0, value.getIntrinsicWidth(), value.getIntrinsicHeight());
 
-            while (text.contains(key)) {
-                int startSpan = text.indexOf(key);
-                ss.setSpan(new ImageSpan(value, ImageSpan.ALIGN_BOTTOM), startSpan - 3, startSpan + (key.length() - 3), Spannable.SPAN_COMPOSING);
-                Timber.d(String.valueOf(ss));
+            while (textFormHtml.contains(key)) {
+                int startSpan = textFormHtml.indexOf(key);
+                spannable.setSpan(new ImageSpan(value, ImageSpan.ALIGN_BOTTOM), startSpan, startSpan + key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 StringBuilder string = new StringBuilder();
                 while (string.length() != key.length()) {
                     string.append(" ");
                 }
-                text = text.replaceFirst(key, String.valueOf(string)); //replace with two blank spaces.
+                textFormHtml = textFormHtml.replaceFirst(key, String.valueOf(string));
             }
         }
-
-        textView.setText(trimSpannable(ss), TextView.BufferType.SPANNABLE);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        return spannable;
     }
 
     private SpannableStringBuilder trimSpannable(SpannableStringBuilder spannable) {
