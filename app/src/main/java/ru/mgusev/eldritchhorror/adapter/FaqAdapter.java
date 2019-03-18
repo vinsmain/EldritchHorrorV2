@@ -50,7 +50,7 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
     private Context context;
     private OnItemClicked onClick;
     private List<Article> articleList;
-    private Map<String, ImageSpan> iconMap;
+    private Map<String, Drawable> iconMap;
 
     public FaqAdapter(Context context) {
         //App.getComponent().inject(this);
@@ -61,12 +61,8 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
 
     private void initIconMap() {
         iconMap = new HashMap<>();
-        Drawable drawable = context.getResources().getDrawable(R.drawable.lore);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        iconMap.put("#lore", new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM));
-        drawable = context.getResources().getDrawable(R.drawable.influence);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        iconMap.put("#influence", new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM));
+        iconMap.put("#lore", context.getResources().getDrawable(R.drawable.lore));
+        iconMap.put("#influence", context.getResources().getDrawable(R.drawable.influence));
     }
 
     public void setData(List<Article> list) {
@@ -84,45 +80,32 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final FaqViewHolder holder, int position) {
-
-
         holder.faqQuestion.setText(articleList.get(position).getTitle());
-//        holder.faqAnswer.setText(trim(Html.fromHtml(articleList.get(position).getIntrotext())));
-//        holder.faqAnswer.setMovementMethod(LinkMovementMethod.getInstance());
-
         replaceTestIcon(articleList.get(position).getIntrotext(), holder.faqAnswer);
 
         //holder.invCardView.setOnClickListener(v -> onClick.onItemClick(holder.getAdapterPosition()));
     }
 
     private void replaceTestIcon(String text, TextView textView) {
-//        Drawable d;
-//        ImageSpan imageSpan;
         StringBuilder textSB = new StringBuilder(text);
         SpannableStringBuilder ss = (SpannableStringBuilder) Html.fromHtml(text);
 
-        for(Map.Entry<String, ImageSpan> entry : iconMap.entrySet()) {
+        for(Map.Entry<String, Drawable> entry : iconMap.entrySet()) {
             String key = entry.getKey();
-            ImageSpan value = entry.getValue();
+            Drawable value = entry.getValue();
+            value.setBounds(0, 0, value.getIntrinsicWidth(), value.getIntrinsicHeight());
 
             while (text.contains(key)) {
                 int startSpan = text.indexOf(key);
-//                d = context.getResources().getDrawable(R.drawable.masks_of_nyarlathotep); // I have kept laugh.png of size 24x24 in drawable folder.
-//                d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-//                imageSpan = new ImageSpan(d, ImageSpan.ALIGN_BOTTOM);
-                ss.setSpan(value, startSpan - 3, startSpan + (key.length() - 3), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                ss.setSpan(new ImageSpan(value, ImageSpan.ALIGN_BOTTOM), startSpan - 3, startSpan + (key.length() - 3), Spannable.SPAN_COMPOSING);
                 Timber.d(String.valueOf(ss));
                 StringBuilder string = new StringBuilder();
                 while (string.length() != key.length()) {
                     string.append(" ");
                 }
                 text = text.replaceFirst(key, String.valueOf(string)); //replace with two blank spaces.
-                Timber.d(text);
-                Timber.d(String.valueOf(ss));
             }
-            Timber.d(String.valueOf(ss));
         }
-        Timber.d(String.valueOf(ss));
 
         textView.setText(trimSpannable(ss), TextView.BufferType.SPANNABLE);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
