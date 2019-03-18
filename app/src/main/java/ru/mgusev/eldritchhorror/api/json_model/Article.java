@@ -1,13 +1,15 @@
 package ru.mgusev.eldritchhorror.api.json_model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Article {
+public class Article implements Comparable<Article> {
 
     @SerializedName("id")
     @Expose
-    private String id;
+    private int id;
     @SerializedName("title")
     @Expose
     private String title;
@@ -60,11 +62,11 @@ public class Article {
     @Expose
     private Tags tags;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -202,5 +204,14 @@ public class Article {
 
     public void setTags(Tags tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public int compareTo(@NonNull Article article) {
+        if (this.getId() < article.getId()) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 }

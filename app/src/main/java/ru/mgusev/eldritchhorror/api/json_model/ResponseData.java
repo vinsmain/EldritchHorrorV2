@@ -1,31 +1,30 @@
 package ru.mgusev.eldritchhorror.api.json_model;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ResponseData {
 
-    @SerializedName("results")
+    @SerializedName("success")
     @Expose
-    private List<Article> articles = null;
-    @SerializedName("total")
+    private Boolean success;
+    @SerializedName("data")
     @Expose
-    private Integer total;
+    private ArticleData articleData;
 
-    public List<Article> getArticles() {
-        return articles;
+    public Boolean getSuccess() {
+        return success;
     }
 
-    public void setArticles(List<Article> articles) {
-        this.articles = articles;
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
 
-    public Integer getTotal() {
-        return total;
+    public ArticleData getArticleData() {
+        return articleData;
     }
 
-    public void setTotal(Integer total) {
-        this.total = total;
+    public void setArticleData(ArticleData articleData) {
+        this.articleData = articleData;
     }
 }

@@ -22,7 +22,7 @@ public class Response {
     private String version;
     @SerializedName("data")
     @Expose
-    private Data data;
+    private ResponseData responseData;
 
     public String getErrMsg() {
         return errMsg;
@@ -64,11 +64,11 @@ public class Response {
         this.version = version;
     }
 
-    public Data getData() {
-        return data;
+    public ResponseData getResponseData() {
+        return responseData;
     }
 
-    public void setData(Data data) {
-        this.data = data;
+    public void setResponseData(ResponseData responseData) {
+        this.responseData = responseData;
     }
 }

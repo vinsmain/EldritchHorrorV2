@@ -159,4 +159,8 @@
     <string name="time_hour">h</string>
     <string name="time_minute">m</string>
     <string name="faq_header">FAQ</string>
+    <string name="search_header">Search</string>
+    <string name="refresh_header">Refresh</string>
+    <string name="format_data_error_header">Incorrect data format, please contact the developer</string>
+    <string name="connection_error_header">Connection error, please check your connection and try again</string>
 </resources>

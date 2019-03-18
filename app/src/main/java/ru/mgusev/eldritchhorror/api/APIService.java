@@ -7,6 +7,6 @@ import ru.mgusev.eldritchhorror.api.json_model.Response;
 
 public interface APIService {
 
-    @GET("index.php?option=com_api&app=articles&resource=article&category_id=9")
-    Observable<Response> getArticles(@Query("category_id") long id);
+    @GET("index.php")
+    Observable<Response> getArticles(@Query("option") String option, @Query("app") String app, @Query("resource") String resource, @Query("category_id") long id);
 }
