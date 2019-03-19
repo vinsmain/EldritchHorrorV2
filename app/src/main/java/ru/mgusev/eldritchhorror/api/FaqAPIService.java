@@ -20,6 +20,7 @@ public class FaqAPIService {
     private final static String RESOURCE = "article";
     private final static long CATEGORY_ID_RU = 10;
     private final static long CATEGORY_ID_EN = 10;
+    private final static long LIMIT = 100;
     private final static String API_KEY = "526b11779725fcceef927b69f2035ed7";
 
     private Context context;
@@ -40,7 +41,7 @@ public class FaqAPIService {
 
     public void getArticles() {
 
-        service.getArticles(OPTION, APP, RESOURCE, categoryId)
+        service.getArticles(OPTION, APP, RESOURCE, categoryId, LIMIT)
                 .subscribeOn(Schedulers.io())
                 //.delay(5000, TimeUnit.MILLISECONDS, Schedulers.io()) //TODO убрать перед релизом
                 .observeOn(AndroidSchedulers.mainThread())

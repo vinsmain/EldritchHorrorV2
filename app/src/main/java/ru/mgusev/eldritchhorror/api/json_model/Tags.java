@@ -11,7 +11,7 @@ public class Tags {
     private Object typeAlias;
     @SerializedName("itemTags")
     @Expose
-    private List<Object> itemTags = null;
+    private List<Tag> itemTags = null;
 
     public Object getTypeAlias() {
         return typeAlias;
@@ -21,11 +21,11 @@ public class Tags {
         this.typeAlias = typeAlias;
     }
 
-    public List<Object> getItemTags() {
+    public List<Tag> getItemTags() {
         return itemTags;
     }
 
-    public void setItemTags(List<Object> itemTags) {
+    public void setItemTags(List<Tag> itemTags) {
         this.itemTags = itemTags;
     }
 }

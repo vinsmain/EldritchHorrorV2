@@ -27,6 +27,7 @@ import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.support.ArticleDiffUtilCallback;
+import timber.log.Timber;
 
 import static android.support.v4.util.Preconditions.checkNotNull;
 
@@ -89,6 +90,10 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
 
         holder.faqAnswer.setText(trimSpannable(getSpannableFormText(articleList.get(position).getIntrotext())), TextView.BufferType.SPANNABLE);
         holder.faqAnswer.setMovementMethod(LinkMovementMethod.getInstance());
+        Timber.d(String.valueOf(articleList.get(position).getId()));
+        //if (articleList.get(position).getTags().getItemTags().size() != 0)
+            //Timber.d(articleList.get(position).getTags().getItemTags().get(0).getTitle());
+//
 
         //holder.invCardView.setOnClickListener(v -> onClick.onItemClick(holder.getAdapterPosition()));
     }

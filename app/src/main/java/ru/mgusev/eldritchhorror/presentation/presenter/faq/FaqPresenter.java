@@ -1,10 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.faq;
 
-import android.graphics.drawable.Drawable;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
@@ -49,7 +44,6 @@ public class FaqPresenter extends MvpPresenter<FaqView> {
     }
 
     public void setCurrentArticleList(List<Article> articleList) {
-        //articleList = replaceTestIcon(articleList);
         Collections.sort(articleList);
         repository.setArticleList(articleList);
     }
@@ -65,7 +59,7 @@ public class FaqPresenter extends MvpPresenter<FaqView> {
 
     public void clickSearch(String text) {
         searchText = text;
-        getViewState().setDataToAdapter(getSearchResult(text));
+        getViewState().setDataToAdapter(getArticleListWithHeaders(getSearchResult(text)));
     }
 
     public String getSearchText() {
@@ -87,6 +81,27 @@ public class FaqPresenter extends MvpPresenter<FaqView> {
                 resultList.add(article);
         }
         return resultList;
+    }
+
+    private List<Article> getArticleListWithHeaders(List<Article> list) {
+        List<Article> listWithHeaders = new ArrayList<>();
+        String tagTitle = "";
+        int headerId = -1;
+        for (Article article : list) {
+            if (!article.getTags().getItemTags().isEmpty()) {
+                if (!article.getTags().getItemTags().get(0).getTitle().equals(tagTitle)) {
+                    Article header = new Article();
+                    tagTitle = article.getTags().getItemTags().get(0).getTitle();
+                    header.setId(headerId);
+                    header.setTitle(tagTitle);
+                    header.setIntrotext(" ");
+                    listWithHeaders.add(header);
+                    headerId --;
+                }
+            }
+            listWithHeaders.add(article);
+        }
+        return listWithHeaders;
     }
 
     public void showError(Throwable e) {
