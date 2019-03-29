@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.HttpException;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.api.FaqAPIService;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
@@ -59,7 +60,9 @@ public class FaqPresenter extends MvpPresenter<FaqView> {
 
     public void clickSearch(String text) {
         searchText = text;
-        getViewState().setDataToAdapter(getArticleListWithHeaders(getSearchResult(text)));
+        List<Article> articleList = new ArrayList<>(getArticleListWithHeaders(getSearchResult(text)));
+        getViewState().setDataToAdapter(articleList);
+        getViewState().setNoneResultsTVVisibility(articleList.isEmpty());
     }
 
     public String getSearchText() {
@@ -93,8 +96,8 @@ public class FaqPresenter extends MvpPresenter<FaqView> {
                     Article header = new Article();
                     tagTitle = article.getTags().getItemTags().get(0).getTitle();
                     header.setId(headerId);
-                    header.setTitle(tagTitle);
-                    header.setIntrotext(" ");
+                    header.setTitle("#errata");
+                    header.setIntrotext("<h2>" + tagTitle + "</h2>");
                     listWithHeaders.add(header);
                     headerId --;
                 }
@@ -104,11 +107,15 @@ public class FaqPresenter extends MvpPresenter<FaqView> {
         return listWithHeaders;
     }
 
-    public void showError(Throwable e) {
+    public void showSuccessAlert() {
+        getViewState().showAlert(R.string.update_complete);
+    }
+
+    public void showErrorAlert(Throwable e) {
         Timber.d(e);
-        if (e instanceof UnknownHostException)
-            getViewState().showError(R.string.connection_error_header);
+        if (e instanceof UnknownHostException || e instanceof HttpException)
+            getViewState().showAlert(R.string.connection_error_header);
         else
-            getViewState().showError(R.string.format_data_error_header);
+            getViewState().showAlert(R.string.format_data_error_header);
     }
 }

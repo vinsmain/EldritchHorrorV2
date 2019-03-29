@@ -30,5 +30,8 @@ public interface FaqView extends MvpView {
     void setExpandSearchView(boolean isExpanded);
 
     @StateStrategyType(OneExecutionStateStrategy.class)
-    void showError(int errorMessageResId);
+    void showAlert(int messageResId);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setNoneResultsTVVisibility(boolean isVisible);
 }

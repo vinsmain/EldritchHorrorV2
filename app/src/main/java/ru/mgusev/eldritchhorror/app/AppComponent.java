@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import ru.mgusev.eldritchhorror.adapter.DetailsAdapter;
+import ru.mgusev.eldritchhorror.adapter.FaqAdapter;
 import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.adapter.StatisticsAdapter;
@@ -23,7 +24,6 @@ import ru.mgusev.eldritchhorror.presentation.presenter.pager.ResultGamePresenter
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.SpecializationChoicePresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPresenter;
-import ru.mgusev.eldritchhorror.ui.activity.faq.FaqActivity;
 
 @Component (modules = AppModule.class)
 @Singleton
@@ -46,6 +46,7 @@ public interface AppComponent {
     void inject(InvestigatorChoiceAdapter adapter);
     void inject(DetailsAdapter adapter);
     void inject(StatisticsAdapter adapter);
+    void inject(FaqAdapter adapter);
 
     void inject(FirebaseHelper helper);
     void inject(GoogleAuth googleAuth);

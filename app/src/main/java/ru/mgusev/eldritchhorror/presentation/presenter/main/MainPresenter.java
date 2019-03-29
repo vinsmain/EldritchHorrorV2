@@ -170,7 +170,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
             // Google Sign In failed, update UI appropriately
             Timber.w(e, "Google sign in failed");
             authStatusChange(false);
-            getViewState().showErrorSnackBar(); //TODO Проверить работоспособность ошибки
+            getViewState().showErrorSnackBar();
         }
     }
 

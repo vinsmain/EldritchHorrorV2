@@ -145,4 +145,5 @@
     <string name="refresh_header">Обновить</string>
     <string name="format_data_error_header">Некорректный формат данных, пожалуйста свяжитесь с разработчиком</string>
     <string name="connection_error_header">Ошибка соединения, пожалуйста проверьте ваше соединение и повторите попытку</string>
+    <string name="update_complete">Обновление завершено</string>
 </resources>

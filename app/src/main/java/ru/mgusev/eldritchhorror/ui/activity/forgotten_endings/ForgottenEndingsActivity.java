@@ -179,6 +179,4 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         sw.setOnCheckedChangeListener(this);
         return sw;
     }
-
-    //TODO Закрывать sinner drop down при перевороте
 }

@@ -17,21 +17,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
+import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.support.ArticleDiffUtilCallback;
-import timber.log.Timber;
+import ru.mgusev.eldritchhorror.util.StatsIcons;
 
 import static android.support.v4.util.Preconditions.checkNotNull;
 
-public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
+public class FaqAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class FaqViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_faq_card_view)
@@ -47,28 +49,32 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
         }
     }
 
+    static class ErrataViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.item_faq_errata_card_view)
+        CardView errataCardView;
+        @BindView(R.id.item_faq_errata_text)
+        TextView errataText;
+
+        ErrataViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    @Inject
+    StatsIcons statsIcons;
+
     private Context context;
     private OnItemClicked onClick;
     private List<Article> articleList;
-    private Map<String, Drawable> iconMap;
+
 
     public FaqAdapter(Context context) {
-        //App.getComponent().inject(this);
+        App.getComponent().inject(this);
         this.articleList = new ArrayList<>();
         this.context = context;
-        initIconMap();
     }
 
-    private void initIconMap() {
-        iconMap = new HashMap<>();
-        iconMap.put("#reckoning", context.getResources().getDrawable(R.drawable.reckoning));
-        iconMap.put("#number of players", context.getResources().getDrawable(R.drawable.number_of_players));
-        iconMap.put("#lore", context.getResources().getDrawable(R.drawable.lore));
-        iconMap.put("#influence", context.getResources().getDrawable(R.drawable.influence));
-        iconMap.put("#observation", context.getResources().getDrawable(R.drawable.observation));
-        iconMap.put("#strength", context.getResources().getDrawable(R.drawable.strength));
-        iconMap.put("#will", context.getResources().getDrawable(R.drawable.will));
-    }
 
     public void setData(List<Article> list) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ArticleDiffUtilCallback(this.articleList, list));
@@ -76,33 +82,45 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.FaqViewHolder> {
         diffResult.dispatchUpdatesTo(this);
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (articleList.get(position).getTitle().contains("#errata"))
+            return 1;
+        return 0;
+    }
+
     @NonNull
     @Override
-    public FaqViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq, parent, false);
-        return new FaqViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case 0: return new FaqViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq, parent, false));
+            case 1: return new ErrataViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq_errata, parent, false));
+            default: return new FaqViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq, parent, false));
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final FaqViewHolder holder, int position) {
-        holder.faqQuestion.setText(articleList.get(position).getTitle());
-        holder.faqQuestion.setVisibility(articleList.get(position).getTitle().contains("#errata") ? View.GONE : View.VISIBLE);
-
-        holder.faqAnswer.setText(trimSpannable(getSpannableFormText(articleList.get(position).getIntrotext())), TextView.BufferType.SPANNABLE);
-        holder.faqAnswer.setMovementMethod(LinkMovementMethod.getInstance());
-        Timber.d(String.valueOf(articleList.get(position).getId()));
-        //if (articleList.get(position).getTags().getItemTags().size() != 0)
-            //Timber.d(articleList.get(position).getTags().getItemTags().get(0).getTitle());
-//
-
-        //holder.invCardView.setOnClickListener(v -> onClick.onItemClick(holder.getAdapterPosition()));
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case 0:
+                FaqViewHolder faqViewHolder = (FaqViewHolder) holder;
+                faqViewHolder.faqQuestion.setText(getSpannableFormText(articleList.get(position).getTitle()), TextView.BufferType.SPANNABLE);
+                faqViewHolder.faqAnswer.setText(trimSpannable(getSpannableFormText(articleList.get(position).getIntrotext())), TextView.BufferType.SPANNABLE);
+                faqViewHolder.faqAnswer.setMovementMethod(LinkMovementMethod.getInstance());
+                break;
+            case 1:
+                ErrataViewHolder errataViewHolder = (ErrataViewHolder) holder;
+                errataViewHolder.errataText.setText(trimSpannable(getSpannableFormText(articleList.get(position).getIntrotext())), TextView.BufferType.SPANNABLE);
+                errataViewHolder.errataText.setMovementMethod(LinkMovementMethod.getInstance());
+                break;
+        }
     }
 
     private SpannableStringBuilder getSpannableFormText(String text) {
         String textFormHtml = Html.fromHtml(text).toString();
         SpannableStringBuilder spannable = (SpannableStringBuilder) Html.fromHtml(text);
 
-        for(Map.Entry<String, Drawable> entry : iconMap.entrySet()) {
+        for(Map.Entry<String, Drawable> entry : statsIcons.getIconMap().entrySet()) {
             String key = entry.getKey();
             Drawable value = entry.getValue();
             value.setBounds(0, 0, value.getIntrinsicWidth(), value.getIntrinsicHeight());

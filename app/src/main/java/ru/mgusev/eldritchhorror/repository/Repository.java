@@ -77,7 +77,8 @@ public class Repository {
     private int pagerPosition = 0;
     private FirebaseHelper firebaseHelper;
     private FirebaseUser user;
-    private List<Article> articleList;
+    private List<Article> articleListRu;
+    private List<Article> articleListEn;
 
     @Inject
     public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FileHelper fileHelper, FirebaseHelper firebaseHelper) {
@@ -109,7 +110,8 @@ public class Repository {
         downloadFileSubscribe = new CompositeDisposable();
         downloadFileSubscribe.add(firebaseHelper.getDownloadFileDisposable().subscribe(this::downloadFile, Timber::d));
 
-        articleList = new ArrayList<>();
+        articleListRu = new ArrayList<>();
+        articleListEn = new ArrayList<>();
 
         for (Game game : getGameList(0, 0)) {
             fixSpecializationsForOldInvestigators(game);
@@ -792,10 +794,16 @@ public class Repository {
     //Faq
 
     public List<Article> getArticleList() {
-        return articleList;
+        return Localization.getInstance().isRusLocale() ? articleListRu : articleListEn;
     }
 
     public void setArticleList(List<Article> articleList) {
-        this.articleList = articleList;
+        if (Localization.getInstance().isRusLocale()) {
+            articleListRu = new ArrayList<>();
+            articleListRu.addAll(articleList);
+        } else {
+            articleListEn = new ArrayList<>();
+            articleListEn.addAll(articleList);
+        }
     }
 }

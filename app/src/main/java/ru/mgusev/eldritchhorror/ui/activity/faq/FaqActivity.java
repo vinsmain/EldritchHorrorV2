@@ -10,9 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -29,22 +31,57 @@ import ru.mgusev.eldritchhorror.presentation.view.faq.FaqView;
 import ru.mgusev.eldritchhorror.support.OptionMenuSupportMvpAppCompatActivity;
 import timber.log.Timber;
 
+/**
+ * Activity для вывода данных типа {@link Article}
+ * Включает поиск по данным и ручное обновление данных
+ */
 public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implements FaqView, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
+    /**
+     * Репозиторий для работы с данными
+     */
     @InjectPresenter
     FaqPresenter faqPresenter;
-
+    /**
+     * RecyclerView для вывода списка {@link Article}
+     */
     @BindView(R.id.faq_rv)
     RecyclerView articleListRV;
+    /**
+     * Toolbar
+     */
     @BindView(R.id.faq_toolbar)
     Toolbar toolbar;
-
+    /**
+     * Сообщение, выводимое если список {@link Article} пуст
+     */
+    @BindView(R.id.faq_none_results)
+    TextView noneResultsTV;
+    /**
+     * Адаптер для {@link #articleListRV}
+     */
     private FaqAdapter adapter;
+    /**
+     * Пункт меню "Обновить данные"
+     */
     private MenuItem refreshItem;
+    /**
+     * АПункт меню "Поиск"
+     */
     private MenuItem searchItem;
+    /**
+     * SearchView для поиска
+     */
     private SearchView searchView;
-    private Snackbar errorSnackbar;
+    /**
+     * Snackbar для вывода сообщений о успешной загрузке данных или об ошибке
+     */
+    private Snackbar alertSnackbar;
 
+    /**
+     * Инициирует {@link #toolbar}, {@link #articleListRV}, {@link #adapter}
+     * @param savedInstanceState bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +97,9 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         articleListRV.setAdapter(adapter);
     }
 
+    /**
+     * Инициирует {@link #toolbar}
+     */
     private void initToolbar() {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.faq_header);
@@ -71,7 +111,7 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
 
     /**
      * Создает меню
-     * getMvpDelegate().onAttach() необходим для своевременного присоединения view к FaqPresenter
+     * getMvpDelegate().onAttach() необходим для присоединения {@link FaqActivity} к {@link FaqPresenter} только после создания меню
      * Подробное описание {@link OptionMenuSupportMvpAppCompatActivity}
      */
     @Override
@@ -90,6 +130,10 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         return true;
     }
 
+    /**
+     * Принудительно вызывает getMvpDelegate().onAttach(), если Activity была восстановлена, а не создана с нуля
+     * Условие добавлено для того, чтобы анимация для {@link #refreshItem} работала корректно после восстановления Activity
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -99,6 +143,10 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         }
     }
 
+    /**
+     * Принудительно вызывает getMvpDelegate().onAttach(), если Activity было восстановлена, а не создано с нуля
+     * Условие добавлено для того, чтобы анимация для {@link #refreshItem} работала корректно после восстановления Activity
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -108,6 +156,11 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         }
     }
 
+    /**
+     * Обрабатывает нажатия на пункты меню
+     * @param item пункт меню
+     * @return параметр, подтверждающий нажатие на пункт меню
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -119,6 +172,9 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         }
     }
 
+    /**
+     * Запускает анимацию вращения иконки {@link #refreshItem}
+     */
     @Override
     public void startRefreshIconRotate() {
         Timber.d(String.valueOf(getMvpDelegate()));
@@ -135,6 +191,9 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         }
     }
 
+    /**
+     * Останавливает анимацию вращения иконки {@link #refreshItem}
+     */
     @Override
     public void stopRefreshIconRotate() {
         Timber.d(String.valueOf(refreshItem));
@@ -144,18 +203,31 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         }
     }
 
+    /**
+     * Устанавливает новый список в {@link #adapter}
+     * @param articleList список данных {@link Article}
+     */
     @Override
     public void setDataToAdapter(List<Article> articleList) {
         Timber.d(String.valueOf(articleList.size()));
         adapter.setData(articleList);
     }
 
+    /**
+     * Устанавливает текст в поле поиска, нужно для сохранения состояния поля после смены конфигурации
+     * Также убирается фокус с поля, чтобы не выводилась клавиатура после смены конфигурации
+     * @param text текст для текстового поля
+     */
     @Override
     public void setTextToSearchView(String text) {
         searchView.setQuery(text, false);
         searchView.clearFocus();
     }
 
+    /**
+     * Устанавливает состояние текстового поля, развернуто или свернуто
+     * @param isExpanded значение состояния, true - развернуто, false - свернуто
+     */
     @Override
     public void setExpandSearchView(boolean isExpanded) {
         Timber.d("onMenuItemActionExpand");
@@ -165,12 +237,22 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
             searchItem.collapseActionView();
     }
 
+    /**
+     * Срабатывает, когда строка поиска разворачивается
+     * @param item меню
+     * @return true
+     */
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         Timber.d("onMenuItemActionExpand");
         return true;
     }
 
+    /**
+     * Срабатывает, когда строка посика сворачивается
+     * @param item меню
+     * @return true
+     */
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         faqPresenter.clickSearch("");
@@ -178,23 +260,49 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         return true;
     }
 
+    /**
+     * Срабатывает, когда выполняется нажатие на кнопку выполнения поиска
+     * @param s строка в поле поиска
+     * @return false
+     */
     @Override
     public boolean onQueryTextSubmit(String s) {
         faqPresenter.clickSearch(s);
         return false;
     }
 
+    /**
+     * Срабатывает, когда выполняется изменение текста в строке поиска
+     * @param s текст в стрроке поиска
+     * @return false
+     */
     @Override
     public boolean onQueryTextChange(String s) {
         return false;
     }
 
+    /**
+     * Выводит {@link #alertSnackbar}
+     * @param messageResId id строкового ресурса, который будет выведен
+     */
     @Override
-    public void showError(int errorMessageResId) {
-        errorSnackbar = Snackbar.make(articleListRV, errorMessageResId, Snackbar.LENGTH_LONG);
-        errorSnackbar.show();
+    public void showAlert(int messageResId) {
+        alertSnackbar = Snackbar.make(articleListRV, messageResId, Snackbar.LENGTH_LONG);
+        alertSnackbar.show();
     }
 
+    /**
+     * Управляет видимостью TextView {@link #noneResultsTV}
+     * @param isVisible параметр, определяющий видимость
+     */
+    @Override
+    public void setNoneResultsTVVisibility(boolean isVisible) {
+        noneResultsTV.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Сохраняет состояние строки поиска в {@link FaqPresenter} перед сменой конфигурации
+     */
     @Override
     protected void onStop() {
         Timber.d(searchView.getQuery().toString());

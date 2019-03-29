@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="icon_code_array" translatable="true">
+        <item>#расплата</item>
+        <item>#число игроков</item>
+        <item>#знания</item>
+        <item>#общение</item>
+        <item>#внимание</item>
+        <item>#сила</item>
+        <item>#воля</item>
+    </string-array>
+</resources>

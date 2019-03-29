@@ -206,12 +206,25 @@ public class Article implements Comparable<Article> {
         this.tags = tags;
     }
 
+    /**
+     * Сравнивает объекты сначала по id метки {@link Tag#id}, в случае равенства - по id статьи {@link #id}
+     * @param article сравниваемый с текущим объект
+     * @return результат сравнения
+     */
     @Override
     public int compareTo(@NonNull Article article) {
-        if (this.getId() < article.getId()) {
-            return -1;
+        int result;
+        if (this.getTags().getItemTags().get(0).getId() < article.getTags().getItemTags().get(0).getId()) {
+            result = -1;
+        } else if (this.getTags().getItemTags().get(0).getId() > article.getTags().getItemTags().get(0).getId()) {
+            result = 1;
         } else {
-            return 1;
+            if (this.getId() < article.getId()) {
+                result = -1;
+            } else {
+                result = 1;
+            }
         }
+        return result;
     }
 }

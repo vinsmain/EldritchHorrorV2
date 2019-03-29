@@ -26,6 +26,7 @@ import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.repository.FileHelper;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.repository.PrefHelper;
+import ru.mgusev.eldritchhorror.util.StatsIcons;
 
 @Module
 public class AppModule {
@@ -126,5 +127,11 @@ public class AppModule {
     @Singleton
     public FaqAPIService provideFaqAPIService(Context context) {
         return new FaqAPIService(context);
+    }
+
+    @Provides
+    @Singleton
+    public StatsIcons provideStatsIcons(Context context) {
+        return new StatsIcons(context);
     }
 }
