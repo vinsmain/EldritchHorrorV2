@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
+import ru.mgusev.eldritchhorror.api.FaqAPIService;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration6to7;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration7to8;
@@ -25,6 +26,7 @@ import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.repository.FileHelper;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.repository.PrefHelper;
+import ru.mgusev.eldritchhorror.util.StatsIcons;
 
 @Module
 public class AppModule {
@@ -119,5 +121,17 @@ public class AppModule {
     @Singleton
     public FirebaseHelper provideFirebaseHelper() {
         return new FirebaseHelper();
+    }
+
+    @Provides
+    @Singleton
+    public FaqAPIService provideFaqAPIService(Context context) {
+        return new FaqAPIService(context);
+    }
+
+    @Provides
+    @Singleton
+    public StatsIcons provideStatsIcons(Context context) {
+        return new StatsIcons(context);
     }
 }

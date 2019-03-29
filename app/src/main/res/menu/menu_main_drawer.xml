@@ -11,7 +11,6 @@
             android:icon="@drawable/statistics_icon"
             android:title="@string/statistics_header"
             app:showAsAction="always|collapseActionView" />
-
         <item
             android:id="@+id/action_forgotten_endings"
             android:icon="@drawable/forgotten_endings"
@@ -22,7 +21,11 @@
             android:icon="@drawable/music"
             android:title="@string/music_header"
             app:showAsAction="always|collapseActionView" />
-
+        <item
+            android:id="@+id/action_faq"
+            android:icon="@drawable/faq"
+            android:title="@string/faq_header"
+            app:showAsAction="always|collapseActionView" />
         <item
             android:id="@+id/action_about"
             android:icon="@drawable/about"

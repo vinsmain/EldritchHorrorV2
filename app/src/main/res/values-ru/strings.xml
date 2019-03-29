@@ -141,4 +141,10 @@
     <string name="time_header">Время партии</string>
     <string name="time_hour">ч</string>
     <string name="time_minute">м</string>
+    <string name="faq_header">Частые вопросы</string>
+    <string name="search_header">Поиск</string>
+    <string name="refresh_header">Обновить</string>
+    <string name="format_data_error_header">Некорректный формат данных, пожалуйста свяжитесь с разработчиком</string>
+    <string name="connection_error_header">Ошибка соединения, пожалуйста проверьте ваше соединение и повторите попытку</string>
+    <string name="update_complete">Обновление завершено</string>
 </resources>

@@ -108,7 +108,7 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
     @OnCheckedChanged({R.id.forgotten_endings_result_switch})
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (compoundButton.getId() == R.id.forgotten_endings_result_switch) {
-            Timber.d("Result checked %b", b);
+            Timber.d("Article checked %b", b);
             forgottenEndingsPresenter.onResultCheckedChanged(b);
         } else
             forgottenEndingsPresenter.onConditionCheckedChanged((String) compoundButton.getText(), b);
@@ -163,12 +163,6 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         }
     }
 
-
-    //C:\Users\vinsm\AppData\Local\Android\Sdk\platform-tools>adb tcpip 5555
-    //restarting in TCP mode port: 5555
-//    C:\Users\vinsm\AppData\Local\Android\Sdk\platform-tools>adb connect 192.168.211.52
-//    connected to 192.168.211.52:5555 /TODO убрать перед релизом
-
     @Override
     public void clearConditionsContainer() {
         conditionsContainer.removeAllViews();
@@ -185,6 +179,4 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         sw.setOnCheckedChangeListener(this);
         return sw;
     }
-
-    //TODO Закрывать sinner drop down при перевороте
 }

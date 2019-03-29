@@ -25,6 +25,7 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -76,6 +77,8 @@ public class Repository {
     private int pagerPosition = 0;
     private FirebaseHelper firebaseHelper;
     private FirebaseUser user;
+    private List<Article> articleListRu;
+    private List<Article> articleListEn;
 
     @Inject
     public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FileHelper fileHelper, FirebaseHelper firebaseHelper) {
@@ -106,6 +109,9 @@ public class Repository {
 
         downloadFileSubscribe = new CompositeDisposable();
         downloadFileSubscribe.add(firebaseHelper.getDownloadFileDisposable().subscribe(this::downloadFile, Timber::d));
+
+        articleListRu = new ArrayList<>();
+        articleListEn = new ArrayList<>();
 
         for (Game game : getGameList(0, 0)) {
             fixSpecializationsForOldInvestigators(game);
@@ -783,5 +789,21 @@ public class Repository {
 
     public List<String> getConditionList(int ancientOneId, boolean victory) {
         return staticDataDB.endingDAO().getConditionList(ancientOneId, victory);
+    }
+
+    //Faq
+
+    public List<Article> getArticleList() {
+        return Localization.getInstance().isRusLocale() ? articleListRu : articleListEn;
+    }
+
+    public void setArticleList(List<Article> articleList) {
+        if (Localization.getInstance().isRusLocale()) {
+            articleListRu = new ArrayList<>();
+            articleListRu.addAll(articleList);
+        } else {
+            articleListEn = new ArrayList<>();
+            articleListEn.addAll(articleList);
+        }
     }
 }

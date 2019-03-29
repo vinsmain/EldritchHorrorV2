@@ -10,4 +10,24 @@
         <item>7</item>
         <item>8</item>
     </string-array>
+
+    <string-array name="icon_code_array" translatable="true">
+        <item>#reckoning</item>
+        <item>#number of players</item>
+        <item>#lore</item>
+        <item>#influence</item>
+        <item>#observation</item>
+        <item>#strength</item>
+        <item>#will</item>
+    </string-array>
+
+    <integer-array name="icon_drawable_array" translatable="false">
+        <item>@drawable/reckoning</item>
+        <item>@drawable/number_of_players</item>
+        <item>@drawable/lore</item>
+        <item>@drawable/influence</item>
+        <item>@drawable/observation</item>
+        <item>@drawable/strength</item>
+        <item>@drawable/will</item>
+    </integer-array>
 </resources>
