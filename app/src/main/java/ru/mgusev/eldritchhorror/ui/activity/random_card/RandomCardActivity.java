@@ -28,12 +28,7 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
 
     @BindView(R.id.random_card_image)
     SimpleDraweeView image;
-    @BindView(R.id.random_card_title)
-    TextView title;
-    @BindView(R.id.random_card_category)
-    TextView category;
-    @BindView(R.id.random_card_type)
-    TextView type;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +42,7 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
     public void loadImage(Uri source) {
         Timber.d("load start");
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(source)
-                .setResizeOptions(new ResizeOptions(200, 227))
+                .setResizeOptions(new ResizeOptions(188, 292))
                 .build();
         image.setController(
                 Fresco.newDraweeControllerBuilder()
@@ -59,16 +54,16 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
 
     @Override
     public void setTitle(String text) {
-        title.setText(text);
+        //title.setText(text);
     }
 
     @Override
     public void setCategory(String text) {
-        category.setText(text);
+        //category.setText(text);
     }
 
     @Override
     public void setType(String text) {
-        type.setText(text);
+        //type.setText(text);
     }
 }
