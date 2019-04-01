@@ -18,7 +18,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.faq.FaqActivity"></activity>
+        <activity android:name=".ui.activity.random_card.RandomCardActivity"
+            android:theme="@style/DialogTheme" />
+        <activity android:name=".ui.activity.faq.FaqActivity" />
         <activity
             android:name=".ui.activity.main.MainActivity"
             android:theme="@style/AppTheme.Launcher">
