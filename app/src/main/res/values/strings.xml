@@ -164,4 +164,111 @@
     <string name="format_data_error_header">Incorrect data format, please contact the developer</string>
     <string name="connection_error_header">Connection error, please check your connection and try again</string>
     <string name="update_complete">Update complete</string>
+
+    <!--Conditions type-->
+    <string name="bane">Bane</string>
+    <string name="boon">Boon</string>
+    <string name="common">Common</string>
+    <string name="deal">Deal</string>
+    <string name="exposure">Exposure</string>
+    <string name="illness">Illness</string>
+    <string name="injury">Injury</string>
+    <string name="madness">Madness</string>
+    <string name="pursuit">Pursuit</string>
+    <string name="restriction">Restriction</string>
+    <string name="talent">Talent</string>
+
+    <!--Conditions title-->
+    <string name="agreement">Agreement</string>
+    <string name="amnesia">Amnesia</string>
+    <string name="attuned">Attuned</string>
+    <string name="back_injury">Back Injury</string>
+    <string name="blessed">Blessed</string>
+    <string name="blight">Blight</string>
+    <string name="composed">Composed</string>
+    <string name="corruption">Corruption</string>
+    <string name="cursed">Cursed</string>
+    <string name="dark_pact">Dark Pact</string>
+    <string name="debt">Debt</string>
+    <string name="despair">Despair</string>
+    <string name="detained">Detained</string>
+    <string name="diseased">Diseased</string>
+    <string name="elusive">Elusive</string>
+    <string name="funding">Funding</string>
+    <string name="guts">Guts</string>
+    <string name="hallucinations">Hallucinations</string>
+    <string name="haunted">Haunted</string>
+    <string name="head_injury">Head Injury</string>
+    <string name="headstrong">Headstrong</string>
+    <string name="hunger">Hunger</string>
+    <string name="hunted">Hunted</string>
+    <string name="hypothermia">Hypothermia</string>
+    <string name="infection">Infection</string>
+    <string name="internal_injury">Internal Injury</string>
+    <string name="leg_injury">Leg Injury</string>
+    <string name="living_link">Living Link</string>
+    <string name="lost_in_time_and_space">Lost in Time and Space</string>
+    <string name="martial_prowess">Martial Prowess</string>
+    <string name="meditation">Meditation</string>
+    <string name="moxie">Moxie</string>
+    <string name="paranoia">Paranoia</string>
+    <string name="perceptive">Perceptive</string>
+    <string name="poisoned">Poisoned</string>
+    <string name="practiced">Practiced</string>
+    <string name="promise_of_power">Promise of Power</string>
+    <string name="quick_study">Quick Study</string>
+    <string name="relentless">Relentless</string>
+    <string name="resilient">Resilient</string>
+    <string name="righteous">Righteous</string>
+    <string name="rugged">Rugged</string>
+    <string name="silver_tongued">Silver Tongued</string>
+    <string name="skulduggery">Skulduggery</string>
+    <string name="studious">Studious</string>
+    <string name="terror">Terror</string>
+    <string name="visions">Visions</string>
+    <string name="wanted">Wanted</string>
+
+    <!--Spells type-->
+    <string name="glamour">Glamour</string>
+    <string name="ritual">Ritual</string>
+    <string name="incantation">Incantation</string>
+
+    <!--Conditions title-->
+    <string name="alter_fate">Alter Fate</string>
+    <string name="arcane_insight">Arcane Insight</string>
+    <string name="astral_travel">Astral Travel</string>
+    <string name="azure_flame">Azure Flame</string>
+    <string name="banishment">Banishment</string>
+    <string name="beast_within">Beast Within</string>
+    <string name="binding">Binding</string>
+    <string name="blessing_of_isis">Blessing of Isis</string>
+    <string name="call_the_storm">Call the Storm</string>
+    <string name="clairvoyance">Clairvoyance</string>
+    <string name="conjuration">Conjuration</string>
+    <string name="dread_curse">Dread Curse</string>
+    <string name="enchant_weapon">Enchant Weapon</string>
+    <string name="enchanting_grace">Enchanting Grace</string>
+    <string name="feed_the_mind">Feed the Mind</string>
+    <string name="find_gate">Find Gate</string>
+    <string name="flesh_ward">Flesh Ward</string>
+    <string name="forced_learning">Forced Learning</string>
+    <string name="healing_words">Healing Words</string>
+    <string name="instill_bravery">Instill Bravery</string>
+    <string name="intervene">Intervene</string>
+    <string name="markings_of_isis">Markings of Isis</string>
+    <string name="minds_eye">Mind\'s Eye</string>
+    <string name="mists_of_releh">Mists of Releh</string>
+    <string name="occult_exaltation">Occult Exaltation</string>
+    <string name="plumb_the_void">Plumb the Void</string>
+    <string name="poison_mist">Poison Mist</string>
+    <string name="shriveling">Shriveling</string>
+    <string name="shroud_of_shadow">Shroud of Shadow</string>
+    <string name="spectral_razor">Spectral Razor</string>
+    <string name="storm_of_spirits">Storm of Spirits</string>
+    <string name="summon_byakhee">Summon Byakhee</string>
+    <string name="summoning">Summoning</string>
+    <string name="voice_of_ra">Voice of Ra</string>
+    <string name="wither">Wither</string>
+    <string name="wrack">Wrack</string>
+
 </resources>

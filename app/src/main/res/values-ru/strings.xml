@@ -147,4 +147,111 @@
     <string name="format_data_error_header">Некорректный формат данных, пожалуйста свяжитесь с разработчиком</string>
     <string name="connection_error_header">Ошибка соединения, пожалуйста проверьте ваше соединение и повторите попытку</string>
     <string name="update_complete">Обновление завершено</string>
+
+    <!--Conditions type-->
+    <string name="bane">Напасть</string>
+    <string name="boon">Дар</string>
+    <string name="common">Обычное</string>
+    <string name="deal">Соглашение</string>
+    <string name="exposure">Воздействие</string>
+    <string name="illness">Болезнь</string>
+    <string name="injury">Травма</string>
+    <string name="madness">Безумие</string>
+    <string name="pursuit">Преследование</string>
+    <string name="restriction">Препятствие</string>
+    <string name="talent">Талант</string>
+
+    <!--Conditions title-->
+    <string name="agreement">Договор</string>
+    <string name="amnesia">Амнезия</string>
+    <string name="attuned">Настроенность</string>
+    <string name="back_injury">Травма спины</string>
+    <string name="blessed">Благословение</string>
+    <string name="blight">Помешательство</string>
+    <string name="composed">Самообладание</string>
+    <string name="corruption">Corruption</string>
+    <string name="cursed">Проклятие</string>
+    <string name="dark_pact">Тёмная сделка</string>
+    <string name="debt">Долг</string>
+    <string name="despair">Отчаяние</string>
+    <string name="detained">Заключение</string>
+    <string name="diseased">Недуг</string>
+    <string name="elusive">Неуловимость</string>
+    <string name="funding">Финансирование</string>
+    <string name="guts">Мужество</string>
+    <string name="hallucinations">Галлюцинации</string>
+    <string name="haunted">Призраки</string>
+    <string name="head_injury">Травма головы</string>
+    <string name="headstrong">Сила воли</string>
+    <string name="hunger">Голод</string>
+    <string name="hunted">Погоня</string>
+    <string name="hypothermia">Переохлаждение</string>
+    <string name="infection">Заражение</string>
+    <string name="internal_injury">Внутренняя травма</string>
+    <string name="leg_injury">Травма ноги</string>
+    <string name="living_link">Living Link</string>
+    <string name="lost_in_time_and_space">Вне времени и пространства</string>
+    <string name="martial_prowess">Боевой азарт</string>
+    <string name="meditation">Meditation</string>
+    <string name="moxie">Отвага</string>
+    <string name="paranoia">Паранойя</string>
+    <string name="perceptive">Perceptive</string>
+    <string name="poisoned">Отравление</string>
+    <string name="practiced">Тренированность</string>
+    <string name="promise_of_power">Обещанная сила</string>
+    <string name="quick_study">Быстрое обучение</string>
+    <string name="relentless">Relentless</string>
+    <string name="resilient">Живучесть</string>
+    <string name="righteous">Праведник</string>
+    <string name="rugged">Rugged</string>
+    <string name="silver_tongued">Silver Tongued</string>
+    <string name="skulduggery">Ловкость рук</string>
+    <string name="studious">Прилежание</string>
+    <string name="terror">Ужас</string>
+    <string name="visions">Видения</string>
+    <string name="wanted">В розыске</string>
+
+    <!--Spells type-->
+    <string name="glamour">Аура</string>
+    <string name="ritual">Ритуал</string>
+    <string name="incantation">Чары</string>
+
+    <!--Conditions title-->
+    <string name="alter_fate">Изменить судьбу</string>
+    <string name="arcane_insight">Тайная интуиция</string>
+    <string name="astral_travel">Астральное путешествие</string>
+    <string name="azure_flame">Лазурное пламя</string>
+    <string name="banishment">Изгнание</string>
+    <string name="beast_within">Beast Within</string>
+    <string name="binding">Наложение пут</string>
+    <string name="blessing_of_isis">Благословение Исиды</string>
+    <string name="call_the_storm">Call the Storm</string>
+    <string name="clairvoyance">Ясновидение</string>
+    <string name="conjuration">Сотворение</string>
+    <string name="dread_curse">Жуткое проклятие</string>
+    <string name="enchant_weapon">Колдовское оружие</string>
+    <string name="enchanting_grace">Колдовская грация</string>
+    <string name="feed_the_mind">Пища для ума</string>
+    <string name="find_gate">Найти врата</string>
+    <string name="flesh_ward">Защита плоти</string>
+    <string name="forced_learning">Ускоренное обучение</string>
+    <string name="healing_words">Исцеляющие слова</string>
+    <string name="instill_bravery">Вселить отвагу</string>
+    <string name="intervene">Вмешательство</string>
+    <string name="markings_of_isis">Отметины Исиды</string>
+    <string name="minds_eye">Мысленный взор</string>
+    <string name="mists_of_releh">Туманы Релеха</string>
+    <string name="occult_exaltation">Occult Exaltation</string>
+    <string name="plumb_the_void">Пронзить пустоту</string>
+    <string name="poison_mist">Ядовитый туман</string>
+    <string name="shriveling">Иссушение</string>
+    <string name="shroud_of_shadow">Покров тени</string>
+    <string name="spectral_razor">Spectral Razor</string>
+    <string name="storm_of_spirits">Буря духов</string>
+    <string name="summon_byakhee">Призвать бьякхи</string>
+    <string name="summoning">Призыв</string>
+    <string name="voice_of_ra">Голос Ра</string>
+    <string name="wither">Лишение силы</string>
+    <string name="wrack">Разрушение</string>
+
 </resources>

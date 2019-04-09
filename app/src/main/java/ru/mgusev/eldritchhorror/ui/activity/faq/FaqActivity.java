@@ -66,7 +66,7 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
      */
     private MenuItem refreshItem;
     /**
-     * АПункт меню "Поиск"
+     * Пункт меню "Поиск"
      */
     private MenuItem searchItem;
     /**
