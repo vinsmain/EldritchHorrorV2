@@ -42,7 +42,7 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
     public void loadImage(Uri source) {
         Timber.d("load start");
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(source)
-                .setResizeOptions(new ResizeOptions(188, 292))
+                .setResizeOptions(new ResizeOptions(225, 365))
                 .build();
         image.setController(
                 Fresco.newDraweeControllerBuilder()

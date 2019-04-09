@@ -16,7 +16,7 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getViewState().loadImage(Uri.parse("https://mgusevstudio.ru/images/files/eh_images/conditions/madness/amnesia3.png"));
+        getViewState().loadImage(Uri.parse("https://mgusevstudio.ru/images/files/eh_images/en/condition/injury/back_injury.png"));
 //        getViewState().setTitle("Амнезия");
 //        getViewState().setCategory("Состояние");
 //        getViewState().setType("БЕЗУМИЕ");
