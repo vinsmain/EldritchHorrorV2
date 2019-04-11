@@ -17,8 +17,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.random_card.RandomCardActivity"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.activity.random_card.RandomCardCategoryActivity"/>
+        <activity
+            android:name=".ui.activity.random_card.RandomCardActivity"
             android:theme="@style/DialogTheme" />
         <activity android:name=".ui.activity.faq.FaqActivity" />
         <activity
