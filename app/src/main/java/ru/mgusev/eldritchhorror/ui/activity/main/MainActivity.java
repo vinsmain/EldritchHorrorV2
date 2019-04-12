@@ -49,6 +49,7 @@ import ru.mgusev.eldritchhorror.ui.activity.faq.FaqActivity;
 import ru.mgusev.eldritchhorror.ui.activity.forgotten_endings.ForgottenEndingsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 import ru.mgusev.eldritchhorror.ui.activity.random_card.RandomCardActivity;
+import ru.mgusev.eldritchhorror.ui.activity.random_card.RandomCardCategoryActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 import timber.log.Timber;
 
@@ -187,7 +188,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 return true;
             case R.id.action_random_card:
                 closeDrawer();
-                Intent randomCardIntent = new Intent(this, RandomCardActivity.class);
+                Intent randomCardIntent = new Intent(this, RandomCardCategoryActivity.class);
                 startActivity(randomCardIntent);
                 return true;
             default:

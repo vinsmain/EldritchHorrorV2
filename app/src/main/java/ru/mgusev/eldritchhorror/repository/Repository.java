@@ -29,6 +29,7 @@ import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.model.ConditionType;
 import ru.mgusev.eldritchhorror.model.Ending;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -805,5 +806,15 @@ public class Repository {
             articleListEn = new ArrayList<>();
             articleListEn.addAll(articleList);
         }
+    }
+
+    //Random card
+
+    public List<ConditionType> getConditionTypeList() {
+        for (ConditionType type : staticDataDB.conditionTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList())) {
+            Timber.d(type.getNameResourceID());
+        }
+        Timber.d(String.valueOf(staticDataDB.conditionTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList()).size()));
+        return staticDataDB.conditionTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList());
     }
 }
