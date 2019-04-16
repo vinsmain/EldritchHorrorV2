@@ -253,5 +253,6 @@
     <string name="voice_of_ra">Голос Ра</string>
     <string name="wither">Лишение силы</string>
     <string name="wrack">Разрушение</string>
+    <string name="random_card_header">Случайная карта</string>
 
 </resources>

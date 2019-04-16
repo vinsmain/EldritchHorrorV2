@@ -19,7 +19,7 @@
         <item
             android:id="@+id/action_random_card"
             android:icon="@drawable/forgotten_endings"
-            android:title="Рандом"
+            android:title="@string/random_card_header"
             app:showAsAction="always|collapseActionView" />
         <item
             android:id="@+id/action_music"

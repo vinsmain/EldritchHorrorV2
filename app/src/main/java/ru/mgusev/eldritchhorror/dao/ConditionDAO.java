@@ -10,6 +10,7 @@ import ru.mgusev.eldritchhorror.model.Condition;
 @Dao
 public interface ConditionDAO {
 
-    @Query("SELECT * FROM conditions")
-    List<Condition> getAll();
+    @Query("SELECT * FROM conditions LEFT JOIN conditions_expansions ON conditions._id = conditions_expansions.condition_id " +
+            "WHERE conditions_expansions.expansion_id IN (:expansionIdList) AND type_id IS :typeId GROUP BY condition_id")
+    List<Condition> getAll(List<Integer> expansionIdList, int typeId);
 }

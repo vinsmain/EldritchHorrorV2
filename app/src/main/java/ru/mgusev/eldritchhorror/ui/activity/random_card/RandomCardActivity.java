@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.ui.activity.random_card;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -28,6 +29,14 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
 
     @BindView(R.id.random_card_image)
     SimpleDraweeView image;
+    @BindView(R.id.random_card_text_block)
+    LinearLayout textBlock;
+    @BindView(R.id.random_card_category)
+    TextView category;
+    @BindView(R.id.random_card_type)
+    TextView type;
+    @BindView(R.id.random_card_title)
+    TextView title;
 
 
     @Override
@@ -42,7 +51,7 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
     public void loadImage(Uri source) {
         Timber.d("load start");
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(source)
-                .setResizeOptions(new ResizeOptions(225, 365))
+                //.setResizeOptions(new ResizeOptions(225, 365))
                 .build();
         image.setController(
                 Fresco.newDraweeControllerBuilder()
@@ -53,17 +62,18 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
     }
 
     @Override
-    public void setTitle(String text) {
-        //title.setText(text);
+    public void setTitle(String resource_id) {
+        title.setText(getResources().getIdentifier(resource_id, "string", getPackageName()));
     }
 
     @Override
-    public void setCategory(String text) {
-        //category.setText(text);
+    public void setCategory(String resource_id) {
+        //category.setText(getResources().getIdentifier(resource_id, "string", getPackageName()));
+        category.setText(resource_id);
     }
 
     @Override
-    public void setType(String text) {
-        //type.setText(text);
+    public void setType(String resource_id) {
+        type.setText(getResources().getIdentifier(resource_id, "string", getPackageName()));
     }
 }

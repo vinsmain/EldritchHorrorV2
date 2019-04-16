@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/random_card_category"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/keyline_1_minus_8dp">
+    android:layout_margin="2dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:theme="@style/AppTheme.ColorHighlight"
+    app:cardCornerRadius="0dp">
 
     <TextView
         android:id="@+id/random_card_category_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="16sp" />
 
 </android.support.v7.widget.CardView>

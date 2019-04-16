@@ -165,6 +165,8 @@
     <string name="connection_error_header">Connection error, please check your connection and try again</string>
     <string name="update_complete">Update complete</string>
 
+    <string name="random_card_header">Random card</string>
+
     <!--Conditions type-->
     <string name="bane">Bane</string>
     <string name="boon">Boon</string>

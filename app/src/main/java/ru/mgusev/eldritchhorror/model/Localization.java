@@ -31,4 +31,8 @@ public class Localization {
         locale = Locale.getDefault().getLanguage();
         return localeList.contains(locale);
     }
+
+    public String getPrefix() {
+        return isRusLocale() ? "ru" : "en";
+    }
 }

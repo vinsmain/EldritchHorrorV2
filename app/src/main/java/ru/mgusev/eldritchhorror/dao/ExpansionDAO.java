@@ -22,8 +22,8 @@ public interface ExpansionDAO {
 
     /**
      * Возвращает список id дополнений
-     * @return список id дополнений, которые включены и являются оффициальными (id < 10)
+     * @return список id дополнений, которые включены
      */
-    @Query("SELECT _id FROM expansions WHERE is_enable IS 1 AND _id < 10")
+    @Query("SELECT _id FROM expansions WHERE is_enable IS 1")
     List<Integer> getEnableExpansionList();
 }

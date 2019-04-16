@@ -1,5 +1,6 @@
 package ru.mgusev.eldritchhorror.support;
 
+import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
 import java.util.List;
@@ -37,6 +38,13 @@ public class ConditionTypeDiffUtilCallback extends DiffUtil.Callback {
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         ConditionType oldType = oldList.get(oldItemPosition);
         ConditionType newType = newList.get(newItemPosition);
-        return oldType.getId() == newType.getId();
+        return oldType.getNameResourceID().equals(newType.getNameResourceID());
+    }
+
+    @Nullable
+    @Override
+    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+        // Implement method if you're going to use ItemAnimator
+        return super.getChangePayload(oldItemPosition, newItemPosition);
     }
 }
