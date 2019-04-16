@@ -31,6 +31,8 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
         @BindView(R.id.random_card_category_name)
         TextView categoryName;
 
+        private ConditionType item;
+
         CategoryViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -49,10 +51,8 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
 
     public void setData(List<ConditionType> list) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ConditionTypeDiffUtilCallback(this.conditionTypeList, list), false);
-        conditionTypeList = new ArrayList<>();
+        conditionTypeList.clear();
         conditionTypeList.addAll(list);
-
-        //notifyDataSetChanged();
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -65,19 +65,19 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
 
     @Override
     public void onBindViewHolder(@NonNull final RandomCardCategoryAdapter.CategoryViewHolder holder, int position) {
+        holder.item = conditionTypeList.get(position);
         Resources resources = context.getResources();
-        holder.categoryName.setText(resources.getIdentifier(conditionTypeList.get(position).getNameResourceID(), "string", context.getPackageName()));
+        holder.categoryName.setText(resources.getIdentifier(holder.item.getNameResourceID(), "string", context.getPackageName()));
 
         holder.categoryCV.setOnClickListener(v -> {
-            //v.startAnimation(animAlpha);
-            Timber.d(String.valueOf(conditionTypeList.get(position).getId()));
-            Timber.d(String.valueOf(position));
-            Timber.d(String.valueOf(holder.categoryName.getText()));
-            for (ConditionType conditionType : conditionTypeList) {
-                Timber.d(conditionType.getId() + " " + conditionType.getNameResourceID());
-            }
-            onClick.onItemClick(conditionTypeList.get(position).getId());
+            onClick.onItemClick(holder.item.getId());
         });
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull CategoryViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.item = null;
     }
 
     @Override
