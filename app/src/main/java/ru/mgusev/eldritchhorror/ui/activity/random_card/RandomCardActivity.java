@@ -68,8 +68,7 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
 
     @Override
     public void setCategory(String resource_id) {
-        //category.setText(getResources().getIdentifier(resource_id, "string", getPackageName()));
-        category.setText(resource_id);
+        category.setText(getResources().getIdentifier(resource_id, "string", getPackageName()));
     }
 
     @Override

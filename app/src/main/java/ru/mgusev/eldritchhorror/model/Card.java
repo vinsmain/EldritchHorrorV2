@@ -4,8 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "condition_types")
-public class ConditionType {
+@Entity(tableName = "cards")
+public class Card {
 
     @PrimaryKey
     @ColumnInfo(name = "_id")
@@ -14,7 +14,10 @@ public class ConditionType {
     @ColumnInfo(name = "name_resource_id")
     private String nameResourceID;
 
-    public ConditionType() {
+    @ColumnInfo(name = "type_id")
+    private int typeID;
+
+    public Card() {
     }
 
     public int getId() {
@@ -31,5 +34,13 @@ public class ConditionType {
 
     public void setNameResourceID(String nameResourceID) {
         this.nameResourceID = nameResourceID;
+    }
+
+    public int getTypeID() {
+        return typeID;
+    }
+
+    public void setTypeID(int typeID) {
+        this.typeID = typeID;
     }
 }

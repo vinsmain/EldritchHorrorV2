@@ -4,8 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "conditions")
-public class Condition {
+@Entity(tableName = "card_types")
+public class CardType {
 
     @PrimaryKey
     @ColumnInfo(name = "_id")
@@ -14,13 +14,16 @@ public class Condition {
     @ColumnInfo(name = "name_resource_id")
     private String nameResourceID;
 
-    @ColumnInfo(name = "type_id")
-    private int typeID;
+    @ColumnInfo(name = "category_resource_id")
+    private String categoryResourceID;
 
-    @ColumnInfo(name = "expansion_id")
-    private int expansionID;
+    public CardType() {
+    }
 
-    public Condition() {
+    public CardType(int id, String nameResourceID, String categoryResourceID) {
+        this.id = id;
+        this.nameResourceID = nameResourceID;
+        this.categoryResourceID = categoryResourceID;
     }
 
     public int getId() {
@@ -39,19 +42,11 @@ public class Condition {
         this.nameResourceID = nameResourceID;
     }
 
-    public int getTypeID() {
-        return typeID;
+    public String getCategoryResourceID() {
+        return categoryResourceID;
     }
 
-    public void setTypeID(int typeID) {
-        this.typeID = typeID;
-    }
-
-    public int getExpansionID() {
-        return expansionID;
-    }
-
-    public void setExpansionID(int expansionID) {
-        this.expansionID = expansionID;
+    public void setCategoryResourceID(String categoryResourceID) {
+        this.categoryResourceID = categoryResourceID;
     }
 }

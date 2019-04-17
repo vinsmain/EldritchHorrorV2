@@ -167,7 +167,12 @@
 
     <string name="random_card_header">Random card</string>
 
-    <!--Conditions type-->
+    <!--Category types-->
+    <string name="condition">Condition</string>
+    <string name="spell">Spell</string>
+    <string name="unique_asset">Unique Asset</string>
+
+    <!--Condition types-->
     <string name="bane">Bane</string>
     <string name="boon">Boon</string>
     <string name="common">Common</string>
@@ -180,7 +185,7 @@
     <string name="restriction">Restriction</string>
     <string name="talent">Talent</string>
 
-    <!--Conditions title-->
+    <!--Condition titles-->
     <string name="agreement">Agreement</string>
     <string name="amnesia">Amnesia</string>
     <string name="attuned">Attuned</string>
@@ -230,12 +235,12 @@
     <string name="visions">Visions</string>
     <string name="wanted">Wanted</string>
 
-    <!--Spells type-->
+    <!--Spell types-->
     <string name="glamour">Glamour</string>
     <string name="ritual">Ritual</string>
     <string name="incantation">Incantation</string>
 
-    <!--Conditions title-->
+    <!--Spell titles-->
     <string name="alter_fate">Alter Fate</string>
     <string name="arcane_insight">Arcane Insight</string>
     <string name="astral_travel">Astral Travel</string>
@@ -272,5 +277,32 @@
     <string name="voice_of_ra">Voice of Ra</string>
     <string name="wither">Wither</string>
     <string name="wrack">Wrack</string>
+
+    <!--Unique Asset types-->
+    <string name="task">Task</string>
+
+    <!--Spells title-->
+    <string name="funding_the_cause">Funding The Cause</string>
+    <string name="for_the_greater_good">For the Greater Good</string>
+    <string name="enlist_the_masses">Enlist The Masses</string>
+    <string name="exploring_the_ruins">Exploring the Ruins</string>
+    <string name="courier_run">Courier Run</string>
+    <string name="bury_them_deep">Bury them Deep</string>
+    <string name="dimensional_study">Dimensional Study</string>
+    <string name="purifying_the_world">Purifying The World</string>
+    <string name="prayer">Prayer</string>
+    <string name="invoke_the_elements">Invoke the Elements</string>
+    <string name="light_of_reason">Light of Reason</string>
+    <string name="know_thy_enemy">Know Thy Enemy</string>
+    <string name="mastering_the_art">Mastering The Art</string>
+    <string name="seeking_the_masters">Seeking the Masters</string>
+    <string name="push_it_to_the_limit">Push It to the Limit</string>
+    <string name="sacrifices_to_make">Sacrifices to Make</string>
+    <string name="sealing_the_old_ones">Sealing the Old Ones</string>
+    <string name="tempted_by_darkness">Tempted by Darkness</string>
+    <string name="walking_the_ley_lines">Walking the Ley Lines</string>
+    <string name="unspeakable_research">Unspeakable Research</string>
+    <string name="turning_the_tide">Turning The Tide</string>
+    <string name="wave_of_destruction">Wave of Destruction</string>
 
 </resources>

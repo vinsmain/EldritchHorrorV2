@@ -18,20 +18,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
-import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
-import ru.mgusev.eldritchhorror.model.ConditionType;
-import ru.mgusev.eldritchhorror.support.ConditionTypeDiffUtilCallback;
-import timber.log.Timber;
+import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
+import ru.mgusev.eldritchhorror.model.CardType;
+import ru.mgusev.eldritchhorror.support.CardTypeDiffUtilCallback;
 
 public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCategoryAdapter.CategoryViewHolder> {
 
-    static class CategoryViewHolder extends RecyclerView.ViewHolder {
+        static class CategoryViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.random_card_category)
         CardView categoryCV;
         @BindView(R.id.random_card_category_name)
         TextView categoryName;
 
-        private ConditionType item;
+        private CardType item;
 
         CategoryViewHolder(View itemView) {
             super(itemView);
@@ -40,19 +39,19 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
     }
 
     private Context context;
-    private List<ConditionType> conditionTypeList;
-    private OnItemClicked onClick;
+    private List<CardType> cardTypeList;
+    private OnItemClickedReturnObj onClick;
 
     public RandomCardCategoryAdapter(Context context) {
         App.getComponent().inject(this);
         this.context = context;
-        this.conditionTypeList = new ArrayList<>();
+        this.cardTypeList = new ArrayList<>();
     }
 
-    public void setData(List<ConditionType> list) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ConditionTypeDiffUtilCallback(this.conditionTypeList, list), false);
-        conditionTypeList.clear();
-        conditionTypeList.addAll(list);
+    public void setData(List<CardType> list) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CardTypeDiffUtilCallback(this.cardTypeList, list), false);
+        cardTypeList.clear();
+        cardTypeList.addAll(list);
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -65,12 +64,12 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
 
     @Override
     public void onBindViewHolder(@NonNull final RandomCardCategoryAdapter.CategoryViewHolder holder, int position) {
-        holder.item = conditionTypeList.get(position);
+        holder.item = cardTypeList.get(position);
         Resources resources = context.getResources();
         holder.categoryName.setText(resources.getIdentifier(holder.item.getNameResourceID(), "string", context.getPackageName()));
 
         holder.categoryCV.setOnClickListener(v -> {
-            onClick.onItemClick(holder.item.getId());
+            onClick.onItemClick(holder.item);
         });
     }
 
@@ -80,12 +79,16 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
         holder.item = null;
     }
 
-    @Override
-    public int getItemCount() {
-        return conditionTypeList.size();
+    public CardType getType(int pos) {
+        return cardTypeList.get(pos);
     }
 
-    public void setOnClick(OnItemClicked onClick) {
+    @Override
+    public int getItemCount() {
+        return cardTypeList.size();
+    }
+
+    public void setOnClick(OnItemClickedReturnObj onClick) {
         this.onClick = onClick;
     }
 }

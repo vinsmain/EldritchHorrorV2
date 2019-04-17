@@ -253,5 +253,8 @@
     <string name="wither">Лишение силы</string>
     <string name="wrack">Разрушение</string>
     <string name="random_card_header">Случайная карта</string>
+    <string name="condition">Состояние</string>
+    <string name="spell">Заклинание</string>
+    <string name="unique_asset">Уникальный актив</string>
 
 </resources>

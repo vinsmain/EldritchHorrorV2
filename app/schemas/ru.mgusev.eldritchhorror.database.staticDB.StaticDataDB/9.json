@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "25fa8c79cec790ada37776c4782e3609",
+    "identityHash": "0e8216669bf8fe421d544e81388ffcb4",
     "entities": [
       {
         "tableName": "ancient_ones",
@@ -397,8 +397,8 @@
         "foreignKeys": []
       },
       {
-        "tableName": "condition_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `name_resource_id` TEXT, PRIMARY KEY(`_id`))",
+        "tableName": "card_types",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `name_resource_id` TEXT, `category_resource_id` TEXT, PRIMARY KEY(`_id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -409,6 +409,12 @@
           {
             "fieldPath": "nameResourceID",
             "columnName": "name_resource_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categoryResourceID",
+            "columnName": "category_resource_id",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -423,8 +429,8 @@
         "foreignKeys": []
       },
       {
-        "tableName": "conditions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `name_resource_id` TEXT, `type_id` INTEGER NOT NULL, `expansion_id` INTEGER NOT NULL, PRIMARY KEY(`_id`))",
+        "tableName": "cards",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `name_resource_id` TEXT, `type_id` INTEGER NOT NULL, PRIMARY KEY(`_id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -443,12 +449,6 @@
             "columnName": "type_id",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "expansionID",
-            "columnName": "expansion_id",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -461,12 +461,12 @@
         "foreignKeys": []
       },
       {
-        "tableName": "conditions_expansions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`condition_id` INTEGER NOT NULL, `expansion_id` INTEGER NOT NULL, PRIMARY KEY(`condition_id`, `expansion_id`))",
+        "tableName": "cards_expansions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`card_id` INTEGER NOT NULL, `expansion_id` INTEGER NOT NULL, PRIMARY KEY(`card_id`, `expansion_id`))",
         "fields": [
           {
-            "fieldPath": "conditionID",
-            "columnName": "condition_id",
+            "fieldPath": "cardID",
+            "columnName": "card_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -479,7 +479,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "condition_id",
+            "card_id",
             "expansion_id"
           ],
           "autoGenerate": false
@@ -490,7 +490,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"25fa8c79cec790ada37776c4782e3609\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0e8216669bf8fe421d544e81388ffcb4\")"
     ]
   }
 }

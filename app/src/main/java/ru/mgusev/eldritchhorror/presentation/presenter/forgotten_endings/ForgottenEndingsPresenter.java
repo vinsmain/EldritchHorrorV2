@@ -82,7 +82,7 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
     private void initConditions(int ancientOneId, boolean victory) {
         getViewState().clearConditionsContainer();
         conditionMap.clear();
-        for (String condition : repository.getConditionList(ancientOneId, victory)) {
+        for (String condition : repository.getCardList(ancientOneId, victory)) {
             conditionMap.put(condition, false);
         }
         getViewState().createConditionSwitch(conditionMap);

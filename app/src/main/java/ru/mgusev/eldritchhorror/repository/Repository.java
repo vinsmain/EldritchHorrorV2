@@ -29,8 +29,8 @@ import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
-import ru.mgusev.eldritchhorror.model.Condition;
-import ru.mgusev.eldritchhorror.model.ConditionType;
+import ru.mgusev.eldritchhorror.model.Card;
+import ru.mgusev.eldritchhorror.model.CardType;
 import ru.mgusev.eldritchhorror.model.Ending;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -81,7 +81,7 @@ public class Repository {
     private FirebaseUser user;
     private List<Article> articleListRu;
     private List<Article> articleListEn;
-    private ConditionType conditionType;
+    private CardType cardType;
 
     @Inject
     public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FileHelper fileHelper, FirebaseHelper firebaseHelper) {
@@ -790,7 +790,7 @@ public class Repository {
         return staticDataDB.endingDAO().getAncientOneIdList();
     }
 
-    public List<String> getConditionList(int ancientOneId, boolean victory) {
+    public List<String> getCardList(int ancientOneId, boolean victory) {
         return staticDataDB.endingDAO().getConditionList(ancientOneId, victory);
     }
 
@@ -812,27 +812,23 @@ public class Repository {
 
     //Random card
 
-    public ConditionType getConditionType() {
-        return conditionType;
+    public CardType getCardType() {
+        return cardType;
     }
 
-    public ConditionType getConditionType(int typeID) {
-        return staticDataDB.conditionTypeDAO().getConditionTypeById(typeID);
+    public void setCardType(CardType cardType) {
+        this.cardType = cardType;
     }
 
-    public void setConditionType(ConditionType conditionType) {
-        this.conditionType = conditionType;
-    }
-
-    public List<ConditionType> getConditionTypeList() {
-        for (ConditionType type : staticDataDB.conditionTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList())) {
+    public List<CardType> getCardTypeList() {
+        for (CardType type : staticDataDB.cardTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList())) {
             Timber.d(type.getNameResourceID());
         }
-        Timber.d(String.valueOf(staticDataDB.conditionTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList()).size()));
-        return staticDataDB.conditionTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList());
+        Timber.d(String.valueOf(staticDataDB.cardTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList()).size()));
+        return staticDataDB.cardTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList());
     }
 
-    public List<Condition> getConditionList(int type_id) {
-        return staticDataDB.conditionDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList(), type_id);
+    public List<Card> getCardList(int type_id) {
+        return staticDataDB.cardDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList(), type_id);
     }
 }

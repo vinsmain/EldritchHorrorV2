@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,12 +20,14 @@ import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.RandomCardCategoryAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
-import ru.mgusev.eldritchhorror.model.ConditionType;
+import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
+import ru.mgusev.eldritchhorror.model.CardType;
 import ru.mgusev.eldritchhorror.presentation.presenter.random_card.RandomCardCategoryPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.random_card.RandomCardCategoryView;
 import ru.mgusev.eldritchhorror.ui.activity.pager.ExpansionChoiceActivity;
+import timber.log.Timber;
 
-public class RandomCardCategoryActivity extends MvpAppCompatActivity implements RandomCardCategoryView, OnItemClicked {
+public class RandomCardCategoryActivity extends MvpAppCompatActivity implements RandomCardCategoryView, OnItemClickedReturnObj {
 
     @InjectPresenter
     RandomCardCategoryPresenter randomCardCategoryPresenter;
@@ -35,6 +38,7 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
     RecyclerView categoryListRV;
 
     private RandomCardCategoryAdapter adapter;
+    private List<CardType> cardTypeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +47,16 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
 
         ButterKnife.bind(this);
         initToolbar();
-
+        cardTypeList = new ArrayList<>();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return cardTypeList.get(position).getId() < 0 ? 2 : 1;
+            }
+        });
+
         categoryListRV.setLayoutManager(gridLayoutManager);
 
         adapter = new RandomCardCategoryAdapter(this);
@@ -81,28 +93,15 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
     }
 
     @Override
-    public void setCategoryList(List<ConditionType> list) {
+    public void setCategoryList(List<CardType> list) {
+        cardTypeList = new ArrayList<>(list);
         adapter.setData(list);
     }
 
     @Override
-    public void onItemClick(int categoryID) {
-        randomCardCategoryPresenter.onCategoryClick(categoryID);
-    }
-
-    @Override
-    public void onItemLongClick(int position) {
-
-    }
-
-    @Override
-    public void onEditClick(int position) {
-
-    }
-
-    @Override
-    public void onDeleteClick(int position) {
-
+    public void onItemClick(Object item) {
+        if (item instanceof CardType)
+            randomCardCategoryPresenter.onCategoryClick((CardType) item);
     }
 
     @Override

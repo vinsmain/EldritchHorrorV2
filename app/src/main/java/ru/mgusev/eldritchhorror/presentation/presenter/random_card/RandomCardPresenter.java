@@ -10,7 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ru.mgusev.eldritchhorror.app.App;
-import ru.mgusev.eldritchhorror.model.Condition;
+import ru.mgusev.eldritchhorror.model.Card;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.view.random_card.RandomCardView;
 import ru.mgusev.eldritchhorror.repository.Repository;
@@ -24,13 +24,13 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
     @Inject
     Repository repository;
 
-    private List<Condition> conditionList;
-    private Condition currentCondition;
+    private List<Card> cardList;
+    private Card currentCard;
 
     public RandomCardPresenter() {
         App.getComponent().inject(this);
-        Timber.d(String.valueOf(repository.getConditionType().getId()));
-        conditionList = repository.getConditionList(repository.getConditionType().getId());
+        Timber.d(String.valueOf(repository.getCardType().getId()));
+        cardList = repository.getCardList(repository.getCardType().getId());
     }
 
     @Override
@@ -41,16 +41,16 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
 
     private void initCard() {
         getRandomCondition();
-        getViewState().setCategory("Состояние");
-        getViewState().setType(repository.getConditionType().getNameResourceID());
-        getViewState().setTitle(currentCondition.getNameResourceID());
-        String cardUrl = IMAGE_URL + Localization.getInstance().getPrefix() + "/condition/" + repository.getConditionType().getNameResourceID() + "/" + currentCondition.getNameResourceID() + ".png";
+        getViewState().setCategory(repository.getCardType().getCategoryResourceID());
+        getViewState().setType(repository.getCardType().getNameResourceID());
+        getViewState().setTitle(currentCard.getNameResourceID());
+        String cardUrl = IMAGE_URL + Localization.getInstance().getPrefix() + "/" + repository.getCardType().getCategoryResourceID() + "/" + repository.getCardType().getNameResourceID() + "/" + currentCard.getNameResourceID() + ".png";
         getViewState().loadImage(Uri.parse(cardUrl));
     }
 
-    private Condition getRandomCondition() {
-        int index = (int) (Math.random()*conditionList.size());
-        currentCondition = conditionList.get(index);
-        return currentCondition;
+    private Card getRandomCondition() {
+        int index = (int) (Math.random()* cardList.size());
+        currentCard = cardList.get(index);
+        return currentCard;
     }
 }

@@ -3,12 +3,14 @@ package ru.mgusev.eldritchhorror.presentation.presenter.random_card;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.model.CardType;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.presentation.view.random_card.RandomCardCategoryView;
 import ru.mgusev.eldritchhorror.repository.Repository;
@@ -35,13 +37,31 @@ public class RandomCardCategoryPresenter extends MvpPresenter<RandomCardCategory
     }
 
     private void updateCategoryList(List<Expansion> list) {
-        getViewState().setCategoryList(repository.getConditionTypeList());
+        getViewState().setCategoryList(getCardTypeList());
     }
 
-    public void onCategoryClick(int typeID) {
-        Timber.d(String.valueOf(typeID));
-        repository.setConditionType(repository.getConditionType(typeID));
-        getViewState().startRandomCardActivity();
+    private List<CardType> getCardTypeList() {
+        int typeCategoryID = -1;
+        String typeCategoryName = "";
+        List<CardType> modifiedCardTypeList = new ArrayList<>();
+        for (CardType cardType : repository.getCardTypeList()) {
+            if (!cardType.getCategoryResourceID().equals(typeCategoryName)) {
+                modifiedCardTypeList.add(new CardType(typeCategoryID--, cardType.getCategoryResourceID(), cardType.getCategoryResourceID()));
+                typeCategoryName = cardType.getCategoryResourceID();
+            }
+            modifiedCardTypeList.add(cardType);
+        }
+        return modifiedCardTypeList;
+    }
+
+    public void onCategoryClick(CardType item) {
+        Timber.d(String.valueOf(item.getId()));
+        if (item.getId() < 0) {
+            Timber.d(item.getNameResourceID());
+        } else {
+            repository.setCardType(item);
+            getViewState().startRandomCardActivity();
+        }
     }
 
     @Override
