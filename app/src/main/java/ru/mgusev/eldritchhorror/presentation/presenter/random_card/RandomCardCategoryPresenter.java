@@ -55,13 +55,8 @@ public class RandomCardCategoryPresenter extends MvpPresenter<RandomCardCategory
     }
 
     public void onCategoryClick(CardType item) {
-        Timber.d(String.valueOf(item.getId()));
-        if (item.getId() < 0) {
-            Timber.d(item.getNameResourceID());
-        } else {
-            repository.setCardType(item);
-            getViewState().startRandomCardActivity();
-        }
+        repository.setCardType(item);
+        getViewState().startRandomCardActivity();
     }
 
     @Override

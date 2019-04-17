@@ -816,19 +816,24 @@ public class Repository {
         return cardType;
     }
 
+    public CardType getCardType(int typeID) {
+        return staticDataDB.cardTypeDAO().getCardTypeByID(typeID);
+    }
+
     public void setCardType(CardType cardType) {
         this.cardType = cardType;
     }
 
     public List<CardType> getCardTypeList() {
-        for (CardType type : staticDataDB.cardTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList())) {
-            Timber.d(type.getNameResourceID());
-        }
         Timber.d(String.valueOf(staticDataDB.cardTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList()).size()));
         return staticDataDB.cardTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList());
     }
 
     public List<Card> getCardList(int type_id) {
         return staticDataDB.cardDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList(), type_id);
+    }
+
+    public List<Card> getCardList(String category) {
+        return staticDataDB.cardDAO().getAllByCategory(staticDataDB.expansionDAO().getEnableExpansionList(), category);
     }
 }

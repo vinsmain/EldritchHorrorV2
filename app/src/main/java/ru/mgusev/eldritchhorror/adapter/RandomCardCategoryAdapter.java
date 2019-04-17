@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
@@ -68,6 +69,28 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
         Resources resources = context.getResources();
         holder.categoryName.setText(resources.getIdentifier(holder.item.getNameResourceID(), "string", context.getPackageName()));
 
+        switch (holder.item.getCategoryResourceID()) {
+            case "condition" :
+                holder.categoryCV.setBackgroundColor(Color.rgb(70, 60, 55));
+                break;
+            case "spell" :
+                holder.categoryCV.setBackgroundColor(Color.rgb(120, 85, 125));
+                break;
+            case "unique_asset" :
+                holder.categoryCV.setBackgroundColor(Color.rgb(190, 155, 75));
+                break;
+        }
+
+        if (holder.item.getId() < -1) {
+            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.categoryCV.getLayoutParams();
+            layoutParams.setMargins(6, 24, 6, 6);
+            holder.categoryCV.requestLayout();
+        } else {
+            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.categoryCV.getLayoutParams();
+            layoutParams.setMargins(6, 6, 6, 6);
+            holder.categoryCV.requestLayout();
+        }
+
         holder.categoryCV.setOnClickListener(v -> {
             onClick.onItemClick(holder.item);
         });
@@ -77,10 +100,6 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
     public void onViewRecycled(@NonNull CategoryViewHolder holder) {
         super.onViewRecycled(holder);
         holder.item = null;
-    }
-
-    public CardType getType(int pos) {
-        return cardTypeList.get(pos);
     }
 
     @Override

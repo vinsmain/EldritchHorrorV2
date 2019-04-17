@@ -58,6 +58,7 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
         });
 
         categoryListRV.setLayoutManager(gridLayoutManager);
+        categoryListRV.setHasFixedSize(true);
 
         adapter = new RandomCardCategoryAdapter(this);
         adapter.setOnClick(this);

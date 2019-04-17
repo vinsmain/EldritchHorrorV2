@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Card;
+import ru.mgusev.eldritchhorror.model.CardType;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.view.random_card.RandomCardView;
 import ru.mgusev.eldritchhorror.repository.Repository;
@@ -29,8 +30,7 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
 
     public RandomCardPresenter() {
         App.getComponent().inject(this);
-        Timber.d(String.valueOf(repository.getCardType().getId()));
-        cardList = repository.getCardList(repository.getCardType().getId());
+        initCardList();
     }
 
     @Override
@@ -39,12 +39,20 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
         initCard();
     }
 
+    private void initCardList() {
+        CardType cardType = repository.getCardType();
+        if (cardType.getId() < 0)
+            cardList = repository.getCardList(cardType.getCategoryResourceID());
+        else
+            cardList = repository.getCardList(cardType.getId());
+    }
+
     private void initCard() {
         getRandomCondition();
         getViewState().setCategory(repository.getCardType().getCategoryResourceID());
-        getViewState().setType(repository.getCardType().getNameResourceID());
+        getViewState().setType(repository.getCardType(currentCard.getTypeID()).getNameResourceID());
         getViewState().setTitle(currentCard.getNameResourceID());
-        String cardUrl = IMAGE_URL + Localization.getInstance().getPrefix() + "/" + repository.getCardType().getCategoryResourceID() + "/" + repository.getCardType().getNameResourceID() + "/" + currentCard.getNameResourceID() + ".png";
+        String cardUrl = IMAGE_URL + Localization.getInstance().getPrefix() + "/" + repository.getCardType().getCategoryResourceID() + "/" + repository.getCardType(currentCard.getTypeID()).getNameResourceID() + "/" + currentCard.getNameResourceID() + ".png";
         getViewState().loadImage(Uri.parse(cardUrl));
     }
 
