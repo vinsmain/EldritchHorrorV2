@@ -555,7 +555,7 @@ public class StaticDBMigration8to9 {
                     "                      108\n" +
                     "                  );\n");
 
-            database.execSQL("CREATE TABLE `cards_type` (`_id` INTEGER NOT NULL, `name_resource_id` TEXT, `category_resource_id` TEXT, PRIMARY KEY(`_id`))");
+            database.execSQL("CREATE TABLE `card_types` (`_id` INTEGER NOT NULL, `name_resource_id` TEXT, `category_resource_id` TEXT, PRIMARY KEY(`_id`))");
             database.execSQL("INSERT INTO card_types (\n" +
                     "                           category_resource_id,\n" +
                     "                           name_resource_id,\n" +
