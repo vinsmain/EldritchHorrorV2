@@ -9,7 +9,7 @@
     android:theme="@style/AppTheme.ColorHighlight"
     app:cardBackgroundColor="@color/colorAccent"
     app:cardCornerRadius="0dp"
-    app:cardElevation="8dp">
+    app:cardElevation="4dp">
 
     <TextView
         android:id="@+id/random_card_category_name"

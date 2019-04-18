@@ -61,4 +61,8 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
         currentCard = cardList.get(index);
         return currentCard;
     }
+
+    public void onClickLogBtn() {
+        getViewState().showLogDialog(cardList);
+    }
 }

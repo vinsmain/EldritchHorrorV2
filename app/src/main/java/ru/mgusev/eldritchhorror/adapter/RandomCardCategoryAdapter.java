@@ -71,7 +71,7 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
 
         switch (holder.item.getCategoryResourceID()) {
             case "condition" :
-                holder.categoryCV.setBackgroundColor(Color.rgb(70, 60, 55));
+                holder.categoryCV.setBackgroundColor(Color.rgb(90, 80, 80));
                 break;
             case "spell" :
                 holder.categoryCV.setBackgroundColor(Color.rgb(120, 85, 125));
