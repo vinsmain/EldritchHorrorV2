@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity(tableName = "card_types")
@@ -20,6 +21,7 @@ public class CardType {
     public CardType() {
     }
 
+    @Ignore
     public CardType(int id, String nameResourceID, String categoryResourceID) {
         this.id = id;
         this.nameResourceID = nameResourceID;

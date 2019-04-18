@@ -15,7 +15,6 @@ import ru.mgusev.eldritchhorror.model.CardType;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.view.random_card.RandomCardView;
 import ru.mgusev.eldritchhorror.repository.Repository;
-import timber.log.Timber;
 
 @InjectViewState
 public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
@@ -62,7 +61,23 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
         return currentCard;
     }
 
+    private void deleteCurrentCardFromCardList() {
+        cardList.remove(currentCard);
+    }
+
     public void onClickLogBtn() {
         getViewState().showLogDialog(cardList);
+    }
+
+    public void onClickOtherBtn() {
+        if (cardList.size() > 1) {
+            deleteCurrentCardFromCardList();
+            initCard();
+        } else
+            getViewState().showAlertIfOtherCardNone();
+    }
+
+    public void dismissLogDialog() {
+        getViewState().hideLogDialog();
     }
 }

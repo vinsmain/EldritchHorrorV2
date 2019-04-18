@@ -252,9 +252,42 @@
     <string name="voice_of_ra">Голос Ра</string>
     <string name="wither">Лишение силы</string>
     <string name="wrack">Разрушение</string>
+
     <string name="random_card_header">Случайная карта</string>
+
     <string name="condition">Состояние</string>
     <string name="spell">Заклинание</string>
     <string name="unique_asset">Уникальный актив</string>
+
+    <!--Unique Asset types-->
+    <string name="task">Задача</string>
+
+    <!--Unique Asset titles-->
+    <string name="funding_the_cause">На общее дело</string>
+    <string name="for_the_greater_good">Во имя величайшего блага</string>
+    <string name="enlist_the_masses">Привлечь массы</string>
+    <string name="exploring_the_ruins">Исследовать руины</string>
+    <string name="courier_run">Работа курьером</string>
+    <string name="bury_them_deep">Закопать поглубже</string>
+    <string name="dimensional_study">Изучение пространств</string>
+    <string name="purifying_the_world">Очистить мир</string>
+    <string name="prayer">Молитва</string>
+    <string name="invoke_the_elements">Призвать стихии</string>
+    <string name="light_of_reason">Light of Reason</string>
+    <string name="know_thy_enemy">Узнать врага своего</string>
+    <string name="mastering_the_art">Овладеть Искусством</string>
+    <string name="seeking_the_masters">Seeking the Masters</string>
+    <string name="push_it_to_the_limit">Push It to the Limit</string>
+    <string name="sacrifices_to_make">Принести жертву</string>
+    <string name="sealing_the_old_ones">Сдержать Древних</string>
+    <string name="tempted_by_darkness">Tempted by Darkness</string>
+    <string name="walking_the_ley_lines">Пройти по лей-линиям</string>
+    <string name="unspeakable_research">Мистическое исследование</string>
+    <string name="turning_the_tide">Переломить ситуацию</string>
+    <string name="wave_of_destruction">Wave of Destruction</string>
+    <string name="random_card_other">УЖЕ ЕСТЬ</string>
+    <string name="random_card_ok">ОК</string>
+    <string name="random_card_log_dialog_header">Карты в категории:</string>
+    <string name="random_card_no_other_cards">Других карт нет</string>
 
 </resources>

@@ -18,7 +18,7 @@
             app:showAsAction="always|collapseActionView" />
         <item
             android:id="@+id/action_random_card"
-            android:icon="@drawable/forgotten_endings"
+            android:icon="@drawable/random_card"
             android:title="@string/random_card_header"
             app:showAsAction="always|collapseActionView" />
         <item
