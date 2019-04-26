@@ -19,4 +19,11 @@ public interface ExpansionDAO {
 
     @Update
     void updateExpansion(Expansion expansion);
+
+    /**
+     * Возвращает список id дополнений
+     * @return список id дополнений, которые включены
+     */
+    @Query("SELECT _id FROM expansions WHERE is_enable IS 1")
+    List<Integer> getEnableExpansionList();
 }

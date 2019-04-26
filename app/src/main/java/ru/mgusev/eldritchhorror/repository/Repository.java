@@ -29,6 +29,8 @@ import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.model.Card;
+import ru.mgusev.eldritchhorror.model.CardType;
 import ru.mgusev.eldritchhorror.model.Ending;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -79,6 +81,7 @@ public class Repository {
     private FirebaseUser user;
     private List<Article> articleListRu;
     private List<Article> articleListEn;
+    private CardType cardType;
 
     @Inject
     public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FileHelper fileHelper, FirebaseHelper firebaseHelper) {
@@ -787,7 +790,7 @@ public class Repository {
         return staticDataDB.endingDAO().getAncientOneIdList();
     }
 
-    public List<String> getConditionList(int ancientOneId, boolean victory) {
+    public List<String> getCardList(int ancientOneId, boolean victory) {
         return staticDataDB.endingDAO().getConditionList(ancientOneId, victory);
     }
 
@@ -805,5 +808,32 @@ public class Repository {
             articleListEn = new ArrayList<>();
             articleListEn.addAll(articleList);
         }
+    }
+
+    //Random card
+
+    public CardType getCardType() {
+        return cardType;
+    }
+
+    public CardType getCardType(int typeID) {
+        return staticDataDB.cardTypeDAO().getCardTypeByID(typeID);
+    }
+
+    public void setCardType(CardType cardType) {
+        this.cardType = cardType;
+    }
+
+    public List<CardType> getCardTypeList() {
+        Timber.d(String.valueOf(staticDataDB.cardTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList()).size()));
+        return staticDataDB.cardTypeDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList());
+    }
+
+    public List<Card> getCardList(int type_id) {
+        return staticDataDB.cardDAO().getAll(staticDataDB.expansionDAO().getEnableExpansionList(), type_id);
+    }
+
+    public List<Card> getCardList(String category) {
+        return staticDataDB.cardDAO().getAllByCategory(staticDataDB.expansionDAO().getEnableExpansionList(), category);
     }
 }

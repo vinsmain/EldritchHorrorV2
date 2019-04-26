@@ -17,6 +17,11 @@
             android:title="@string/forgotten_endings_header"
             app:showAsAction="always|collapseActionView" />
         <item
+            android:id="@+id/action_random_card"
+            android:icon="@drawable/random_card"
+            android:title="@string/random_card_header"
+            app:showAsAction="always|collapseActionView" />
+        <item
             android:id="@+id/action_music"
             android:icon="@drawable/music"
             android:title="@string/music_header"

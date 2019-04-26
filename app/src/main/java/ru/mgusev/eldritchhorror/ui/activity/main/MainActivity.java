@@ -48,6 +48,8 @@ import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.faq.FaqActivity;
 import ru.mgusev.eldritchhorror.ui.activity.forgotten_endings.ForgottenEndingsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
+import ru.mgusev.eldritchhorror.ui.activity.random_card.RandomCardActivity;
+import ru.mgusev.eldritchhorror.ui.activity.random_card.RandomCardCategoryActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 import timber.log.Timber;
 
@@ -123,7 +125,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private void initDrawerMenu() {
         forgottenEndingsItem = navigationView.getMenu().getItem(1);
         statItem = navigationView.getMenu().getItem(0);
-        authItem = navigationView.getMenu().getItem(5);
+        authItem = navigationView.getMenu().getItem(6);
         mainPresenter.setVisibilityStatisticsMenuItem();
         mainPresenter.initAuthMenuItem();
         setVisibilityForgottenEndingsItem();
@@ -183,6 +185,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 closeDrawer();
                 Intent forgottenEndingsIntent = new Intent(this, ForgottenEndingsActivity.class);
                 startActivity(forgottenEndingsIntent);
+                return true;
+            case R.id.action_random_card:
+                closeDrawer();
+                Intent randomCardIntent = new Intent(this, RandomCardCategoryActivity.class);
+                startActivity(randomCardIntent);
                 return true;
             default:
                 return true;

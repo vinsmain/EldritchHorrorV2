@@ -7,10 +7,13 @@ import ru.mgusev.eldritchhorror.adapter.DetailsAdapter;
 import ru.mgusev.eldritchhorror.adapter.FaqAdapter;
 import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.adapter.MainAdapter;
+import ru.mgusev.eldritchhorror.adapter.RandomCardCategoryAdapter;
 import ru.mgusev.eldritchhorror.adapter.StatisticsAdapter;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.presentation.presenter.faq.FaqPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.forgotten_endings.ForgottenEndingsPresenter;
+import ru.mgusev.eldritchhorror.presentation.presenter.random_card.RandomCardCategoryPresenter;
+import ru.mgusev.eldritchhorror.presentation.presenter.random_card.RandomCardPresenter;
 import ru.mgusev.eldritchhorror.repository.FirebaseHelper;
 import ru.mgusev.eldritchhorror.database.oldDB.DatabaseHelperOld;
 import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
@@ -41,12 +44,15 @@ public interface AppComponent {
     void inject(GamePhotoPresenter presenter);
     void inject(ForgottenEndingsPresenter forgottenEndingsPresenter);
     void inject(FaqPresenter presenter);
+    void inject(RandomCardCategoryPresenter presenter);
+    void inject(RandomCardPresenter presenter);
 
     void inject(MainAdapter adapter);
     void inject(InvestigatorChoiceAdapter adapter);
     void inject(DetailsAdapter adapter);
     void inject(StatisticsAdapter adapter);
     void inject(FaqAdapter adapter);
+    void inject(RandomCardCategoryAdapter adapter);
 
     void inject(FirebaseHelper helper);
     void inject(GoogleAuth googleAuth);
