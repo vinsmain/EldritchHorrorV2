@@ -308,5 +308,6 @@
     <string name="random_card_ok">OK</string>
     <string name="random_card_log_dialog_header">Cards in category:</string>
     <string name="random_card_no_other_cards">"No other cards "</string>
+    <string name="share_header">Share</string>
 
 </resources>

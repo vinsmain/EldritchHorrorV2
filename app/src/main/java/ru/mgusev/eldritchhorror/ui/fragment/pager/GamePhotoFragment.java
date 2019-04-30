@@ -37,7 +37,9 @@ import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
+import ru.mgusev.eldritchhorror.androidmaterialgallery.ImageOverlayView;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
+import ru.mgusev.eldritchhorror.interfaces.OnShareImageClick;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.GamePhotoPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
@@ -46,7 +48,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhotoView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener {
+public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhotoView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener, OnShareImageClick {
 
     @InjectPresenter
     GamePhotoPresenter gamePhotoPresenter;
@@ -231,6 +233,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
                 .setImageChangeListener(this)
                 .setOnDismissListener(this)
                 .setStartPosition(gamePhotoPresenter.getCurrentPosition())
+                .setOverlayView(new ImageOverlayView(getContext(), this))
                 .show();
     }
 
@@ -248,7 +251,6 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     public void onImageChange(int position) {
         gamePhotoPresenter.setCurrentPosition(position);
     }
-
 
     @Override
     public void openImagePicker() {
@@ -271,5 +273,10 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
                 .enableLog(false) // disabling log
                 //.imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable
                 .start(); // start image picker activity with request code
+    }
+
+    @Override
+    public void onClickShare() {
+        gamePhotoPresenter.shareImage(true);
     }
 }

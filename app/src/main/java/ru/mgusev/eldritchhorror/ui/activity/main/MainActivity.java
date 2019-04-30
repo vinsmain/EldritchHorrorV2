@@ -122,6 +122,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         initDrawerMenu();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mainPresenter.clearGameInRepository();
+    }
+
     private void initDrawerMenu() {
         forgottenEndingsItem = navigationView.getMenu().getItem(1);
         statItem = navigationView.getMenu().getItem(0);

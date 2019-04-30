@@ -1,6 +1,9 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
+import android.support.v4.content.FileProvider;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -17,6 +20,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.ImageFile;
@@ -35,6 +39,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     private CompositeDisposable updatePhotoGallerySubscribe;
     private CompositeDisposable selectAllPhotoSubscribe;
     private CompositeDisposable deleteSelectImagesSubscribe;
+    private CompositeDisposable shareImageSubscribe;
     private List<String> selectedPhotoList;
     private boolean selectMode = false;
     private Uri currentPhotoURI;
@@ -53,6 +58,8 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         selectAllPhotoSubscribe.add(repository.getSelectAllPhotoPublish().subscribe(this::selectAllPhoto, Timber::d));
         deleteSelectImagesSubscribe = new CompositeDisposable();
         deleteSelectImagesSubscribe.add(repository.getDeleteSelectImagesPublish().subscribe(this::deleteSelectImages, Timber::d));
+        shareImageSubscribe = new CompositeDisposable();
+        shareImageSubscribe.add(repository.getShareImagePublish().subscribe(this::shareImage, Timber::d));
         selectedPhotoList = new ArrayList<>();
     }
 
@@ -186,6 +193,22 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         this.currentPosition = currentPosition;
     }
 
+    public void shareImage(boolean value) {
+        repository.shareImage(getImageUriList());
+    }
+
+    private List<Uri> getImageUriList() {
+        List<Uri> uris = new ArrayList<>();
+        if (selectedPhotoList.isEmpty()) {
+            uris.add(FileProvider.getUriForFile(repository.getContext(), BuildConfig.APPLICATION_ID + ".provider", new File(repository.getImages().get(currentPosition).substring(5))));
+        } else {
+            for (String path : selectedPhotoList) {
+                uris.add(FileProvider.getUriForFile(repository.getContext(), BuildConfig.APPLICATION_ID + ".provider", new File(path.substring(5))));
+            }
+        }
+        return uris;
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -193,5 +216,6 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         updatePhotoGallerySubscribe.dispose();
         selectAllPhotoSubscribe.dispose();
         deleteSelectImagesSubscribe.dispose();
+        shareImageSubscribe.dispose();
     }
 }

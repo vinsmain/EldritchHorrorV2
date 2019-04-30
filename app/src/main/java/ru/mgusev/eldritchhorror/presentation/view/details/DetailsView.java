@@ -99,4 +99,10 @@ public interface DetailsView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setComment(String text);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void selectGalleryItem(List<String> list, int position);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void updatePhotoGallery(List<String> imagesUrlList);
 }

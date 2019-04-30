@@ -68,6 +68,7 @@ public class Repository {
     private PublishSubject<Boolean> selectModePublish;
     private PublishSubject<Boolean> selectAllPhotoPublish;
     private PublishSubject<Boolean> deleteSelectImagesPublish;
+    private PublishSubject<Boolean> shareImagePublish;
 
     private CompositeDisposable firebaseDBSubscribe;
     private CompositeDisposable firebaseFilesSubscribe;
@@ -106,6 +107,7 @@ public class Repository {
         selectModePublish = PublishSubject.create();
         selectAllPhotoPublish = PublishSubject.create();
         deleteSelectImagesPublish = PublishSubject.create();
+        shareImagePublish = PublishSubject.create();
 
         uploadFileSubscribe = new CompositeDisposable();
         uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile, Timber::d));
@@ -769,6 +771,18 @@ public class Repository {
         imagePipeline.clearCaches();
         if (getGame() != null && getGame().getId() == imageFile.getGameId())
             updatePhotoGalleryOnNext(true);
+    }
+
+    public PublishSubject<Boolean> getShareImagePublish() {
+        return shareImagePublish;
+    }
+
+    public void shareImagePublishOnNext(boolean isClick) {
+        shareImagePublish.onNext(isClick);
+    }
+
+    public void shareImage(List<Uri> imageUriList) {
+        fileHelper.shareImageIntent(imageUriList);
     }
 
     //Forgotten endings

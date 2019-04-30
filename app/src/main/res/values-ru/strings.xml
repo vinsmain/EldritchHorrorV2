@@ -290,5 +290,6 @@
     <string name="random_card_ok">ОК</string>
     <string name="random_card_log_dialog_header">Карты в категории:</string>
     <string name="random_card_no_other_cards">Других карт нет</string>
+    <string name="share_header">Поделиться</string>
 
 </resources>
