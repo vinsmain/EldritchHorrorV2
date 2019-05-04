@@ -6,15 +6,20 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Card;
 import ru.mgusev.eldritchhorror.model.CardType;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.view.random_card.RandomCardView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import timber.log.Timber;
+
 
 @InjectViewState
 public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
@@ -26,9 +31,14 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
 
     private List<Card> cardList;
     private Card currentCard;
+    private PublishSubject<Boolean> showAlertPublish;
+    private CompositeDisposable showAlertSubscribe;
 
     public RandomCardPresenter() {
         App.getComponent().inject(this);
+        showAlertPublish = PublishSubject.create();
+        showAlertSubscribe = new CompositeDisposable();
+        showAlertSubscribe.add(showAlertPublish.throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe( v -> getViewState().showAlertIfOtherCardNone(v), Timber::e));
         initCardList();
     }
 
@@ -47,7 +57,7 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
     }
 
     private void initCard() {
-        getRandomCondition();
+        selectRandomCard();
         getViewState().setCategory(repository.getCardType().getCategoryResourceID());
         getViewState().setType(repository.getCardType(currentCard.getTypeID()).getNameResourceID());
         getViewState().setTitle(currentCard.getNameResourceID());
@@ -55,10 +65,9 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
         getViewState().loadImage(Uri.parse(cardUrl));
     }
 
-    private Card getRandomCondition() {
+    private void selectRandomCard() {
         int index = (int) (Math.random()* cardList.size());
         currentCard = cardList.get(index);
-        return currentCard;
     }
 
     private void deleteCurrentCardFromCardList() {
@@ -74,10 +83,16 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
             deleteCurrentCardFromCardList();
             initCard();
         } else
-            getViewState().showAlertIfOtherCardNone();
+            showAlertPublish.onNext(true);
     }
 
     public void dismissLogDialog() {
         getViewState().hideLogDialog();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        showAlertSubscribe.dispose();
     }
 }

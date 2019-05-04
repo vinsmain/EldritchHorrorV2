@@ -34,6 +34,7 @@ public class RandomCardCategoryPresenter extends MvpPresenter<RandomCardCategory
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         repository.expansionOnNext();
+        getViewState().setScreenLightFlags(repository.getScreenLight());
     }
 
     private void updateCategoryList(List<Expansion> list) {
@@ -57,6 +58,16 @@ public class RandomCardCategoryPresenter extends MvpPresenter<RandomCardCategory
     public void onCategoryClick(CardType item) {
         repository.setCardType(item);
         getViewState().startRandomCardActivity();
+    }
+
+    public boolean getScreenLight() {
+        return repository.getScreenLight();
+    }
+
+    public void onScreenLightClick(boolean isOn) {
+        repository.setScreenLight(isOn);
+        getViewState().setVisibilityScreenLightButtons();
+        getViewState().setScreenLightFlags(isOn);
     }
 
     @Override

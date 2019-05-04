@@ -27,5 +27,26 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/random_card_category_copyright"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="72dp"
+        android:paddingBottom="2dp"
+        android:text="@string/random_card_copyright"
+        android:textAlignment="textStart"
+        android:textColor="@color/colorText"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include
+        layout="@layout/loader"
+        android:id="@+id/loader" />
+
 </android.support.constraint.ConstraintLayout>

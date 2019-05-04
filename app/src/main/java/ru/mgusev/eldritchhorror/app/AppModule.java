@@ -15,6 +15,7 @@ import ru.mgusev.eldritchhorror.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration6to7;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration7to8;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration8to9;
+import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration9to10;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigrations;
 import ru.mgusev.eldritchhorror.database.userDB.Migrations;
 import ru.mgusev.eldritchhorror.repository.FirebaseHelper;
@@ -63,6 +64,7 @@ public class AppModule {
                 .addMigrations(StaticDBMigration6to7.MIGRATION_6_7)
                 .addMigrations(StaticDBMigration7to8.MIGRATION_7_8)
                 .addMigrations(StaticDBMigration8to9.MIGRATION_8_9)
+                .addMigrations(StaticDBMigration9to10.MIGRATION_9_10)
                 .allowMainThreadQueries()
                 .build();
     }

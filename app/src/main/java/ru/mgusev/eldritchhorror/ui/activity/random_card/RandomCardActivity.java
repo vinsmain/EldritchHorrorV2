@@ -24,8 +24,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.jakewharton.rxbinding3.view.RxView;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -165,7 +167,7 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
     }
 
     @Override
-    public void showAlertIfOtherCardNone() {
+    public void showAlertIfOtherCardNone(boolean v) {
         Toast toast = Toast.makeText(this, R.string.random_card_no_other_cards, Toast.LENGTH_SHORT);
         View view = toast.getView();
         view.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimaryDark), PorterDuff.Mode.SRC_IN);

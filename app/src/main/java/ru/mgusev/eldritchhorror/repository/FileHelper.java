@@ -70,6 +70,7 @@ public class FileHelper {
         sendIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
         sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, (ArrayList<? extends Parcelable>) imageUriList);
         sendIntent.setType("image/*");
+        sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(sendIntent);
     }
 }

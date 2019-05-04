@@ -1,5 +1,6 @@
 package ru.mgusev.eldritchhorror.ui.activity.main;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -29,8 +30,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
+import com.jakewharton.rxbinding3.view.RxView;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +51,6 @@ import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.faq.FaqActivity;
 import ru.mgusev.eldritchhorror.ui.activity.forgotten_endings.ForgottenEndingsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
-import ru.mgusev.eldritchhorror.ui.activity.random_card.RandomCardActivity;
 import ru.mgusev.eldritchhorror.ui.activity.random_card.RandomCardCategoryActivity;
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 import timber.log.Timber;
@@ -120,6 +122,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         navigationView.setNavigationItemSelectedListener(this);
 
         initDrawerMenu();
+        initStatisticHintsListener();
     }
 
     @Override
@@ -219,8 +222,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public void changeAuthItem(boolean signedIn) {
         if (signedIn) {
-           authItem.setTitle(R.string.sign_out_menu_header);
-           authItem.setIcon(R.drawable.sign_out);
+            authItem.setTitle(R.string.sign_out_menu_header);
+            authItem.setIcon(R.drawable.sign_out);
         } else {
             authItem.setTitle(R.string.auth_header);
             authItem.setIcon(R.drawable.sign_in);
@@ -352,22 +355,20 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         startActivity(googlePlayIntent);
     }
 
-    @OnClick({R.id.main_add_game, R.id.main_count_game_linear, R.id.main_best_score_linear, R.id.main_worst_score_linear})
+    @OnClick({R.id.main_add_game})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_add_game:
                 mainPresenter.addGame();
                 break;
-            case R.id.main_count_game_linear:
-                Toast.makeText(this, R.string.games_count, Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.main_best_score_linear:
-                Toast.makeText(this, R.string.best_result, Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.main_worst_score_linear:
-                Toast.makeText(this, R.string.worst_result, Toast.LENGTH_SHORT).show();
-                break;
         }
+    }
+
+    @SuppressLint("CheckResult")
+    private void initStatisticHintsListener() {
+        RxView.clicks(findViewById(R.id.main_count_game_linear)).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> Toast.makeText(this, R.string.games_count, Toast.LENGTH_SHORT).show());
+        RxView.clicks(findViewById(R.id.main_best_score_linear)).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> Toast.makeText(this, R.string.best_result, Toast.LENGTH_SHORT).show());
+        RxView.clicks(findViewById(R.id.main_worst_score_linear)).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> Toast.makeText(this, R.string.worst_result, Toast.LENGTH_SHORT).show());
     }
 
     private void showLoader() {

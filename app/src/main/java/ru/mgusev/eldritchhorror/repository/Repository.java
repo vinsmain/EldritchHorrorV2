@@ -850,4 +850,12 @@ public class Repository {
     public List<Card> getCardList(String category) {
         return staticDataDB.cardDAO().getAllByCategory(staticDataDB.expansionDAO().getEnableExpansionList(), category);
     }
+
+    public void setScreenLight(boolean isOn) {
+        prefHelper.saveIsScreenLight(isOn);
+    }
+
+    public boolean getScreenLight() {
+        return prefHelper.loadIsScreenLight();
+    }
 }

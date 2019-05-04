@@ -93,6 +93,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.comment_tv) TextView commentTV;
     @BindView(R.id.loader) LinearLayout loader;
 
+    @BindView(R.id.photo_details_select_all) ImageButton selectAllBtn;
     @BindView(R.id.photo_details_select_cancel) ImageButton selectCancelBtn;
     @BindView(R.id.photo_details_share_image) ImageButton shareImageBtn;
 
@@ -443,6 +444,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     public void showPhotoNoneMessage(boolean isShow) {
         photoNoneMessage.setVisibility(isShow ? View.VISIBLE : View.GONE);
         photoRV.setVisibility(isShow ? View.GONE : View.VISIBLE);
+        setVisibilityIcons();
     }
 
     @Override
@@ -479,6 +481,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     private void setVisibilityIcons() {
+        selectAllBtn.setVisibility(photoNoneMessage.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         selectCancelBtn.setVisibility(detailsPresenter.isSelectMode() ? View.VISIBLE : View.GONE);
         shareImageBtn.setVisibility(detailsPresenter.isSelectMode() ? View.VISIBLE : View.GONE);
     }

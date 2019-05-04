@@ -148,7 +148,12 @@
     <string name="connection_error_header">Ошибка соединения, пожалуйста проверьте ваше соединение и повторите попытку</string>
     <string name="update_complete">Обновление завершено</string>
 
-    <!--Conditions type-->
+    <!--Card category types-->
+    <string name="condition">Состояние</string>
+    <string name="spell">Заклинание</string>
+    <string name="unique_asset">Уникальный актив</string>
+
+    <!--Condition types-->
     <string name="bane">Напасть</string>
     <string name="boon">Дар</string>
     <string name="common">Обычное</string>
@@ -161,7 +166,7 @@
     <string name="restriction">Препятствие</string>
     <string name="talent">Талант</string>
 
-    <!--Conditions title-->
+    <!--Condition titles-->
     <string name="agreement">Договор</string>
     <string name="amnesia">Амнезия</string>
     <string name="attuned">Настроенность</string>
@@ -211,12 +216,12 @@
     <string name="visions">Видения</string>
     <string name="wanted">В розыске</string>
 
-    <!--Spells type-->
+    <!--Spell types-->
     <string name="glamour">Аура</string>
     <string name="ritual">Ритуал</string>
     <string name="incantation">Чары</string>
 
-    <!--Conditions title-->
+    <!--Spell titles-->
     <string name="alter_fate">Изменить судьбу</string>
     <string name="arcane_insight">Тайная интуиция</string>
     <string name="astral_travel">Астральное путешествие</string>
@@ -254,14 +259,17 @@
     <string name="wither">Лишение силы</string>
     <string name="wrack">Разрушение</string>
 
-    <string name="random_card_header">Случайная карта</string>
-
-    <string name="condition">Состояние</string>
-    <string name="spell">Заклинание</string>
-    <string name="unique_asset">Уникальный актив</string>
-
     <!--Unique Asset types-->
     <string name="task">Задача</string>
+    <string name="ally">Союзник</string>
+    <string name="character">Персонаж</string>
+    <string name="item">Вещь</string>
+    <string name="tome">Книга</string>
+    <string name="magical">Волшебный</string>
+    <string name="relic">Редкий</string>
+    <string name="weapon">Оружие</string>
+    <string name="trinket">Безделушка</string>
+    <string name="tarot">Таро</string>
 
     <!--Unique Asset titles-->
     <string name="funding_the_cause">На общее дело</string>
@@ -274,22 +282,93 @@
     <string name="purifying_the_world">Очистить мир</string>
     <string name="prayer">Молитва</string>
     <string name="invoke_the_elements">Призвать стихии</string>
-    <string name="light_of_reason">Light of Reason</string>
     <string name="know_thy_enemy">Узнать врага своего</string>
     <string name="mastering_the_art">Овладеть Искусством</string>
-    <string name="seeking_the_masters">Seeking the Masters</string>
-    <string name="push_it_to_the_limit">Push It to the Limit</string>
     <string name="sacrifices_to_make">Принести жертву</string>
     <string name="sealing_the_old_ones">Сдержать Древних</string>
-    <string name="tempted_by_darkness">Tempted by Darkness</string>
     <string name="walking_the_ley_lines">Пройти по лей-линиям</string>
     <string name="unspeakable_research">Мистическое исследование</string>
     <string name="turning_the_tide">Переломить ситуацию</string>
+    <string name="anna_tilton">Анна Тилтон</string>
+    <string name="antarctic_guide">Бывалый полярник</string>
+    <string name="constance_hawberk">Констанция Хоберк</string>
+    <string name="danforth">Данфорт</string>
+    <string name="dog_sled">Собачья упряжка</string>
+    <string name="dr_hiram_upham">Доктор Хирам Апхэм</string>
+    <string name="esteban_herrero">Эстебан Эрреро</string>
+    <string name="father_merluzzo">Отец Мерлуццо</string>
+    <string name="henry_wilcox">Генри Уилкокс</string>
+    <string name="kid_obrien">Малыш О\'Брайен</string>
+    <string name="old_journal">Старый дневник</string>
+    <string name="professor_armitage">Профессор Армитедж</string>
+    <string name="provisions">Провизия</string>
+    <string name="sir_william_brinton">Сэр Уильям Бринтон</string>
+    <string name="william_dyer">Уильям Дайер</string>
+    <string name="etienne_laurent">Этьен-Лоран</string>
+    <string name="asenath_waite">Асенат Уэйт</string>
+    <string name="ancient_sword">Древний меч</string>
+    <string name="professor_rice">Профессор Райс</string>
+    <string name="mysterious_idol">Таинственный идол</string>
+    <string name="lost_treasure">Потерянное сокровище</string>
+    <string name="stone_tablet">Каменная табличка</string>
+    <string name="stone_chest">Каменный сундук</string>
+    <string name="stone_calendar">Каменный календарь</string>
+    <string name="halpin_chambers">Халпин Чалмерс</string>
+    <string name="fossilized_samples">Окаменелости</string>
+    <string name="erich_weiss">Эрих Вайсс</string>
+    <string name="enoch_bowen">Енох Боуэн</string>
+    <string name="canopic_jar">Канопа</string>
+    <string name="cursed_tablet">Проклятая табличка</string>
+    <string name="cryptic_text">Загадочный текст</string>
+    <string name="pharaonic_mask">Маска фараонов</string>
+    <string name="ornate_scarab">Украшенный скарабей</string>
+    <string name="jeweled_scarab">Драгоценный скарабей</string>
+    <string name="treasure_map">Карта сокровищ</string>
+    <string name="wooden_puppet">Деревянная кукла</string>
+    <string name="granny_orne">Бабушка Орн</string>
+    <string name="albert_wilmarth">Альберт Уилмарт</string>
+    <string name="corinna_jones">Коринна Джонс</string>
+    <string name="hildred_castaigne">Илдред Кастень</string>
+    <string name="ace_of_swords">Туз мечей</string>
+    <string name="four_of_cups">Четверка кубков</string>
+    <string name="five_of_pentacles">Пятерка пентаклей</string>
+    <string name="flux_stabilizer">Стабилизатор потоков</string>
+    <string name="basil_elton">Бэзил Элтон</string>
+    <string name="death_xiii">Смерть XIII</string>
+    <string name="mythos_codex">Энциклопедия Мифа</string>
+    <string name="miss_doyle">Мисс Дойл</string>
+    <string name="randolph_carter">Рэндольф Картер</string>
+    <string name="the_moon_xviii">Луна XVIII</string>
+
     <string name="wave_of_destruction">Wave of Destruction</string>
+    <string name="tempted_by_darkness">Tempted by Darkness</string>
+    <string name="seeking_the_masters">Seeking the Masters</string>
+    <string name="push_it_to_the_limit">Push It to the Limit</string>
+    <string name="light_of_reason">Light of Reason</string>
+    <string name="agency_secrets">Agency Secrets</string>
+    <string name="agent_callahan">Agent Callahan</string>
+    <string name="duke">Duke</string>
+    <string name="amery_wendy_smith">Amery Wendy-Smith</string>
+    <string name="professor_morgan">Professor Morgan</string>
+    <string name="eye_of_light">Eye of Light</string>
+    <string name="dr_ali_kafour">Dr. Ali Kafour</string>
+    <string name="eye_of_darkness">Eye of Darkness</string>
+    <string name="ancient_scroll">Ancient Scroll</string>
+    <string name="perplexing_idol">Perplexing Idol</string>
+    <string name="jake_williams">Jake Williams</string>
+    <string name="jack_brady">Jack Brady</string>
+    <string name="sacred_icon">Sacred Icon</string>
+    <string name="the_messenger">The Messenger</string>
+    <string name="tablet_shards">Tablet Shards</string>
+
+    <string name="random_card_header">Случайная карта</string>
     <string name="random_card_other">УЖЕ ЕСТЬ</string>
     <string name="random_card_ok">ОК</string>
     <string name="random_card_log_dialog_header">Карты в категории:</string>
     <string name="random_card_no_other_cards">Других карт нет</string>
     <string name="share_header">Поделиться</string>
+    <string name="random_card_copyright">идея - Александр Кондратков</string>
+    <string name="random_card_keep_screen_on">Держать экран включенным</string>
+    <string name="random_card_not_keep_screen_on">Не держать экран включенным</string>
 
 </resources>
