@@ -185,6 +185,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
         }
     }
 
+    public void clearGameInRepository() {
+        repository.clearGame();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

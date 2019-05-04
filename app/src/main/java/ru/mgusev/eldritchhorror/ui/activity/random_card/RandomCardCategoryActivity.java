@@ -1,12 +1,16 @@
 package ru.mgusev.eldritchhorror.ui.activity.random_card;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -35,9 +39,14 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
     Toolbar toolbar;
     @BindView(R.id.random_card_category_rv)
     RecyclerView categoryListRV;
+    @BindView(R.id.loader)
+    LinearLayout loader;
 
     private RandomCardCategoryAdapter adapter;
     private List<CardType> cardTypeList;
+    private int columnNumber = 2;
+    private MenuItem screenLightOn;
+    private MenuItem screenLightOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +61,16 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
             startActivity(firstIntent);
         }
 
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnNumber = 3;
+
         initToolbar();
         cardTypeList = new ArrayList<>();
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, columnNumber);
 
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return cardTypeList.get(position).getId() < 0 ? 2 : 1;
+                return cardTypeList.get(position).getId() < 0 ? columnNumber : 1;
             }
         });
 
@@ -71,6 +82,12 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
         categoryListRV.setAdapter(adapter);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideLoader();
+    }
+
     private void initToolbar() {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.random_card_header);
@@ -80,9 +97,22 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
         toolbar.setNavigationOnClickListener(v -> finish());
     }
 
+    private void showLoader() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        loader.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoader() {
+        loader.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_random_card_activity, menu);
+        screenLightOn = menu.findItem(R.id.action_screen_light_on);
+        screenLightOff = menu.findItem(R.id.action_screen_light_off);
+        setVisibilityScreenLightButtons();
         return true;
     }
 
@@ -90,13 +120,27 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit_expansion:
-                //showLoader();
+                showLoader();
                 Intent expansionChoiceIntent = new Intent(this, ExpansionChoiceActivity.class);
                 startActivity(expansionChoiceIntent);
+                return true;
+            case R.id.action_screen_light_on:
+                randomCardCategoryPresenter.onScreenLightClick(false);
+                return true;
+            case R.id.action_screen_light_off:
+                randomCardCategoryPresenter.onScreenLightClick(true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void setVisibilityScreenLightButtons() {
+        if (screenLightOn != null)
+            screenLightOn.setVisible(randomCardCategoryPresenter.getScreenLight());
+        if (screenLightOff != null)
+            screenLightOff.setVisible(!randomCardCategoryPresenter.getScreenLight());
     }
 
     @Override
@@ -114,5 +158,13 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
     @Override
     public void startRandomCardActivity() {
         startActivity(new Intent(this, RandomCardActivity.class));
+    }
+
+    @Override
+    public void setScreenLightFlags(boolean isScreenLightOn) {
+        if (isScreenLightOn)
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }

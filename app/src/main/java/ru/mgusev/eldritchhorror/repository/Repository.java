@@ -68,6 +68,7 @@ public class Repository {
     private PublishSubject<Boolean> selectModePublish;
     private PublishSubject<Boolean> selectAllPhotoPublish;
     private PublishSubject<Boolean> deleteSelectImagesPublish;
+    private PublishSubject<Boolean> shareImagePublish;
 
     private CompositeDisposable firebaseDBSubscribe;
     private CompositeDisposable firebaseFilesSubscribe;
@@ -106,6 +107,7 @@ public class Repository {
         selectModePublish = PublishSubject.create();
         selectAllPhotoPublish = PublishSubject.create();
         deleteSelectImagesPublish = PublishSubject.create();
+        shareImagePublish = PublishSubject.create();
 
         uploadFileSubscribe = new CompositeDisposable();
         uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile, Timber::d));
@@ -771,6 +773,18 @@ public class Repository {
             updatePhotoGalleryOnNext(true);
     }
 
+    public PublishSubject<Boolean> getShareImagePublish() {
+        return shareImagePublish;
+    }
+
+    public void shareImagePublishOnNext(boolean isClick) {
+        shareImagePublish.onNext(isClick);
+    }
+
+    public void shareImage(List<Uri> imageUriList) {
+        fileHelper.shareImageIntent(imageUriList);
+    }
+
     //Forgotten endings
 
     public List<Ending> getEndingList(int ancientOneId, boolean result, List<String> conditionList) {
@@ -835,5 +849,13 @@ public class Repository {
 
     public List<Card> getCardList(String category) {
         return staticDataDB.cardDAO().getAllByCategory(staticDataDB.expansionDAO().getEnableExpansionList(), category);
+    }
+
+    public void setScreenLight(boolean isOn) {
+        prefHelper.saveIsScreenLight(isOn);
+    }
+
+    public boolean getScreenLight() {
+        return prefHelper.loadIsScreenLight();
     }
 }

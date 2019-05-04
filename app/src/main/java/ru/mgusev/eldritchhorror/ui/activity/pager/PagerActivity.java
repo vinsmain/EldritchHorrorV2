@@ -62,6 +62,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private MenuItem actionRandomSettings;
     private MenuItem actionSelectAll;
     private MenuItem actionSelectCancel;
+    private MenuItem actionShareImage;
 
 
     @Override
@@ -201,6 +202,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         actionRandomSettings = menu.findItem(R.id.action_random_settings);
         actionSelectAll = menu.findItem(R.id.action_select_all);
         actionSelectCancel = menu.findItem(R.id.action_select_cancel);
+        actionShareImage = menu.findItem(R.id.action_share_image);
         showMenuItem();
         return true;
     }
@@ -214,6 +216,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         if (actionEditExpansion != null) actionEditExpansion.setVisible(currentPosition != 3);
 
         showActionSelectCancelButton();
+        showActionShareImageButton();
     }
 
     private void showAddPhotoButton() {
@@ -235,6 +238,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
             }
         }
         showActionSelectCancelButton();
+        showActionShareImageButton();
     }
 
     @OnClick({R.id.games_pager_delete_image})
@@ -246,6 +250,13 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         if (actionSelectCancel != null) {
             if (pagerPresenter.getCurrentPosition() == 3) actionSelectCancel.setVisible(pagerPresenter.isSelectedMode());
             else actionSelectCancel.setVisible(false);
+        }
+    }
+
+    private void showActionShareImageButton() {
+        if (actionShareImage != null) {
+            if (pagerPresenter.getCurrentPosition() == 3) actionShareImage.setVisible(pagerPresenter.isSelectedMode());
+            else actionShareImage.setVisible(false);
         }
     }
 
@@ -276,6 +287,9 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 return true;
             case R.id.action_select_cancel:
                 pagerPresenter.clickSelectPhoto(false);
+                return true;
+            case R.id.action_share_image:
+                pagerPresenter.clickShareImageButton();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

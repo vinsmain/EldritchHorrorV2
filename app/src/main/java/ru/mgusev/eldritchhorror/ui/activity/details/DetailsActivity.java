@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
@@ -31,7 +32,9 @@ import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.adapter.DetailsAdapter;
 import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
+import ru.mgusev.eldritchhorror.androidmaterialgallery.ImageOverlayView;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
+import ru.mgusev.eldritchhorror.interfaces.OnShareImageClick;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
@@ -40,7 +43,7 @@ import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
 
-public class DetailsActivity extends MvpAppCompatActivity implements DetailsView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener {
+public class DetailsActivity extends MvpAppCompatActivity implements DetailsView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener, OnShareImageClick {
 
     @InjectPresenter
     DetailsPresenter detailsPresenter;
@@ -90,10 +93,14 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.comment_tv) TextView commentTV;
     @BindView(R.id.loader) LinearLayout loader;
 
+    @BindView(R.id.photo_details_select_all) ImageButton selectAllBtn;
+    @BindView(R.id.photo_details_select_cancel) ImageButton selectCancelBtn;
+    @BindView(R.id.photo_details_share_image) ImageButton shareImageBtn;
+
     private DetailsAdapter adapter;
     private GalleryAdapter galleryAdapter;
     private AlertDialog deleteDialog;
-    private List<String> uriList;
+    private List<String> imagePathList;
     private int columnsCount = 4;
     private ImageViewer imageViewer;
     private boolean imageViewerIsOpen;
@@ -113,6 +120,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         initToolbar();
         initInvestigatorRV();
         initPhotoRV();
+        setVisibilityIcons();
     }
 
     @Override
@@ -150,6 +158,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     private void startIntent(int position) {
+        detailsPresenter.selectAllPhoto(false);
         showLoader();
         detailsPresenter.setCurrentPagerPosition(position);
         detailsPresenter.setGameToRepository();
@@ -363,8 +372,8 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @Override
     public void setPhotoList(List<String> list) {
         photoRV.setVisibility(View.GONE);
-        uriList = list;
-        galleryAdapter.addGalleryItems(uriList);
+        imagePathList = list;
+        galleryAdapter.addGalleryItems(imagePathList);
         photoRV.setVisibility(View.VISIBLE);
     }
 
@@ -381,13 +390,19 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void onItemClick(int position) {
-        detailsPresenter.setCurrentPosition(position);
-        detailsPresenter.openFullScreenPhotoViewer();
+        if (detailsPresenter.isSelectMode()) detailsPresenter.selectGalleryItem(imagePathList.get(position), position);
+        else {
+            detailsPresenter.setCurrentPosition(position);
+            detailsPresenter.openFullScreenPhotoViewer();
+        }
     }
 
     @Override
     public void onItemLongClick(int position) {
-
+        if (!detailsPresenter.isSelectMode()) {
+            detailsPresenter.setSelectMode(true);
+            detailsPresenter.selectGalleryItem(imagePathList.get(position), position);
+        }
     }
 
     @Override
@@ -402,10 +417,11 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void openFullScreenPhotoViewer() {
-        imageViewer = new ImageViewer.Builder(this, uriList)
+        imageViewer = new ImageViewer.Builder(this, imagePathList)
                 .setImageChangeListener(this)
                 .setOnDismissListener(this)
                 .setStartPosition(detailsPresenter.getCurrentPosition())
+                .setOverlayView(new ImageOverlayView(this, this))
                 .show();
     }
 
@@ -428,5 +444,45 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     public void showPhotoNoneMessage(boolean isShow) {
         photoNoneMessage.setVisibility(isShow ? View.VISIBLE : View.GONE);
         photoRV.setVisibility(isShow ? View.GONE : View.VISIBLE);
+        setVisibilityIcons();
+    }
+
+    @Override
+    public void onClickShare() {
+        detailsPresenter.shareImage();
+    }
+
+    @Override
+    public void selectGalleryItem(List<String> list, int position) {
+        galleryAdapter.selectGalleryItem(list, position);
+        setVisibilityIcons();
+    }
+
+    @Override
+    public void updatePhotoGallery(List<String> imagesUrlList) {
+        galleryAdapter.addGalleryItems(imagesUrlList);
+        imagePathList = imagesUrlList;
+        setVisibilityIcons();
+    }
+
+    @OnClick({R.id.photo_details_select_all, R.id.photo_details_select_cancel, R.id.photo_details_share_image})
+    public void onClickImageHandleButtons(View view) {
+        switch (view.getId()) {
+            case R.id.photo_details_select_all:
+                detailsPresenter.selectAllPhoto(true);
+                break;
+            case R.id.photo_details_select_cancel:
+                detailsPresenter.selectAllPhoto(false);
+                break;
+            case R.id.photo_details_share_image:
+                detailsPresenter.shareImage();
+                break;
+        }
+    }
+
+    private void setVisibilityIcons() {
+        selectAllBtn.setVisibility(photoNoneMessage.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        selectCancelBtn.setVisibility(detailsPresenter.isSelectMode() ? View.VISIBLE : View.GONE);
+        shareImageBtn.setVisibility(detailsPresenter.isSelectMode() ? View.VISIBLE : View.GONE);
     }
 }

@@ -13,6 +13,7 @@ public class PrefHelper {
     private static final String SETTINGS_IS_RATE = "settings_is_rate";
     private static final String SETTINGS_GAMES_COUNT = "settings_games_count";
     private static final String SETTINGS_SORT_MODE = "settings_sort_mode";
+    private static final String SETTINGS_IS_SCREEN_LIGHT = "settings_is_screen_light";
     private static final long TWENTY_FOUR_HOURS = 86400000; //milliseconds
 
     public PrefHelper(Context context) {
@@ -53,5 +54,17 @@ public class PrefHelper {
     public int loadSortMode() {
         sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
         return sPref.getInt(SETTINGS_SORT_MODE, 1);
+    }
+
+    public void saveIsScreenLight(boolean value) {
+        sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+        Editor ed = sPref.edit();
+        ed.putBoolean(SETTINGS_IS_SCREEN_LIGHT, value);
+        ed.apply();
+    }
+
+    public boolean loadIsScreenLight() {
+        sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+        return sPref.getBoolean(SETTINGS_IS_SCREEN_LIGHT, false);
     }
 }

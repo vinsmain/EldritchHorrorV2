@@ -32,5 +32,5 @@ public interface RandomCardView extends MvpView {
     void hideLogDialog();
 
     @StateStrategyType(OneExecutionStateStrategy.class)
-    void showAlertIfOtherCardNone();
+    void showAlertIfOtherCardNone(boolean v);
 }

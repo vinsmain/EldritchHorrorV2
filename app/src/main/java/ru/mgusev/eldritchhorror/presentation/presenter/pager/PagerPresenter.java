@@ -150,13 +150,16 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
         return selectedMode;
     }
 
+    public void clickShareImageButton() {
+        repository.shareImagePublishOnNext(true);
+    }
+
     @Override
     public void onDestroy() {
         ancientOneSubscribe.dispose();
         scoreSubscribe.dispose();
         isWinSubscribe.dispose();
         selectModeSubscribe.dispose();
-        repository.clearGame();
         repository.setPagerPosition(0);
         super.onDestroy();
     }

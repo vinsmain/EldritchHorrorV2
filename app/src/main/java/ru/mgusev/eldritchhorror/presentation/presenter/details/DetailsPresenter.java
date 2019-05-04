@@ -1,17 +1,21 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.details;
 
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.app.App;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -31,6 +35,8 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
     private CompositeDisposable photoSubscribe;
     private static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     private int currentPosition;
+    private List<String> selectedPhotoList;
+    private boolean selectMode = false;
 
     public DetailsPresenter() {
         App.getComponent().inject(this);
@@ -39,6 +45,7 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::initGameData, Timber::d));
         photoSubscribe = new CompositeDisposable();
         photoSubscribe.add(repository.getUpdatePhotoGalleryPublish().subscribe(this::initPhotoList, Timber::d));
+        selectedPhotoList = new ArrayList<>();
     }
 
     @Override
@@ -158,11 +165,56 @@ public class DetailsPresenter extends MvpPresenter<DetailsView> {
         this.currentPosition = currentPosition;
     }
 
+    public void shareImage() {
+        repository.shareImage(getImageUriList());
+    }
+
+    private List<Uri> getImageUriList() {
+        List<Uri> uris = new ArrayList<>();
+        if (selectedPhotoList.isEmpty()) {
+            uris.add(FileProvider.getUriForFile(repository.getContext(), BuildConfig.APPLICATION_ID + ".provider", new File(repository.getImages().get(currentPosition).substring(5))));
+        } else {
+            for (String path : selectedPhotoList) {
+                uris.add(FileProvider.getUriForFile(repository.getContext(), BuildConfig.APPLICATION_ID + ".provider", new File(path.substring(5))));
+            }
+        }
+        return uris;
+    }
+
+    public boolean isSelectMode() {
+        return selectMode;
+    }
+
+    public void setSelectMode(boolean selectMode) {
+        this.selectMode = selectMode;
+    }
+
+    public void selectGalleryItem(String selectedItem, int position) {
+        if (selectedPhotoList.contains(selectedItem)) {
+            selectedPhotoList.remove(selectedItem);
+            if (selectedPhotoList.isEmpty()) setSelectMode(false);
+        }
+        else selectedPhotoList.add(selectedItem);
+        getViewState().selectGalleryItem(selectedPhotoList, position);
+    }
+
+    public void selectAllPhoto(boolean isSelectAll) {
+        List<String> imagesUriList = repository.getImages();
+        if (!imagesUriList.isEmpty()) {
+            selectedPhotoList.clear();
+            if (isSelectAll) {
+                selectedPhotoList.addAll(imagesUriList);
+                setSelectMode(true);
+            } else setSelectMode(false);
+            getViewState().selectGalleryItem(selectedPhotoList, 0);
+            getViewState().updatePhotoGallery(imagesUriList);
+        }
+    }
+
     @Override
     public void onDestroy() {
         gameListSubscribe.dispose();
         photoSubscribe.dispose();
-        repository.clearGame();
         super.onDestroy();
     }
 }

@@ -1,7 +1,10 @@
 package ru.mgusev.eldritchhorror.repository;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
+import android.os.Parcelable;
 
 import com.facebook.common.util.UriUtil;
 
@@ -60,5 +63,14 @@ public class FileHelper {
         if (!fileOrDirectory.isDirectory() && fileOrDirectory.getParentFile().listFiles().length == 0) {
             Timber.tag("DELETE FILE").d(fileOrDirectory.getPath() + " " + fileOrDirectory.getParentFile().delete());
         }
+    }
+
+    public void shareImageIntent(List<Uri> imageUriList) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+        sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, (ArrayList<? extends Parcelable>) imageUriList);
+        sendIntent.setType("image/*");
+        sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(sendIntent);
     }
 }

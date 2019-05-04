@@ -280,8 +280,17 @@
 
     <!--Unique Asset types-->
     <string name="task">Task</string>
+    <string name="ally">Ally</string>
+    <string name="character">Character</string>
+    <string name="item">Item</string>
+    <string name="tome">Tome</string>
+    <string name="magical">Magical</string>
+    <string name="relic">Relic</string>
+    <string name="weapon">Weapon</string>
+    <string name="trinket">Trinket</string>
+    <string name="tarot">Tarot</string>
 
-    <!--Spells title-->
+    <!--Unique Asset titles-->
     <string name="funding_the_cause">Funding The Cause</string>
     <string name="for_the_greater_good">For the Greater Good</string>
     <string name="enlist_the_masses">Enlist The Masses</string>
@@ -304,9 +313,80 @@
     <string name="unspeakable_research">Unspeakable Research</string>
     <string name="turning_the_tide">Turning The Tide</string>
     <string name="wave_of_destruction">Wave of Destruction</string>
+
+    <string name="anna_tilton">Anna Tilton</string>
+    <string name="antarctic_guide">Antarctic Guide</string>
+    <string name="constance_hawberk">Constance Hawberk</string>
+    <string name="danforth">Danforth</string>
+    <string name="dog_sled">Dog Sled</string>
+    <string name="dr_hiram_upham">Dr. Hiram Upham</string>
+    <string name="esteban_herrero">Esteban Herrero</string>
+    <string name="father_merluzzo">Father Merluzzo</string>
+    <string name="henry_wilcox">Henry Wilcox</string>
+    <string name="kid_obrien">Kid O\'Brien</string>
+    <string name="old_journal">Old Journal</string>
+    <string name="professor_armitage">Professor Armitage</string>
+    <string name="provisions">Provisions</string>
+    <string name="sir_william_brinton">Sir William Brinton</string>
+    <string name="william_dyer">William Dyer</string>
+    <string name="etienne_laurent">Etienne Laurent</string>
+    <string name="asenath_waite">Asenath Waite</string>
+    <string name="ancient_sword">Ancient Sword</string>
+    <string name="professor_rice">Professor Rice</string>
+    <string name="mysterious_idol">Mysterious Idol</string>
+    <string name="lost_treasure">Lost Treasure</string>
+    <string name="stone_tablet">Stone Tablet</string>
+    <string name="stone_chest">Stone Chest</string>
+    <string name="stone_calendar">Stone Calendar</string>
+    <string name="halpin_chambers">Halpin Chambers</string>
+    <string name="fossilized_samples">Fossilized Samples</string>
+    <string name="erich_weiss">Erich Weiss</string>
+    <string name="enoch_bowen">Enoch Bowen</string>
+    <string name="canopic_jar">Canopic Jar</string>
+    <string name="cursed_tablet">Cursed Tablet</string>
+    <string name="cryptic_text">Cryptic Text</string>
+    <string name="pharaonic_mask">Pharaonic Mask</string>
+    <string name="ornate_scarab">Ornate Scarab</string>
+    <string name="jeweled_scarab">Jeweled Scarab</string>
+    <string name="treasure_map">Treasure Map</string>
+    <string name="wooden_puppet">Wooden Puppet</string>
+    <string name="granny_orne">Granny Orne</string>
+    <string name="albert_wilmarth">Albert Wilmarth</string>
+    <string name="corinna_jones">Corinna Jones</string>
+    <string name="hildred_castaigne">Hildred Castaigne</string>
+    <string name="ace_of_swords">Ace of Swords</string>
+    <string name="four_of_cups">Four of Cups</string>
+    <string name="five_of_pentacles">Five of Pentacles</string>
+    <string name="flux_stabilizer">Flux Stabilizer</string>
+    <string name="basil_elton">Basil Elton</string>
+    <string name="death_xiii">Death XIII</string>
+    <string name="mythos_codex">Mythos Codex</string>
+    <string name="miss_doyle">Miss Doyle</string>
+    <string name="randolph_carter">Randolph Carter</string>
+    <string name="the_moon_xviii">The Moon XVIII</string>
+    <string name="agency_secrets">Agency Secrets</string>
+    <string name="agent_callahan">Agent Callahan</string>
+    <string name="duke">Duke</string>
+    <string name="amery_wendy_smith">Amery Wendy-Smith</string>
+    <string name="professor_morgan">Professor Morgan</string>
+    <string name="eye_of_light">Eye of Light</string>
+    <string name="dr_ali_kafour">Dr. Ali Kafour</string>
+    <string name="eye_of_darkness">Eye of Darkness</string>
+    <string name="ancient_scroll">Ancient Scroll</string>
+    <string name="perplexing_idol">Perplexing Idol</string>
+    <string name="jake_williams">Jake Williams</string>
+    <string name="jack_brady">Jack Brady</string>
+    <string name="sacred_icon">Sacred Icon</string>
+    <string name="the_messenger">The Messenger</string>
+    <string name="tablet_shards">Tablet Shards</string>
+
     <string name="random_card_other">OTHER</string>
     <string name="random_card_ok">OK</string>
     <string name="random_card_log_dialog_header">Cards in category:</string>
     <string name="random_card_no_other_cards">"No other cards "</string>
+    <string name="share_header">Share</string>
+    <string name="random_card_copyright">idea - Alexander Kondratkov</string>
+    <string name="random_card_keep_screen_on">Keep screen on</string>
+    <string name="random_card_not_keep_screen_on">Not keep screen on</string>
 
 </resources>

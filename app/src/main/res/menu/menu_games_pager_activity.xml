@@ -39,6 +39,12 @@
         app:showAsAction="always|collapseActionView" />
 
     <item
+        android:id="@+id/action_share_image"
+        android:icon="@drawable/share_border"
+        android:title="@string/share_header"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
         android:id="@+id/action_save"
         android:icon="@drawable/checked_white"
         android:title="@string/saveResult"
