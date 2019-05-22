@@ -22,6 +22,11 @@
             android:title="@string/random_card_header"
             app:showAsAction="always|collapseActionView" />
         <item
+            android:id="@+id/action_dice"
+            android:icon="@drawable/dice"
+            android:title="@string/random_card_header"
+            app:showAsAction="always|collapseActionView" />
+        <item
             android:id="@+id/action_music"
             android:icon="@drawable/music"
             android:title="@string/music_header"

@@ -91,9 +91,7 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
             holder.categoryCV.requestLayout();
         }
 
-        holder.categoryCV.setOnClickListener(v -> {
-            onClick.onItemClick(holder.item);
-        });
+        holder.categoryCV.setOnClickListener(v -> onClick.onItemClick(holder.item));
     }
 
     @Override

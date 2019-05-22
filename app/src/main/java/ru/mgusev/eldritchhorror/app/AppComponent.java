@@ -10,6 +10,7 @@ import ru.mgusev.eldritchhorror.adapter.MainAdapter;
 import ru.mgusev.eldritchhorror.adapter.RandomCardCategoryAdapter;
 import ru.mgusev.eldritchhorror.adapter.StatisticsAdapter;
 import ru.mgusev.eldritchhorror.auth.GoogleAuth;
+import ru.mgusev.eldritchhorror.presentation.presenter.dice.DicePresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.faq.FaqPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.forgotten_endings.ForgottenEndingsPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.random_card.RandomCardCategoryPresenter;
@@ -46,6 +47,7 @@ public interface AppComponent {
     void inject(FaqPresenter presenter);
     void inject(RandomCardCategoryPresenter presenter);
     void inject(RandomCardPresenter presenter);
+    void inject(DicePresenter presenter);
 
     void inject(MainAdapter adapter);
     void inject(InvestigatorChoiceAdapter adapter);

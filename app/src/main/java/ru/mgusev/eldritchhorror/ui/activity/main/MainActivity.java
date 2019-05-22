@@ -48,6 +48,7 @@ import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
 import ru.mgusev.eldritchhorror.support.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
+import ru.mgusev.eldritchhorror.ui.activity.dice.DiceActivity;
 import ru.mgusev.eldritchhorror.ui.activity.faq.FaqActivity;
 import ru.mgusev.eldritchhorror.ui.activity.forgotten_endings.ForgottenEndingsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
@@ -134,7 +135,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private void initDrawerMenu() {
         forgottenEndingsItem = navigationView.getMenu().getItem(1);
         statItem = navigationView.getMenu().getItem(0);
-        authItem = navigationView.getMenu().getItem(6);
+        authItem = navigationView.getMenu().getItem(7);
         mainPresenter.setVisibilityStatisticsMenuItem();
         mainPresenter.initAuthMenuItem();
         setVisibilityForgottenEndingsItem();
@@ -199,6 +200,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 closeDrawer();
                 Intent randomCardIntent = new Intent(this, RandomCardCategoryActivity.class);
                 startActivity(randomCardIntent);
+                return true;
+            case R.id.action_dice:
+                closeDrawer();
+                Intent diceIntent = new Intent(this, DiceActivity.class);
+                startActivity(diceIntent);
                 return true;
             default:
                 return true;
