@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
+import ru.mgusev.eldritchhorror.ui.adapter.pager.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorChoicePresenter;

@@ -2,15 +2,15 @@ package ru.mgusev.eldritchhorror.model;
 
 import android.os.Handler;
 
-import com.iigo.library.DiceLoadingView;
-
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicLong;
 
-import ru.mgusev.eldritchhorror.adapter.DiceItemPresenter;
-import ru.mgusev.eldritchhorror.presentation.presenter.dice.DicePresenter;
+import ru.mgusev.eldritchhorror.presentation.presenter.dice.DiceItemPresenter;
 import timber.log.Timber;
 
 public class Dice {
+
+    private static AtomicLong currentId = new AtomicLong(new Date().getTime());
 
     private long id;
     private int firstValue;
@@ -19,24 +19,17 @@ public class Dice {
     private int fourthValue;
     private int lineMode;
     private int rotateMode;
+    private int updateValuesTimeOut;
+    private int stopAnimationTimeOut;
+    private boolean animationMode;
 
     private DiceItemPresenter presenter;
     private boolean animationRun;
-    private boolean animationFinish = true;
 
     public Dice() {
-        id = new Date().getTime();
-        roll();
-        Timber.d(lineMode + " " + rotateMode);
-    }
-
-    public Dice(Dice dice) {
-        this.firstValue = dice.getFirstValue();
-        this.secondValue = dice.getSecondValue();
-        this.thirdValue = dice.getThirdValue();
-        this.fourthValue = dice.getFourthValue();
-        this.animationRun = dice.isAnimationRun();
-        this.animationFinish = dice.isAnimationFinish();
+        id = currentId.incrementAndGet();
+        initValues();
+        Timber.d(lineMode + " " + rotateMode + " " + firstValue);
     }
 
     private void initModes() {
@@ -159,102 +152,69 @@ public class Dice {
         return fourthValue;
     }
 
-    public int getLineMode() {
-        return lineMode;
+    public int getStopAnimationTimeOut() {
+        return stopAnimationTimeOut;
     }
 
-    public int getRotateMode() {
-        return rotateMode;
+    public boolean isAnimationMode() {
+        return animationMode;
     }
-
-    public void setDiceDLV(DiceLoadingView diceDLV) {
-//        if (this.diceDLV == null) {
-//            this.diceDLV = diceDLV;
-//        }
-//        //startAnimation();
-//
-//        if (!animationRun && !animationFinish) {
-//            this.diceDLV.setDuration(3000);
-//            this.diceDLV.start();
-//            stopAnimation();
-//            animationRun = true;
-//            animationFinish = false;
-//        } else if(!animationRun || animationFinish) {
-//            this.diceDLV.setDuration(0);
-//            this.diceDLV.stop();
-//        }
-    }
-
 
     private void startAnimation() {
-        animationRun = true;
-        animationFinish = false;
-        //presenter.startAnimation();
-        stopAnimation();
-
-//        if (!animationRun && !animationFinish) {
-//            if (diceDLV != null) {
-//
-//                new Handler().postDelayed(() -> {
-//                    if (diceDLV != null) {
-//                        diceDLV.setFirstSideDiceNumber(getFirstValue());
-//                        diceDLV.setSecondSideDiceNumber(getSecondValue());
-//                        diceDLV.setThirdSideDiceNumber(getThirdValue());
-//                        diceDLV.setFourthSideDiceNumber(getFourthValue());
-//                    }
-//                    animationRun = false;
-//                    animationFinish = true;
-//                }, 700);
-//
-//
-//                this.diceDLV.setDuration(3000);
-//                this.diceDLV.start();
-//            }
-//            stopAnimation();
-//            animationRun = true;
-//            animationFinish = false;
-//        } else if(diceDLV != null && (!animationRun || animationFinish)) {
-//            this.diceDLV.setDuration(0);
-//            this.diceDLV.stop();
-//        }
+        if (presenter != null)
+            presenter.updateAnimation(animationRun);
     }
 
     private void stopAnimation() {
         new Handler().postDelayed(() -> {
             animationRun = false;
-            animationFinish = true;
-            //presenter.stopAnimation();
-        }, 3000);
+            if (presenter != null)
+                presenter.updateAnimation(animationRun);
+        }, stopAnimationTimeOut);
     }
 
-    public void setAnimationRun(boolean animationRun) {
-        this.animationRun = animationRun;
-    }
-
-    public void setAnimationFinish(boolean animationFinish) {
-        this.animationFinish = animationFinish;
-    }
-
-    public boolean isAnimationRun() {
-        return animationRun;
-    }
-
-    public boolean isAnimationFinish() {
-        return animationFinish;
+    private void initValues() {
+        this.firstValue = 1 + (int) (Math.random() * 6);
+        Timber.d("ROLL DICE %s", id);
+        initModes();
+        initOtherValues();
     }
 
     public void roll() {
-        this.firstValue = 1 + (int) (Math.random() * 6);
-        initModes();
-        initOtherValues();
-        startAnimation();
-    }
+        if (!animationRun) {
+            initValues();
+            animationRun = true;
+            startAnimation();
 
-    public DiceItemPresenter getPresenter() {
-        return presenter;
+            new Handler().postDelayed(() -> {
+                if (presenter != null)
+                    presenter.updateDice();
+            }, updateValuesTimeOut);
+
+            stopAnimation();
+        }
     }
 
     public void setPresenter(DiceItemPresenter presenter) {
         this.presenter = presenter;
+        updateDice();
+    }
+
+    private void updateDice() {
+        if (presenter != null) {
+            presenter.updateDice();
+            presenter.updateAnimation(animationRun);
+        }
+    }
+
+    public void changeAnimationMode(boolean is3D) {
+        animationMode = is3D;
+        if (is3D) {
+            updateValuesTimeOut = 700;
+            stopAnimationTimeOut = 3000;
+        } else  {
+            updateValuesTimeOut = 250;
+            stopAnimationTimeOut = 500;
+        }
     }
 }

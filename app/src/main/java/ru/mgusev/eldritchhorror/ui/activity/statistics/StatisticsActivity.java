@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.adapter.StatisticsAdapter;
+import ru.mgusev.eldritchhorror.ui.adapter.statistics.StatisticsAdapter;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.statistics.StatisticsView;

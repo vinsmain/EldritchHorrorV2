@@ -1,8 +1,6 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
-import android.content.Intent;
 import android.net.Uri;
-import android.os.Parcelable;
 import android.support.v4.content.FileProvider;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -21,7 +19,7 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.BuildConfig;
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.ImageFile;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;

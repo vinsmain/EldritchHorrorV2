@@ -16,8 +16,8 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.app.App;
-import ru.mgusev.eldritchhorror.auth.GoogleAuth;
+import ru.mgusev.eldritchhorror.di.App;
+import ru.mgusev.eldritchhorror.utils.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.oldDB.DatabaseHelperOld;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;

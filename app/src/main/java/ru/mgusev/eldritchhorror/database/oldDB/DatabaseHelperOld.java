@@ -2,7 +2,6 @@ package ru.mgusev.eldritchhorror.database.oldDB;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.GenericRawResults;
@@ -18,7 +17,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import timber.log.Timber;

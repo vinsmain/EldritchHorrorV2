@@ -10,7 +10,7 @@ import java.io.File;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;

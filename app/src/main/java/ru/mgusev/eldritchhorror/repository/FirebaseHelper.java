@@ -1,7 +1,6 @@
 package ru.mgusev.eldritchhorror.repository;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +21,7 @@ import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.ImageFile;
 import timber.log.Timber;

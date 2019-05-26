@@ -12,7 +12,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Ending;
 import ru.mgusev.eldritchhorror.presentation.view.forgotten_endings.ForgottenEndingsView;
 import ru.mgusev.eldritchhorror.repository.Repository;

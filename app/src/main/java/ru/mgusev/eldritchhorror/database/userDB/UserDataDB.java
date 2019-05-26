@@ -3,9 +3,9 @@ package ru.mgusev.eldritchhorror.database.userDB;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
-import ru.mgusev.eldritchhorror.dao.GameDAO;
-import ru.mgusev.eldritchhorror.dao.ImageFileDAO;
-import ru.mgusev.eldritchhorror.dao.InvestigatorDAO;
+import ru.mgusev.eldritchhorror.database.dao.GameDAO;
+import ru.mgusev.eldritchhorror.database.dao.ImageFileDAO;
+import ru.mgusev.eldritchhorror.database.dao.InvestigatorDAO;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.ImageFile;
 import ru.mgusev.eldritchhorror.model.Investigator;

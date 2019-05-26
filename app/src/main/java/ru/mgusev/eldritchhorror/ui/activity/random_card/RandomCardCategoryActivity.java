@@ -22,7 +22,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.adapter.RandomCardCategoryAdapter;
+import ru.mgusev.eldritchhorror.ui.adapter.random_card.RandomCardCategoryAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
 import ru.mgusev.eldritchhorror.model.CardType;
 import ru.mgusev.eldritchhorror.presentation.presenter.random_card.RandomCardCategoryPresenter;

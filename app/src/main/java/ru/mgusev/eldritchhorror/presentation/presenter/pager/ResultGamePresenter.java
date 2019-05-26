@@ -9,13 +9,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Rumor;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 import ru.mgusev.eldritchhorror.repository.Repository;
-import ru.mgusev.eldritchhorror.support.FormattedTime;
+import ru.mgusev.eldritchhorror.utils.FormattedTime;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import timber.log.Timber;
 

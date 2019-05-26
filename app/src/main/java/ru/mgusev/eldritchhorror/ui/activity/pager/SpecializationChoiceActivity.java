@@ -12,7 +12,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.adapter.SpecializationChoiceAdapter;
+import ru.mgusev.eldritchhorror.ui.adapter.pager.SpecializationChoiceAdapter;
 import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.SpecializationChoicePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.SpecializationChoiceView;

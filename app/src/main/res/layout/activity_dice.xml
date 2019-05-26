@@ -29,20 +29,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    <Button
-        android:id="@+id/dice_reroll_all_btn"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
+    <TextView
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimaryLight"
-        android:backgroundTint="@color/colorAccent"
-        android:text="Перебросить все"
+        android:padding="@dimen/keyline_1_minus_8dp"
+        android:text="Число успехов"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dice_count_seekbar" />
+        app:layout_constraintTop_toBottomOf="@+id/dice_count_seekbar"></TextView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dice_rv"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/colorDivider"
         android:clipChildren="false"
@@ -51,12 +53,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dice_reroll_all_btn">
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
     </android.support.v7.widget.RecyclerView>
 
-    <include
-        layout="@layout/loader"
-        android:id="@+id/loader" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/dice_reroll_all_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="86dp"
+        android:src="@drawable/dice_reroll"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

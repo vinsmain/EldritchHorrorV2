@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.presentation.view.pager.SpecializationChoiceView;
 import ru.mgusev.eldritchhorror.repository.Repository;

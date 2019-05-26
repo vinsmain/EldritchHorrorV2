@@ -388,5 +388,8 @@
     <string name="random_card_copyright">idea - Alexander Kondratkov</string>
     <string name="random_card_keep_screen_on">Keep screen on</string>
     <string name="random_card_not_keep_screen_on">Not keep screen on</string>
+    <string name="dice_header">Dice</string>
+    <string name="animation_3d_header">Animation 3D</string>
+    <string name="animation_2D_header">Animation 2D</string>
 
 </resources>

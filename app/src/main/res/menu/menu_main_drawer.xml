@@ -23,8 +23,8 @@
             app:showAsAction="always|collapseActionView" />
         <item
             android:id="@+id/action_dice"
-            android:icon="@drawable/dice"
-            android:title="@string/random_card_header"
+            android:icon="@drawable/dice_menu_icon"
+            android:title="@string/dice_header"
             app:showAsAction="always|collapseActionView" />
         <item
             android:id="@+id/action_music"

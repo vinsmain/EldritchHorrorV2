@@ -26,6 +26,8 @@
         app:thirdSideDiceBgColor="@color/color_dice_bg"
         app:thirdSideDiceBorderColor="@color/color_dice_border"
         app:thirdSideDiceNumber="3"
-        app:thirdSideDicePointColor="@color/color_dice_point" />
+        app:thirdSideDicePointColor="@color/color_dice_point" >
+
+    </com.iigo.library.DiceLoadingView>
 
 </LinearLayout>

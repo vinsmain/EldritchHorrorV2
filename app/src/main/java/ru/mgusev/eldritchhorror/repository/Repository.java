@@ -31,6 +31,7 @@ import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Card;
 import ru.mgusev.eldritchhorror.model.CardType;
+import ru.mgusev.eldritchhorror.model.Dice;
 import ru.mgusev.eldritchhorror.model.Ending;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -38,7 +39,7 @@ import ru.mgusev.eldritchhorror.model.ImageFile;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.model.Prelude;
-import ru.mgusev.eldritchhorror.app.AppModule;
+import ru.mgusev.eldritchhorror.di.module.AppModule;
 import ru.mgusev.eldritchhorror.model.Rumor;
 import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
@@ -69,6 +70,8 @@ public class Repository {
     private PublishSubject<Boolean> selectAllPhotoPublish;
     private PublishSubject<Boolean> deleteSelectImagesPublish;
     private PublishSubject<Boolean> shareImagePublish;
+    private PublishSubject<List<Dice>> updateDiceListPublish;
+    private PublishSubject<Boolean> changeAnimationModePublish;
 
     private CompositeDisposable firebaseDBSubscribe;
     private CompositeDisposable firebaseFilesSubscribe;
@@ -108,6 +111,8 @@ public class Repository {
         selectAllPhotoPublish = PublishSubject.create();
         deleteSelectImagesPublish = PublishSubject.create();
         shareImagePublish = PublishSubject.create();
+        updateDiceListPublish = PublishSubject.create();
+        changeAnimationModePublish = PublishSubject.create();
 
         uploadFileSubscribe = new CompositeDisposable();
         uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile, Timber::d));
@@ -857,5 +862,38 @@ public class Repository {
 
     public boolean getScreenLight() {
         return prefHelper.loadIsScreenLight();
+    }
+
+    public void setAnimationMode(boolean animationMode) {
+        prefHelper.saveAnimationMode(animationMode);
+    }
+
+    public boolean getAnimationMode() {
+        return prefHelper.loadAnimationMode();
+    }
+
+    public void setDiceCount(int diceCount) {
+        prefHelper.saveDiceCount(diceCount);
+    }
+
+    public int getDiceCount() {
+        return prefHelper.loadDiceCount();
+    }
+
+    public PublishSubject<List<Dice>> getUpdateDiceListPublish() {
+        return updateDiceListPublish;
+    }
+
+    public void updateDiceListOnNext(List<Dice> list) {
+        updateDiceListPublish.onNext(list);
+    }
+
+    public PublishSubject<Boolean> getChangeAnimationModePublish() {
+        return changeAnimationModePublish;
+    }
+
+    public void changeAnimationModeOnNext(boolean mode) {
+        Timber.d(String.valueOf(mode));
+        changeAnimationModePublish.onNext(mode);
     }
 }

@@ -2,12 +2,8 @@ package ru.mgusev.eldritchhorror.presentation.view.dice;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
-
-import java.util.List;
-
-import ru.mgusev.eldritchhorror.model.Dice;
 
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface DiceView extends MvpView {
@@ -16,11 +12,10 @@ public interface DiceView extends MvpView {
 
     void setScreenLightFlags(boolean isScreenLightOn);
 
+    void setVisibilityAnimationModeButtons();
+
+    @StateStrategyType(OneExecutionStateStrategy.class)
+    void setInitialValueForSeekBar(int value);
+
     void setDiceCountValue(String value);
-
-    void updateDiceList(List<Dice> diceList);
-
-    void startAnimation();
-
-    void stopAnimation();
 }

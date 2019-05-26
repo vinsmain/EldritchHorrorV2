@@ -369,5 +369,8 @@
     <string name="random_card_copyright">идея - Александр Кондратков</string>
     <string name="random_card_keep_screen_on">Держать экран включенным</string>
     <string name="random_card_not_keep_screen_on">Не держать экран включенным</string>
+    <string name="dice_header">Кубики</string>
+    <string name="animation_3d_header">Эффект анимации 3D</string>
+    <string name="animation_2D_header">Эффект анимации 2D</string>
 
 </resources>

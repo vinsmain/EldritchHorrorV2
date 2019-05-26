@@ -5,17 +5,13 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.subjects.PublishSubject;
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Dice;
 import ru.mgusev.eldritchhorror.presentation.view.dice.DiceView;
 import ru.mgusev.eldritchhorror.repository.Repository;
-import timber.log.Timber;
 
 @InjectViewState
 public class DicePresenter extends MvpPresenter<DiceView> {
@@ -24,20 +20,19 @@ public class DicePresenter extends MvpPresenter<DiceView> {
     Repository repository;
 
     private List<Dice> diceList;
-    private PublishSubject<Boolean> updateDiceListPublish;
-    private CompositeDisposable updateDiceListSubscribe;
 
     public DicePresenter() {
         App.getComponent().inject(this);
         diceList = new ArrayList<>();
-        updateDiceListPublish = PublishSubject.create();
-        updateDiceListSubscribe = new CompositeDisposable();
-        updateDiceListSubscribe.add(updateDiceListPublish.throttleFirst(1000, TimeUnit.MILLISECONDS).subscribe(this::updateDiceList, Timber::e));
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
+        onDiceCountSeekBarStopChangeProgress(repository.getDiceCount());
+        getViewState().setScreenLightFlags(repository.getScreenLight());
+        getViewState().setInitialValueForSeekBar(repository.getDiceCount());
+        repository.changeAnimationModeOnNext(repository.getAnimationMode());
     }
 
     public void onDiceCountSeekBarChangeProgress(int progress) {
@@ -45,8 +40,9 @@ public class DicePresenter extends MvpPresenter<DiceView> {
     }
 
     public void onDiceCountSeekBarStopChangeProgress(int progress) {
+        repository.setDiceCount(progress);
         initDiceList(progress);
-        getViewState().updateDiceList(diceList);
+        repository.changeAnimationModeOnNext(repository.getAnimationMode());
     }
 
     private void initDiceList(int diceCount) {
@@ -57,6 +53,7 @@ public class DicePresenter extends MvpPresenter<DiceView> {
                 diceList.remove(diceList.size() - 1);
             }
         }
+        repository.updateDiceListOnNext(diceList);
     }
 
     public boolean getScreenLight() {
@@ -70,41 +67,18 @@ public class DicePresenter extends MvpPresenter<DiceView> {
     }
 
     public void onClickRerollAllBtn() {
-        Timber.d("reroll");
-        List<Dice> temp = new ArrayList<>();
         for (Dice dice : diceList) {
             dice.roll();
-            //temp.add(new Dice());
         }
-        //diceList = temp;
-        getViewState().updateDiceList(diceList);
     }
 
-    public void onClickRerollOneDice(Dice clickedDice) {
-        for (Dice dice : diceList) {
-            if (clickedDice.getId() == dice.getId()) {
-                dice.roll();
-            }
-        }
-        //getViewState().updateDiceList(diceList);
+    public boolean getAnimationMode() {
+        return repository.getAnimationMode();
     }
 
-    public void onNextUpdateDiceListPublish() {
-        updateDiceListPublish.onNext(true);
-    }
-
-    public void updateDiceList(boolean value) {
-        List<Dice> temp = new ArrayList<>();
-        for (Dice dice : diceList) {
-            //dice.roll();
-            temp.add(new Dice(dice));
-        }
-        getViewState().updateDiceList(temp);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        updateDiceListSubscribe.dispose();
+    public void onAnimationModeClick(boolean is3D) {
+        repository.setAnimationMode(is3D);
+        getViewState().setVisibilityAnimationModeButtons();
+        repository.changeAnimationModeOnNext(is3D);
     }
 }
