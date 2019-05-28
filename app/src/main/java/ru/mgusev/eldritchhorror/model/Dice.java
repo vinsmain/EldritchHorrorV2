@@ -22,7 +22,7 @@ public class Dice {
     private int updateValuesTimeOut;
     private int stopAnimationTimeOut;
     private boolean animationMode;
-
+    private int successMode;
     private DiceItemPresenter presenter;
     private boolean animationRun;
 
@@ -160,6 +160,10 @@ public class Dice {
         return animationMode;
     }
 
+    public int getSuccessMode() {
+        return successMode;
+    }
+
     private void startAnimation() {
         if (presenter != null)
             presenter.updateAnimation(animationRun);
@@ -193,6 +197,7 @@ public class Dice {
 
             stopAnimation();
         }
+        Timber.d(String.valueOf(successMode));
     }
 
     public void setPresenter(DiceItemPresenter presenter) {
@@ -216,5 +221,11 @@ public class Dice {
             updateValuesTimeOut = 250;
             stopAnimationTimeOut = 500;
         }
+    }
+
+    public void changeSuccessMode(int mode) {
+        successMode = mode;
+        if (presenter != null)
+            presenter.updateDice();
     }
 }

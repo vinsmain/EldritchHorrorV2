@@ -96,10 +96,12 @@ public class DiceItemHolder extends RecyclerView.ViewHolder implements DiceItemV
         diceDLV.setThirdSideDiceNumber(dice.getThirdValue());
         diceDLV.setFourthSideDiceNumber(dice.getFourthValue());
 
-        diceDLV.setFirstSidePointColor(dice.getFirstValue() > 4 ? successColorId : defaultColorId);
-        diceDLV.setSecondSidePointColor(dice.getSecondValue() > 4 ? successColorId : defaultColorId);
-        diceDLV.setThirdSidePointColor(dice.getThirdValue() > 4 ? successColorId : defaultColorId);
-        diceDLV.setFourthSidePointColor(dice.getFourthValue() > 4 ? successColorId : defaultColorId);
+        Timber.d(String.valueOf(dice.getSuccessMode()));
+
+        diceDLV.setFirstSidePointColor(dice.getFirstValue() >= dice.getSuccessMode() ? successColorId : defaultColorId);
+        diceDLV.setSecondSidePointColor(dice.getSecondValue() >= dice.getSuccessMode() ? successColorId : defaultColorId);
+        diceDLV.setThirdSidePointColor(dice.getThirdValue() >= dice.getSuccessMode() ? successColorId : defaultColorId);
+        diceDLV.setFourthSidePointColor(dice.getFourthValue() >= dice.getSuccessMode() ? successColorId : defaultColorId);
     }
 
     private MvpDelegate<DiceItemHolder> getMvpDelegate() {

@@ -24,6 +24,7 @@ public class DiceAdapterPresenter extends MvpPresenter<DiceAdapterView> {
     private List<Dice> diceList;
     private CompositeDisposable updateDiceListSubscribe;
     private CompositeDisposable changeAnimationModeSubscribe;
+    private CompositeDisposable changeSuccessModeSubscribe;
 
 
     public DiceAdapterPresenter() {
@@ -43,6 +44,9 @@ public class DiceAdapterPresenter extends MvpPresenter<DiceAdapterView> {
 
         changeAnimationModeSubscribe = new CompositeDisposable();
         changeAnimationModeSubscribe.add(repository.getChangeAnimationModePublish().subscribe(this::changeAnimationMode, Timber::d));
+
+        changeSuccessModeSubscribe = new CompositeDisposable();
+        changeSuccessModeSubscribe.add(repository.getChangeSuccessModePublish().subscribe(this::changeSuccessMode, Timber::d));
     }
 
     private void changeDiceList(List<Dice> list) {
@@ -57,10 +61,18 @@ public class DiceAdapterPresenter extends MvpPresenter<DiceAdapterView> {
         }
     }
 
+    private void changeSuccessMode(int mode) {
+        Timber.d(String.valueOf(mode));
+        for (Dice dice : diceList) {
+            dice.changeSuccessMode(mode);
+        }
+    }
+
     @Override
     public void destroyView(DiceAdapterView view) {
         super.destroyView(view);
         updateDiceListSubscribe.dispose();
         changeAnimationModeSubscribe.dispose();
+        changeSuccessModeSubscribe.dispose();
     }
 }

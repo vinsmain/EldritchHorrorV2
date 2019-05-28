@@ -33,6 +33,7 @@ public class DicePresenter extends MvpPresenter<DiceView> {
         getViewState().setScreenLightFlags(repository.getScreenLight());
         getViewState().setInitialValueForSeekBar(repository.getDiceCount());
         repository.changeAnimationModeOnNext(repository.getAnimationMode());
+        repository.changeSuccessModeOnNext(repository.getSuccessMode());
     }
 
     public void onDiceCountSeekBarChangeProgress(int progress) {
@@ -80,5 +81,15 @@ public class DicePresenter extends MvpPresenter<DiceView> {
         repository.setAnimationMode(is3D);
         getViewState().setVisibilityAnimationModeButtons();
         repository.changeAnimationModeOnNext(is3D);
+    }
+
+    public void onSuccessModeClick(int mode) {
+        repository.setSuccessMode(mode);
+        getViewState().setVisibilitySuccessModeButtons();
+        repository.changeSuccessModeOnNext(mode);
+    }
+
+    public int getSuccessMode() {
+        return repository.getSuccessMode();
     }
 }

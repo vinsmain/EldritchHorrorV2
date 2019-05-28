@@ -57,6 +57,9 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
     private MenuItem animation2DMode;
     private MenuItem animation3DMode;
     private MenuItem diceCount;
+    private MenuItem successMode6;
+    private MenuItem successMode5;
+    private MenuItem successMode4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +110,13 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
         animation2DMode = menu.findItem(R.id.action_2d_animation);
         animation3DMode = menu.findItem(R.id.action_3d_animation);
         diceCount = menu.findItem(R.id.dice_count);
+        successMode6 = menu.findItem(R.id.action_success_mode_6);
+        successMode5 = menu.findItem(R.id.action_success_mode_5);
+        successMode4 = menu.findItem(R.id.action_success_mode_4);
         setDiceCountValue(String.valueOf(minDiceCount + diceCountSeekBar.getProgress()));
         setVisibilityScreenLightButtons();
         setVisibilityAnimationModeButtons();
+        setVisibilitySuccessModeButtons();
         return true;
     }
 
@@ -127,6 +134,15 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
                 return true;
             case R.id.action_3d_animation:
                 dicePresenter.onAnimationModeClick(false);
+                return true;
+            case R.id.action_success_mode_6:
+                dicePresenter.onSuccessModeClick(4);
+                return true;
+            case R.id.action_success_mode_5:
+                dicePresenter.onSuccessModeClick(6);
+                return true;
+            case R.id.action_success_mode_4:
+                dicePresenter.onSuccessModeClick(5);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -156,6 +172,16 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
             animation3DMode.setVisible(dicePresenter.getAnimationMode());
         if (animation2DMode != null)
             animation2DMode.setVisible(!dicePresenter.getAnimationMode());
+    }
+
+    @Override
+    public void setVisibilitySuccessModeButtons() {
+        if (successMode6 != null)
+            successMode6.setVisible(dicePresenter.getSuccessMode() == 6);
+        if (successMode5 != null)
+            successMode5.setVisible(dicePresenter.getSuccessMode() == 5);
+        if (successMode4 != null)
+            successMode4.setVisible(dicePresenter.getSuccessMode() == 4);
     }
 
     @Override

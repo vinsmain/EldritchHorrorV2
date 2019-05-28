@@ -15,6 +15,7 @@ public class PrefHelper {
     private static final String SETTINGS_IS_SCREEN_LIGHT = "settings_is_screen_light";
     private static final String SETTINGS_ANIMATION_MODE = "settings_animation_mode";
     private static final String SETTINGS_DICE_COUNT = "settings_dice_count";
+    private static final String SETTINGS_SUCCESS_MODE = "settings_success_mode";
 
     public PrefHelper(Context context) {
         this.context = context;
@@ -108,5 +109,28 @@ public class PrefHelper {
     public int loadDiceCount() {
         sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
         return sPref.getInt(SETTINGS_DICE_COUNT, 6);
+    }
+
+    /**
+     * Сохраняет значение режима выделения успехов на кубиках
+     * @param mode - режим успехов
+     * 6 - успехи только 6
+     * 5 - успехи 6 и 5
+     * 4 - успехи 6, 5, 4
+     */
+    public void saveSuccessMode(int mode) {
+        sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+        Editor ed = sPref.edit();
+        ed.putInt(SETTINGS_SUCCESS_MODE, mode);
+        ed.apply();
+    }
+
+    /**
+     * Возвращает режим успехов на кубиках
+     * @return - режим успехов
+     */
+    public int loadSuccessMode() {
+        sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+        return sPref.getInt(SETTINGS_SUCCESS_MODE, 5);
     }
 }

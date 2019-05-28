@@ -14,6 +14,8 @@ public interface DiceView extends MvpView {
 
     void setVisibilityAnimationModeButtons();
 
+    void setVisibilitySuccessModeButtons();
+
     @StateStrategyType(OneExecutionStateStrategy.class)
     void setInitialValueForSeekBar(int value);
 
