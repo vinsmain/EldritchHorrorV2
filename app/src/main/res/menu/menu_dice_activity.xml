@@ -10,19 +10,19 @@
     <item
         android:id="@+id/action_success_mode_6"
         android:icon="@drawable/dice_success_mode_6"
-        android:title="@string/animation_2D_header"
+        android:title="@string/dice_success_mode_6_header"
         app:showAsAction="always|collapseActionView" />
 
     <item
         android:id="@+id/action_success_mode_5"
         android:icon="@drawable/dice_success_mode_5"
-        android:title="@string/animation_2D_header"
+        android:title="@string/dice_success_mode_5_header"
         app:showAsAction="always|collapseActionView" />
 
     <item
         android:id="@+id/action_success_mode_4"
         android:icon="@drawable/dice_success_mode_4"
-        android:title="@string/animation_2D_header"
+        android:title="@string/dice_success_mode_4_header"
         app:showAsAction="always|collapseActionView" />
 
     <item

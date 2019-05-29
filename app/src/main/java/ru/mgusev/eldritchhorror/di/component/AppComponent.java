@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import ru.mgusev.eldritchhorror.di.module.AppModule;
 import ru.mgusev.eldritchhorror.presentation.presenter.dice.DiceAdapterPresenter;
+import ru.mgusev.eldritchhorror.presentation.presenter.dice.DiceItemPresenter;
 import ru.mgusev.eldritchhorror.ui.adapter.details.DetailsAdapter;
 import ru.mgusev.eldritchhorror.ui.adapter.faq.FaqAdapter;
 import ru.mgusev.eldritchhorror.ui.adapter.pager.InvestigatorChoiceAdapter;
@@ -51,6 +52,7 @@ public interface AppComponent {
     void inject(RandomCardPresenter presenter);
     void inject(DicePresenter presenter);
     void inject(DiceAdapterPresenter presenter);
+    void inject(DiceItemPresenter presenter);
 
     void inject(MainAdapter adapter);
     void inject(InvestigatorChoiceAdapter adapter);

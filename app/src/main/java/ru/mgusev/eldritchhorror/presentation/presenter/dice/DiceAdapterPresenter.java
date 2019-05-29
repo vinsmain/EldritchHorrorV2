@@ -29,16 +29,16 @@ public class DiceAdapterPresenter extends MvpPresenter<DiceAdapterView> {
 
     public DiceAdapterPresenter() {
         App.getComponent().inject(this);
-        initSubscribe();
+        initSubscribes();
     }
 
     @Override
     public void attachView(DiceAdapterView view) {
         super.attachView(view);
-        initSubscribe();
+        //initSubscribe();
     }
 
-    private void initSubscribe() {
+    private void initSubscribes() {
         updateDiceListSubscribe = new CompositeDisposable();
         updateDiceListSubscribe.add(repository.getUpdateDiceListPublish().subscribe(this::changeDiceList, Timber::d));
 
@@ -69,10 +69,18 @@ public class DiceAdapterPresenter extends MvpPresenter<DiceAdapterView> {
     }
 
     @Override
-    public void destroyView(DiceAdapterView view) {
-        super.destroyView(view);
+    public void onDestroy() {
+        super.onDestroy();
         updateDiceListSubscribe.dispose();
         changeAnimationModeSubscribe.dispose();
         changeSuccessModeSubscribe.dispose();
+    }
+
+    @Override
+    public void destroyView(DiceAdapterView view) {
+        super.destroyView(view);
+//        updateDiceListSubscribe.dispose();
+//        changeAnimationModeSubscribe.dispose();
+//        changeSuccessModeSubscribe.dispose();
     }
 }

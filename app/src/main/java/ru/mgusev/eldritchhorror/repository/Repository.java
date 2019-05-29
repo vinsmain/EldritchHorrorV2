@@ -73,6 +73,7 @@ public class Repository {
     private PublishSubject<List<Dice>> updateDiceListPublish;
     private PublishSubject<Boolean> changeAnimationModePublish;
     private PublishSubject<Integer> changeSuccessModePublish;
+    private PublishSubject<Integer> changeSuccessCountPublish;
 
     private CompositeDisposable firebaseDBSubscribe;
     private CompositeDisposable firebaseFilesSubscribe;
@@ -115,6 +116,7 @@ public class Repository {
         updateDiceListPublish = PublishSubject.create();
         changeAnimationModePublish = PublishSubject.create();
         changeSuccessModePublish = PublishSubject.create();
+        changeSuccessCountPublish = PublishSubject.create();
 
         uploadFileSubscribe = new CompositeDisposable();
         uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile, Timber::d));
@@ -914,5 +916,14 @@ public class Repository {
     public void changeSuccessModeOnNext(int mode) {
         Timber.d(String.valueOf(mode));
         changeSuccessModePublish.onNext(mode);
+    }
+
+    public PublishSubject<Integer> getChangeSuccessCountPublish() {
+        return changeSuccessCountPublish;
+    }
+
+    public void changeSuccessCountOnNext(int count) {
+        Timber.d(String.valueOf(count));
+        changeSuccessCountPublish.onNext(count);
     }
 }

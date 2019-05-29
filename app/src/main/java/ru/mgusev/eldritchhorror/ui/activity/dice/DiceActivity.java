@@ -15,8 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -46,8 +46,8 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
     SeekBar diceCountSeekBar;
     @BindView(R.id.dice_reroll_all_fab)
     FloatingActionButton rerollAllFAB;
-
-    //TODO Добавить название для success mode в ресурсы, реализовать смену success mode
+    @BindView(R.id.dice_success_count)
+    TextView successCountTV;
 
     private DiceAdapter adapter;
     private int minDiceCount = 1;
@@ -60,6 +60,7 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
     private MenuItem successMode6;
     private MenuItem successMode5;
     private MenuItem successMode4;
+    private String successCountHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +92,8 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
                     rerollAllFAB.show();
                 }
             }});
+
+        successCountHeader = getResources().getString(R.string.number_of_successes_header);
     }
 
     private void initToolbar() {
@@ -213,6 +216,12 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
             spanString.setSpan(new ForegroundColorSpan(Color.WHITE), 0, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             diceCount.setTitle(spanString);
         }
+    }
+
+    @Override
+    public void setSuccessCount(String count) {
+        String result = successCountHeader + count;
+        successCountTV.setText(result);
     }
 
     @OnClick(R.id.dice_reroll_all_fab)

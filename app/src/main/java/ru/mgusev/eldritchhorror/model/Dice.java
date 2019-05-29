@@ -225,7 +225,9 @@ public class Dice {
 
     public void changeSuccessMode(int mode) {
         successMode = mode;
-        if (presenter != null)
+        if (presenter != null) {
             presenter.updateDice();
+            presenter.updateSuccessCount();
+        }
     }
 }

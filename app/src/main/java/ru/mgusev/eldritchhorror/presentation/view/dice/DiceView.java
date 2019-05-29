@@ -20,4 +20,6 @@ public interface DiceView extends MvpView {
     void setInitialValueForSeekBar(int value);
 
     void setDiceCountValue(String value);
+
+    void setSuccessCount(String count);
 }

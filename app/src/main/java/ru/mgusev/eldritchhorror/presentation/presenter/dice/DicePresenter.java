@@ -8,10 +8,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Dice;
 import ru.mgusev.eldritchhorror.presentation.view.dice.DiceView;
 import ru.mgusev.eldritchhorror.repository.Repository;
+import timber.log.Timber;
 
 @InjectViewState
 public class DicePresenter extends MvpPresenter<DiceView> {
@@ -20,10 +22,13 @@ public class DicePresenter extends MvpPresenter<DiceView> {
     Repository repository;
 
     private List<Dice> diceList;
+    private CompositeDisposable changeSuccessCountSubscribe;
 
     public DicePresenter() {
         App.getComponent().inject(this);
         diceList = new ArrayList<>();
+        changeSuccessCountSubscribe = new CompositeDisposable();
+        changeSuccessCountSubscribe.add(repository.getChangeSuccessCountPublish().subscribe(this::calculateSuccessCount, Timber::d));
     }
 
     @Override
@@ -91,5 +96,21 @@ public class DicePresenter extends MvpPresenter<DiceView> {
 
     public int getSuccessMode() {
         return repository.getSuccessMode();
+    }
+
+    public void calculateSuccessCount(int value) {
+        int count = 0;
+        for (Dice dice : diceList) {
+            if (dice.getFirstValue() >= dice.getSuccessMode()) {
+                count++;
+            }
+        }
+        getViewState().setSuccessCount(String.valueOf(count));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        changeSuccessCountSubscribe.dispose();
     }
 }

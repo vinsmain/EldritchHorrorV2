@@ -87,6 +87,8 @@ public class DiceItemHolder extends RecyclerView.ViewHolder implements DiceItemV
         diceDLV.setDuration(0);
         diceDLV.stop();
         Timber.d("STOP ANIMATION");
+
+        presenter.updateSuccessCount();
     }
 
     @Override

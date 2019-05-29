@@ -373,5 +373,9 @@
     <string name="dice_header">Кубики</string>
     <string name="animation_3d_header">Эффект анимации 3D</string>
     <string name="animation_2D_header">Эффект анимации 2D</string>
+    <string name="number_of_successes_header">"Число успехов: "</string>
+    <string name="dice_success_mode_4_header">Успехи: 4, 5, 6</string>
+    <string name="dice_success_mode_5_header">Успехи: 5, 6</string>
+    <string name="dice_success_mode_6_header">Успехи: 6</string>
 
 </resources>
