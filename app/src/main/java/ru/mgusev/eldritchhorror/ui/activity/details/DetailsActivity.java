@@ -406,16 +406,6 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     @Override
-    public void onEditClick(int position) {
-
-    }
-
-    @Override
-    public void onDeleteClick(int position) {
-
-    }
-
-    @Override
     public void openFullScreenPhotoViewer() {
         imageViewer = new ImageViewer.Builder(this, imagePathList)
                 .setImageChangeListener(this)

@@ -39,8 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
 import ru.mgusev.eldritchhorror.ui.adapter.main.MainAdapter;
-import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
@@ -56,7 +56,7 @@ import ru.mgusev.eldritchhorror.ui.activity.random_card.RandomCardCategoryActivi
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 import timber.log.Timber;
 
-public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClickedReturnObj, NavigationView.OnNavigationItemSelectedListener {
 
     public static boolean initialized;
 
@@ -388,30 +388,25 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
-    public void onItemClick(int position) {
-        mainPresenter.setCurrentGame(position);
-        intentToDetails();
+    public void onItemClick(Object item) {
+        if (item instanceof Game) {
+            mainPresenter.setCurrentGame((Game) item);
+            intentToDetails();
+        }
     }
 
     @Override
-    public void onItemLongClick(int position) {
-
+    public void onEditClick(Object item) {
+        if (item instanceof Game) {
+            mainPresenter.setCurrentGame((Game) item);
+            intentToPager();
+        }
     }
 
     @Override
-    public void onEditClick(int position) {
-        mainPresenter.setCurrentGame(position);
-        intentToPager();
-    }
-
-    @Override
-    public void onDeleteClick(int position) {
-        mainPresenter.showDeleteDialog(position);
-    }
-
-    @Override
-    public void deleteGame(int position, List<Game> gameList) {
-        adapter.deleteGame(position, gameList);
+    public void onDeleteClick(Object item) {
+        if (item instanceof Game)
+            mainPresenter.showDeleteDialog((Game) item);
     }
 
     @Override

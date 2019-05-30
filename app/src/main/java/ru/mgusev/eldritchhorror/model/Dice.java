@@ -184,6 +184,12 @@ public class Dice {
         initOtherValues();
     }
 
+    public void immediateStopAnimation() {
+        animationRun = false;
+        if (presenter != null)
+            presenter.updateAnimation(animationRun);
+    }
+
     public void roll() {
         if (!animationRun) {
             initValues();

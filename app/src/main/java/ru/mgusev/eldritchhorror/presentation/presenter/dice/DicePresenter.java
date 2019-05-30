@@ -98,7 +98,7 @@ public class DicePresenter extends MvpPresenter<DiceView> {
         return repository.getSuccessMode();
     }
 
-    public void calculateSuccessCount(int value) {
+    private void calculateSuccessCount(int value) {
         int count = 0;
         for (Dice dice : diceList) {
             if (dice.getFirstValue() >= dice.getSuccessMode()) {

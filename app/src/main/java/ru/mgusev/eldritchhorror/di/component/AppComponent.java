@@ -8,6 +8,7 @@ import ru.mgusev.eldritchhorror.presentation.presenter.dice.DiceAdapterPresenter
 import ru.mgusev.eldritchhorror.presentation.presenter.dice.DiceItemPresenter;
 import ru.mgusev.eldritchhorror.ui.adapter.details.DetailsAdapter;
 import ru.mgusev.eldritchhorror.ui.adapter.faq.FaqAdapter;
+import ru.mgusev.eldritchhorror.ui.adapter.main.GameDiffUtilCallback;
 import ru.mgusev.eldritchhorror.ui.adapter.pager.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.ui.adapter.main.MainAdapter;
 import ru.mgusev.eldritchhorror.ui.adapter.random_card.RandomCardCategoryAdapter;
@@ -60,6 +61,8 @@ public interface AppComponent {
     void inject(StatisticsAdapter adapter);
     void inject(FaqAdapter adapter);
     void inject(RandomCardCategoryAdapter adapter);
+
+    void inject(GameDiffUtilCallback diffUtilCallback);
 
     void inject(FirebaseHelper helper);
     void inject(GoogleAuth googleAuth);

@@ -63,9 +63,6 @@ public interface MainView extends MvpView {
     void intentToGooglePlay();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void deleteGame(int position, List<Game> gameList);
-
-    @StateStrategyType(AddToEndSingleStrategy.class)
     void setStatistics(int gameCount, int bestScore, int worstScore);
 
     @StateStrategyType(AddToEndSingleStrategy.class)

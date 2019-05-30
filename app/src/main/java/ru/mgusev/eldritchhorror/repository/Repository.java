@@ -526,6 +526,7 @@ public class Repository {
             Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
         }
         firebaseHelper.removeGame(game);
+        gameListOnNext();
     }
 
     private void deleteGameFromDB(Game game) {
@@ -726,6 +727,7 @@ public class Repository {
     public void addImageFile(ImageFile file) {
         userDataDB.imageFileDAO().insertImageFile(file);
         firebaseHelper.addFile(file);
+        gameListOnNext();
     }
 
     public ImageFile getImageFile(String name) {
@@ -737,6 +739,7 @@ public class Repository {
             userDataDB.imageFileDAO().deleteImageFile(file);
             firebaseHelper.removeFile(file);
             firebaseHelper.deleteFileFromFirebaseStorage(file);
+            gameListOnNext();
         }
     }
 
@@ -745,9 +748,13 @@ public class Repository {
     }
 
     public void removeImageFile(long gameId) {
-        for (ImageFile file : userDataDB.imageFileDAO().getImageFileList(gameId)) {
+        for (ImageFile file : getImageFileListByGameId(gameId)) {
             removeImageFile(file);
         }
+    }
+
+    public List<ImageFile> getImageFileListByGameId(long gameId) {
+        return userDataDB.imageFileDAO().getImageFileList(gameId);
     }
 
     public void sendFileToStorage(Uri file, long gameId) {

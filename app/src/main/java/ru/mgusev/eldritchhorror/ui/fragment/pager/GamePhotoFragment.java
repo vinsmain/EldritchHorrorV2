@@ -213,16 +213,6 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     }
 
     @Override
-    public void onEditClick(int position) {
-
-    }
-
-    @Override
-    public void onDeleteClick(int position) {
-
-    }
-
-    @Override
     public void selectGalleryItem(List<String> list, int position) {
         galleryAdapter.selectGalleryItem(list, position);
     }

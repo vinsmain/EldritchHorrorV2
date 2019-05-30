@@ -3,6 +3,7 @@ package ru.mgusev.eldritchhorror.ui.adapter.main;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.di.App;
-import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
+import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -56,6 +57,8 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
         @BindView(R.id.gallery_icon) ImageView galleryIW;
         @BindView(R.id.comment_icon) ImageView commentIW;
 
+        private Game item;
+
         MainViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -77,7 +80,7 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
     @Inject
     List<Expansion> expansionList;
     //declare interface
-    private OnItemClicked onClick;
+    private OnItemClickedReturnObj onClick;
     private List<Game> gameList;
 
     private Context context;
@@ -90,15 +93,10 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
     }
 
     public void updateGameList(List<Game> gameList) {
-        notifyItemRangeRemoved(0, getItemCount());
-        this.gameList = gameList;
-        notifyItemRangeInserted(0, getItemCount());
-    }
-
-    public void deleteGame(int position, List<Game> gameList) {
-        this.gameList = gameList;
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, getItemCount());
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new GameDiffUtilCallback(this.gameList, gameList), false);
+        this.gameList.clear();
+        this.gameList.addAll(gameList);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @NonNull
@@ -110,6 +108,7 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final MainViewHolder holder, final int position) {
+        holder.item = gameList.get(position);
 
         holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 
@@ -160,14 +159,14 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
 
         holder.cardView.setOnClickListener(v -> {
             //v.startAnimation(animAlpha);
-            onClick.onItemClick(position);
+            onClick.onItemClick(holder.item);
         });
 
         holder.cardView.setOnLongClickListener(view -> false);
 
-        holder.editImgSwipe.setOnClickListener(v -> onClick.onEditClick(position));
+        holder.editImgSwipe.setOnClickListener(v -> onClick.onEditClick(holder.item));
 
-        holder.deleteImgSwipe.setOnClickListener(v -> onClick.onDeleteClick(position));
+        holder.deleteImgSwipe.setOnClickListener(v -> onClick.onDeleteClick(holder.item));
     }
 
     private AncientOne getAncientOne(int id) {
@@ -193,7 +192,7 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
         return gameList.size();
     }
 
-    public void setOnClick(OnItemClicked onClick) {
+    public void setOnClick(OnItemClickedReturnObj onClick) {
         this.onClick = onClick;
     }
 }

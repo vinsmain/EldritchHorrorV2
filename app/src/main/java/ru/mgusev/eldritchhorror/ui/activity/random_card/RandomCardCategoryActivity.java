@@ -156,6 +156,16 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
     }
 
     @Override
+    public void onEditClick(Object item) {
+        //Pass
+    }
+
+    @Override
+    public void onDeleteClick(Object item) {
+        //Pass
+    }
+
+    @Override
     public void startRandomCardActivity() {
         startActivity(new Intent(this, RandomCardActivity.class));
     }
