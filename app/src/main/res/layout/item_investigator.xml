@@ -31,8 +31,8 @@
             android:id="@+id/item_inv_expansion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toBottomOf="@+id/item_inv_photo"
             app:layout_constraintEnd_toEndOf="@+id/item_inv_photo"
             tools:srcCompat="@drawable/cities_in_ruin" />
@@ -41,8 +41,8 @@
             android:id="@+id/item_inv_specialization"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:layout_marginStart="4dp"
+            android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toBottomOf="@+id/item_inv_photo"
             app:layout_constraintStart_toStartOf="@+id/item_inv_dead"
             tools:srcCompat="@drawable/cities_in_ruin" />
@@ -63,29 +63,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"
             android:gravity="center_horizontal"
-            tools:text="Чарли Кейн"
             android:textColor="@android:color/black"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_inv_photo" />
+            app:layout_constraintTop_toBottomOf="@+id/item_inv_photo"
+            tools:text="Чарли Кейн" />
 
         <TextView
             android:id="@+id/item_inv_occupation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"
             android:gravity="center_horizontal"
-            tools:text="TextView"
             android:textSize="12sp"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_inv_name" />
+            app:layout_constraintTop_toBottomOf="@+id/item_inv_name"
+            tools:text="TextView" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
