@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.activity.dice.DiceActivity"></activity>
+        <activity android:name=".ui.activity.dice.DiceActivity" />
         <activity android:name=".ui.activity.random_card.RandomCardCategoryActivity" />
         <activity
             android:name=".ui.activity.random_card.RandomCardActivity"
