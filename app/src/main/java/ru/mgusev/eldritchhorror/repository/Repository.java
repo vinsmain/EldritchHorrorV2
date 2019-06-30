@@ -31,6 +31,7 @@ import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Card;
 import ru.mgusev.eldritchhorror.model.CardType;
+import ru.mgusev.eldritchhorror.model.Dice;
 import ru.mgusev.eldritchhorror.model.Ending;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -38,7 +39,7 @@ import ru.mgusev.eldritchhorror.model.ImageFile;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.model.Prelude;
-import ru.mgusev.eldritchhorror.app.AppModule;
+import ru.mgusev.eldritchhorror.di.module.AppModule;
 import ru.mgusev.eldritchhorror.model.Rumor;
 import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
@@ -69,6 +70,10 @@ public class Repository {
     private PublishSubject<Boolean> selectAllPhotoPublish;
     private PublishSubject<Boolean> deleteSelectImagesPublish;
     private PublishSubject<Boolean> shareImagePublish;
+    private PublishSubject<List<Dice>> updateDiceListPublish;
+    private PublishSubject<Boolean> changeAnimationModePublish;
+    private PublishSubject<Integer> changeSuccessModePublish;
+    private PublishSubject<Integer> changeSuccessCountPublish;
 
     private CompositeDisposable firebaseDBSubscribe;
     private CompositeDisposable firebaseFilesSubscribe;
@@ -108,6 +113,10 @@ public class Repository {
         selectAllPhotoPublish = PublishSubject.create();
         deleteSelectImagesPublish = PublishSubject.create();
         shareImagePublish = PublishSubject.create();
+        updateDiceListPublish = PublishSubject.create();
+        changeAnimationModePublish = PublishSubject.create();
+        changeSuccessModePublish = PublishSubject.create();
+        changeSuccessCountPublish = PublishSubject.create();
 
         uploadFileSubscribe = new CompositeDisposable();
         uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile, Timber::d));
@@ -517,6 +526,7 @@ public class Repository {
             Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
         }
         firebaseHelper.removeGame(game);
+        gameListOnNext();
     }
 
     private void deleteGameFromDB(Game game) {
@@ -717,6 +727,7 @@ public class Repository {
     public void addImageFile(ImageFile file) {
         userDataDB.imageFileDAO().insertImageFile(file);
         firebaseHelper.addFile(file);
+        gameListOnNext();
     }
 
     public ImageFile getImageFile(String name) {
@@ -728,6 +739,7 @@ public class Repository {
             userDataDB.imageFileDAO().deleteImageFile(file);
             firebaseHelper.removeFile(file);
             firebaseHelper.deleteFileFromFirebaseStorage(file);
+            gameListOnNext();
         }
     }
 
@@ -736,9 +748,13 @@ public class Repository {
     }
 
     public void removeImageFile(long gameId) {
-        for (ImageFile file : userDataDB.imageFileDAO().getImageFileList(gameId)) {
+        for (ImageFile file : getImageFileListByGameId(gameId)) {
             removeImageFile(file);
         }
+    }
+
+    public List<ImageFile> getImageFileListByGameId(long gameId) {
+        return userDataDB.imageFileDAO().getImageFileList(gameId);
     }
 
     public void sendFileToStorage(Uri file, long gameId) {
@@ -857,5 +873,64 @@ public class Repository {
 
     public boolean getScreenLight() {
         return prefHelper.loadIsScreenLight();
+    }
+
+    public void setAnimationMode(boolean animationMode) {
+        prefHelper.saveAnimationMode(animationMode);
+    }
+
+    public boolean getAnimationMode() {
+        return prefHelper.loadAnimationMode();
+    }
+
+    public void setDiceCount(int diceCount) {
+        prefHelper.saveDiceCount(diceCount);
+    }
+
+    public int getDiceCount() {
+        return prefHelper.loadDiceCount();
+    }
+
+    public PublishSubject<List<Dice>> getUpdateDiceListPublish() {
+        return updateDiceListPublish;
+    }
+
+    public void updateDiceListOnNext(List<Dice> list) {
+        updateDiceListPublish.onNext(list);
+    }
+
+    public PublishSubject<Boolean> getChangeAnimationModePublish() {
+        return changeAnimationModePublish;
+    }
+
+    public void changeAnimationModeOnNext(boolean mode) {
+        Timber.d(String.valueOf(mode));
+        changeAnimationModePublish.onNext(mode);
+    }
+
+    public void setSuccessMode(int mode) {
+        prefHelper.saveSuccessMode(mode);
+    }
+
+    public int getSuccessMode() {
+        return prefHelper.loadSuccessMode();
+    }
+
+    public PublishSubject<Integer> getChangeSuccessModePublish() {
+        return changeSuccessModePublish;
+    }
+
+    public void changeSuccessModeOnNext(int mode) {
+        Timber.d(String.valueOf(mode));
+        changeSuccessModePublish.onNext(mode);
+    }
+
+    public PublishSubject<Integer> getChangeSuccessCountPublish() {
+        return changeSuccessCountPublish;
+    }
+
+    public void changeSuccessCountOnNext(int count) {
+        Timber.d(String.valueOf(count));
+        changeSuccessCountPublish.onNext(count);
     }
 }

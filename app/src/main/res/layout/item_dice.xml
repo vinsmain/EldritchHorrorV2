@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <com.iigo.library.DiceLoadingView
+        android:id="@+id/item_dice_dlv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:animDuration="3000"
+        app:animInterpolator="BounceInterpolator"
+        app:firstSideDiceBgColor="@color/color_dice_bg"
+        app:firstSideDiceBorderColor="@color/color_dice_border"
+        app:firstSideDiceNumber="6"
+        app:firstSideDicePointColor="@color/color_dice_point"
+        app:fourthSideDiceBgColor="@color/color_dice_bg"
+        app:fourthSideDiceBorderColor="@color/color_dice_border"
+        app:fourthSideDiceNumber="4"
+        app:fourthSideDicePointColor="@color/color_dice_point"
+        app:secondSideDiceBgColor="@color/color_dice_bg"
+        app:secondSideDiceBorderColor="@color/color_dice_border"
+        app:secondSideDiceNumber="2"
+        app:secondSideDicePointColor="@color/color_dice_point"
+        app:thirdSideDiceBgColor="@color/color_dice_bg"
+        app:thirdSideDiceBorderColor="@color/color_dice_border"
+        app:thirdSideDiceNumber="3"
+        app:thirdSideDicePointColor="@color/color_dice_point" >
+
+    </com.iigo.library.DiceLoadingView>
+
+</LinearLayout>

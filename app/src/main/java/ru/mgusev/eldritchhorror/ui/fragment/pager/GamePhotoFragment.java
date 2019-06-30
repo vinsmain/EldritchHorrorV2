@@ -36,8 +36,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
-import ru.mgusev.eldritchhorror.androidmaterialgallery.ImageOverlayView;
+import ru.mgusev.eldritchhorror.utils.gallery.GalleryAdapter;
+import ru.mgusev.eldritchhorror.utils.gallery.ImageOverlayView;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.interfaces.OnShareImageClick;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.GamePhotoPresenter;
@@ -210,16 +210,6 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
             gamePhotoPresenter.setSelectMode(true);
             gamePhotoPresenter.selectGalleryItem(urlList.get(position), position);
         }
-    }
-
-    @Override
-    public void onEditClick(int position) {
-
-    }
-
-    @Override
-    public void onDeleteClick(int position) {
-
     }
 
     @Override

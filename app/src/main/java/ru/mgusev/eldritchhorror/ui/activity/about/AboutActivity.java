@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.util.IabHelper;
+import ru.mgusev.eldritchhorror.utils.billing.IabHelper;
 import timber.log.Timber;
 
 public class AboutActivity extends AppCompatActivity {

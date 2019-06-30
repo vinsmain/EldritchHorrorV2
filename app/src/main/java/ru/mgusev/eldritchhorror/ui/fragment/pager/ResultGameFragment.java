@@ -43,7 +43,7 @@ import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ResultGamePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
-import ru.mgusev.eldritchhorror.support.FixedTextInputEditText;
+import ru.mgusev.eldritchhorror.utils.FixedTextInputEditText;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import timber.log.Timber;
 

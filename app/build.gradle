@@ -16,8 +16,8 @@ android {
         applicationId "ru.mgusev.eldritchhorror"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 45
-        versionName "2.2.1"
+        versionCode 46
+        versionName "2.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -123,6 +123,9 @@ dependencies {
 
     //RxBinding https://github.com/JakeWharton/RxBinding
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
+
+    //DiceLoadingView https://github.com/samlss/DiceLoadingView
+    implementation 'com.github.samlss:DiceLoadingView:1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

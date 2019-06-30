@@ -5,14 +5,14 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
+    android:background="@color/colorPrimaryLight"
     android:fitsSystemWindows="true"
     android:isScrollContainer="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="220dp"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -22,6 +22,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginBottom="70dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
 
@@ -43,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="78dp"
                 android:layout_marginLeft="8dp"
                 app:layout_collapseMode="pin"
                 tools:srcCompat="@drawable/under_the_pyramids" />
@@ -53,6 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
+                android:layout_marginBottom="70dp"
                 android:layout_marginRight="8dp"
                 android:orientation="horizontal"
                 app:layout_collapseMode="pin">
@@ -97,14 +99,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
+        android:background="@color/colorTransparent"
+        app:behavior_overlapTop="70dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v4.view.PagerTabStrip
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top">
 
-        </android.support.v4.view.PagerTabStrip>
 
     </android.support.v4.view.ViewPager>
 

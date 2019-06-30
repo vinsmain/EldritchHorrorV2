@@ -18,6 +18,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:theme="@style/aboutTheme" />
 
+    <TextView
+        android:id="@+id/forgotten_endings_copyright"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="72dp"
+        android:paddingBottom="2dp"
+        android:text="@string/forgotten_endings_copyright"
+        android:textAlignment="textStart"
+        android:textColor="@color/colorText"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"

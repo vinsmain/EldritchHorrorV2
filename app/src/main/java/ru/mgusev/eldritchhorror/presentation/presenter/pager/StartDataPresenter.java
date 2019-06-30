@@ -11,7 +11,7 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;

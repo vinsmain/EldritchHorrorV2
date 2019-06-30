@@ -25,4 +25,9 @@
     <color name="color_preloader_start">#00000000</color>
     <color name="color_preloader_center">#00000000</color>
     <color name="color_preloader_end">#ff56a9c7</color>
+
+    <color name="color_dice_point_default">#FFF</color>
+    <color name="color_dice_point">#51CC7D</color>
+    <color name="color_dice_bg">#000</color>
+    <color name="color_dice_border">#000</color>
 </resources>

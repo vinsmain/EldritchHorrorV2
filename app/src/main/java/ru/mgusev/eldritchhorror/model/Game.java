@@ -147,6 +147,9 @@ public class Game {
     @Ignore
     private List<Investigator> invList;
 
+    @Ignore
+    private List<ImageFile> imageFileList;
+
     public Game() {
         id = new Date().getTime();
         date = new Date().getTime();
@@ -180,6 +183,7 @@ public class Game {
         isDefeatBySurrender = false;
         time = 0;
         invList = new ArrayList<>();
+        imageFileList = new ArrayList<>();
     }
 
     public Game(Game game) {
@@ -471,6 +475,14 @@ public class Game {
 
     public void setInvList(List<Investigator> invList) {
         this.invList = invList;
+    }
+
+    public List<ImageFile> getImageFileList() {
+        return imageFileList;
+    }
+
+    public void setImageFileList(List<ImageFile> imageFileList) {
+        this.imageFileList = imageFileList;
     }
 
     public void clearResultValuesIfDefeat() {

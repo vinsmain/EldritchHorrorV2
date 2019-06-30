@@ -39,15 +39,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.adapter.MainAdapter;
-import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
+import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
+import ru.mgusev.eldritchhorror.ui.adapter.main.MainAdapter;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
-import ru.mgusev.eldritchhorror.support.ScrollListener;
+import ru.mgusev.eldritchhorror.utils.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
+import ru.mgusev.eldritchhorror.ui.activity.dice.DiceActivity;
 import ru.mgusev.eldritchhorror.ui.activity.faq.FaqActivity;
 import ru.mgusev.eldritchhorror.ui.activity.forgotten_endings.ForgottenEndingsActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
@@ -55,7 +56,7 @@ import ru.mgusev.eldritchhorror.ui.activity.random_card.RandomCardCategoryActivi
 import ru.mgusev.eldritchhorror.ui.activity.statistics.StatisticsActivity;
 import timber.log.Timber;
 
-public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClicked, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends MvpAppCompatActivity implements MainView, OnItemClickedReturnObj, NavigationView.OnNavigationItemSelectedListener {
 
     public static boolean initialized;
 
@@ -134,7 +135,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private void initDrawerMenu() {
         forgottenEndingsItem = navigationView.getMenu().getItem(1);
         statItem = navigationView.getMenu().getItem(0);
-        authItem = navigationView.getMenu().getItem(6);
+        authItem = navigationView.getMenu().getItem(7);
         mainPresenter.setVisibilityStatisticsMenuItem();
         mainPresenter.initAuthMenuItem();
         setVisibilityForgottenEndingsItem();
@@ -199,6 +200,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 closeDrawer();
                 Intent randomCardIntent = new Intent(this, RandomCardCategoryActivity.class);
                 startActivity(randomCardIntent);
+                return true;
+            case R.id.action_dice:
+                closeDrawer();
+                Intent diceIntent = new Intent(this, DiceActivity.class);
+                startActivity(diceIntent);
                 return true;
             default:
                 return true;
@@ -382,30 +388,25 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
-    public void onItemClick(int position) {
-        mainPresenter.setCurrentGame(position);
-        intentToDetails();
+    public void onItemClick(Object item) {
+        if (item instanceof Game) {
+            mainPresenter.setCurrentGame((Game) item);
+            intentToDetails();
+        }
     }
 
     @Override
-    public void onItemLongClick(int position) {
-
+    public void onEditClick(Object item) {
+        if (item instanceof Game) {
+            mainPresenter.setCurrentGame((Game) item);
+            intentToPager();
+        }
     }
 
     @Override
-    public void onEditClick(int position) {
-        mainPresenter.setCurrentGame(position);
-        intentToPager();
-    }
-
-    @Override
-    public void onDeleteClick(int position) {
-        mainPresenter.showDeleteDialog(position);
-    }
-
-    @Override
-    public void deleteGame(int position, List<Game> gameList) {
-        adapter.deleteGame(position, gameList);
+    public void onDeleteClick(Object item) {
+        if (item instanceof Game)
+            mainPresenter.showDeleteDialog((Game) item);
     }
 
     @Override

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/dice_count"
+        android:title="@string/edit_expansion"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_success_mode_6"
+        android:icon="@drawable/dice_success_mode_6"
+        android:title="@string/dice_success_mode_6_header"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_success_mode_5"
+        android:icon="@drawable/dice_success_mode_5"
+        android:title="@string/dice_success_mode_5_header"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_success_mode_4"
+        android:icon="@drawable/dice_success_mode_4"
+        android:title="@string/dice_success_mode_4_header"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_3d_animation"
+        android:icon="@drawable/animation_3d_mode"
+        android:title="@string/animation_3d_header"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_2d_animation"
+        android:icon="@drawable/animation_2d_mode"
+        android:title="@string/animation_2D_header"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_screen_light_on"
+        android:icon="@drawable/screen_light_on"
+        android:title="@string/random_card_keep_screen_on"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_screen_light_off"
+        android:icon="@drawable/screen_light_off"
+        android:title="@string/random_card_not_keep_screen_on"
+        app:showAsAction="always|collapseActionView" />
+
+</menu>

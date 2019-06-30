@@ -24,11 +24,11 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.adapter.FaqAdapter;
+import ru.mgusev.eldritchhorror.ui.adapter.faq.FaqAdapter;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.presentation.presenter.faq.FaqPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.faq.FaqView;
-import ru.mgusev.eldritchhorror.support.OptionMenuSupportMvpAppCompatActivity;
+import ru.mgusev.eldritchhorror.ui.activity.OptionMenuSupportMvpAppCompatActivity;
 import timber.log.Timber;
 
 /**

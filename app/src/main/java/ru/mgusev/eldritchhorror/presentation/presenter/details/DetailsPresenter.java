@@ -17,12 +17,12 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
-import ru.mgusev.eldritchhorror.support.FormattedTime;
+import ru.mgusev.eldritchhorror.utils.FormattedTime;
 import timber.log.Timber;
 
 @InjectViewState

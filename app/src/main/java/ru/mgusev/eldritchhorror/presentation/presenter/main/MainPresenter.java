@@ -16,8 +16,8 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.app.App;
-import ru.mgusev.eldritchhorror.auth.GoogleAuth;
+import ru.mgusev.eldritchhorror.di.App;
+import ru.mgusev.eldritchhorror.utils.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.oldDB.DatabaseHelperOld;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
@@ -39,7 +39,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     private CompositeDisposable authSubscribe;
     private CompositeDisposable rateSubscribe;
 
-    private int deletingGamePosition;
+    private Game deletingGame;
 
     public MainPresenter() {
         App.getComponent().inject(this);
@@ -81,8 +81,8 @@ public class MainPresenter extends MvpPresenter<MainView> {
         getViewState().intentToPager();
     }
 
-    public void setCurrentGame(int position) {
-        repository.setGame(gameList.get(position));
+    public void setCurrentGame(Game game) {
+        repository.setGame(game);
     }
 
     private void updateGameList(List<Game> gameList) {
@@ -91,6 +91,9 @@ public class MainPresenter extends MvpPresenter<MainView> {
         showEmptyListMessage();
         setVisibilityStatisticsMenuItem();
         updateStatistics();
+        for (Game game : this.gameList) {
+            game.setImageFileList(repository.getImageFileListByGameId(game.getId()));
+        }
         getViewState().setDataToAdapter(this.gameList);
     }
 
@@ -109,8 +112,8 @@ public class MainPresenter extends MvpPresenter<MainView> {
         else getViewState().setStatistics(repository.getGameCount(0), repository.getBestScore(), repository.getWorstScore());
     }
 
-    public void showDeleteDialog(int deletingGamePosition) {
-        this.deletingGamePosition = deletingGamePosition;
+    public void showDeleteDialog(Game game) {
+        this.deletingGame = game;
         getViewState().showDeleteDialog();
     }
 
@@ -131,9 +134,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public void deleteGame() {
-        repository.deleteGame(gameList.get(deletingGamePosition), true);
-        gameList.remove(deletingGamePosition);
-        getViewState().deleteGame(deletingGamePosition, gameList);
+        repository.deleteGame(deletingGame, true);
         showEmptyListMessage();
         setVisibilityStatisticsMenuItem();
         updateStatistics();

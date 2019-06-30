@@ -30,9 +30,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.adapter.DetailsAdapter;
-import ru.mgusev.eldritchhorror.androidmaterialgallery.GalleryAdapter;
-import ru.mgusev.eldritchhorror.androidmaterialgallery.ImageOverlayView;
+import ru.mgusev.eldritchhorror.ui.adapter.details.DetailsAdapter;
+import ru.mgusev.eldritchhorror.utils.gallery.GalleryAdapter;
+import ru.mgusev.eldritchhorror.utils.gallery.ImageOverlayView;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.interfaces.OnShareImageClick;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -403,16 +403,6 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
             detailsPresenter.setSelectMode(true);
             detailsPresenter.selectGalleryItem(imagePathList.get(position), position);
         }
-    }
-
-    @Override
-    public void onEditClick(int position) {
-
-    }
-
-    @Override
-    public void onDeleteClick(int position) {
-
     }
 
     @Override

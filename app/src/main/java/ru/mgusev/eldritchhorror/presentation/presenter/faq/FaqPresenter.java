@@ -14,7 +14,7 @@ import retrofit2.HttpException;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.api.FaqAPIService;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
-import ru.mgusev.eldritchhorror.app.App;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.presentation.view.faq.FaqView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import timber.log.Timber;

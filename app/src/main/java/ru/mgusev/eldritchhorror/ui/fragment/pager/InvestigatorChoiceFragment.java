@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.adapter.InvestigatorChoiceAdapter;
+import ru.mgusev.eldritchhorror.ui.adapter.pager.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorChoicePresenter;
@@ -95,16 +95,6 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
 
     @Override
     public void onItemLongClick(int position) {
-
-    }
-
-    @Override
-    public void onEditClick(int position) {
-
-    }
-
-    @Override
-    public void onDeleteClick(int position) {
 
     }
 
