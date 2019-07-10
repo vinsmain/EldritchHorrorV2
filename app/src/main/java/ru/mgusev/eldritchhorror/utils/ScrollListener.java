@@ -1,6 +1,6 @@
 package ru.mgusev.eldritchhorror.utils;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import ru.mgusev.eldritchhorror.ui.adapter.main.MainAdapter;
 

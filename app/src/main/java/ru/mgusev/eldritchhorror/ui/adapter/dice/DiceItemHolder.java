@@ -1,23 +1,22 @@
 package ru.mgusev.eldritchhorror.ui.adapter.dice;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.arellomobile.mvp.MvpDelegate;
-import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.arellomobile.mvp.presenter.ProvidePresenter;
-import com.iigo.library.DiceLoadingView;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import moxy.MvpDelegate;
+import moxy.presenter.InjectPresenter;
+import moxy.presenter.ProvidePresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.Dice;
 import ru.mgusev.eldritchhorror.presentation.presenter.dice.DiceItemPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.dice.DiceItemView;
+import ru.mgusev.eldritchhorror.utils.dice_view.DiceLoadingView;
 import timber.log.Timber;
 
 public class DiceItemHolder extends RecyclerView.ViewHolder implements DiceItemView {

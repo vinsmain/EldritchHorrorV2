@@ -397,4 +397,15 @@
     <string name="dice_success_mode_6_header">Successes: 6</string>
     <string name="forgotten_endings_copyright">author - Zack SV</string>
 
+    <string name="pick_single" translatable="false">Please select your image</string>
+
+    <plurals name="pick_multi">
+        <item quantity="one">One image selected</item>
+        <item quantity="other">%1$d images selected</item>
+    </plurals>
+    <plurals name="pick_multi_more">
+        <item quantity="one">Please select one more image…</item>
+        <item quantity="other">Please select %1$d more images…</item>
+    </plurals>
+    <string name="pick_multi_limit" translatable="false">You have more than %1$d images selected…</string>
 </resources>

@@ -1,6 +1,6 @@
 package ru.mgusev.eldritchhorror.presentation.view.statistics;
 
-import com.arellomobile.mvp.MvpView;
+import moxy.MvpView;
 
 public interface ChartView extends MvpView {
 

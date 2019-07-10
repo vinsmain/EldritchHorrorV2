@@ -1,8 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -10,6 +7,8 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;

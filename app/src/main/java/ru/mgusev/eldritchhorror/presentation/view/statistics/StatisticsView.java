@@ -1,14 +1,14 @@
 package ru.mgusev.eldritchhorror.presentation.view.statistics;
 
-import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.List;
 
+import moxy.MvpView;
+import moxy.viewstate.strategy.AddToEndSingleStrategy;
+import moxy.viewstate.strategy.OneExecutionStateStrategy;
+import moxy.viewstate.strategy.SkipStrategy;
+import moxy.viewstate.strategy.StateStrategyType;
 import ru.mgusev.eldritchhorror.model.Investigator;
 
 public interface StatisticsView extends MvpView {

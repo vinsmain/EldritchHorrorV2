@@ -1,11 +1,10 @@
 package ru.mgusev.eldritchhorror.presentation.view.details;
 
-import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
-
 import java.util.List;
 
+import moxy.MvpView;
+import moxy.viewstate.strategy.AddToEndSingleStrategy;
+import moxy.viewstate.strategy.StateStrategyType;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;

@@ -1,37 +1,36 @@
 package ru.mgusev.eldritchhorror.ui.activity.random_card;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
-import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.jakewharton.rxbinding3.view.RxView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import moxy.MvpAppCompatActivity;
+import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.Card;
 import ru.mgusev.eldritchhorror.presentation.presenter.random_card.RandomCardPresenter;
@@ -40,16 +39,15 @@ import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import timber.log.Timber;
 
 public class RandomCardActivity extends MvpAppCompatActivity implements RandomCardView {
-    /**
-     * Репозиторий для работы с данными
-     */
+
     @InjectPresenter
     RandomCardPresenter randomCardPresenter;
 
     @BindView(R.id.random_card_image)
     SimpleDraweeView image;
-    @BindView(R.id.random_card_scroll)
-    ScrollView scrollView;
+    @Nullable
+    @BindView(R.id.random_card_linear)
+    LinearLayout imageContainer;
     @BindView(R.id.random_card_text_block)
     LinearLayout textBlock;
     @BindView(R.id.random_card_category)
@@ -71,7 +69,7 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random_card);
-
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         ButterKnife.bind(this);
 
         if (!MainActivity.initialized) {
@@ -93,19 +91,27 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
                         .setControllerListener(new BaseControllerListener<ImageInfo>() {
                             @Override
                             public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                                scrollView.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.MATCH_CONSTRAINT));
                                 image.setAspectRatio(0.616438356f);
+                                changeViewSize(imageContainer, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                 Timber.i("DraweeUpdate Image is fully loaded!");
                             }
                             @Override
                             public void onFailure(String id, Throwable throwable) {
-                                scrollView.setLayoutParams(new ConstraintLayout.LayoutParams(0, 0));
-                                //scrollView.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.MATCH_CONSTRAINT));
                                 image.setAspectRatio(0f);
+                                changeViewSize(imageContainer, 0, 0);
                                 Timber.i("DraweeUpdate Image failed to load: %s", throwable.getMessage());
                             }
                         })
                         .build());
+    }
+
+    private void changeViewSize(View view, int width, int height) {
+        if (view != null) {
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            params.height = height;
+            params.width = width;
+            view.setLayoutParams(params);
+        }
     }
 
     @Override
@@ -168,10 +174,7 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
 
     @Override
     public void showAlertIfOtherCardNone(boolean v) {
-        Toast toast = Toast.makeText(this, R.string.random_card_no_other_cards, Toast.LENGTH_SHORT);
-        View view = toast.getView();
-        view.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimaryDark), PorterDuff.Mode.SRC_IN);
-        toast.show();
+        Snackbar.make(findViewById(R.id.random_card_cv), R.string.random_card_no_other_cards, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

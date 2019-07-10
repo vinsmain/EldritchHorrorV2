@@ -1,7 +1,7 @@
 package ru.mgusev.eldritchhorror.database.staticDB;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Database;
+import androidx.room.RoomDatabase;
 
 import ru.mgusev.eldritchhorror.database.dao.AncientOneDAO;
 import ru.mgusev.eldritchhorror.database.dao.CardDAO;

@@ -2,9 +2,6 @@ package ru.mgusev.eldritchhorror.presentation.presenter.random_card;
 
 import android.net.Uri;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +9,8 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Card;
 import ru.mgusev.eldritchhorror.model.CardType;

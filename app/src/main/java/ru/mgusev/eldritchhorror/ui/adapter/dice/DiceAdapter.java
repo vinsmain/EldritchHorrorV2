@@ -1,17 +1,16 @@
 package ru.mgusev.eldritchhorror.ui.adapter.dice;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.arellomobile.mvp.MvpDelegate;
-import com.arellomobile.mvp.presenter.InjectPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import moxy.MvpDelegate;
+import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.presentation.presenter.dice.DiceAdapterPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.dice.DiceAdapterView;
@@ -26,7 +25,7 @@ public class DiceAdapter  extends MvpBaseAdapter implements DiceAdapterView {
 
     private List<Dice> diceList;
 
-    public DiceAdapter(MvpDelegate<?> parentDelegate) {
+    public DiceAdapter(MvpDelegate parentDelegate) {
         super(parentDelegate, String.valueOf(0));
 
         diceList = new ArrayList<>();

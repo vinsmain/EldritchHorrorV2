@@ -1,9 +1,6 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.main;
 
 import android.content.Intent;
-
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
@@ -15,6 +12,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.utils.auth.GoogleAuth;
@@ -163,13 +162,15 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     public void startAuthTask(Intent data) {
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+        Timber.d("1");
         try {
             // Google Sign In was successful, authenticate with Firebase
             GoogleSignInAccount account = task.getResult(ApiException.class);
             googleAuth.firebaseAuthWithGoogle(account);
+            Timber.d("2");
         } catch (ApiException e) {
             // Google Sign In failed, update UI appropriately
-            Timber.w(e, "Google sign in failed");
+            Timber.d(e, "Google sign in failed");
             authStatusChange(false);
             getViewState().showErrorSnackBar();
         }

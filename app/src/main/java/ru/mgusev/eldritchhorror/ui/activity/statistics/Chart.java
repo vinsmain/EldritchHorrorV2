@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -21,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.mgusev.eldritchhorror.R;
+
+import static com.github.mikephil.charting.animation.Easing.EaseInOutQuad;
 
 public class Chart extends PieChart implements OnChartValueSelectedListener {
 
@@ -117,7 +118,7 @@ public class Chart extends PieChart implements OnChartValueSelectedListener {
         setEntryLabelColor(Color.BLACK);
         setHoleRadius(60f);
         setTransparentCircleRadius(65f);
-        animateY(1000, Easing.EasingOption.EaseInOutQuad);
+        animateY(1000, EaseInOutQuad);
     }
 
     public void setData(List<PieEntry> entries, List<String> labels, List<Float> values, int sum) {
@@ -130,6 +131,7 @@ public class Chart extends PieChart implements OnChartValueSelectedListener {
         dataSet = new PieDataSet(entries, "");
         // add a lot of colors
         dataSet.setColors(colors);
+        dataSet.setSliceSpace(4f);
         initPieData();
         initPieChart();
         setCenterTextSize(16);

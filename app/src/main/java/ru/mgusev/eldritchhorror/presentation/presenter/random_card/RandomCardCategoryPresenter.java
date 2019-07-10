@@ -1,14 +1,13 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.random_card;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.CardType;
 import ru.mgusev.eldritchhorror.model.Expansion;

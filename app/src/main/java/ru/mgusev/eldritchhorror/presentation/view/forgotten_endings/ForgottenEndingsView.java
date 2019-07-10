@@ -1,11 +1,11 @@
 package ru.mgusev.eldritchhorror.presentation.view.forgotten_endings;
 
-import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
-
 import java.util.List;
 import java.util.Map;
+
+import moxy.MvpView;
+import moxy.viewstate.strategy.AddToEndSingleStrategy;
+import moxy.viewstate.strategy.StateStrategyType;
 
 public interface ForgottenEndingsView extends MvpView {
 

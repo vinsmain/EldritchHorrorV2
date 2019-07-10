@@ -1,10 +1,9 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
 import android.net.Uri;
-import android.support.v4.content.FileProvider;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
+import androidx.core.content.FileProvider;
+
 import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
@@ -18,6 +17,8 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Game;
@@ -107,7 +108,7 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         for (Image image : images) {
             try {
                 File dest = repository.getPhotoFile(getNewImageFileName());
-                repository.copyFile(new File(image.getPath()), dest);
+                repository.copyFile(new File(image.getPath().replace("/" + image.getName(), ""), image.getName()), dest);
                 currentPhotoURI = Uri.fromFile(dest);
                 addImageFile();
             } catch (IOException e) {

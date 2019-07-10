@@ -2,11 +2,11 @@ package ru.mgusev.eldritchhorror.ui.activity.faq;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,13 +16,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.arellomobile.mvp.presenter.InjectPresenter;
-
 import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.ui.adapter.faq.FaqAdapter;
 import ru.mgusev.eldritchhorror.api.json_model.Article;

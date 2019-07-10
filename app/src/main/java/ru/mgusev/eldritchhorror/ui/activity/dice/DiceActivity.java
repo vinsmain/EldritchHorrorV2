@@ -3,10 +3,10 @@ package ru.mgusev.eldritchhorror.ui.activity.dice;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -18,14 +18,13 @@ import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
-import com.arellomobile.mvp.presenter.InjectPresenter;
-
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import moxy.MvpAppCompatActivity;
+import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
 
 import ru.mgusev.eldritchhorror.ui.adapter.dice.DiceAdapter;

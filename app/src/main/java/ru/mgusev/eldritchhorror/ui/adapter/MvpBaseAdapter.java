@@ -1,8 +1,8 @@
 package ru.mgusev.eldritchhorror.ui.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.arellomobile.mvp.MvpDelegate;
+import moxy.MvpDelegate;
 
 public abstract class MvpBaseAdapter extends RecyclerView.Adapter {
     private MvpDelegate<? extends MvpBaseAdapter> mMvpDelegate;

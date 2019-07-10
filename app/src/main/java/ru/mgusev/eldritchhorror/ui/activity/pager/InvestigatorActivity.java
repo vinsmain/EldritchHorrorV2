@@ -7,11 +7,10 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
-import com.arellomobile.mvp.presenter.InjectPresenter;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import moxy.MvpAppCompatActivity;
+import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorPresenter;
