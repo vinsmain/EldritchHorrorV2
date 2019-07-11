@@ -64,5 +64,6 @@ public interface StatisticsView extends MvpView {
     @StateStrategyType(OneExecutionStateStrategy.class)
     void setVisibilityInvestigatorChart(boolean isVisible);
 
+    @StateStrategyType(OneExecutionStateStrategy.class)
     void finishActivity();
 }

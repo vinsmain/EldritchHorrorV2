@@ -431,11 +431,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Timber.d(requestCode + " " + resultCode);
         // Article returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
-
-            Timber.d("SUCCESS");
             mainPresenter.startAuthTask(data);
         }
     }

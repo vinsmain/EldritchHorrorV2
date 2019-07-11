@@ -81,7 +81,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public void setCurrentGame(Game game) {
-        repository.setGame(game);
+        repository.setGame(repository.getGame(game.getId()));
     }
 
     private void updateGameList(List<Game> gameList) {
@@ -162,12 +162,10 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     public void startAuthTask(Intent data) {
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-        Timber.d("1");
         try {
             // Google Sign In was successful, authenticate with Firebase
             GoogleSignInAccount account = task.getResult(ApiException.class);
             googleAuth.firebaseAuthWithGoogle(account);
-            Timber.d("2");
         } catch (ApiException e) {
             // Google Sign In failed, update UI appropriately
             Timber.d(e, "Google sign in failed");
