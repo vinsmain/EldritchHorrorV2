@@ -1,10 +1,9 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.dice;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
-
 import javax.inject.Inject;
 
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.presentation.view.dice.DiceItemView;
 import ru.mgusev.eldritchhorror.model.Dice;

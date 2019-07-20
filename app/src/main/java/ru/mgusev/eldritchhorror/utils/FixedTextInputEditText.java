@@ -2,7 +2,7 @@ package ru.mgusev.eldritchhorror.utils;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.design.widget.TextInputEditText;
+import com.google.android.material.textfield.TextInputEditText;
 import android.util.AttributeSet;
 import android.widget.TextView;
 

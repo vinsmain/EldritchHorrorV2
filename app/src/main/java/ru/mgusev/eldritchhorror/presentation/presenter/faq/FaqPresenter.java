@@ -1,8 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.faq;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
-
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +7,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import retrofit2.HttpException;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.api.FaqAPIService;

@@ -8,21 +8,20 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
-import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.stfalcon.frescoimageviewer.ImageViewer;
@@ -34,8 +33,11 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import moxy.MvpAppCompatFragment;
+import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.utils.FrescoImageLoader;
 import ru.mgusev.eldritchhorror.utils.gallery.GalleryAdapter;
 import ru.mgusev.eldritchhorror.utils.gallery.ImageOverlayView;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
@@ -151,10 +153,11 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     public void dispatchTakePictureIntent() {
         //check for read storage permission
         if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startCameraIntent();
         } else {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RC_READ_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RC_READ_STORAGE);
         }
     }
 
@@ -187,7 +190,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == RC_READ_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 startCameraIntent();
             } else {
                 Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
@@ -251,17 +254,12 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
                 .toolbarImageTitle(getString(R.string.select_image_header)) // image selection title
                 .toolbarArrowColor(Color.WHITE) // Toolbar 'up' arrow color
                 .includeVideo(false) // Show video on image picker
-                //.single() // single mode
-                //.multi() // multi mode (default mode)
                 .limit(10) // max images can be selected (99 by default)
                 .showCamera(false) // show camera or not (true by default)
-                //.imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
-                //.origin(images) // original selected images, used in multi mode
-                //.exclude(images) // exclude anything that in image.getPath()
-                //.excludeFiles(files) // same as exclude but using ArrayList<File>
+                .imageDirectory(Environment.DIRECTORY_PICTURES) // directory name for captured image  ("Camera" folder by default)
                 .theme(R.style.AppTheme) // must inherit ef_BaseTheme. please refer to sample
                 .enableLog(false) // disabling log
-                //.imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable
+                .imageLoader(new FrescoImageLoader()) // custom image loader, must be serializeable
                 .start(); // start image picker activity with request code
     }
 

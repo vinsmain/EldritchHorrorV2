@@ -97,12 +97,13 @@
     <string name="prelude_header">Прелюдия</string>
 
     <string name="auth_error">Ошибка авторизации</string>
-    <string name="auth_header">Авторизация</string>
-    <string name="statistics_header">Статистика</string>
-    <string name="statistics_none">Данные отсутствуют</string>
+
     <string name="win_defeat_stat_description">Победы/Поражения</string>
     <string name="win_stat_label">Победы</string>
     <string name="defeat_stat_label">Поражения</string>
+    <string name="auth_header">Авторизация</string>
+    <string name="statistics_header">Статистика</string>
+    <string name="statistics_none">Данные отсутствуют</string>
     <string name="all_results">Все результаты</string>
     <string name="other_results">Другие</string>
     <string name="last_game_header">Последняя игра</string>
@@ -168,7 +169,7 @@
     <!--Condition titles-->
     <string name="agreement">Договор</string>
     <string name="amnesia">Амнезия</string>
-    <string name="attuned">Настроенность</string>
+    <string name="attuned">Гармония</string>
     <string name="back_injury">Травма спины</string>
     <string name="blessed">Благословение</string>
     <string name="blight">Помешательство</string>
@@ -182,7 +183,7 @@
     <string name="diseased">Недуг</string>
     <string name="elusive">Неуловимость</string>
     <string name="funding">Финансирование</string>
-    <string name="guts">Мужество</string>
+    <string name="guts">Храбрость</string>
     <string name="hallucinations">Галлюцинации</string>
     <string name="haunted">Призраки</string>
     <string name="head_injury">Травма головы</string>
@@ -201,17 +202,17 @@
     <string name="paranoia">Паранойя</string>
     <string name="perceptive">Perceptive</string>
     <string name="poisoned">Отравление</string>
-    <string name="practiced">Тренированность</string>
+    <string name="practiced">Опытность</string>
     <string name="promise_of_power">Обещанная сила</string>
     <string name="quick_study">Быстрое обучение</string>
-    <string name="relentless">Relentless</string>
+    <string name="relentless">Беспощадность</string>
     <string name="resilient">Живучесть</string>
     <string name="righteous">Праведник</string>
-    <string name="rugged">Rugged</string>
+    <string name="rugged">Выносливость</string>
     <string name="silver_tongued">Silver Tongued</string>
     <string name="skulduggery">Ловкость рук</string>
     <string name="studious">Прилежание</string>
-    <string name="terror">Ужас</string>
+    <string name="terror">Страх</string>
     <string name="visions">Видения</string>
     <string name="wanted">В розыске</string>
 
@@ -226,7 +227,7 @@
     <string name="astral_travel">Астральное путешествие</string>
     <string name="azure_flame">Лазурное пламя</string>
     <string name="banishment">Изгнание</string>
-    <string name="beast_within">Beast Within</string>
+    <string name="beast_within">Внутренний зверь</string>
     <string name="binding">Наложение пут</string>
     <string name="blessing_of_isis">Благословение Исиды</string>
     <string name="call_the_storm">Call the Storm</string>
@@ -245,12 +246,12 @@
     <string name="markings_of_isis">Отметины Исиды</string>
     <string name="minds_eye">Мысленный взор</string>
     <string name="mists_of_releh">Туманы Релеха</string>
-    <string name="occult_exaltation">Occult Exaltation</string>
+    <string name="occult_exaltation">Мистическое вдохновение</string>
     <string name="plumb_the_void">Пронзить пустоту</string>
     <string name="poison_mist">Ядовитый туман</string>
     <string name="shriveling">Иссушение</string>
     <string name="shroud_of_shadow">Покров тени</string>
-    <string name="spectral_razor">Spectral Razor</string>
+    <string name="spectral_razor">Призрачное лезвие</string>
     <string name="storm_of_spirits">Буря духов</string>
     <string name="summon_byakhee">Призвать бьякхи</string>
     <string name="summoning">Призыв</string>
@@ -339,16 +340,16 @@
     <string name="randolph_carter">Рэндольф Картер</string>
     <string name="the_moon_xviii">Луна XVIII</string>
 
-    <string name="wave_of_destruction">Wave of Destruction</string>
+    <string name="wave_of_destruction">Волна разрушений</string>
     <string name="tempted_by_darkness">Tempted by Darkness</string>
-    <string name="seeking_the_masters">Seeking the Masters</string>
+    <string name="seeking_the_masters">Поиск наставников</string>
     <string name="push_it_to_the_limit">Push It to the Limit</string>
-    <string name="light_of_reason">Light of Reason</string>
-    <string name="agency_secrets">Agency Secrets</string>
-    <string name="agent_callahan">Agent Callahan</string>
-    <string name="duke">Duke</string>
-    <string name="amery_wendy_smith">Amery Wendy-Smith</string>
-    <string name="professor_morgan">Professor Morgan</string>
+    <string name="light_of_reason">Свет разума</string>
+    <string name="agency_secrets">Секретные материалы</string>
+    <string name="agent_callahan">Агент Каллахан</string>
+    <string name="duke">Дюк</string>
+    <string name="amery_wendy_smith">Эмери Уэнди-Смит</string>
+    <string name="professor_morgan">Профессор Морган</string>
     <string name="eye_of_light">Eye of Light</string>
     <string name="dr_ali_kafour">Dr. Ali Kafour</string>
     <string name="eye_of_darkness">Eye of Darkness</string>

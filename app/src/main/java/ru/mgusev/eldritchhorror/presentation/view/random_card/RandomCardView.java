@@ -2,13 +2,12 @@ package ru.mgusev.eldritchhorror.presentation.view.random_card;
 
 import android.net.Uri;
 
-import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
-
 import java.util.List;
 
+import moxy.MvpView;
+import moxy.viewstate.strategy.AddToEndSingleStrategy;
+import moxy.viewstate.strategy.OneExecutionStateStrategy;
+import moxy.viewstate.strategy.StateStrategyType;
 import ru.mgusev.eldritchhorror.model.Card;
 import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 

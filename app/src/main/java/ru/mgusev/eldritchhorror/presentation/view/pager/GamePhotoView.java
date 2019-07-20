@@ -1,13 +1,11 @@
 package ru.mgusev.eldritchhorror.presentation.view.pager;
 
-import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
-
-import java.io.File;
 import java.util.List;
 
+import moxy.MvpView;
+import moxy.viewstate.strategy.AddToEndSingleStrategy;
+import moxy.viewstate.strategy.OneExecutionStateStrategy;
+import moxy.viewstate.strategy.StateStrategyType;
 import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 
 public interface GamePhotoView extends MvpView {

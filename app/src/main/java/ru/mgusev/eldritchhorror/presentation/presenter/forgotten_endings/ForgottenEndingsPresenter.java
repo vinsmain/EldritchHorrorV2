@@ -1,8 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.forgotten_endings;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +8,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Ending;

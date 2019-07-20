@@ -1,8 +1,7 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.statistics;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
-
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.statistics.ChartView;
 
 @InjectViewState

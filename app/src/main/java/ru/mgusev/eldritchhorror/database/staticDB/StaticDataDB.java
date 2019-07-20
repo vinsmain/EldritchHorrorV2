@@ -1,7 +1,7 @@
 package ru.mgusev.eldritchhorror.database.staticDB;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Database;
+import androidx.room.RoomDatabase;
 
 import ru.mgusev.eldritchhorror.database.dao.AncientOneDAO;
 import ru.mgusev.eldritchhorror.database.dao.CardDAO;
@@ -23,7 +23,7 @@ import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.model.Rumor;
 import ru.mgusev.eldritchhorror.model.Specialization;
 
-@Database(entities = {AncientOne.class, Expansion.class, Investigator.class, Prelude.class, Specialization.class, Rumor.class, Ending.class, CardType.class, Card.class, CardsExpansions.class}, version = 10)
+@Database(entities = {AncientOne.class, Expansion.class, Investigator.class, Prelude.class, Specialization.class, Rumor.class, Ending.class, CardType.class, Card.class, CardsExpansions.class}, version = 11)
 public abstract class StaticDataDB extends RoomDatabase {
     public abstract AncientOneDAO ancientOneDAO();
     public abstract ExpansionDAO expansionDAO();

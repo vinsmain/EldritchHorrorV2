@@ -2,9 +2,9 @@ package ru.mgusev.eldritchhorror.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.arellomobile.mvp.MvpDelegate;
+import moxy.MvpDelegate;
 
 /**
  * Класс является аналогом com.arellomobile.mvp.MvpAppCompatActivity и применяется только для активити с меню

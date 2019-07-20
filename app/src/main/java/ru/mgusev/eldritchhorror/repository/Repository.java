@@ -202,6 +202,15 @@ public class Repository {
                 investigator.setNameRU("Зои Самарас");
                 investigator.setOccupationRU("Повар");
                 update = true;
+            } else if (investigator.getOccupationRU().equals("Продавец")) {
+                investigator.setOccupationRU("Коммивояжёр");
+                update = true;
+            } else if (investigator.getOccupationRU().equals("Федеральный агент")) {
+                investigator.setOccupationRU("Федерал");
+                update = true;
+            } else if (investigator.getNameRU().equals("\"Ашкан\" Пит")) {
+                investigator.setNameRU("Пит Мусорщик");
+                update = true;
             }
         }
         if (update) insertGame(game);

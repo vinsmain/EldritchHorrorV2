@@ -1,10 +1,7 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.details;
 
 import android.net.Uri;
-import android.support.v4.content.FileProvider;
-
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
+import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -15,6 +12,8 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.di.App;

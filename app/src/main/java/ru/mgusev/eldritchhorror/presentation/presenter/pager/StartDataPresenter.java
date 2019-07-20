@@ -1,8 +1,5 @@
 package ru.mgusev.eldritchhorror.presentation.presenter.pager;
 
-import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -11,6 +8,8 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import moxy.InjectViewState;
+import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
@@ -158,8 +157,10 @@ public class StartDataPresenter extends MvpPresenter<StartDataView> {
 
     public void setCurrentAncientOne(String value) {
         currentAncientOne = repository.getAncientOne(value);
-        repository.getGame().setAncientOneID(currentAncientOne.getId());
-        repository.ancientOneOnNext(currentAncientOne);
+        if (repository.getGame() != null && currentAncientOne != null) {
+            repository.getGame().setAncientOneID(currentAncientOne.getId());
+            repository.ancientOneOnNext(currentAncientOne);
+        }
     }
 
     public void setCurrentPrelude(String value) {
