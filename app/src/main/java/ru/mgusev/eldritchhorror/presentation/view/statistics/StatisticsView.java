@@ -17,6 +17,9 @@ public interface StatisticsView extends MvpView {
     void initAncientOneSpinner(List<String> ancientOneList);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
+    void setItemSelected(int position);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setBackgroundImage(String imageResource);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
@@ -63,6 +66,9 @@ public interface StatisticsView extends MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void setVisibilityInvestigatorChart(boolean isVisible);
+
+    @StateStrategyType(SkipStrategy.class)
+    void invalidateView();
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void finishActivity();

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import moxy.MvpView;
 import moxy.viewstate.strategy.AddToEndSingleStrategy;
+import moxy.viewstate.strategy.SkipStrategy;
 import moxy.viewstate.strategy.StateStrategyType;
 
 public interface ForgottenEndingsView extends MvpView {
@@ -12,8 +13,8 @@ public interface ForgottenEndingsView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void initAncientOneSpinner(List<String> ancientOneNameList);
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
-    void setAncientOneSpinnerError(String text, int time);
+    @StateStrategyType(SkipStrategy.class)
+    void setItemSelected(int position);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void showText(String header, String text);
@@ -35,4 +36,7 @@ public interface ForgottenEndingsView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void clearConditionsContainer();
+
+    @StateStrategyType(SkipStrategy.class)
+    void invalidateView();
 }

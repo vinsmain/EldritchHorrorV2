@@ -10,7 +10,6 @@ import javax.inject.Inject;
 
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
-import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Ending;
 import ru.mgusev.eldritchhorror.presentation.view.forgotten_endings.ForgottenEndingsView;
@@ -51,22 +50,20 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
     }
 
     public void onAncientOneSelected(int position) {
-        // -1 - позиция hitn'а = "Древний"
         Timber.d(String.valueOf(position));
         int oldAncientOneId = ancientOneId;
-        if (position != -1) {
-            ancientOneId = repository.getAncientOne(ancientOneNameList.get(position)).getId();
-            getViewState().setResultSwitchVisibility(true);
-            getViewState().setAncientOneSpinnerError(null, 0);
-        } else {
-            ancientOneId = 0;
-            getViewState().setResultSwitchVisibility(false);
-            getViewState().setAncientOneSpinnerError(repository.getContext().getResources().getString(R.string.forgotten_endings_select_ancient_one_header), 400); //400ms - задержка при показе ошибки, чтобы избежать IllegalArgumentException
-            getViewState().hideText();
-        }
-        getViewState().setAncientOneSpinnerPosition(position + 1); // +1 - поправка на hint
+        ancientOneId = repository.getAncientOne(ancientOneNameList.get(position)).getId();
+        getViewState().setResultSwitchVisibility(true);
+        getViewState().setAncientOneSpinnerPosition(position);
         if (oldAncientOneId != ancientOneId)
             initConditions(ancientOneId, resultValue);
+    }
+
+    public void setSpinnerPosition() {
+        if (ancientOneId == 0)
+            getViewState().setItemSelected(0);
+        else
+            getViewState().setItemSelected(ancientOneNameList.indexOf(repository.getAncientOne(ancientOneId).getName()));
     }
 
     public void onResultCheckedChanged(boolean checked) {
@@ -96,6 +93,8 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
             getViewState().createConditionSwitch(conditionMap);
             getViewState().hideText();
         } else initConditions(ancientOneId, resultValue);
+
+        getViewState().invalidateView();
     }
 
     public void onReadTextBtnClick() {
@@ -109,16 +108,13 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
         if (!endingList.isEmpty()) {
             int newRandomIndex;
             do {
-               newRandomIndex = (int)(Math.random() * endingList.size());
+                newRandomIndex = (int) (Math.random() * endingList.size());
             } while (endingList.size() > 1 && randomIndex == newRandomIndex);
             randomIndex = newRandomIndex;
             Ending randomEnding = endingList.get(randomIndex);
             getViewState().showText(randomEnding.getHeader(), randomEnding.getText());
         }
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+        getViewState().invalidateView();
     }
 }

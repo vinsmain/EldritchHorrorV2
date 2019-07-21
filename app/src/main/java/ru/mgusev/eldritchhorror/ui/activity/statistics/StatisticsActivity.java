@@ -2,6 +2,8 @@ package ru.mgusev.eldritchhorror.ui.activity.statistics;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
@@ -9,15 +11,18 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.data.PieEntry;
+import com.tiper.MaterialSpinner;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +31,6 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemSelected;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
@@ -36,12 +40,14 @@ import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPres
 import ru.mgusev.eldritchhorror.presentation.view.statistics.StatisticsView;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
 import ru.mgusev.eldritchhorror.ui.fragment.statistics.ChartFragment;
+import timber.log.Timber;
 
-public class StatisticsActivity extends MvpAppCompatActivity implements StatisticsView {
+public class StatisticsActivity extends MvpAppCompatActivity implements StatisticsView, MaterialSpinner.OnItemSelectedListener {
 
     @BindView(R.id.statistics_toolbar) Toolbar toolbarStatistics;
+    @BindView(R.id.statistics_scroll_view) NestedScrollView scrollView;
     @BindView(R.id.statistics_chart_container) LinearLayout chartContainer;
-    @BindView(R.id.statistics_ancient_one_spinner) Spinner ancientOneSpinner;
+    @BindView(R.id.statistics_ancient_one_spinner) MaterialSpinner ancientOneSpinner;
     @BindView(R.id.statistics_popular_investigator_container) LinearLayout investigatorLL;
     @BindView(R.id.statistics_popular_investigators_recycler_view) RecyclerView investigatorsRV;
     @BindView(R.id.statistics_background) ImageView background;
@@ -71,6 +77,7 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         ancientOneAdapter = new ArrayAdapter<>(this, R.layout.spinner);
         ancientOneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ancientOneSpinner.setAdapter(ancientOneAdapter);
+        ancientOneSpinner.setOnItemSelectedListener(this);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 5;
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, columnsCount);
@@ -86,6 +93,7 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
     @Override
     protected void onResume() {
         super.onResume();
+        statisticsPresenter.setSpinnerPosition();
         hideLoader();
     }
 
@@ -105,9 +113,21 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         ancientOneAdapter.notifyDataSetChanged();
     }
 
-    @OnItemSelected(R.id.statistics_ancient_one_spinner)
-    public void onItemSelected() {
+    @Override
+    public void onItemSelected(com.tiper.@NotNull MaterialSpinner materialSpinner, @org.jetbrains.annotations.Nullable View view, int i, long l) {
         statisticsPresenter.setCurrentAncientOneId((String) ancientOneSpinner.getSelectedItem());
+        Timber.d((String) ancientOneSpinner.getSelectedItem());
+    }
+
+    @Override
+    public void onNothingSelected(com.tiper.@NotNull MaterialSpinner materialSpinner) {
+
+    }
+
+    @Override
+    public void setItemSelected(int position) {
+        ancientOneSpinner.setSelection(position);
+        Timber.d(String.valueOf(position));
     }
 
     @Override
@@ -163,7 +183,7 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         lastGameTV.setText(value);
     }
 
-    @OnClick({R.id.statistics_last_game_row, R.id.statistics_best_game_row, R.id.statistics_filter_card})
+    @OnClick({R.id.statistics_last_game_row, R.id.statistics_best_game_row})
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.statistics_last_game_row :
@@ -173,9 +193,6 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
             case R.id.statistics_best_game_row :
                 showLoader();
                 statisticsPresenter.goToDetailsActivity(false);
-                break;
-            case R.id.statistics_filter_card :
-                ancientOneSpinner.performClick();
                 break;
         }
     }
@@ -277,8 +294,14 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (isVisible) fragmentTransaction.show(investigatorChartFragment);
         else fragmentTransaction.hide(investigatorChartFragment);
-        investigatorLL.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         fragmentTransaction.commit();
+        investigatorLL.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void invalidateView() {
+        scrollView.invalidate();
+        scrollView.requestLayout();
     }
 
     @Override

@@ -40,6 +40,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     private Game bestGame;
     private Game lastGame;
     private CompositeDisposable gameListSubscribe;
+    private List<String> ancientOneNameList;
 
     public StatisticsPresenter() {
         App.getComponent().inject(this);
@@ -65,6 +66,13 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         updateAllCharts(new ArrayList<>());
     }
 
+    public void setSpinnerPosition() {
+        if (currentAncientOneId == 0)
+            getViewState().setItemSelected(0);
+        else
+            getViewState().setItemSelected(ancientOneNameList.indexOf(repository.getAncientOne(currentAncientOneId).getName()));
+    }
+
     private void updateAllCharts(List<Game> list) {
         getViewState().initAncientOneSpinner(getAncientOneNameList());
         try {
@@ -84,6 +92,8 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         initScoreChart();
         initDefeatReasonChart();
         initInvestigatorChart();
+
+        getViewState().invalidateView();
     }
 
     private String getGameScoreAndDate(Game game) {
@@ -97,7 +107,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
     }
 
     private List<String> getAncientOneNameList() {
-        List<String> ancientOneNameList = new ArrayList<>();
+        ancientOneNameList = new ArrayList<>();
         for (AncientOne ancientOne : repository.getAddedAncientOneList()) ancientOneNameList.add(ancientOne.getName());
         ancientOneNameList.add(0, repository.getContext().getResources().getString(R.string.all_results));
         return ancientOneNameList;

@@ -1,8 +1,9 @@
 package ru.mgusev.eldritchhorror.ui.activity.forgotten_endings;
 
 import android.os.Bundle;
-import android.os.Handler;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -12,6 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.tiper.MaterialSpinner;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,8 +26,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
-import butterknife.OnItemSelected;
-import ir.hamsaa.RtlMaterialSpinner;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
@@ -29,15 +33,16 @@ import ru.mgusev.eldritchhorror.presentation.presenter.forgotten_endings.Forgott
 import ru.mgusev.eldritchhorror.presentation.view.forgotten_endings.ForgottenEndingsView;
 import timber.log.Timber;
 
-public class ForgottenEndingsActivity extends MvpAppCompatActivity implements ForgottenEndingsView, CompoundButton.OnCheckedChangeListener {
+public class ForgottenEndingsActivity extends MvpAppCompatActivity implements ForgottenEndingsView, CompoundButton.OnCheckedChangeListener, MaterialSpinner.OnItemSelectedListener {
 
     @InjectPresenter
     ForgottenEndingsPresenter forgottenEndingsPresenter;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.forgotten_endings_scroll_view) NestedScrollView scrollView;
     @BindView(R.id.forgotten_endings_ancient_one_spinner)
-    RtlMaterialSpinner ancientOneSpinner;
+    MaterialSpinner ancientOneSpinner;
     @BindView(R.id.forgotten_endings_result_switch)
     Switch resultSwitch;
     @BindView(R.id.forgotten_endings_switch_container)
@@ -62,6 +67,12 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         initAncientOneSpinner();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        forgottenEndingsPresenter.setSpinnerPosition();
+    }
+
     private void initToolbar() {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.forgotten_endings_header);
@@ -75,6 +86,7 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         ancientOneAdapter = new ArrayAdapter<>(this, R.layout.spinner);
         ancientOneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ancientOneSpinner.setAdapter(ancientOneAdapter);
+        ancientOneSpinner.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -85,23 +97,25 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
     }
 
     @Override
-    public void setAncientOneSpinnerError(String text, int time) {
-        try {
-            new Handler().postDelayed(() -> ancientOneSpinner.setError(text), time);
-        } catch (IllegalArgumentException e) {
-            Timber.d(e);
-        }
-    }
-
-    @OnItemSelected({R.id.forgotten_endings_ancient_one_spinner})
-    public void onItemSelected() {
+    public void onItemSelected(@NotNull MaterialSpinner materialSpinner, @Nullable View view, int i, long l) {
         if (!skipCheckedChangedSpinner) {
-            Timber.d((String) ancientOneSpinner.getItemAtPosition(ancientOneSpinner.getSelectedItemPosition() - 1));
-            Timber.d(String.valueOf(ancientOneSpinner.getSelectedItemPosition() - 1));
+            Timber.d(String.valueOf(ancientOneSpinner.getSelection()));
             Timber.d(String.valueOf(skipCheckedChangedSpinner));
-            forgottenEndingsPresenter.onAncientOneSelected(ancientOneSpinner.getSelectedItemPosition() - 1);
+            forgottenEndingsPresenter.onAncientOneSelected(ancientOneSpinner.getSelection());
         }
         skipCheckedChangedSpinner = false;
+        invalidateView();
+    }
+
+    @Override
+    public void onNothingSelected(@NotNull MaterialSpinner materialSpinner) {
+
+    }
+
+    @Override
+    public void setItemSelected(int position) {
+        ancientOneSpinner.setSelection(position);
+        Timber.d(String.valueOf(position));
     }
 
     @OnCheckedChanged({R.id.forgotten_endings_result_switch})
@@ -177,5 +191,11 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         sw.setId(View.generateViewId());
         sw.setOnCheckedChangeListener(this);
         return sw;
+    }
+
+    @Override
+    public void invalidateView() {
+        scrollView.invalidate();
+        scrollView.requestLayout();
     }
 }
