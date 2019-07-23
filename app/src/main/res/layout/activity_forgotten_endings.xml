@@ -33,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/forgotten_endings_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="0dp"
@@ -55,17 +55,15 @@
                 android:layout_margin="@dimen/keyline_1_minus_8dp"
                 android:orientation="vertical">
 
-                <ir.hamsaa.RtlMaterialSpinner
+                <com.tiper.MaterialSpinner
                     android:id="@+id/forgotten_endings_ancient_one_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/keyline_1_minus_8dp"
-                    app:ms_baseColor="@color/colorPrimaryText"
-                    app:ms_floatingLabelColor="@color/colorPrimaryText"
-                    app:ms_hint="@string/ancientOne"
-                    app:ms_hintColor="@color/colorSecondaryText"
-                    app:ms_hintTextSize="12"
-                    app:ms_thickness="0.5dp" />
+                    android:focusable="false"
+                    android:hint="@string/ancientOne"
+                    android:paddingStart="8dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="8dp" />
 
                 <Switch
                     android:id="@+id/forgotten_endings_result_switch"
