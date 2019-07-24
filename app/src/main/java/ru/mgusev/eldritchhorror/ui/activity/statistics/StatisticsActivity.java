@@ -45,12 +45,12 @@ import timber.log.Timber;
 public class StatisticsActivity extends MvpAppCompatActivity implements StatisticsView, MaterialSpinner.OnItemSelectedListener {
 
     @BindView(R.id.statistics_toolbar) Toolbar toolbarStatistics;
-    @BindView(R.id.statistics_scroll_view) NestedScrollView scrollView;
+    //@BindView(R.id.statistics_scroll_view) NestedScrollView scrollView;
     @BindView(R.id.statistics_chart_container) LinearLayout chartContainer;
     @BindView(R.id.statistics_ancient_one_spinner) MaterialSpinner ancientOneSpinner;
     @BindView(R.id.statistics_popular_investigator_container) LinearLayout investigatorLL;
     @BindView(R.id.statistics_popular_investigators_recycler_view) RecyclerView investigatorsRV;
-    @BindView(R.id.statistics_background) ImageView background;
+    //@BindView(R.id.statistics_background) ImageView background;
     @BindView(R.id.statistics_last_game) TextView lastGameTV;
     @BindView(R.id.statistics_best_game) TextView bestGameTV;
     @BindView(R.id.loader) LinearLayout loader;
@@ -132,12 +132,12 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
     @Override
     public void setBackgroundImage(String imageResource) {
-        background.setImageResource(getResources().getIdentifier(imageResource, "drawable", getPackageName()));
+        //background.setImageResource(getResources().getIdentifier(imageResource, "drawable", getPackageName()));
     }
 
     @Override
     public void setDefaultBackgroundImage() {
-        background.setImageResource(R.drawable.eh_main);
+        //background.setImageResource(R.drawable.eh_main);
     }
 
     @Override
@@ -300,8 +300,8 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
     @Override
     public void invalidateView() {
-        scrollView.invalidate();
-        scrollView.requestLayout();
+//        scrollView.invalidate();
+//        scrollView.requestLayout();
     }
 
     @Override
