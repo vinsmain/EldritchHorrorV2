@@ -3,7 +3,6 @@ package ru.mgusev.eldritchhorror.ui.activity.statistics;
 import android.content.Intent;
 import android.content.res.Configuration;
 
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
@@ -45,7 +44,7 @@ import timber.log.Timber;
 public class StatisticsActivity extends MvpAppCompatActivity implements StatisticsView, MaterialSpinner.OnItemSelectedListener {
 
     @BindView(R.id.statistics_toolbar) Toolbar toolbarStatistics;
-    @BindView(R.id.statistics_scroll_view) NestedScrollView scrollView;
+    //@BindView(R.id.statistics_scroll_view) NestedScrollView scrollView;
     @BindView(R.id.statistics_chart_container) LinearLayout chartContainer;
     @BindView(R.id.statistics_ancient_one_spinner) MaterialSpinner ancientOneSpinner;
     @BindView(R.id.statistics_popular_investigator_container) LinearLayout investigatorLL;
@@ -300,8 +299,8 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
     @Override
     public void invalidateView() {
-        scrollView.invalidate();
-        scrollView.requestLayout();
+//        scrollView.invalidate();
+//        scrollView.requestLayout();
     }
 
     @Override

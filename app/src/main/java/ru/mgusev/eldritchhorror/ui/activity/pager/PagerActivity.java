@@ -346,6 +346,11 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     }
 
     @Override
+    public void setDefeatByPreludeIcon() {
+        winIcon.setImageDrawable(getResources().getDrawable(R.drawable.defeat_by_prelude));
+    }
+
+    @Override
     public void showScore() {
         scoreTV.setVisibility(View.VISIBLE);
     }

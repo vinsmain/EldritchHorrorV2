@@ -170,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/comment_header"
                         app:counterEnabled="true"
-                        app:counterMaxLength="200"
+                        app:counterMaxLength="1000"
                         app:hintTextAppearance="@style/TextLabel"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -181,7 +181,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textMultiLine"
-                            android:maxLength="200"
+                            android:maxLength="1000"
                             android:textSize="16sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -387,6 +387,57 @@
 
                         <Spinner
                             android:id="@+id/result_game_defeat_rumor_spinner"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="32dp"
+                            android:dropDownWidth="match_parent"
+                            android:gravity="start" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="@dimen/keyline_1_minus_8dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="@dimen/keyline_1_minus_8dp">
+
+                        <Switch
+                            android:id="@+id/result_game_defeat_by_prelude_switch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="32dp"
+                            android:layout_span="2"
+                            android:checked="false"
+                            android:text="@string/defeat_by_prelude"
+                            android:textColor="@color/colorSecondaryText" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/result_game_defeat_prelude_spinner_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="@dimen/keyline_1_minus_8dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="@dimen/keyline_1_minus_8dp"
+                        android:theme="@style/AppTheme.ColorHighlight"
+                        android:weightSum="5">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/prelude_header"
+                            android:textColor="@color/colorSecondaryText"
+                            android:textSize="14sp" />
+
+                        <Spinner
+                            android:id="@+id/result_game_defeat_prelude_spinner"
                             android:layout_width="300dp"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="32dp"

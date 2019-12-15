@@ -10,7 +10,7 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.ImageFile;
 import ru.mgusev.eldritchhorror.model.Investigator;
 
-@Database(entities = {Game.class, Investigator.class, ImageFile.class}, version = 7)
+@Database(entities = {Game.class, Investigator.class, ImageFile.class}, version = 8)
 public abstract class UserDataDB extends RoomDatabase {
     public abstract GameDAO gameDAO();
     public abstract InvestigatorDAO investigatorDAO();

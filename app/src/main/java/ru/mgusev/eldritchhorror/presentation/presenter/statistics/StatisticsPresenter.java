@@ -215,6 +215,10 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
             chartValues.add((float) repository.getDefeatByRumorCount(currentAncientOneId));
             chartLabels.add(repository.getContext().getResources().getString(R.string.defeat_by_rumor));
         }
+        if (repository.getDefeatByPreludeCount(currentAncientOneId) != 0) {
+            chartValues.add((float) repository.getDefeatByPreludeCount(currentAncientOneId));
+            chartLabels.add(repository.getContext().getResources().getString(R.string.defeat_by_prelude));
+        }
     }
 
     private void initInvestigatorChart() {

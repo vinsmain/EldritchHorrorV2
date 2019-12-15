@@ -86,6 +86,8 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @BindView(R.id.defeat_reason_by_surrender_row) TableRow defeatReasonBySurrender;
     @BindView(R.id.defeat_reason_by_rumor_row) TableRow defeatReasonByRumor;
     @BindView(R.id.defeat_reason_by_rumor_name_tv) TextView rumorName;
+    @BindView(R.id.defeat_reason_by_prelude_row) TableRow defeatReasonByPrelude;
+    @BindView(R.id.defeat_reason_by_prelude_name_tv) TextView preludeName;
 
     @BindView(R.id.photo_details_recycle_view) RecyclerView photoRV;
     @BindView(R.id.photo_details_none) TextView photoNoneMessage;
@@ -279,8 +281,18 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     @Override
+    public void setDefeatByPreludeIcon() {
+        victoryIcon.setImageDrawable(getResources().getDrawable(R.drawable.defeat_by_prelude));
+    }
+
+    @Override
     public void setDefeatByRumorName(String name) {
         rumorName.setText(name);
+    }
+
+    @Override
+    public void setDefeatByPreludeName(String name) {
+        preludeName.setText(name);
     }
 
     @Override
@@ -350,12 +362,13 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     }
 
     @Override
-    public void setDefeatReason(boolean isDefeatReasonByElimination, boolean isDefeatReasonByMythosDepletion, boolean isDefeatReasonByAwakenedAncientOne, boolean isDefeatReasonBySurrender, boolean isDefeatReasonByRumor) {
+    public void setDefeatReason(boolean isDefeatReasonByElimination, boolean isDefeatReasonByMythosDepletion, boolean isDefeatReasonByAwakenedAncientOne, boolean isDefeatReasonBySurrender, boolean isDefeatReasonByRumor, boolean isDefeatReasonByPrelude) {
         defeatReasonByElimination.setVisibility(isDefeatReasonByElimination ? View.VISIBLE : View.GONE);
         defeatReasonByMythosDepletion.setVisibility(isDefeatReasonByMythosDepletion ? View.VISIBLE : View.GONE);
         defeatReasonByAwakenedAncientOne.setVisibility(isDefeatReasonByAwakenedAncientOne ? View.VISIBLE : View.GONE);
         defeatReasonBySurrender.setVisibility(isDefeatReasonBySurrender ? View.VISIBLE : View.GONE);
         defeatReasonByRumor.setVisibility(isDefeatReasonByRumor ? View.VISIBLE : View.GONE);
+        defeatReasonByPrelude.setVisibility(isDefeatReasonByPrelude ? View.VISIBLE : View.GONE);
     }
 
     @Override

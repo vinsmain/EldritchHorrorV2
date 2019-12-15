@@ -195,6 +195,27 @@
                     android:textAlignment="textEnd" />
 
             </TableRow>
+
+            <TableRow
+                android:id="@+id/defeat_reason_by_prelude_row"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/defeat_by_prelude" />
+
+                <TextView
+                    android:id="@+id/defeat_reason_by_prelude_name_tv"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:textAlignment="textEnd" />
+
+            </TableRow>
         </TableLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

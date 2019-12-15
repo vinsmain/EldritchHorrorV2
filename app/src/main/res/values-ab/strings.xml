@@ -130,6 +130,7 @@
     <string name="comment_none">Отсутствует</string>
     <string name="rumor">Слух</string>
     <string name="defeat_by_rumor">По указанию карты Слуха</string>
+    <string name="defeat_by_prelude">По указанию карты Прелюдии</string>
     <string name="defeat_by_surrender">Сыщики сдались</string>
     <string name="forgotten_endings_header">Забытые концовки</string>
     <string name="forgotten_endings_read_header">Случайная концовка</string>

@@ -378,5 +378,6 @@
     <string name="dice_success_mode_5_header">Успехи: 5, 6</string>
     <string name="dice_success_mode_6_header">Успехи: 6</string>
     <string name="forgotten_endings_copyright">автор - Zack SV</string>
+    <string name="defeat_by_prelude">По указанию карты Прелюдии</string>
 
 </resources>

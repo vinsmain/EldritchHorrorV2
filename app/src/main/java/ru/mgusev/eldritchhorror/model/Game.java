@@ -46,9 +46,12 @@ public class Game {
     public static final String GAME_FIELD_DEFEAT_BY_RUMOR = "defeat_by_rumor";
     public static final String GAME_FIELD_DEFEAT_RUMOR_ID = "defeat_rumor_id";
     public static final String GAME_FIELD_DEFEAT_BY_SURRENDER = "defeat_by_surrender";
+    public static final String GAME_FIELD_DEFEAT_BY_PRELUDE = "defeat_by_prelude";
+    public static final String GAME_FIELD_DEFEAT_PRELUDE_ID = "defeat_prelude_id";
     public static final String GAME_FIELD_TIME = "time";
 
     public static final int DEFAULT_DEFEAT_RUMOR_ID = 2;
+    public static final int DEFAULT_DEFEAT_PRELUDE_ID = 23;
 
     @PrimaryKey
     @ColumnInfo(name = GAME_FIELD_ID)
@@ -141,6 +144,12 @@ public class Game {
     @ColumnInfo(name = GAME_FIELD_DEFEAT_BY_SURRENDER)
     private boolean isDefeatBySurrender;
 
+    @ColumnInfo(name = GAME_FIELD_DEFEAT_BY_PRELUDE)
+    private boolean isDefeatByPrelude;
+
+    @ColumnInfo(name = GAME_FIELD_DEFEAT_PRELUDE_ID)
+    private int defeatPreludeID;
+
     @ColumnInfo(name = GAME_FIELD_TIME)
     private int time;
 
@@ -181,6 +190,8 @@ public class Game {
         isDefeatByRumor = false;
         defeatRumorID = DEFAULT_DEFEAT_RUMOR_ID;
         isDefeatBySurrender = false;
+        isDefeatByPrelude = false;
+        defeatPreludeID = DEFAULT_DEFEAT_PRELUDE_ID;
         time = 0;
         invList = new ArrayList<>();
         imageFileList = new ArrayList<>();
@@ -217,6 +228,8 @@ public class Game {
         this.isDefeatByRumor = game.isDefeatByRumor;
         this.defeatRumorID = game.defeatRumorID;
         this.isDefeatBySurrender = game.isDefeatBySurrender;
+        this.isDefeatByPrelude = game.isDefeatByPrelude;
+        this.defeatPreludeID= game.defeatPreludeID;
         this.time = game.time;
         this.invList = game.invList;
     }
@@ -461,6 +474,22 @@ public class Game {
         isDefeatBySurrender = defeatBySurrender;
     }
 
+    public boolean getIsDefeatByPrelude() {
+        return isDefeatByPrelude;
+    }
+
+    public void setIsDefeatByPrelude(boolean defeatByPrelude) {
+        isDefeatByPrelude = defeatByPrelude;
+    }
+
+    public int getDefeatPreludeID() {
+        return defeatPreludeID;
+    }
+
+    public void setDefeatPreludeID(int defeatPreludeID) {
+        this.defeatPreludeID = defeatPreludeID;
+    }
+
     public int getTime() {
         return time;
     }
@@ -506,6 +535,10 @@ public class Game {
         if (!getIsDefeatByRumor()) setDefeatRumorID(DEFAULT_DEFEAT_RUMOR_ID);
     }
 
+    public void clearDefeatPreludeID() {
+        if (!getIsDefeatByPrelude()) setDefeatPreludeID(DEFAULT_DEFEAT_PRELUDE_ID);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == this) return true;
@@ -544,6 +577,8 @@ public class Game {
                 getIsDefeatByRumor() == game.getIsDefeatByRumor() &&
                 getDefeatRumorID() == game.getDefeatRumorID() &&
                 getIsDefeatBySurrender() == game.getIsDefeatBySurrender() &&
+                getIsDefeatByPrelude() == game.getIsDefeatByPrelude() &&
+                getDefeatPreludeID() == game.getDefeatPreludeID() &&
                 getTime() == game.getTime() &&
                 equalsInvList(getInvList(), game.getInvList());
     }

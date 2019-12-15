@@ -148,6 +148,7 @@ public class MainAdapter extends RecyclerSwipeAdapter<MainAdapter.MainViewHolder
             else if (gameList.get(position).getIsDefeatByMythosDepletion()) holder.winImage.setImageResource(R.drawable.mythos_empty);
             else if (gameList.get(position).getIsDefeatByRumor()) holder.winImage.setImageResource(R.drawable.defeat_by_rumor);
             else if (gameList.get(position).getIsDefeatBySurrender()) holder.winImage.setImageResource(R.drawable.defeat_by_surrender);
+            else if (gameList.get(position).getIsDefeatByPrelude()) holder.winImage.setImageResource(R.drawable.defeat_by_prelude);
             holder.score.setVisibility(View.GONE);
         }
 

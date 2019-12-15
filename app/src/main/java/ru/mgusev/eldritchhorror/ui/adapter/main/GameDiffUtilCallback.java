@@ -48,7 +48,8 @@ public class GameDiffUtilCallback extends DiffUtil.Callback {
         return oldItem.getAncientOneID() == newItem.getAncientOneID() && oldItem.getDate() == newItem.getDate() && oldItem.getIsWinGame() == newItem.getIsWinGame() &&
                 oldItem.getIsDefeatByAwakenedAncientOne() == newItem.getIsDefeatByAwakenedAncientOne() && oldItem.getIsDefeatByElimination() == newItem.getIsDefeatByElimination() &&
                 oldItem.getIsDefeatByMythosDepletion() == newItem.getIsDefeatByMythosDepletion() && oldItem.getIsDefeatByRumor() == newItem.getIsDefeatByRumor() &&
-                oldItem.getIsDefeatBySurrender() == newItem.getIsDefeatBySurrender() && oldItem.getPlayersCount() == newItem.getPlayersCount() && oldItem.getScore() == newItem.getScore() &&
-                oldItem.getComment().equals(newItem.getComment()) && oldItem.getImageFileList().size() == newItem.getImageFileList().size();
+                oldItem.getIsDefeatBySurrender() == newItem.getIsDefeatBySurrender() && oldItem.getIsDefeatByPrelude() == newItem.getIsDefeatByPrelude() &&
+                oldItem.getPlayersCount() == newItem.getPlayersCount() && oldItem.getScore() == newItem.getScore() && oldItem.getComment().equals(newItem.getComment()) &&
+                oldItem.getImageFileList().size() == newItem.getImageFileList().size();
     }
 }

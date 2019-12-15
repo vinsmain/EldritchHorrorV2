@@ -21,4 +21,10 @@ public interface PreludeDAO {
 
     @Query("SELECT * FROM preludes WHERE name_en IS :name OR name_ru IS :name")
     Prelude getPreludeByName(String name);
+
+    @Query("SELECT * FROM preludes WHERE defeat = 1 ORDER BY name_en")
+    List<Prelude> getDefeatPreludesEN();
+
+    @Query("SELECT * FROM preludes WHERE defeat = 1 ORDER BY name_ru")
+    List<Prelude> getDefeatPreludesRU();
 }

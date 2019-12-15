@@ -13,6 +13,7 @@ public class Prelude {
     public static final String PRELUDE_FIELD_EXPANSION_ID = "expansion_id";
     public static final String PRELUDE_FIELD_TEXT_EN = "text_en";
     public static final String PRELUDE_FIELD_TEXT_RU = "text_ru";
+    public static final String PRELUDE_FIELD_DEFEAT = "defeat";
 
     @PrimaryKey
     @ColumnInfo(name = PRELUDE_FIELD_ID)
@@ -32,6 +33,9 @@ public class Prelude {
 
     @ColumnInfo(name = PRELUDE_FIELD_TEXT_RU)
     private String textRU;
+
+    @ColumnInfo(name = PRELUDE_FIELD_DEFEAT)
+    private boolean defeat;
 
     public Prelude() {
     }
@@ -82,6 +86,14 @@ public class Prelude {
 
     public void setTextRU(String textRU) {
         this.textRU = textRU;
+    }
+
+    public boolean isDefeat() {
+        return defeat;
+    }
+
+    public void setDefeat(boolean defeat) {
+        this.defeat = defeat;
     }
 
     public String getName() {
