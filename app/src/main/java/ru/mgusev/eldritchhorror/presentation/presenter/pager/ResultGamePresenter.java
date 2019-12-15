@@ -11,6 +11,7 @@ import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Game;
+import ru.mgusev.eldritchhorror.model.Prelude;
 import ru.mgusev.eldritchhorror.model.Rumor;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
 import ru.mgusev.eldritchhorror.repository.Repository;
@@ -26,7 +27,9 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
     private CompositeDisposable resultSwitchSubscribe;
     private CompositeDisposable expansionSubscribe;
     private Rumor currentRumor;
+    private Prelude currentPrelude;
     private List<Rumor> rumorList;
+    private List<Prelude> preludeList;
     private int time;
     private int tempTime;
 
@@ -47,6 +50,9 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         rumorList = repository.getRumorList();
         currentRumor = repository.getRumor(repository.getGame().getDefeatRumorID());
 
+        preludeList = repository.getDefeatPreludeList();
+        currentPrelude = repository.getPrelude(repository.getGame().getDefeatPreludeID());
+
         time = repository.getGame().getTime();
     }
 
@@ -59,8 +65,9 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         setResultValues();
         repository.scoreOnNext(); //устанавливаем счет при первом запуске
         getViewState().setDefeatReasonSwitchChecked(repository.getGame().getIsDefeatByElimination(), repository.getGame().getIsDefeatByMythosDepletion(),
-                repository.getGame().getIsDefeatByAwakenedAncientOne(), repository.getGame().getIsDefeatByRumor(), repository.getGame().getIsDefeatBySurrender());
+                repository.getGame().getIsDefeatByAwakenedAncientOne(), repository.getGame().getIsDefeatByRumor(), repository.getGame().getIsDefeatBySurrender(), repository.getGame().getIsDefeatByPrelude());
         setRumorSpinnerPosition();
+        setPreludeSpinnerPosition();
         setTimeToField();
     }
 
@@ -85,6 +92,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
             getViewState().showDefeatTable();
             getViewState().hideVictoryTable();
             getViewState().setVisibilityRumorSpinnerTR(repository.getGame().getIsDefeatByRumor());
+            getViewState().setVisibilityPreludeSpinnerTR(repository.getGame().getIsDefeatByPrelude());
         }
     }
 
@@ -100,12 +108,13 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         repository.scoreOnNext();
     }
 
-    public void setDefeatReasons(boolean v1, boolean v2, boolean v3, boolean v4, boolean v5) {
+    public void setDefeatReasons(boolean v1, boolean v2, boolean v3, boolean v4, boolean v5, boolean v6) {
         repository.getGame().setIsDefeatByElimination(v1);
         repository.getGame().setIsDefeatByMythosDepletion(v2);
         repository.getGame().setIsDefeatByAwakenedAncientOne(v3);
         repository.getGame().setIsDefeatByRumor(v4);
         repository.getGame().setIsDefeatBySurrender(v5);
+        repository.getGame().setIsDefeatByPrelude(v6);
         repository.isWinOnNext();
     }
 
@@ -124,6 +133,7 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
 
     private void initSpinners(List<Expansion> expansionList) {
         setRumorSpinnerPosition();
+        setPreludeSpinnerPosition();
     }
 
     public void setRumorSpinnerPosition() {
@@ -138,6 +148,26 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
                 list.add(rumor.getName());
         }
         if (currentRumor == null) currentRumor = repository.getRumor(list.get(0));
+        return list;
+    }
+
+    public void setCurrentPrelude(String value) {
+        currentPrelude = repository.getPrelude(value);
+        repository.getGame().setDefeatPreludeID(currentPrelude.getId());
+    }
+
+    public void setPreludeSpinnerPosition() {
+        getViewState().initPreludeSpinner(getPreludeNameList());
+        getViewState().setPreludeSpinnerPosition(getPreludeNameList().indexOf(currentPrelude.getName()));
+    }
+
+    private List<String> getPreludeNameList() {
+        List<String> list = new ArrayList<>();
+        for (Prelude prelude : preludeList) {
+            if (repository.getExpansion(prelude.getExpansionID()).isEnable() || (currentPrelude != null && prelude.getId() == currentPrelude.getId()))
+                list.add(prelude.getName());
+        }
+        if (currentPrelude == null) currentPrelude = repository.getPrelude(list.get(0));
         return list;
     }
 

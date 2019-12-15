@@ -94,4 +94,12 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <color name="ef_white">#FFFFFF</color>
+
+    <style name="AppTheme.WhiteAccent">
+        <item name="colorPrimary">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.WhiteAccent.SpinnerTheme">
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
 </resources>

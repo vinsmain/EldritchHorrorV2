@@ -322,6 +322,10 @@ public class Repository {
         return staticDataDB.preludeDAO().getPreludeByName(name);
     }
 
+    public List<Prelude> getDefeatPreludeList() {
+        if (Localization.getInstance().isRusLocale()) return staticDataDB.preludeDAO().getDefeatPreludesRU();
+        else return staticDataDB.preludeDAO().getDefeatPreludesEN();
+    }
 
     //Rumor
 
@@ -618,6 +622,10 @@ public class Repository {
 
     public int getDefeatByRumorCount(int ancientOneId) {
         return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatByRumorCount() : userDataDB.gameDAO().getDefeatByRumorCount(ancientOneId);
+    }
+
+    public int getDefeatByPreludeCount(int ancientOneId) {
+        return ancientOneId == 0 ? userDataDB.gameDAO().getDefeatByPreludeCount() : userDataDB.gameDAO().getDefeatByPreludeCount(ancientOneId);
     }
 
     public List<StatisticsInvestigator> getStatisticsInvestigatorList(int ancientOneId) {

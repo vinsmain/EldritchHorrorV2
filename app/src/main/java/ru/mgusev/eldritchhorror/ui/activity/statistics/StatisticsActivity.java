@@ -3,7 +3,6 @@ package ru.mgusev.eldritchhorror.ui.activity.statistics;
 import android.content.Intent;
 import android.content.res.Configuration;
 
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
@@ -50,7 +49,7 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
     @BindView(R.id.statistics_ancient_one_spinner) MaterialSpinner ancientOneSpinner;
     @BindView(R.id.statistics_popular_investigator_container) LinearLayout investigatorLL;
     @BindView(R.id.statistics_popular_investigators_recycler_view) RecyclerView investigatorsRV;
-    //@BindView(R.id.statistics_background) ImageView background;
+    @BindView(R.id.statistics_background) ImageView background;
     @BindView(R.id.statistics_last_game) TextView lastGameTV;
     @BindView(R.id.statistics_best_game) TextView bestGameTV;
     @BindView(R.id.loader) LinearLayout loader;
@@ -132,12 +131,12 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
     @Override
     public void setBackgroundImage(String imageResource) {
-        //background.setImageResource(getResources().getIdentifier(imageResource, "drawable", getPackageName()));
+        background.setImageResource(getResources().getIdentifier(imageResource, "drawable", getPackageName()));
     }
 
     @Override
     public void setDefaultBackgroundImage() {
-        //background.setImageResource(R.drawable.eh_main);
+        background.setImageResource(R.drawable.eh_main);
     }
 
     @Override

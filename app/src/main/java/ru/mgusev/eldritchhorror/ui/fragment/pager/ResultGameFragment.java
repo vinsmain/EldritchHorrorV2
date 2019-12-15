@@ -60,6 +60,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @BindView(R.id.result_game_defeat_by_awakened_ancient_one_switch) Switch defeatByAwakenedAncientOneSwitch;
     @BindView(R.id.result_game_defeat_by_surrender_switch) Switch defeatBySurrenderSwitch;
     @BindView(R.id.result_game_defeat_by_rumor_switch) Switch defeatByRumorSwitch;
+    @BindView(R.id.result_game_defeat_by_prelude_switch) Switch defeatByPreludeSwitch;
     @BindView(R.id.result_game_defeat_table) TableLayout defeatTable;
     @BindView(R.id.result_game_gates_count) EditText gatesCountTV;
     @BindView(R.id.result_game_monsters_count) EditText monstersCountTV;
@@ -72,6 +73,8 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @BindView(R.id.result_game_comment_tiet) FixedTextInputEditText commentTIED;
     @BindView(R.id.result_game_defeat_rumor_spinner) Spinner rumorSpinner;
     @BindView(R.id.result_game_defeat_rumor_spinner_row) TableRow rumorSpinnerTR;
+    @BindView(R.id.result_game_defeat_prelude_spinner) Spinner preludeSpinner;
+    @BindView(R.id.result_game_defeat_prelude_spinner_row) TableRow preludeSpinnerTR;
     @BindView(R.id.result_game_time_tv) TextView timeTV;
 
     private static final int EDIT_TEXT_INDEX = 1; //Индекс EditText в строке TableRow
@@ -79,6 +82,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     private Switch[] switchArray;
     private int[] idArray;
     private ArrayAdapter<String> rumorAdapter;
+    private ArrayAdapter<String> preludeAdapter;
 
     private TimePickerDialog timePickerDialog;
     private int currentTime;
@@ -113,8 +117,12 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         rumorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         rumorSpinner.setAdapter(rumorAdapter);
 
-        switchArray = new Switch[]{defeatByEliminationSwitch, defeatByMythosDepletionSwitch, defeatByAwakenedAncientOneSwitch, defeatBySurrenderSwitch, defeatByRumorSwitch};
-        idArray = new int[]{R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_surrender_switch, R.id.result_game_defeat_by_rumor_switch};
+        preludeAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.spinner);
+        preludeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        preludeSpinner.setAdapter(preludeAdapter);
+
+        switchArray = new Switch[]{defeatByEliminationSwitch, defeatByMythosDepletionSwitch, defeatByAwakenedAncientOneSwitch, defeatBySurrenderSwitch, defeatByRumorSwitch, defeatByPreludeSwitch};
+        idArray = new int[]{R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_surrender_switch, R.id.result_game_defeat_by_rumor_switch, R.id.result_game_defeat_by_prelude_switch};
         return view;
     }
 
@@ -128,6 +136,18 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @Override
     public void setRumorSpinnerPosition(int rumorPosition) {
         rumorSpinner.setSelection(rumorPosition, false);
+    }
+
+    @Override
+    public void initPreludeSpinner(List<String> preludeList) {
+        preludeAdapter.clear();
+        preludeAdapter.addAll(preludeList);
+        preludeAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setPreludeSpinnerPosition(int preludePosition) {
+        preludeSpinner.setSelection(preludePosition, false);
     }
 
     public void setResultValues(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount) {
@@ -176,7 +196,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     }
 
     @OnCheckedChanged({R.id.result_game_result_switch, R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch,
-            R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_surrender_switch, R.id.result_game_defeat_by_rumor_switch})
+            R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_surrender_switch, R.id.result_game_defeat_by_rumor_switch, R.id.result_game_defeat_by_prelude_switch})
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.result_game_result_switch:
@@ -196,7 +216,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
                 switchArray[i].setChecked(false);
             }
         }
-        resultGamePresenter.setDefeatReasons(defeatByEliminationSwitch.isChecked(), defeatByMythosDepletionSwitch.isChecked(), defeatByAwakenedAncientOneSwitch.isChecked(), defeatByRumorSwitch.isChecked(), defeatBySurrenderSwitch.isChecked());
+        resultGamePresenter.setDefeatReasons(defeatByEliminationSwitch.isChecked(), defeatByMythosDepletionSwitch.isChecked(), defeatByAwakenedAncientOneSwitch.isChecked(), defeatByRumorSwitch.isChecked(), defeatBySurrenderSwitch.isChecked(), defeatByPreludeSwitch.isChecked());
     }
 
     @Override
@@ -218,12 +238,13 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     }
 
     @Override
-    public void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3, boolean v4, boolean v5) {
+    public void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3, boolean v4, boolean v5, boolean v6) {
         defeatByEliminationSwitch.setChecked(v1);
         defeatByMythosDepletionSwitch.setChecked(v2);
         defeatByAwakenedAncientOneSwitch.setChecked(v3);
         defeatByRumorSwitch.setChecked(v4);
         defeatBySurrenderSwitch.setChecked(v5);
+        defeatByPreludeSwitch.setChecked(v6);
     }
 
     @Override
@@ -249,14 +270,30 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         resultGamePresenter.setRumorSpinnerPosition();
     }
 
+    @OnItemSelected(R.id.result_game_defeat_prelude_spinner)
+    public void onItemPreludeSelected() {
+        resultGamePresenter.setCurrentPrelude((String) preludeSpinner.getSelectedItem());
+        resultGamePresenter.setPreludeSpinnerPosition();
+    }
+
     @Override
     public void setVisibilityRumorSpinnerTR(boolean visible) {
         rumorSpinnerTR.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public void setVisibilityPreludeSpinnerTR(boolean visible) {
+        preludeSpinnerTR.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
     @OnClick(R.id.result_game_defeat_rumor_spinner_row)
     public void onRumorRowClick() {
         rumorSpinner.performClick();
+    }
+
+    @OnClick(R.id.result_game_defeat_prelude_spinner_row)
+    public void onPreludeRowClick() {
+        preludeSpinner.performClick();
     }
 
     @OnClick({R.id.gatesCountRow, R.id.monstersCountRow, R.id.curseCountRow, R.id.rumorsCountRow, R.id.cluesCountRow, R.id.blessedCountRow, R.id.doomCountRow})

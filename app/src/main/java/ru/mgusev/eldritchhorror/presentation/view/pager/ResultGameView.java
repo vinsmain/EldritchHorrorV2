@@ -45,16 +45,25 @@ public interface ResultGameView extends MvpView {
     void setRumorSpinnerPosition(int rumorPosition);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
+    void initPreludeSpinner(List<String> preludeList);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setPreludeSpinnerPosition(int preludePosition);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setResultValues(int gatesCount, int monstersCount, int curseCount, int rumorsCount, int cluesCount, int blessedCount, int doomCount);
 
     @StateStrategyType(SkipStrategy.class)
     void setMysteryValue(int i);
 
     @StateStrategyType(OneExecutionStateStrategy.class)
-    void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3, boolean v4, boolean v5);
+    void setDefeatReasonSwitchChecked(boolean v1, boolean v2, boolean v3, boolean v4, boolean v5, boolean v6);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setVisibilityRumorSpinnerTR(boolean visible);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setVisibilityPreludeSpinnerTR(boolean visible);
 
     @StateStrategyType(SkipStrategy.class)
     void setCommentValue(String text);

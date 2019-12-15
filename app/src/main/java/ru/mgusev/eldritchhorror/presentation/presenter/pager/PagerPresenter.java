@@ -76,6 +76,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
             else if (repository.getGame().getIsDefeatByMythosDepletion()) getViewState().setDefeatByMythosDepletionIcon();
             else if (repository.getGame().getIsDefeatBySurrender()) getViewState().setDefeatBySurrenderIcon();
             else if (repository.getGame().getIsDefeatByRumor()) getViewState().setDefeatByRumorIcon();
+            else if (repository.getGame().getIsDefeatByPrelude()) getViewState().setDefeatByPreludeIcon();
             else getViewState().setDefeatByAwakenedAncientOneIcon();
         }
     }
@@ -93,6 +94,7 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
             repository.getGame().clearResultValuesIfDefeat();
             repository.getGame().trimCommentText();
             repository.getGame().clearDefeatRumorID();
+            repository.getGame().clearDefeatPreludeID();
             repository.insertGame(repository.getGame());
             repository.gameListOnNext();
             repository.rateOnNext();
