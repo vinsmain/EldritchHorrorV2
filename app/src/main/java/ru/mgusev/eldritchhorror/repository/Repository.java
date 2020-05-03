@@ -211,6 +211,9 @@ public class Repository {
             } else if (investigator.getNameRU().equals("\"Ашкан\" Пит")) {
                 investigator.setNameRU("Пит Мусорщик");
                 update = true;
+            } else if (investigator.getOccupationRU().equals("Проклятый")) {
+                investigator.setOccupationRU("Беглец");
+                update = true;
             }
         }
         if (update) insertGame(game);
