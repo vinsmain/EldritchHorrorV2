@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_ancient_one"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.3"
+                android:scaleType="centerCrop"
+                android:src="@drawable/eh_main_land" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:theme="@style/aboutTheme" />
+
+                <TextView
+                    android:id="@+id/forgotten_endings_copyright"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="72dp"
+                    android:layout_marginTop="-8dp"
+                    android:layout_marginBottom="2dp"
+                    android:text="@string/before_the_storm_starts_copyright"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorText"
+                    android:textSize="12sp" />
+
+                <com.tiper.MaterialSpinner
+                    android:id="@+id/forgotten_endings_ancient_one_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:focusable="false"
+                    android:hint="@string/ancientOne"
+                    android:paddingStart="4dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#CCFFFFFF"
+                    android:theme="@style/AppTheme.WhiteAccent.SpinnerTheme" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/ancient_one_info_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/audio_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/keyline_1_minus_8dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/view_audio_player" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/info_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/keyline_1_minus_8dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <hakobastvatsatryan.DropdownTextView
+                            android:id="@+id/expandable_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            app:arrow_drawable="@drawable/arrow_right"
+                            app:content_text_color="@color/colorSecondaryText"
+                            app:expand_duration="300"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:foregroundGravity="center"
+                            app:title_text="               Краткая информация"
+                            app:title_text_color="@color/colorPrimaryText"
+                            app:title_text_color_expanded="@color/colorPrimaryText"
+                            app:title_text_size="@dimen/title_text_size" />
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/view_clickable_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/btn_audio_info"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:theme="@style/AppTheme.ColorHighlight"
+                                android:layout_margin="8dp"
+                                android:padding="16dp"
+                                android:src="@drawable/play" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    </FrameLayout>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/story_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/keyline_1_minus_8dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <hakobastvatsatryan.DropdownTextView
+                            android:id="@+id/expandable_story"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            app:arrow_drawable="@drawable/arrow_right"
+                            app:content_text_color="@color/colorSecondaryText"
+                            app:expand_duration="300"
+                            app:title_text="               Вступительная история"
+                            app:title_text_color="@color/colorPrimaryText"
+                            app:title_text_color_expanded="@color/colorPrimaryText"
+                            app:title_text_size="@dimen/title_text_size" />
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/view_clickable_story"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/btn_audio_story"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:theme="@style/AppTheme.ColorHighlight"
+                                android:layout_margin="8dp"
+                                android:padding="16dp"
+                                android:src="@drawable/play" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    </FrameLayout>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

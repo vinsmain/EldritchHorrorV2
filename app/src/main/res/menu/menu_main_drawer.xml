@@ -12,6 +12,11 @@
             android:title="@string/statistics_header"
             app:showAsAction="always|collapseActionView" />
         <item
+            android:id="@+id/action_ancient_one_info"
+            android:icon="@drawable/scroll"
+            android:title="@string/before_the_storm_starts"
+            app:showAsAction="always|collapseActionView" />
+        <item
             android:id="@+id/action_forgotten_endings"
             android:icon="@drawable/forgotten_endings"
             android:title="@string/forgotten_endings_header"
@@ -40,6 +45,17 @@
             android:id="@+id/action_about"
             android:icon="@drawable/about"
             android:title="@string/about"
+            app:showAsAction="always|collapseActionView" />
+    </group>
+
+    <group
+        android:id="@+id/menu_donate"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/action_donate"
+            android:icon="@drawable/coin_black"
+            android:title="@string/donate"
             app:showAsAction="always|collapseActionView" />
     </group>
 

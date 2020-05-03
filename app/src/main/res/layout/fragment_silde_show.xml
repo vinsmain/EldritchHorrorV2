@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-<!--Viewpager to show slideshow of images-->
+<!--Viewpager to show slideshow of files-->
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPagerGallery"
         android:layout_width="match_parent"

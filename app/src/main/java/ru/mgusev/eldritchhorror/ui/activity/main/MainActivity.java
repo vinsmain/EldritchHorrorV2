@@ -40,6 +40,7 @@ import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
+import ru.mgusev.eldritchhorror.ui.activity.ancient_one_info.AncientOneInfoActivity;
 import ru.mgusev.eldritchhorror.ui.adapter.main.MainAdapter;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Localization;
@@ -133,9 +134,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     private void initDrawerMenu() {
-        forgottenEndingsItem = navigationView.getMenu().getItem(1);
+        forgottenEndingsItem = navigationView.getMenu().getItem(2);
         statItem = navigationView.getMenu().getItem(0);
-        authItem = navigationView.getMenu().getItem(7);
+        authItem = navigationView.getMenu().getItem(9);
         mainPresenter.setVisibilityStatisticsMenuItem();
         mainPresenter.initAuthMenuItem();
         setVisibilityForgottenEndingsItem();
@@ -158,6 +159,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         switch (item.getItemId()) {
             case R.id.action_sort:
                 mainPresenter.changeSortMode();
+                return true;
+            case R.id.action_donate:
+                //TODO Сделать экран доната
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -205,6 +209,17 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 closeDrawer();
                 Intent diceIntent = new Intent(this, DiceActivity.class);
                 startActivity(diceIntent);
+                return true;
+            case R.id.action_ancient_one_info:
+                closeDrawer();
+                Intent ancientOneInfoIntent = new Intent(this, AncientOneInfoActivity.class);
+                startActivity(ancientOneInfoIntent);
+                return true;
+            case R.id.action_donate:
+                //TODO Сделать экран доната
+//                closeDrawer();
+//                Intent ancientOneInfoIntent = new Intent(this, AncientOneInfoActivity.class);
+//                startActivity(ancientOneInfoIntent);
                 return true;
             default:
                 return true;

@@ -11,7 +11,7 @@ import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import retrofit2.HttpException;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.api.FaqAPIService;
+import ru.mgusev.eldritchhorror.api.EHAPIService;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.presentation.view.faq.FaqView;
@@ -24,7 +24,7 @@ public class FaqPresenter extends MvpPresenter<FaqView> {
     @Inject
     Repository repository;
     @Inject
-    FaqAPIService service;
+    EHAPIService service;
     private String searchText = "";
 
     public FaqPresenter() {
@@ -50,7 +50,7 @@ public class FaqPresenter extends MvpPresenter<FaqView> {
 
     public void clickRefresh() {
         getViewState().startRefreshIconRotate();
-        service.getArticles();
+        service.getFaq();
     }
 
     public void completeUpdateArticleList() {

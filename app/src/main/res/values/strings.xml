@@ -402,11 +402,16 @@
 
     <plurals name="pick_multi">
         <item quantity="one">One image selected</item>
-        <item quantity="other">%1$d images selected</item>
+        <item quantity="other">%1$d files selected</item>
     </plurals>
     <plurals name="pick_multi_more">
         <item quantity="one">Please select one more image…</item>
-        <item quantity="other">Please select %1$d more images…</item>
+        <item quantity="other">Please select %1$d more files…</item>
     </plurals>
-    <string name="pick_multi_limit" translatable="false">You have more than %1$d images selected…</string>
+    <string name="pick_multi_limit" translatable="false">You have more than %1$d files selected…</string>
+
+    <!--Ancient One Info-->
+    <string name="before_the_storm_starts">Before the storm starts</string>
+    <string name="before_the_storm_starts_copyright">collected - Sineptic</string>
+    <string name="test">Он – божество нечистот. Это огромное озеро фосфоресцирующей материи, постоянно пузырящейся и выбрасывающей наружу отростки, пасти и ложно-ножки. Отвратительные чудовища непрерывно формируются в этой бурлящей массе и потом отползают от своего родителя. Завитки и отростки Абхота порождают множество отпрысков, которые затем жадно поглощаются первичной массой, но другим порождениям удается спастись, расползаясь по бесконечным черным пещерам, где обитает это монструозное божество. \\n</string>
 </resources>

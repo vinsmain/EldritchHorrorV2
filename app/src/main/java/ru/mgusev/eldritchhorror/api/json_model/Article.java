@@ -42,7 +42,7 @@ public class Article implements Comparable<Article> {
     private String publishDown;
     @SerializedName("images")
     @Expose
-    private Images images;
+    private Files files;
     @SerializedName("access")
     @Expose
     private String access;
@@ -150,12 +150,12 @@ public class Article implements Comparable<Article> {
         this.publishDown = publishDown;
     }
 
-    public Images getImages() {
-        return images;
+    public Files getFiles() {
+        return files;
     }
 
-    public void setImages(Images images) {
-        this.images = images;
+    public void setFiles(Files files) {
+        this.files = files;
     }
 
     public String getAccess() {

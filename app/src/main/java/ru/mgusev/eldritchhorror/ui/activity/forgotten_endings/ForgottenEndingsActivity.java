@@ -40,7 +40,8 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.forgotten_endings_scroll_view) NestedScrollView scrollView;
+    @BindView(R.id.forgotten_endings_scroll_view)
+    NestedScrollView scrollView;
     @BindView(R.id.forgotten_endings_ancient_one_spinner)
     MaterialSpinner ancientOneSpinner;
     @BindView(R.id.forgotten_endings_result_switch)

@@ -10,15 +10,18 @@ import java.util.List;
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
-import ru.mgusev.eldritchhorror.api.FaqAPIService;
-import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration10to11;
-import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration11to12;
-import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration12to13;
+
+import ru.mgusev.eldritchhorror.api.EHAPIService;
 import ru.mgusev.eldritchhorror.utils.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration6to7;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration7to8;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration8to9;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration9to10;
+import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration10to11;
+import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration11to12;
+import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration12to13;
+import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration13to14;
+import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration14to15;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigrations;
 import ru.mgusev.eldritchhorror.database.userDB.Migrations;
 import ru.mgusev.eldritchhorror.repository.FirebaseHelper;
@@ -71,6 +74,8 @@ public class AppModule {
                 .addMigrations(StaticDBMigration10to11.MIGRATION_10_11)
                 .addMigrations(StaticDBMigration11to12.MIGRATION_11_12)
                 .addMigrations(StaticDBMigration12to13.MIGRATION_12_13)
+                .addMigrations(StaticDBMigration13to14.MIGRATION_13_14)
+                .addMigrations(StaticDBMigration14to15.MIGRATION_14_15)
                 .allowMainThreadQueries()
                 .build();
     }
@@ -136,8 +141,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public FaqAPIService provideFaqAPIService(Context context) {
-        return new FaqAPIService(context);
+    public EHAPIService provideFaqAPIService(Context context) {
+        return new EHAPIService(context);
     }
 
     @Provides

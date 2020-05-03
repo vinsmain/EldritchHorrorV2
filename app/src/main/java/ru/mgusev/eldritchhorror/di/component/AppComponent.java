@@ -3,7 +3,9 @@ package ru.mgusev.eldritchhorror.di.component;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.di.module.AppModule;
+import ru.mgusev.eldritchhorror.presentation.presenter.ancient_one_info.AncientOneInfoPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.dice.DiceAdapterPresenter;
 import ru.mgusev.eldritchhorror.presentation.presenter.dice.DiceItemPresenter;
 import ru.mgusev.eldritchhorror.ui.adapter.details.DetailsAdapter;
@@ -36,6 +38,7 @@ import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPres
 @Component (modules = AppModule.class)
 @Singleton
 public interface AppComponent {
+    void inject(App presenter);
     void inject(MainPresenter presenter);
     void inject(DetailsPresenter presenter);
     void inject(StatisticsPresenter presenter);
@@ -54,6 +57,7 @@ public interface AppComponent {
     void inject(DicePresenter presenter);
     void inject(DiceAdapterPresenter presenter);
     void inject(DiceItemPresenter presenter);
+    void inject(AncientOneInfoPresenter presenter);
 
     void inject(MainAdapter adapter);
     void inject(InvestigatorChoiceAdapter adapter);
