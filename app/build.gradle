@@ -16,15 +16,15 @@ android {
         applicationId "ru.mgusev.eldritchhorror"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 51
-        versionName "2.4.4"
+        versionCode 52
+        versionName "2.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "FileBaseUrl", '""https://mgusevstudio.ru/images/files"'
+            buildConfigField "String", "FileBaseUrl", '"https://mgusevstudio.ru/images/files"'
         }
         debug {
             applicationIdSuffix '.debug'

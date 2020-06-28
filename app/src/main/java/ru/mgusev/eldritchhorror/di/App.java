@@ -78,7 +78,7 @@ public class App extends Application{
                 boolean playing = state.getState() == PlaybackStateCompat.STATE_PLAYING;
                 boolean stopped = state.getState() != PlaybackStateCompat.STATE_STOPPED && state.getState() != PlaybackStateCompat.STATE_PAUSED;
                 Timber.d(String.valueOf(state.getState()));
-                repository.audioPlayerStateChangePublish(new AudioState(audioPlayerService.getCurrentTrack(), playing, audioPlayerService.getTotalDuration(), audioPlayerService.getCurrentPosition()));
+                repository.audioPlayerStateChangePublish(new AudioState(audioPlayerService.getCurrentTrack(), playing, audioPlayerService.getTotalDuration(), state.getState() != PlaybackStateCompat.STATE_STOPPED ? audioPlayerService.getCurrentPosition() : 0));
                 updateProgress(playing, stopped);
             }
         };
@@ -146,7 +146,7 @@ public class App extends Application{
     }
 
     public static void updateAudioPlayerState(Files audio) {
-        Timber.d(String.valueOf(audio));
+        Timber.d(String.valueOf(audio) + " " + audio.getImageIntroAlt());
         audioPlayerService.updateState(audio);
     }
 
@@ -158,18 +158,23 @@ public class App extends Application{
         if (playerServiceBinder != null) {
             if (playing) {
                 audioPlayerProgressDisposable = Observable
-                        .interval(500, TimeUnit.MILLISECONDS)
+                        .interval(100, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .map(p -> new AudioState(audioPlayerService.getCurrentTrack(), true, audioPlayerService.getTotalDuration(), audioPlayerService.getCurrentPosition()))
                         .subscribeOn(Schedulers.io())
                         .subscribe(state -> repository.audioPlayerProgressChangePublish(state), Timber::e);
             } else {
-                if (audioPlayerProgressDisposable != null) audioPlayerProgressDisposable.dispose();
                 if (stopped) {
                     audioPlayerSeekTo(0L);
                     repository.audioPlayerProgressChangePublish(new AudioState(audioPlayerService.getCurrentTrack(), true, audioPlayerService.getTotalDuration(), 0L));
                 }
             }
         }
+    }
+
+    @Override
+    public void onTerminate() {
+        if (audioPlayerProgressDisposable != null) audioPlayerProgressDisposable.dispose();
+        super.onTerminate();
     }
 }

@@ -55,6 +55,7 @@ public class ForgottenEndingsPresenter extends MvpPresenter<ForgottenEndingsView
         ancientOneId = repository.getAncientOne(ancientOneNameList.get(position)).getId();
         getViewState().setResultSwitchVisibility(true);
         getViewState().setAncientOneSpinnerPosition(position);
+        getViewState().setAncientOneImage(repository.getAncientOne(ancientOneId));
         if (oldAncientOneId != ancientOneId)
             initConditions(ancientOneId, resultValue);
     }

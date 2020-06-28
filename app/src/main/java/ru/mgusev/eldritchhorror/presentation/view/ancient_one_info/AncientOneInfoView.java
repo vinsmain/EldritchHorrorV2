@@ -44,6 +44,7 @@ public interface AncientOneInfoView extends MvpView {
 
     void setVisibilityContent(boolean visible);
 
+    @StateStrategyType(OneExecutionStateStrategy.class)
     void updateAudioPlayerState(Files audio);
 
     void setVisibilityAudioPlayer(boolean visible);
@@ -56,7 +57,9 @@ public interface AncientOneInfoView extends MvpView {
 
     void changeAudioStoryIcon(boolean isPlaying);
 
-    void updateDuration(int total, int current);
+    void setAudioTitle(String title);
+
+    void updateDuration(long total, long current);
 
     void changeAudioControlButtonIcon(boolean playing);
 

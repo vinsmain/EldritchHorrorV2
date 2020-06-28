@@ -14,9 +14,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.media.session.MediaButtonReceiver;
 
-import ru.mgusev.eldritchhorror.R;
-
-
 /**
  * Helper APIs for constructing MediaStyle notifications
  */
@@ -41,7 +38,7 @@ public class MediaStyleHelper {
                 .setContentTitle(description.getTitle())
                 .setContentText(description.getSubtitle())
                 .setSubText(description.getDescription())
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher_foreground))
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), context.getResources().getIdentifier(mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI), "drawable", context.getPackageName())))
                 .setContentIntent(intent)
                 .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);

@@ -83,6 +83,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private MenuItem authItem;
     private MenuItem statItem;
     private MenuItem forgottenEndingsItem;
+    private MenuItem infoAncientOneItem;
 
     private int columnsCount = 1;
     private MainAdapter adapter;
@@ -134,12 +135,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     private void initDrawerMenu() {
+        infoAncientOneItem = navigationView.getMenu().getItem(1);
         forgottenEndingsItem = navigationView.getMenu().getItem(2);
         statItem = navigationView.getMenu().getItem(0);
         authItem = navigationView.getMenu().getItem(9);
         mainPresenter.setVisibilityStatisticsMenuItem();
         mainPresenter.initAuthMenuItem();
         setVisibilityForgottenEndingsItem();
+        setVisibilityInfoAncientOneItem();
     }
 
     @Override
@@ -154,6 +157,10 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         forgottenEndingsItem.setVisible(Localization.getInstance().isRusLocale());
     }
 
+    private void setVisibilityInfoAncientOneItem() {
+        infoAncientOneItem.setVisible(Localization.getInstance().isRusLocale());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -161,7 +168,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 mainPresenter.changeSortMode();
                 return true;
             case R.id.action_donate:
-                //TODO Сделать экран доната
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -172,6 +180,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
+            case R.id.action_donate:
                 closeDrawer();
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
@@ -214,12 +223,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 closeDrawer();
                 Intent ancientOneInfoIntent = new Intent(this, AncientOneInfoActivity.class);
                 startActivity(ancientOneInfoIntent);
-                return true;
-            case R.id.action_donate:
-                //TODO Сделать экран доната
-//                closeDrawer();
-//                Intent ancientOneInfoIntent = new Intent(this, AncientOneInfoActivity.class);
-//                startActivity(ancientOneInfoIntent);
                 return true;
             default:
                 return true;

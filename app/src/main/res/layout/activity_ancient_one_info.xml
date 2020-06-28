@@ -65,6 +65,16 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/noneResultsTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/statistics_none"
+        android:layout_margin="@dimen/standard_margin"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/ancient_one_info_scroll_view"
         android:layout_width="match_parent"
@@ -81,6 +91,7 @@
                 android:id="@+id/audio_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_margin="@dimen/keyline_1_minus_8dp">
 
                 <androidx.appcompat.widget.LinearLayoutCompat

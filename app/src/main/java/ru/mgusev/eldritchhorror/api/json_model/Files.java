@@ -32,6 +32,10 @@ public class Files {
     @Expose
     private String imageFulltextCaption;
 
+    private String title;
+    private String cover;
+    private int spinnerPosition;
+
     public String getImageIntro() {
         return imageIntro;
     }
@@ -94,6 +98,30 @@ public class Files {
 
     public void setImageFulltextCaption(String imageFulltextCaption) {
         this.imageFulltextCaption = imageFulltextCaption;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public int getSpinnerPosition() {
+        return spinnerPosition;
+    }
+
+    public void setSpinnerPosition(int spinnerPosition) {
+        this.spinnerPosition = spinnerPosition;
     }
 
     @Override

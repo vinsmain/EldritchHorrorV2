@@ -414,4 +414,17 @@
     <string name="before_the_storm_starts">Before the storm starts</string>
     <string name="before_the_storm_starts_copyright">collected - Sineptic</string>
     <string name="test">Он – божество нечистот. Это огромное озеро фосфоресцирующей материи, постоянно пузырящейся и выбрасывающей наружу отростки, пасти и ложно-ножки. Отвратительные чудовища непрерывно формируются в этой бурлящей массе и потом отползают от своего родителя. Завитки и отростки Абхота порождают множество отпрысков, которые затем жадно поглощаются первичной массой, но другим порождениям удается спастись, расползаясь по бесконечным черным пещерам, где обитает это монструозное божество. \\n</string>
+
+    <string name="score_info_header">Scoring</string>
+    <string name="score_info_text">If investigators win the game, they can determine how well they did.\n\n
+        The lower the score, the better!\n\n
+        To calculate a score, start with zero, then:\n
+            \u2022 Add one for each Gate on the game board.\n
+            \u2022 Add one for every three Monsters on the game board (rounded up).\n
+            \u2022 Add one for each Cursed or Dark Pact Condition investigators have.\n
+            \u2022 Add three for each Rumor Mythos card in play\n
+            \u2022 Subtract one for every three Clue tokens investigators have (rounded up).\n
+            \u2022 Subtract one for each Blessed Condition investigators have.\n
+            \u2022 Subtract the current level of Doom.\n\n
+            (reference guide, page 14)</string>
 </resources>

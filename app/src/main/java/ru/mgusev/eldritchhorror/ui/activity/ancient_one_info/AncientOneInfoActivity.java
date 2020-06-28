@@ -1,25 +1,23 @@
 package ru.mgusev.eldritchhorror.ui.activity.ancient_one_info;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -74,14 +72,18 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
     DropdownTextView expandableStory;
     @BindView(R.id.ancient_one_info_scroll_view)
     NestedScrollView scrollView;
+    @BindView(R.id.noneResultsTV)
+    AppCompatTextView noneResultsTV;
 
     @BindView(R.id.btn_audio_info)
     AppCompatImageView btnAudioInfo;
     @BindView(R.id.btn_audio_story)
     AppCompatImageView btnAudioStory;
 
-    @BindView(R.id.audioPlayerContainer)
-    LinearLayoutCompat audioPlayerContainer;
+    @BindView(R.id.audio_card)
+    CardView audioPlayerContainer;
+    @BindView(R.id.textAudioTitle)
+    AppCompatTextView textAudioTitle;
     @BindView(R.id.audioProgressBar)
     AppCompatSeekBar audioProgressBar;
     @BindView(R.id.textAudioCurrentDuration)
@@ -120,6 +122,9 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
 
         initToolbar();
         initAncientOneSpinner();
+
+        if (getIntent().getData() != null)
+            presenter.setAncientOneSpinnerCurrentPositionFromIntent(Integer.parseInt(getIntent().getData().toString()), false);
     }
 
     /**
@@ -256,7 +261,7 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
      */
     @Override
     public void setNoneResultsTVVisibility(boolean isVisible) {
-        //noneResultsTV.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        noneResultsTV.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -272,7 +277,6 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
     @Override
     public void setAncientOneSpinnerPosition(int position) {
         Timber.d(String.valueOf(position));
-        //skipCheckedChangedSpinner = true;
         ancientOneSpinner.setSelection(position);
     }
 
@@ -281,7 +285,7 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
         imageAncientOne.setImageResource(getResources().getIdentifier(ancientOne.getImageResource(), "drawable", getPackageName()));
     }
 
-    @OnClick({R.id.view_clickable_info, R.id.view_clickable_story, R.id.btn_audio_info, R.id.btn_audio_story})
+    @OnClick({R.id.view_clickable_info, R.id.view_clickable_story})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.view_clickable_info:
@@ -289,12 +293,6 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
                 break;
             case R.id.view_clickable_story:
                 presenter.expandableStoryOnClick();
-                break;
-            case R.id.btn_audio_info:
-                //presenter.expandableStoryOnClick();
-                break;
-            case R.id.btn_audio_story:
-                //presenter.expandableStoryOnClick();
                 break;
         }
     }
@@ -312,7 +310,6 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
                 presenter.onAudioStoryButtonClicked();
                 break;
         }
-        presenter.onAudioControlButtonClicked();
     }
 
     @Override
@@ -362,6 +359,10 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
     @Override
     public void setVisibilityAudioPlayer(boolean visible) {
         audioPlayerContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (visible) {
+            audioProgressBar.setOnSeekBarChangeListener(this);
+        } else
+            audioProgressBar.setOnSeekBarChangeListener(null);
     }
 
     @Override
@@ -387,11 +388,16 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
     }
 
     @Override
-    public void updateDuration(int total, int current) {
+    public void setAudioTitle(String title) {
+        textAudioTitle.setText(title);
+    }
+
+    @Override
+    public void updateDuration(long total, long current) {
         audioTotalDuration.setText(getDuration(total));
         audioCurrentDuration.setText(getDuration(current));
-        audioProgressBar.setMax(total);
-        audioProgressBar.setProgress(current);
+        audioProgressBar.setMax((int) total);
+        audioProgressBar.setProgress((int) current);
     }
 
     @Override
@@ -418,8 +424,17 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
         presenter.onUserTrackingTouch(false);
     }
 
-    public static String getDuration(int durationInSeconds) {
+    public static String getDuration(long durationInSeconds) {
         //Timber.d(String.valueOf(durationInSeconds));
-        return String.format(Locale.getDefault(), "%d:%02d:%02d", durationInSeconds / 3600, (durationInSeconds % 3600) / 60, (durationInSeconds % 60));
+        return String.format(Locale.getDefault(), "%02d:%02d", (durationInSeconds % 3600) / 60, (durationInSeconds % 60));
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Timber.d(intent.getData().toString());
+        if (intent.getData() != null) {
+            presenter.setAncientOneSpinnerCurrentPositionFromIntent(Integer.parseInt(intent.getData().toString()), true);
+        }
     }
 }

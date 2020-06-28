@@ -70,7 +70,9 @@
         <activity
             android:name=".ui.activity.forgotten_endings.ForgottenEndingsActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ui.activity.ancient_one_info.AncientOneInfoActivity" />
+        <activity
+            android:name=".ui.activity.ancient_one_info.AncientOneInfoActivity"
+            android:launchMode="singleTask"/>
 
         <service
             android:name=".ui.audio_player.AudioPlayerService"

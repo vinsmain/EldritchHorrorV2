@@ -26,6 +26,16 @@
         android:orientation="vertical"
         android:paddingTop="@dimen/small_margin">
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textAudioTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginEnd="@dimen/standard_margin"
+            android:textColor="@color/colorPrimaryText"
+            tools:text="Азатот - Краткая информация" />
+
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/audioProgressBar"
             android:layout_width="match_parent"
@@ -37,8 +47,8 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/standard_margin"
-            android:paddingEnd="@dimen/standard_margin">
+            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginEnd="@dimen/standard_margin">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textAudioCurrentDuration"

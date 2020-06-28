@@ -61,6 +61,7 @@ import okhttp3.OkHttpClient;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.api.json_model.Files;
 import ru.mgusev.eldritchhorror.di.App;
+import ru.mgusev.eldritchhorror.ui.activity.ancient_one_info.AncientOneInfoActivity;
 import timber.log.Timber;
 
 import static com.google.android.exoplayer2.C.POSITION_UNSET;
@@ -159,9 +160,14 @@ public class AudioPlayerService extends MediaBrowserServiceCompat {
 
     public void updateState(Files currentTrack) {
         Timber.d(String.valueOf(exoPlayer.isPlaying()));
-        if (this.currentTrack != null && this.currentTrack.equals(currentTrack) && exoPlayer.isPlaying()) {
-            mediaSessionCallback.onPause();
+        if (this.currentTrack != null && this.currentTrack.equals(currentTrack)) {
+            Timber.d("123");
+            if (exoPlayer.isPlaying())
+                mediaSessionCallback.onPause();
+            else
+                mediaSessionCallback.onPlay();
         } else {
+            Timber.d("456");
             this.currentTrack = currentTrack;
             mediaSessionCallback.onSkipToNext();
             mediaSessionCallback.onPlay();
@@ -304,9 +310,9 @@ public class AudioPlayerService extends MediaBrowserServiceCompat {
         }
 
         private void updateMetadataFromTrack(Files track) {
-            //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, track.getCoverUrl());
-            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, "Азатот");
-            //metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.getAbsoluteNewsUrl());
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, track.getCover());
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.getTitle());
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, String.valueOf(track.getSpinnerPosition()));
             mediaSession.setMetadata(metadataBuilder.build());
         }
     };
@@ -414,8 +420,8 @@ public class AudioPlayerService extends MediaBrowserServiceCompat {
     }
 
     private Notification getNotification(int playbackState) {
-        Intent resultIntent = new Intent(Intent.ACTION_VIEW);
-        //resultIntent.setData(Uri.parse(mediaSession.getController().getMetadata().getDescription().getMediaId()));
+        Intent resultIntent = new Intent(this, AncientOneInfoActivity.class);
+        resultIntent.setData(Uri.parse(mediaSession.getController().getMetadata().getDescription().getMediaId()));
 
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

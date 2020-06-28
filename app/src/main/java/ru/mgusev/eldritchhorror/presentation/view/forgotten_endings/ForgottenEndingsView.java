@@ -7,6 +7,7 @@ import moxy.MvpView;
 import moxy.viewstate.strategy.AddToEndSingleStrategy;
 import moxy.viewstate.strategy.SkipStrategy;
 import moxy.viewstate.strategy.StateStrategyType;
+import ru.mgusev.eldritchhorror.model.AncientOne;
 
 public interface ForgottenEndingsView extends MvpView {
 
@@ -24,6 +25,8 @@ public interface ForgottenEndingsView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setAncientOneSpinnerPosition(int position);
+
+    void setAncientOneImage(AncientOne ancientOne);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setResultSwitchVisibility(boolean visible);

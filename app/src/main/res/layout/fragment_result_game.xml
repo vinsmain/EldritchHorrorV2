@@ -230,6 +230,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.01"
+                            android:paddingEnd="@dimen/standard_margin"
                             android:background="@color/colorTransparent"
                             android:src="@drawable/clock" />
                     </LinearLayout>
@@ -462,15 +463,33 @@
                         android:gravity="center_vertical"
                         android:padding="16dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
                             android:layout_span="2"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:text="@string/win_table_header"
-                            android:textColor="@color/colorPrimaryText"
-                            android:textSize="16sp" />
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/win_table_header"
+                                android:textColor="@color/colorPrimaryText"
+                                android:textSize="16sp" />
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/btnScoreInfo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:padding="@dimen/standard_margin"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:theme="@style/AppTheme.ColorHighlight"
+                                android:background="@color/colorTransparent"
+                                android:src="@drawable/about" />
+
+                        </FrameLayout>
 
                     </TableRow>
 
