@@ -1,6 +1,8 @@
 package ru.mgusev.eldritchhorror.ui.activity.forgotten_endings;
 
 import android.os.Bundle;
+
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 
@@ -29,6 +31,7 @@ import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.presenter.forgotten_endings.ForgottenEndingsPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.forgotten_endings.ForgottenEndingsView;
 import timber.log.Timber;
@@ -40,9 +43,12 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.forgotten_endings_scroll_view) NestedScrollView scrollView;
+    @BindView(R.id.forgotten_endings_scroll_view)
+    NestedScrollView scrollView;
     @BindView(R.id.forgotten_endings_ancient_one_spinner)
     MaterialSpinner ancientOneSpinner;
+    @BindView(R.id.image_ancient_one)
+    AppCompatImageView imageAncientOne;
     @BindView(R.id.forgotten_endings_result_switch)
     Switch resultSwitch;
     @BindView(R.id.forgotten_endings_switch_container)
@@ -154,6 +160,11 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         Timber.d(String.valueOf(position));
         skipCheckedChangedSpinner = true;
         ancientOneSpinner.setSelection(position);
+    }
+
+    @Override
+    public void setAncientOneImage(AncientOne ancientOne) {
+        imageAncientOne.setImageResource(getResources().getIdentifier(ancientOne.getImageResource(), "drawable", getPackageName()));
     }
 
     @Override

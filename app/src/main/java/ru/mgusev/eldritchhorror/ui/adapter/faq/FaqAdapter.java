@@ -91,11 +91,10 @@ public class FaqAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case 0: return new FaqViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq, parent, false));
-            case 1: return new ErrataViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq_errata, parent, false));
-            default: return new FaqViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq, parent, false));
+        if (viewType == 1) {
+            return new ErrataViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq_errata, parent, false));
         }
+        return new FaqViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq, parent, false));
     }
 
     @Override
@@ -104,12 +103,12 @@ public class FaqAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case 0:
                 FaqViewHolder faqViewHolder = (FaqViewHolder) holder;
                 faqViewHolder.faqQuestion.setText(getSpannableFormText(articleList.get(position).getTitle()), TextView.BufferType.SPANNABLE);
-                faqViewHolder.faqAnswer.setText(trimSpannable(getSpannableFormText(articleList.get(position).getIntrotext())), TextView.BufferType.SPANNABLE);
+                faqViewHolder.faqAnswer.setText(App.trimSpannable(getSpannableFormText(articleList.get(position).getIntrotext())), TextView.BufferType.SPANNABLE);
                 faqViewHolder.faqAnswer.setMovementMethod(LinkMovementMethod.getInstance());
                 break;
             case 1:
                 ErrataViewHolder errataViewHolder = (ErrataViewHolder) holder;
-                errataViewHolder.errataText.setText(trimSpannable(getSpannableFormText(articleList.get(position).getIntrotext())), TextView.BufferType.SPANNABLE);
+                errataViewHolder.errataText.setText(App.trimSpannable(getSpannableFormText(articleList.get(position).getIntrotext())), TextView.BufferType.SPANNABLE);
                 errataViewHolder.errataText.setMovementMethod(LinkMovementMethod.getInstance());
                 break;
         }
@@ -135,26 +134,6 @@ public class FaqAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
         return spannable;
-    }
-
-    private SpannableStringBuilder trimSpannable(SpannableStringBuilder spannable) {
-        checkNotNull(spannable);
-        int trimStart = 0;
-        int trimEnd = 0;
-
-        String text = spannable.toString();
-
-        while (text.length() > 0 && text.startsWith("\n")) {
-            text = text.substring(1);
-            trimStart += 1;
-        }
-
-        while (text.length() > 0 && text.endsWith("\n")) {
-            text = text.substring(0, text.length() - 1);
-            trimEnd += 1;
-        }
-
-        return spannable.delete(0, trimStart).delete(spannable.length() - trimEnd, spannable.length());
     }
 
     @Override

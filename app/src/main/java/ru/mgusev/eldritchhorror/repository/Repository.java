@@ -23,12 +23,14 @@ import dagger.Module;
 import durdinapps.rxfirebase2.RxFirebaseChildEvent;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.database.staticDB.StaticDataDB;
 import ru.mgusev.eldritchhorror.database.userDB.UserDataDB;
 import ru.mgusev.eldritchhorror.model.AncientOne;
+import ru.mgusev.eldritchhorror.model.AudioState;
 import ru.mgusev.eldritchhorror.model.Card;
 import ru.mgusev.eldritchhorror.model.CardType;
 import ru.mgusev.eldritchhorror.model.Dice;
@@ -74,6 +76,8 @@ public class Repository {
     private PublishSubject<Boolean> changeAnimationModePublish;
     private PublishSubject<Integer> changeSuccessModePublish;
     private PublishSubject<Integer> changeSuccessCountPublish;
+    private BehaviorSubject<AudioState> audioPlayerStateChangeSubject;
+    private BehaviorSubject<AudioState> audioPlayerProgressChangeSubject;
 
     private CompositeDisposable firebaseDBSubscribe;
     private CompositeDisposable firebaseFilesSubscribe;
@@ -88,6 +92,8 @@ public class Repository {
     private List<Article> articleListRu;
     private List<Article> articleListEn;
     private CardType cardType;
+    private List<Article> ancientOneStoryList;
+    private List<Article> ancientOneInfoList;
 
     @Inject
     public Repository(Context context, StaticDataDB staticDataDB, UserDataDB userDataDB, PrefHelper prefHelper, FileHelper fileHelper, FirebaseHelper firebaseHelper) {
@@ -117,6 +123,8 @@ public class Repository {
         changeAnimationModePublish = PublishSubject.create();
         changeSuccessModePublish = PublishSubject.create();
         changeSuccessCountPublish = PublishSubject.create();
+        audioPlayerStateChangeSubject = BehaviorSubject.create();
+        audioPlayerProgressChangeSubject = BehaviorSubject.create();
 
         uploadFileSubscribe = new CompositeDisposable();
         uploadFileSubscribe.add(firebaseHelper.getSuccessUploadFilePublish().subscribe(this::uploadFile, Timber::d));
@@ -126,6 +134,9 @@ public class Repository {
 
         articleListRu = new ArrayList<>();
         articleListEn = new ArrayList<>();
+
+        ancientOneStoryList = new ArrayList<>();
+        ancientOneInfoList = new ArrayList<>();
 
         for (Game game : getGameList(0, 0)) {
             fixSpecializationsForOldInvestigators(game);
@@ -858,6 +869,41 @@ public class Repository {
             articleListEn = new ArrayList<>();
             articleListEn.addAll(articleList);
         }
+    }
+
+    //Before the storm started
+
+    public List<Article> getAncientOneStoryList() {
+        return ancientOneStoryList;
+    }
+
+    public void setAncientOneStoryList(List<Article> ancientOneStoryList) {
+        this.ancientOneStoryList = ancientOneStoryList;
+    }
+
+    public List<Article> getAncientOneInfoList() {
+        return ancientOneInfoList;
+    }
+
+    public void setAncientOneInfoList(List<Article> ancientOneInfoList) {
+        this.ancientOneInfoList = ancientOneInfoList;
+    }
+
+    public BehaviorSubject<AudioState> getAudioPlayerStateChangeSubject() {
+        return audioPlayerStateChangeSubject;
+    }
+
+    public BehaviorSubject<AudioState> getAudioPlayerProgressChangeSubject() {
+        return audioPlayerProgressChangeSubject;
+    }
+
+    public void audioPlayerStateChangePublish(AudioState audioState) {
+        Timber.d(audioState.toString());
+        audioPlayerStateChangeSubject.onNext(audioState);
+    }
+
+    public void audioPlayerProgressChangePublish(AudioState audioState) {
+        audioPlayerProgressChangeSubject.onNext(audioState);
     }
 
     //Random card

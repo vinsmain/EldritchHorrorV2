@@ -13,6 +13,7 @@ import ru.mgusev.eldritchhorror.strategy.DismissDialogStrategy;
 public interface ResultGameView extends MvpView {
 
     String TIME_PICKER_DIALOG_TAG = "timePickerDialog";
+    String SCORE_INFO_DIALOG_TAG = "scoreInfoDialog";
 
     @StateStrategyType(SkipStrategy.class)
     void setResultSwitchChecked(boolean value);
@@ -76,4 +77,10 @@ public interface ResultGameView extends MvpView {
 
     @StateStrategyType(value = DismissDialogStrategy.class, tag = TIME_PICKER_DIALOG_TAG)
     void dismissTimePicker();
+
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = SCORE_INFO_DIALOG_TAG)
+    void showScoreInfoDialog();
+
+    @StateStrategyType(value = DismissDialogStrategy.class, tag = SCORE_INFO_DIALOG_TAG)
+    void hideScoreInfoDialog();
 }

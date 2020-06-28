@@ -11,6 +11,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
+import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Card;
 import ru.mgusev.eldritchhorror.model.CardType;
@@ -22,8 +23,6 @@ import timber.log.Timber;
 
 @InjectViewState
 public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
-
-    private final String IMAGE_URL = "https://mgusevstudio.ru/images/files/eh_images/";
 
     @Inject
     Repository repository;
@@ -60,7 +59,7 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
         getViewState().setCategory(repository.getCardType().getCategoryResourceID());
         getViewState().setType(repository.getCardType(currentCard.getTypeID()).getNameResourceID());
         getViewState().setTitle(currentCard.getNameResourceID());
-        String cardUrl = IMAGE_URL + Localization.getInstance().getPrefix() + "/" + repository.getCardType().getCategoryResourceID() + "/" + repository.getCardType(currentCard.getTypeID()).getNameResourceID() + "/" + currentCard.getNameResourceID() + ".png";
+        String cardUrl = BuildConfig.FileBaseUrl + "/eh_images/" + Localization.getInstance().getPrefix() + "/" + repository.getCardType().getCategoryResourceID() + "/" + repository.getCardType(currentCard.getTypeID()).getNameResourceID() + "/" + currentCard.getNameResourceID() + ".png";
         getViewState().loadImage(Uri.parse(cardUrl));
     }
 

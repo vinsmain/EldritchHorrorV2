@@ -40,6 +40,7 @@ import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
+import ru.mgusev.eldritchhorror.ui.activity.ancient_one_info.AncientOneInfoActivity;
 import ru.mgusev.eldritchhorror.ui.adapter.main.MainAdapter;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Localization;
@@ -82,6 +83,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private MenuItem authItem;
     private MenuItem statItem;
     private MenuItem forgottenEndingsItem;
+    private MenuItem infoAncientOneItem;
 
     private int columnsCount = 1;
     private MainAdapter adapter;
@@ -133,12 +135,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     private void initDrawerMenu() {
-        forgottenEndingsItem = navigationView.getMenu().getItem(1);
+        infoAncientOneItem = navigationView.getMenu().getItem(1);
+        forgottenEndingsItem = navigationView.getMenu().getItem(2);
         statItem = navigationView.getMenu().getItem(0);
-        authItem = navigationView.getMenu().getItem(7);
+        authItem = navigationView.getMenu().getItem(9);
         mainPresenter.setVisibilityStatisticsMenuItem();
         mainPresenter.initAuthMenuItem();
         setVisibilityForgottenEndingsItem();
+        setVisibilityInfoAncientOneItem();
     }
 
     @Override
@@ -153,11 +157,19 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         forgottenEndingsItem.setVisible(Localization.getInstance().isRusLocale());
     }
 
+    private void setVisibilityInfoAncientOneItem() {
+        infoAncientOneItem.setVisible(Localization.getInstance().isRusLocale());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_sort:
                 mainPresenter.changeSortMode();
+                return true;
+            case R.id.action_donate:
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -168,6 +180,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
+            case R.id.action_donate:
                 closeDrawer();
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
@@ -205,6 +218,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 closeDrawer();
                 Intent diceIntent = new Intent(this, DiceActivity.class);
                 startActivity(diceIntent);
+                return true;
+            case R.id.action_ancient_one_info:
+                closeDrawer();
+                Intent ancientOneInfoIntent = new Intent(this, AncientOneInfoActivity.class);
+                startActivity(ancientOneInfoIntent);
                 return true;
             default:
                 return true;

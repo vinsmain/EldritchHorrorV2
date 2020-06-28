@@ -200,6 +200,14 @@ public class ResultGamePresenter extends MvpPresenter<ResultGameView> {
         tempTime = 0;
     }
 
+    public void showScoreInfoDialog() {
+        getViewState().showScoreInfoDialog();
+    }
+
+    public void dismissScoreInfoDialog() {
+        getViewState().hideScoreInfoDialog();
+    }
+
     @Override
     public void onDestroy() {
         ancientOneSubscribe.dispose();

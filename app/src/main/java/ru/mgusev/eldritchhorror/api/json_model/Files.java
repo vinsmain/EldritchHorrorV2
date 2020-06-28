@@ -3,7 +3,9 @@ package ru.mgusev.eldritchhorror.api.json_model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Images {
+import java.util.Objects;
+
+public class Files {
 
     @SerializedName("image_intro")
     @Expose
@@ -29,6 +31,10 @@ public class Images {
     @SerializedName("image_fulltext_caption")
     @Expose
     private String imageFulltextCaption;
+
+    private String title;
+    private String cover;
+    private int spinnerPosition;
 
     public String getImageIntro() {
         return imageIntro;
@@ -92,5 +98,42 @@ public class Images {
 
     public void setImageFulltextCaption(String imageFulltextCaption) {
         this.imageFulltextCaption = imageFulltextCaption;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public int getSpinnerPosition() {
+        return spinnerPosition;
+    }
+
+    public void setSpinnerPosition(int spinnerPosition) {
+        this.spinnerPosition = spinnerPosition;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Files files = (Files) o;
+        return Objects.equals(imageIntroAlt, files.imageIntroAlt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(imageIntroAlt);
     }
 }

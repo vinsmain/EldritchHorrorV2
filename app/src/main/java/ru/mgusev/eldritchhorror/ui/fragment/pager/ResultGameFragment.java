@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -83,7 +85,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     private int[] idArray;
     private ArrayAdapter<String> rumorAdapter;
     private ArrayAdapter<String> preludeAdapter;
-
+    private AlertDialog scoreInfoDialog;
     private TimePickerDialog timePickerDialog;
     private int currentTime;
 
@@ -361,6 +363,33 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         resultGamePresenter.dismissTimePicker();
     }
 
+    @OnClick(R.id.btnScoreInfo)
+    public void onBtnScoreInfoClick() {
+        resultGamePresenter.showScoreInfoDialog();
+    }
+
+    @Override
+    public void showScoreInfoDialog() {
+        if (scoreInfoDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setCancelable(false);
+            builder.setTitle(R.string.score_info_header);
+            builder.setMessage(R.string.score_info_text);
+            builder.setIcon(R.drawable.about);
+            builder.setPositiveButton(R.string.random_card_ok, (DialogInterface dialog, int which) -> {
+                resultGamePresenter.dismissScoreInfoDialog();
+            });
+            //builder.setNegativeButton(R.string.messageCancel, (DialogInterface dialog, int which) -> pagerPresenter.dismissBackDialog());
+            scoreInfoDialog = builder.show();
+        }
+    }
+
+    @Override
+    public void hideScoreInfoDialog() {
+        scoreInfoDialog = null;
+        //Delete showScoreInfoDialog() from currentState with DismissDialogStrategy
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -378,6 +407,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
             }
             timePickerDialog.dismiss();
         }
+        if(scoreInfoDialog != null && scoreInfoDialog.isShowing()) scoreInfoDialog.dismiss();
         unbinder.unbind();
     }
 }
