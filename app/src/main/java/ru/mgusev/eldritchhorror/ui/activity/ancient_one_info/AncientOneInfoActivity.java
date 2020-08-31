@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.ui.activity.ancient_one_info;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -92,6 +93,8 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
     AppCompatTextView audioTotalDuration;
     @BindView(R.id.btnAudioControl)
     FloatingActionButton audioControlButton;
+    @BindView(R.id.textAudioCopyright)
+    AppCompatTextView textAudioCopyright;
 
     /**
      * Сообщение, выводимое если список {@link Article} пуст
@@ -361,6 +364,7 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
         audioPlayerContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
         if (visible) {
             audioProgressBar.setOnSeekBarChangeListener(this);
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)  textAudioCopyright.setText(getResources().getString(R.string.audio_copyright_land));
         } else
             audioProgressBar.setOnSeekBarChangeListener(null);
     }
