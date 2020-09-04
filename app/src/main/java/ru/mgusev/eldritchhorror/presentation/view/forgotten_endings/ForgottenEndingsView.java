@@ -26,6 +26,7 @@ public interface ForgottenEndingsView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setAncientOneSpinnerPosition(int position);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setAncientOneImage(AncientOne ancientOne);
 
     @StateStrategyType(AddToEndSingleStrategy.class)

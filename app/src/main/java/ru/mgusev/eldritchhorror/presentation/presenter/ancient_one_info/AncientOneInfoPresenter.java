@@ -224,7 +224,10 @@ public class AncientOneInfoPresenter extends MvpPresenter<AncientOneInfoView> {
 
     @Override
     public void onDestroy() {
-        audioStateChangeSubscribe.dispose();
+        if (audioStateChangeSubscribe != null)
+            audioStateChangeSubscribe.dispose();
+        if (audioProgressChangeSubscribe != null)
+            audioProgressChangeSubscribe.dispose();
         super.onDestroy();
     }
 }
