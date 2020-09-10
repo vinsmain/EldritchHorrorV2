@@ -12,6 +12,9 @@ public class CardsExpansions {
     @ColumnInfo(name = "expansion_id")
     private int expansionID;
 
+    @ColumnInfo(name = "card_count")
+    private int cardCount;
+
     public CardsExpansions() {
     }
 
@@ -29,5 +32,13 @@ public class CardsExpansions {
 
     public void setExpansionID(int expansionID) {
         this.expansionID = expansionID;
+    }
+
+    public int getCardCount() {
+        return cardCount;
+    }
+
+    public void setCardCount(int cardCount) {
+        this.cardCount = cardCount;
     }
 }

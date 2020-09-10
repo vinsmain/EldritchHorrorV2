@@ -160,7 +160,11 @@ public class AudioPlayerService extends MediaBrowserServiceCompat {
 
     public void updateState(Files currentTrack) {
         Timber.d(String.valueOf(exoPlayer.isPlaying()));
-        if (this.currentTrack != null && this.currentTrack.equals(currentTrack)) {
+        if (currentTrack == null) {
+            if (this.currentTrack != null)
+                mediaSessionCallback.onStop();
+            this.currentTrack = null;
+        } else if (this.currentTrack != null && this.currentTrack.equals(currentTrack)) {
             if (exoPlayer.isPlaying())
                 mediaSessionCallback.onPause();
             else

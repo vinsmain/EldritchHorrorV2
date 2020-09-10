@@ -126,8 +126,10 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
         initToolbar();
         initAncientOneSpinner();
 
-        if (getIntent().getData() != null)
+        if (getIntent().getData() != null) {
             presenter.setAncientOneSpinnerCurrentPositionFromIntent(Integer.parseInt(getIntent().getData().toString()), false);
+            Timber.d(getIntent().getData().toString());
+        }
     }
 
     /**
@@ -354,9 +356,7 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
 
     @Override
     public void updateAudioPlayerState(Files audio) {
-        if (audio != null) {
-            App.updateAudioPlayerState(audio);
-        }
+        App.updateAudioPlayerState(audio);
     }
 
     @Override
@@ -364,7 +364,8 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
         audioPlayerContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
         if (visible) {
             audioProgressBar.setOnSeekBarChangeListener(this);
-            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)  textAudioCopyright.setText(getResources().getString(R.string.audio_copyright_land));
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+                textAudioCopyright.setText(getResources().getString(R.string.audio_copyright_land));
         } else
             audioProgressBar.setOnSeekBarChangeListener(null);
     }

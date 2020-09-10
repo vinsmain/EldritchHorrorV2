@@ -62,8 +62,11 @@ public class AncientOneInfoPresenter extends MvpPresenter<AncientOneInfoView> {
     }
 
     public void setAncientOneSpinnerCurrentPositionFromIntent(int ancientOneSpinnerCurrentPosition, boolean isNewIntent) {
-        if (!isNewIntent) this.ancientOneSpinnerCurrentPosition = ancientOneSpinnerCurrentPosition;
-        getViewState().setAncientOneSpinnerPosition(ancientOneSpinnerCurrentPosition);
+        if (!isNewIntent && this.ancientOneSpinnerCurrentPosition == -1) {
+            Timber.d("OLD " + ancientOneSpinnerCurrentPosition + " " + this.ancientOneSpinnerCurrentPosition);
+            this.ancientOneSpinnerCurrentPosition = ancientOneSpinnerCurrentPosition;
+            getViewState().setAncientOneSpinnerPosition(this.ancientOneSpinnerCurrentPosition);
+        }
     }
 
     private List<String> getAncientOneNameList() {
@@ -124,6 +127,7 @@ public class AncientOneInfoPresenter extends MvpPresenter<AncientOneInfoView> {
             storyIsExpand = false;
             infoIsExpand = false;
             updateContent();
+            getViewState().updateAudioPlayerState(null);
         }
     }
 
@@ -168,15 +172,20 @@ public class AncientOneInfoPresenter extends MvpPresenter<AncientOneInfoView> {
     private void updateAudioState(AudioState state) {
         currentAudio = state.getAudio();
         getViewState().setVisibilityAudioPlayer(state.getAudio() != null);
-        getViewState().setAudioTitle(state.getAudio().getTitle());
-        getViewState().changeAudioControlButtonIcon(state.isPlaying());
+        if (state.getAudio() != null) {
+            getViewState().setAudioTitle(state.getAudio().getTitle());
+            getViewState().changeAudioControlButtonIcon(state.isPlaying());
 
-        if (state.getAudio().equals(getArticleByAncientOneName(ancientOneNameList.get(ancientOneSpinnerCurrentPosition), repository.getAncientOneInfoList()).getFiles())) {
-            getViewState().changeAudioInfoIcon(state.isPlaying());
-            getViewState().changeAudioStoryIcon(false);
-        } else if (state.getAudio().equals(getArticleByAncientOneName(ancientOneNameList.get(ancientOneSpinnerCurrentPosition), repository.getAncientOneStoryList()).getFiles())) {
-            getViewState().changeAudioStoryIcon(state.isPlaying());
-            getViewState().changeAudioInfoIcon(false);
+            if (state.getAudio().equals(getArticleByAncientOneName(ancientOneNameList.get(ancientOneSpinnerCurrentPosition), repository.getAncientOneInfoList()).getFiles())) {
+                getViewState().changeAudioInfoIcon(state.isPlaying());
+                getViewState().changeAudioStoryIcon(false);
+            } else if (state.getAudio().equals(getArticleByAncientOneName(ancientOneNameList.get(ancientOneSpinnerCurrentPosition), repository.getAncientOneStoryList()).getFiles())) {
+                getViewState().changeAudioStoryIcon(state.isPlaying());
+                getViewState().changeAudioInfoIcon(false);
+            } else {
+                getViewState().changeAudioStoryIcon(false);
+                getViewState().changeAudioInfoIcon(false);
+            }
         } else {
             getViewState().changeAudioStoryIcon(false);
             getViewState().changeAudioInfoIcon(false);

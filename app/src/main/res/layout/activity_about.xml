@@ -115,54 +115,65 @@
             android:textColor="@color/colorPrimaryText"
             android:textSize="18sp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/standard_margin"
+        android:layout_marginEnd="@dimen/standard_margin">
+
+        <Button
+            android:id="@+id/about_donate_1_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/image_button_border"
+            android:backgroundTint="@color/cardview_light_background"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:scaleType="fitCenter"
+            android:text="@string/d1"
+            android:theme="@style/AppTheme.ColorHighlight" />
+
+        <Button
+            android:id="@+id/about_donate_2_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/image_button_border"
+            android:backgroundTint="@color/cardview_light_background"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:scaleType="fitCenter"
+            android:text="@string/d2"
+            android:theme="@style/AppTheme.ColorHighlight" />
+        <Button
+            android:id="@+id/about_donate_5_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/image_button_border"
+            android:backgroundTint="@color/cardview_light_background"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:scaleType="fitCenter"
+            android:text="@string/d5"
+            android:theme="@style/AppTheme.ColorHighlight" />
+
+    </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/about_donate_1_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/image_button_border"
-                android:backgroundTint="@color/cardview_light_background"
-                android:foreground="?attr/selectableItemBackground"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:scaleType="fitCenter"
-                android:text="@string/d1"
-                android:theme="@style/AppTheme.ColorHighlight" />
-
-            <Button
-                android:id="@+id/about_donate_2_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/image_button_border"
-                android:backgroundTint="@color/cardview_light_background"
-                android:foreground="?attr/selectableItemBackground"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:scaleType="fitCenter"
-                android:text="@string/d2"
-                android:theme="@style/AppTheme.ColorHighlight" />
-            <Button
-                android:id="@+id/about_donate_5_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/image_button_border"
-                android:backgroundTint="@color/cardview_light_background"
-                android:foreground="?attr/selectableItemBackground"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:scaleType="fitCenter"
-                android:text="@string/d5"
-                android:theme="@style/AppTheme.ColorHighlight" />
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginEnd="@dimen/standard_margin">
 
             <Button
                 android:id="@+id/about_donate_10_btn"

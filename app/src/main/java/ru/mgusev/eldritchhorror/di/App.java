@@ -39,7 +39,7 @@ import timber.log.Timber;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class App extends Application{
+public class App extends Application {
 
     @Inject
     Repository repository;
@@ -146,7 +146,6 @@ public class App extends Application{
     }
 
     public static void updateAudioPlayerState(Files audio) {
-        Timber.d(String.valueOf(audio) + " " + audio.getImageIntroAlt());
         audioPlayerService.updateState(audio);
     }
 

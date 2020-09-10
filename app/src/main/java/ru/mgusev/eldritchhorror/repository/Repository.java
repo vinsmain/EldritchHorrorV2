@@ -933,6 +933,10 @@ public class Repository {
         return staticDataDB.cardDAO().getAllByCategory(staticDataDB.expansionDAO().getEnableExpansionList(), category);
     }
 
+    public int getCardCount(int cardId) {
+        return staticDataDB.cardDAO().getCount(staticDataDB.expansionDAO().getEnableExpansionList(), cardId);
+    }
+
     public void setScreenLight(boolean isOn) {
         prefHelper.saveIsScreenLight(isOn);
     }

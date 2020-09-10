@@ -2,6 +2,7 @@ package ru.mgusev.eldritchhorror.presentation.presenter.random_card;
 
 import android.net.Uri;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -48,10 +49,18 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
 
     private void initCardList() {
         CardType cardType = repository.getCardType();
+        cardList = new ArrayList<>();
+        List<Card> cardListUniqueCard;
         if (cardType.getId() < 0)
-            cardList = repository.getCardList(cardType.getCategoryResourceID());
+            cardListUniqueCard = new ArrayList<>(repository.getCardList(cardType.getCategoryResourceID()));
         else
-            cardList = repository.getCardList(cardType.getId());
+            cardListUniqueCard = new ArrayList<>(repository.getCardList(cardType.getId()));
+
+        for(Card card : cardListUniqueCard) {
+            for (int i = 0; i < repository.getCardCount(card.getId()); i++) {
+                cardList.add(card);
+            }
+        }
     }
 
     private void initCard() {
@@ -69,7 +78,13 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
     }
 
     private void deleteCurrentCardFromCardList() {
-        cardList.remove(currentCard);
+        List<Card> tempList = new ArrayList<>();
+        for (Card card : cardList) {
+            if (!card.getNameResourceID().equals(currentCard.getNameResourceID()))
+                tempList.add(card);
+        }
+        cardList.clear();
+        cardList.addAll(tempList);
     }
 
     public void onClickLogBtn() {
@@ -77,11 +92,19 @@ public class RandomCardPresenter extends MvpPresenter<RandomCardView> {
     }
 
     public void onClickOtherBtn() {
-        if (cardList.size() > 1) {
+        if (!isLastCard()) {
             deleteCurrentCardFromCardList();
             initCard();
         } else
             showAlertPublish.onNext(true);
+    }
+
+    private boolean isLastCard() {
+        for (Card card : cardList) {
+            if (!card.getNameResourceID().equals(currentCard.getNameResourceID()))
+                return false;
+        }
+        return true;
     }
 
     public void dismissLogDialog() {
