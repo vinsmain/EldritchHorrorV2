@@ -120,7 +120,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <hakobastvatsatryan.DropdownTextView
+                        <ru.mgusev.eldritchhorror.utils.dropdowntextview.DropdownTextView
                             android:id="@+id/expandable_info"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -174,7 +174,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <hakobastvatsatryan.DropdownTextView
+                        <ru.mgusev.eldritchhorror.utils.dropdowntextview.DropdownTextView
                             android:id="@+id/expandable_story"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

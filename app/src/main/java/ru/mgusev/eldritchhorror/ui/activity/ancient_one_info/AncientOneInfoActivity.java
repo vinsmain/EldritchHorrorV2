@@ -35,7 +35,6 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import hakobastvatsatryan.DropdownTextView;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
@@ -45,6 +44,7 @@ import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.presenter.ancient_one_info.AncientOneInfoPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.ancient_one_info.AncientOneInfoView;
 import ru.mgusev.eldritchhorror.ui.activity.OptionMenuSupportMvpAppCompatActivity;
+import ru.mgusev.eldritchhorror.utils.dropdowntextview.DropdownTextView;
 import timber.log.Timber;
 
 /**

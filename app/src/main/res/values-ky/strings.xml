@@ -216,6 +216,7 @@
     <string name="terror">Страх</string>
     <string name="visions">Видения</string>
     <string name="wanted">В розыске</string>
+    <string name="abducted">Похищение</string>
 
     <!--Spell types-->
     <string name="glamour">Аура</string>

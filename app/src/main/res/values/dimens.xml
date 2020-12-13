@@ -14,4 +14,8 @@
     <dimen name="zero_margin">0dp</dimen>
     <dimen name="large_margin">16dp</dimen>
     <dimen name="title_text_size">16sp</dimen>
+
+    <dimen name="arrow_default_size">25dp</dimen>
+    <dimen name="panel_default_padding">12dp</dimen>
+    <dimen name="content_default_padding">12dp</dimen>
 </resources>

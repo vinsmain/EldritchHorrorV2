@@ -13,6 +13,7 @@ import dagger.Provides;
 
 import ru.mgusev.eldritchhorror.api.EHAPIService;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration15to16;
+import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration16to17;
 import ru.mgusev.eldritchhorror.utils.auth.GoogleAuth;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration6to7;
 import ru.mgusev.eldritchhorror.database.staticDB.migrations.StaticDBMigration7to8;
@@ -78,6 +79,7 @@ public class AppModule {
                 .addMigrations(StaticDBMigration13to14.MIGRATION_13_14)
                 .addMigrations(StaticDBMigration14to15.MIGRATION_14_15)
                 .addMigrations(StaticDBMigration15to16.MIGRATION_15_16)
+                .addMigrations(StaticDBMigration16to17.MIGRATION_16_17)
                 .allowMainThreadQueries()
                 .build();
     }

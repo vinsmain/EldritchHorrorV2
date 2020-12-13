@@ -235,6 +235,7 @@
     <string name="terror">Terror</string>
     <string name="visions">Visions</string>
     <string name="wanted">Wanted</string>
+    <string name="abducted">Abducted</string>
 
     <!--Spell types-->
     <string name="glamour">Glamour</string>

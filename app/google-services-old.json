@@ -1,0 +1,157 @@
+{
+  "project_info": {
+    "project_number": "287867948802",
+    "firebase_url": "https://eldritch-horror-assistant.firebaseio.com",
+    "project_id": "eldritch-horror-assistant",
+    "storage_bucket": "eldritch-horror-assistant.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:287867948802:android:ce51ccd197520dc4",
+        "android_client_info": {
+          "package_name": "ru.mgusev.eldritchhorror"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "287867948802-n72bl6tbjbvmg2mvgfu2igq3b25glmjd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror",
+            "certificate_hash": "1aad8e33f401ef8693d12973316e4568191ba292"
+          }
+        },
+        {
+          "client_id": "287867948802-17loqu34h43cq7qcb6rk596fbubfiu9r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror",
+            "certificate_hash": "15bf6d5ec709847314f7cba415bf1f0cef494fd3"
+          }
+        },
+        {
+          "client_id": "287867948802-3c8ctal06pe3q6gj4lvasltk2gtr1jil.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror",
+            "certificate_hash": "f7870ce96e083012ae35fb0621328134e380b1cc"
+          }
+        },
+        {
+          "client_id": "287867948802-lubpmpn1vbfukj9ggbu7sah4o79hms4n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror",
+            "certificate_hash": "d9cfa79bcd05687033ddc9be5a274ab70ea91267"
+          }
+        },
+        {
+          "client_id": "287867948802-k4ht7tckd643ccnmrht57n73vg1b9ohr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror",
+            "certificate_hash": "0e0e751caac32bff915b76b5da47c36c902e59ee"
+          }
+        },
+        {
+          "client_id": "287867948802-2rnrv3ai95tuctoidq10rbln3vnd8l5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjdxGhUx7KEl8-tsH7mxv-AVXrwiD4SSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "287867948802-2rnrv3ai95tuctoidq10rbln3vnd8l5r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:287867948802:android:c5a8b5e1b3e2b5d4",
+        "android_client_info": {
+          "package_name": "ru.mgusev.eldritchhorror.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "287867948802-k5a3dsr648jjl5uqc6kks83rm1ivnbhs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror.debug",
+            "certificate_hash": "da14c70940ee6a8728ca184d46677ff758056356"
+          }
+        },
+        {
+          "client_id": "287867948802-q1dbop6kqmnva2r46l7rdi84aifeghm6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror.debug",
+            "certificate_hash": "eea9848f3b8af7d38daf7543e4c96a5cd57ba468"
+          }
+        },
+        {
+          "client_id": "287867948802-3ock4b712u4kkd8m2vn0qkr5d5nre617.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror.debug",
+            "certificate_hash": "ff4fd184a17e976e9662b9ea7b059f969ad9f08d"
+          }
+        },
+        {
+          "client_id": "287867948802-52hmm69505asb6678vfa0c00vj6siu1f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror.debug",
+            "certificate_hash": "1aad8e33f401ef8693d12973316e4568191ba292"
+          }
+        },
+        {
+          "client_id": "287867948802-gi74mjps5jg4ho7omejvb285ta40kqe1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror.debug",
+            "certificate_hash": "0e0e751caac32bff915b76b5da47c36c902e59ee"
+          }
+        },
+        {
+          "client_id": "287867948802-0hpdtkd109hbkt6u4suam3ghvceg5ogp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mgusev.eldritchhorror.debug",
+            "certificate_hash": "d9cfa79bcd05687033ddc9be5a274ab70ea91267"
+          }
+        },
+        {
+          "client_id": "287867948802-2rnrv3ai95tuctoidq10rbln3vnd8l5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjdxGhUx7KEl8-tsH7mxv-AVXrwiD4SSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "287867948802-2rnrv3ai95tuctoidq10rbln3vnd8l5r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
