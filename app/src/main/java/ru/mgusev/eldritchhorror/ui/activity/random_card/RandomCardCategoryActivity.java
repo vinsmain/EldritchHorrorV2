@@ -28,6 +28,7 @@ import ru.mgusev.eldritchhorror.presentation.presenter.random_card.RandomCardCat
 import ru.mgusev.eldritchhorror.presentation.view.random_card.RandomCardCategoryView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.ExpansionChoiceActivity;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 
 public class RandomCardCategoryActivity extends MvpAppCompatActivity implements RandomCardCategoryView, OnItemClickedReturnObj {
 
@@ -53,6 +54,7 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
         setContentView(R.layout.activity_random_card_category);
 
         ButterKnife.bind(this);
+        EdgeToEdge.apply(this, toolbar, findViewById(R.id.random_card_category_content));
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);

@@ -33,7 +33,7 @@ import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
-import ru.mgusev.eldritchhorror.utils.AndroidBug5497Workaround;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import timber.log.Timber;
 
@@ -68,7 +68,7 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games_pager);
         ButterKnife.bind(this);
-        AndroidBug5497Workaround.assistActivity(this);
+        EdgeToEdge.applyCollapsingHeader(this, findViewById(R.id.main_content));
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);

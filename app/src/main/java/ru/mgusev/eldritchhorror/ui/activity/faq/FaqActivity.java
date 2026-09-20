@@ -28,6 +28,7 @@ import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.presentation.presenter.faq.FaqPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.faq.FaqView;
 import ru.mgusev.eldritchhorror.ui.activity.OptionMenuSupportMvpAppCompatActivity;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import timber.log.Timber;
 
 /**
@@ -86,6 +87,7 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faq);
         ButterKnife.bind(this);
+        EdgeToEdge.apply(this, toolbar, findViewById(R.id.faq_content));
 
         initToolbar();
 

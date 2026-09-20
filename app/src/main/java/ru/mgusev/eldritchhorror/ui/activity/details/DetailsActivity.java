@@ -3,6 +3,8 @@ package ru.mgusev.eldritchhorror.ui.activity.details;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.app.Dialog;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -19,8 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.stfalcon.frescoimageviewer.ImageViewer;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +32,6 @@ import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
 import ru.mgusev.eldritchhorror.ui.adapter.details.DetailsAdapter;
 import ru.mgusev.eldritchhorror.utils.gallery.GalleryAdapter;
-import ru.mgusev.eldritchhorror.utils.gallery.ImageOverlayView;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.interfaces.OnShareImageClick;
 import ru.mgusev.eldritchhorror.model.AncientOne;
@@ -42,8 +41,10 @@ import ru.mgusev.eldritchhorror.presentation.presenter.details.DetailsPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.details.DetailsView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.PagerActivity;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
+import ru.mgusev.eldritchhorror.utils.PhotoViewerDialog;
 
-public class DetailsActivity extends MvpAppCompatActivity implements DetailsView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener, OnShareImageClick {
+public class DetailsActivity extends MvpAppCompatActivity implements DetailsView, OnItemClicked, OnShareImageClick {
 
     @InjectPresenter
     DetailsPresenter detailsPresenter;
@@ -104,14 +105,14 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     private AlertDialog deleteDialog;
     private List<String> imagePathList;
     private int columnsCount = 4;
-    private ImageViewer imageViewer;
-    private boolean imageViewerIsOpen;
+    private Dialog imageDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
+        EdgeToEdge.applyCollapsingHeader(this, findViewById(R.id.main_content));
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);
@@ -394,10 +395,7 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     protected void onDestroy() {
         super.onDestroy();
         if(deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
-        if (imageViewer != null) {
-            imageViewerIsOpen = true;
-            imageViewer.onDismiss();
-        }
+        if (imageDialog != null && imageDialog.isShowing()) imageDialog.dismiss();
 
     }
 
@@ -420,27 +418,15 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public void openFullScreenPhotoViewer() {
-        imageViewer = new ImageViewer.Builder(this, imagePathList)
-                .setImageChangeListener(this)
-                .setOnDismissListener(this)
-                .setStartPosition(detailsPresenter.getCurrentPosition())
-                .setOverlayView(new ImageOverlayView(this, this))
-                .show();
+        imageDialog = PhotoViewerDialog.show(
+                this,
+                Uri.parse(imagePathList.get(detailsPresenter.getCurrentPosition())),
+                dialog -> detailsPresenter.closeFullScreenPhotoViewer());
     }
 
     @Override
     public void closeFullScreenPhotoViewer() {
-        if (imageViewer != null) imageViewer.onDismiss();
-    }
-
-    @Override
-    public void onDismiss() {
-        if (!imageViewerIsOpen) detailsPresenter.closeFullScreenPhotoViewer();
-    }
-
-    @Override
-    public void onImageChange(int position) {
-        detailsPresenter.setCurrentPosition(position);
+        if (imageDialog != null && imageDialog.isShowing()) imageDialog.dismiss();
     }
 
     @Override

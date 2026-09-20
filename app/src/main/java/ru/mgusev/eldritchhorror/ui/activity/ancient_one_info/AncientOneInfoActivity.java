@@ -44,6 +44,7 @@ import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.presenter.ancient_one_info.AncientOneInfoPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.ancient_one_info.AncientOneInfoView;
 import ru.mgusev.eldritchhorror.ui.activity.OptionMenuSupportMvpAppCompatActivity;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import ru.mgusev.eldritchhorror.utils.dropdowntextview.DropdownTextView;
 import timber.log.Timber;
 
@@ -122,6 +123,7 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ancient_one_info);
         ButterKnife.bind(this);
+        EdgeToEdge.apply(this, toolbar, findViewById(R.id.ancient_one_info_content));
 
         initToolbar();
         initAncientOneSpinner();

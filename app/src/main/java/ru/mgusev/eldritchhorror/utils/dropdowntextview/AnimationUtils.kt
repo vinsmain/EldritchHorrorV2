@@ -9,10 +9,10 @@ import android.animation.ValueAnimator
  */
 
 open class AnimListenerImpl : Animator.AnimatorListener {
-    override fun onAnimationRepeat(animation: Animator?) {}
-    override fun onAnimationEnd(animation: Animator?) {}
-    override fun onAnimationCancel(animation: Animator?) {}
-    override fun onAnimationStart(animation: Animator?) {}
+    override fun onAnimationRepeat(animation: Animator) {}
+    override fun onAnimationEnd(animation: Animator) {}
+    override fun onAnimationCancel(animation: Animator) {}
+    override fun onAnimationStart(animation: Animator) {}
 }
 
 inline fun <reified V> changeValue(from: V,
@@ -33,7 +33,7 @@ inline fun <reified V> changeValue(from: V,
             update(this.getAnimatedValue("prop") as V)
         }
         addListener(object : AnimListenerImpl() {
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 complete()
             }
         })

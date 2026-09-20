@@ -755,6 +755,10 @@ public class Repository {
         fileHelper.copyFile(source, dest);
     }
 
+    public void copyUriToFile(Uri source, File dest) throws IOException {
+        fileHelper.copyUriToFile(source, dest);
+    }
+
     public void addImageFile(ImageFile file) {
         userDataDB.imageFileDAO().insertImageFile(file);
         firebaseHelper.addFile(file);

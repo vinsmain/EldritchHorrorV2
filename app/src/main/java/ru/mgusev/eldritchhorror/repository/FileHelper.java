@@ -77,6 +77,13 @@ public class FileHelper {
         inputStream.close();
     }
 
+    public void copyUriToFile(Uri source, File dest) throws IOException {
+        try (InputStream inputStream = context.getContentResolver().openInputStream(source);
+             FileOutputStream outputStream = new FileOutputStream(dest)) {
+            copyStream(Objects.requireNonNull(inputStream), outputStream);
+        }
+    }
+
     private static void copyStream(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[1024];
         int bytesRead;

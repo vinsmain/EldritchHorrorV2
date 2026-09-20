@@ -39,6 +39,7 @@ import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPres
 import ru.mgusev.eldritchhorror.presentation.view.statistics.StatisticsView;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
 import ru.mgusev.eldritchhorror.ui.fragment.statistics.ChartFragment;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import timber.log.Timber;
 
 public class StatisticsActivity extends MvpAppCompatActivity implements StatisticsView, MaterialSpinner.OnItemSelectedListener {
@@ -71,6 +72,7 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
         ButterKnife.bind(this);
+        EdgeToEdge.apply(this, toolbarStatistics, findViewById(R.id.statistics_content));
         initToolbar();
 
         ancientOneAdapter = new ArrayAdapter<>(this, R.layout.spinner);

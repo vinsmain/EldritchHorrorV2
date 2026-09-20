@@ -26,6 +26,7 @@ import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 
 import ru.mgusev.eldritchhorror.ui.adapter.dice.DiceAdapter;
 import ru.mgusev.eldritchhorror.presentation.presenter.dice.DicePresenter;
@@ -66,6 +67,7 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dice);
         ButterKnife.bind(this);
+        EdgeToEdge.apply(this, toolbar, findViewById(R.id.dice_content));
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnNumber = 5;
 

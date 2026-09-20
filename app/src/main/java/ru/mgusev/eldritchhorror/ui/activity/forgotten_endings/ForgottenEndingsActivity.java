@@ -31,6 +31,7 @@ import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.presenter.forgotten_endings.ForgottenEndingsPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.forgotten_endings.ForgottenEndingsView;
@@ -68,6 +69,7 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgotten_endings);
         ButterKnife.bind(this);
+        EdgeToEdge.apply(this, toolbar, findViewById(R.id.forgotten_endings_content));
 
         initToolbar();
         initAncientOneSpinner();

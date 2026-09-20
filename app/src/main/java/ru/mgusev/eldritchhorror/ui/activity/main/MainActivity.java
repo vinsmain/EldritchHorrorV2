@@ -46,6 +46,7 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import ru.mgusev.eldritchhorror.utils.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
@@ -99,6 +100,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        EdgeToEdge.apply(this, toolbar, drawer);
+        EdgeToEdge.applyVerticalInsets(navigationView);
         initialized = true;
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 2;
