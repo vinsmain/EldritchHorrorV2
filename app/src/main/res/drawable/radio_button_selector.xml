@@ -2,11 +2,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
         <inset
+            android:insetLeft="8dp"
             android:insetRight="8dp"
             android:drawable="@drawable/radio_button_checked" />
     </item>
     <item>
         <inset
+            android:insetLeft="8dp"
             android:insetRight="8dp"
             android:drawable="@drawable/radio_button_unchecked" />
     </item>
