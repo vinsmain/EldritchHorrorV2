@@ -320,7 +320,9 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
 
     @Override
     public void setMysteryValue(int i) {
-        ((RadioButton) mysteriesRadioGroup.getChildAt(i)).setChecked(true);
+        if (i >= 0 && i < mysteriesRadioGroup.getChildCount()) {
+            mysteriesRadioGroup.check(mysteriesRadioGroup.getChildAt(i).getId());
+        }
     }
 
     public void onTextChanged() {
