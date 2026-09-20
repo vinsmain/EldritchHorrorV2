@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/colorAccentRipple">
-
-    <item android:drawable="@drawable/radio_button_state_selector" />
-
-    <item android:id="@android:id/mask">
-        <shape android:shape="oval">
-            <size android:width="36dp" android:height="36dp" />
-            <solid android:color="@android:color/white" />
-        </shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <inset
+            android:insetLeft="8dp"
+            android:insetRight="8dp"
+            android:drawable="@drawable/radio_button_checked" />
     </item>
-</ripple>
+    <item>
+        <inset
+            android:insetLeft="8dp"
+            android:insetRight="8dp"
+            android:drawable="@drawable/radio_button_unchecked" />
+    </item>
+</selector>
