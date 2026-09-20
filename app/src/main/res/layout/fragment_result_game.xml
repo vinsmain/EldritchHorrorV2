@@ -114,6 +114,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:button="@drawable/radio_button_selector"
+                            android:theme="@style/AppTheme.OrangeHighlight"
                             android:text="@string/zero"
                             android:textSize="14sp" />
 
@@ -123,6 +124,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:button="@drawable/radio_button_selector"
+                            android:theme="@style/AppTheme.OrangeHighlight"
                             android:text="@string/one" />
 
                         <RadioButton
@@ -131,6 +133,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:button="@drawable/radio_button_selector"
+                            android:theme="@style/AppTheme.OrangeHighlight"
                             android:text="@string/two" />
 
                         <RadioButton
@@ -139,6 +142,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:button="@drawable/radio_button_selector"
+                            android:theme="@style/AppTheme.OrangeHighlight"
                             android:text="@string/three" />
 
                         <RadioButton
@@ -147,6 +151,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:button="@drawable/radio_button_selector"
+                            android:theme="@style/AppTheme.OrangeHighlight"
                             android:text="@string/four" />
 
                         <RadioButton
@@ -155,6 +160,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:button="@drawable/radio_button_selector"
+                            android:theme="@style/AppTheme.OrangeHighlight"
                             android:text="@string/five" />
                     </RadioGroup>
 
