@@ -145,6 +145,9 @@
     <string name="select_image_header">Tap to select</string>
     <string name="folders_header">Folders</string>
     <string name="camera_header">Camera</string>
+    <string name="camera_app_unavailable">Приложение «Камера» недоступно. Установите или включите его в настройках устройства.</string>
+    <string name="camera_file_unavailable">Не удалось подготовить файл для фотографии. Проверьте доступность хранилища.</string>
+    <string name="camera_open_error">Не удалось открыть камеру. Проверьте разрешение «Камера» в настройках устройства.</string>
     <string name="gallery_header">Gallery</string>
     <string name="comment_header">Comment</string>
     <string name="comment_none">None</string>

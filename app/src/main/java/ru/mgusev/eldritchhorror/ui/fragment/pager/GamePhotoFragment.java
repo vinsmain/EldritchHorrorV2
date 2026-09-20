@@ -1,6 +1,8 @@
 package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
 import android.content.ClipData;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ import ru.mgusev.eldritchhorror.interfaces.OnShareImageClick;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.GamePhotoPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -149,19 +153,31 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     }
 
     private void startCameraIntent() {
+        Context context = getContext();
+        if (context == null) return;
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
-            // Continue only if the File was successfully created
-            File file = gamePhotoPresenter.getNewImageFile();
-            if (file != null) {
-                Uri outputUri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID  + ".provider", file);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
-                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                takePictureIntent.setClipData(ClipData.newRawUri("output", outputUri));
-                gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(file));
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
+        if (takePictureIntent.resolveActivity(context.getPackageManager()) == null) {
+            Toast.makeText(context, R.string.camera_app_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        File file = gamePhotoPresenter.getNewImageFile();
+        if (file == null) {
+            Toast.makeText(context, R.string.camera_file_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        try {
+            Uri outputUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
+            takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            takePictureIntent.setClipData(ClipData.newRawUri("output", outputUri));
+            gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(file));
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+        } catch (ActivityNotFoundException | IllegalArgumentException | SecurityException exception) {
+            Timber.e(exception, "Не удалось открыть камеру");
+            Toast.makeText(context, R.string.camera_open_error, Toast.LENGTH_LONG).show();
         }
     }
 

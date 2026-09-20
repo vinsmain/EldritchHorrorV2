@@ -66,6 +66,14 @@ public class FileHelper {
 
     public File getImageFile(String imageFileName, long gameId) {
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + gameId);
+        if (storageDir == null) {
+            Timber.e("Хранилище для фотографий недоступно");
+            return null;
+        }
+        if (!storageDir.exists() && !storageDir.mkdirs()) {
+            Timber.e("Не удалось создать каталог для фотографий: %s", storageDir);
+            return null;
+        }
         return new File(storageDir, imageFileName);
     }
 
