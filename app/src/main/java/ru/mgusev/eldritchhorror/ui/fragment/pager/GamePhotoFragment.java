@@ -1,19 +1,23 @@
 package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
+import android.Manifest;
 import android.content.ClipData;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Build;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -53,6 +57,7 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
 
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 553;
+    static final int REQUEST_CAMERA_PERMISSION = 554;
 
     private int columnsCount = 2;
     private GalleryAdapter galleryAdapter;
@@ -149,7 +154,30 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
 
     @Override
     public void dispatchTakePictureIntent() {
+        Context context = getContext();
+        if (context == null) return;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+            return;
+        }
         startCameraIntent();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode != REQUEST_CAMERA_PERMISSION) return;
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startCameraIntent();
+        } else {
+            Context context = getContext();
+            if (context != null) {
+                Toast.makeText(context, R.string.camera_permission_denied, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void startCameraIntent() {
