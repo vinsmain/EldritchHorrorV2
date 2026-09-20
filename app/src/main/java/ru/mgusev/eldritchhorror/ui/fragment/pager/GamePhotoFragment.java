@@ -1,5 +1,6 @@
 package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -22,13 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.FragmentGamePhotoBinding;
 import ru.mgusev.eldritchhorror.utils.PhotoViewerDialog;
 import ru.mgusev.eldritchhorror.utils.gallery.GalleryAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
@@ -46,12 +45,11 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     @InjectPresenter
     GamePhotoPresenter gamePhotoPresenter;
 
-    @BindView(R.id.recyclerViewGallery) RecyclerView recyclerViewGallery;
+    private FragmentGamePhotoBinding binding;
 
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 553;
 
-    private Unbinder unbinder;
     private int columnsCount = 2;
     private GalleryAdapter galleryAdapter;
     private List<String> urlList;
@@ -82,17 +80,16 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
             startActivity(firstIntent);
         }
 
-        View view = inflater.inflate(R.layout.fragment_game_photo, null);
-        unbinder = ButterKnife.bind(this, view);
+        binding = FragmentGamePhotoBinding.inflate(inflater, container, false);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 3;
 
-        recyclerViewGallery.setLayoutManager(new GridLayoutManager(getContext(), columnsCount));
+        binding.recyclerViewGallery.setLayoutManager(new GridLayoutManager(getContext(), columnsCount));
         galleryAdapter = new GalleryAdapter(getContext());
-        recyclerViewGallery.setAdapter(galleryAdapter);
+        binding.recyclerViewGallery.setAdapter(galleryAdapter);
         galleryAdapter.setOnClick(this);
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override
@@ -161,18 +158,19 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
                 Uri outputUri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID  + ".provider", file);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                takePictureIntent.setClipData(ClipData.newRawUri("output", outputUri));
                 gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(file));
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
     }
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
         if (imageDialog != null && imageDialog.isShowing()) imageDialog.dismiss();
         if(deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
+        binding = null;
+        super.onDestroyView();
     }
 
     @Override

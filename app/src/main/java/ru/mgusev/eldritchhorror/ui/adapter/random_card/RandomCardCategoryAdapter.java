@@ -15,9 +15,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ItemRandomCardCategoryBinding;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
 import ru.mgusev.eldritchhorror.model.CardType;
@@ -25,16 +24,12 @@ import ru.mgusev.eldritchhorror.model.CardType;
 public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCategoryAdapter.CategoryViewHolder> {
 
         static class CategoryViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.random_card_category)
-        CardView categoryCV;
-        @BindView(R.id.random_card_category_name)
-        TextView categoryName;
+        final CardView categoryCV; final TextView categoryName;
 
         private CardType item;
 
-        CategoryViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        CategoryViewHolder(ItemRandomCardCategoryBinding binding) {
+            super(binding.getRoot()); categoryCV = binding.randomCardCategory; categoryName = binding.randomCardCategoryName;
         }
     }
 
@@ -58,8 +53,7 @@ public class RandomCardCategoryAdapter extends RecyclerView.Adapter<RandomCardCa
     @NonNull
     @Override
     public RandomCardCategoryAdapter.CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_random_card_category, parent, false);
-        return new RandomCardCategoryAdapter.CategoryViewHolder(view);
+        return new RandomCardCategoryAdapter.CategoryViewHolder(ItemRandomCardCategoryBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override

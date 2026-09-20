@@ -4,7 +4,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -12,20 +11,19 @@ import android.widget.Switch;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ItemExpansionBinding;
 import ru.mgusev.eldritchhorror.model.Specialization;
 
 public class SpecializationChoiceAdapter extends RecyclerView.Adapter<SpecializationChoiceAdapter.SpecializationViewHolder> implements CompoundButton.OnCheckedChangeListener {
 
     static class SpecializationViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_expansion_image) ImageView itemSpecializationImage;
-        @BindView(R.id.item_expansion_switch) Switch itemSpecializationSwitch;
+        final ImageView itemSpecializationImage;
+        final Switch itemSpecializationSwitch;
 
-        SpecializationViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        SpecializationViewHolder(ItemExpansionBinding binding) {
+            super(binding.getRoot());
+            itemSpecializationImage = binding.itemExpansionImage;
+            itemSpecializationSwitch = binding.itemExpansionSwitch;
         }
     }
 
@@ -38,8 +36,7 @@ public class SpecializationChoiceAdapter extends RecyclerView.Adapter<Specializa
     @NonNull
     @Override
     public SpecializationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_expansion, parent, false);
-        return new SpecializationViewHolder(view);
+        return new SpecializationViewHolder(ItemExpansionBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override

@@ -27,12 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityStatisticsBinding;
 import ru.mgusev.eldritchhorror.ui.adapter.statistics.StatisticsAdapter;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPresenter;
@@ -44,16 +42,17 @@ import timber.log.Timber;
 
 public class StatisticsActivity extends MvpAppCompatActivity implements StatisticsView, MaterialSpinner.OnItemSelectedListener {
 
-    @BindView(R.id.statistics_toolbar) Toolbar toolbarStatistics;
-    //@BindView(R.id.statistics_scroll_view) NestedScrollView scrollView;
-    @BindView(R.id.statistics_chart_container) LinearLayout chartContainer;
-    @BindView(R.id.statistics_ancient_one_spinner) MaterialSpinner ancientOneSpinner;
-    @BindView(R.id.statistics_popular_investigator_container) LinearLayout investigatorLL;
-    @BindView(R.id.statistics_popular_investigators_recycler_view) RecyclerView investigatorsRV;
-    @BindView(R.id.statistics_background) ImageView background;
-    @BindView(R.id.statistics_last_game) TextView lastGameTV;
-    @BindView(R.id.statistics_best_game) TextView bestGameTV;
-    @BindView(R.id.loader) LinearLayout loader;
+    private ActivityStatisticsBinding binding;
+
+    Toolbar toolbarStatistics;
+    LinearLayout chartContainer;
+    MaterialSpinner ancientOneSpinner;
+    LinearLayout investigatorLL;
+    RecyclerView investigatorsRV;
+    ImageView background;
+    TextView lastGameTV;
+    TextView bestGameTV;
+    LinearLayout loader;
 
     @InjectPresenter
     StatisticsPresenter statisticsPresenter;
@@ -70,9 +69,20 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
-        ButterKnife.bind(this);
-        EdgeToEdge.apply(this, toolbarStatistics, findViewById(R.id.statistics_content));
+        binding = ActivityStatisticsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        toolbarStatistics = binding.statisticsToolbar;
+        chartContainer = binding.statisticsChartContainer;
+        ancientOneSpinner = binding.statisticsAncientOneSpinner;
+        investigatorLL = binding.statisticsPopularInvestigatorContainer;
+        investigatorsRV = binding.statisticsPopularInvestigatorsRecyclerView;
+        background = binding.statisticsBackground;
+        lastGameTV = binding.statisticsLastGame;
+        bestGameTV = binding.statisticsBestGame;
+        loader = (LinearLayout) binding.loader.getRoot();
+        EdgeToEdge.apply(this, toolbarStatistics, binding.statisticsContent);
+        binding.statisticsLastGameRow.setOnClickListener(this::OnClick);
+        binding.statisticsBestGameRow.setOnClickListener(this::OnClick);
         initToolbar();
 
         ancientOneAdapter = new ArrayAdapter<>(this, R.layout.spinner);
@@ -184,17 +194,13 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         lastGameTV.setText(value);
     }
 
-    @OnClick({R.id.statistics_last_game_row, R.id.statistics_best_game_row})
     public void OnClick(View view) {
-        switch (view.getId()) {
-            case R.id.statistics_last_game_row :
+        if (view.getId() == R.id.statistics_last_game_row) {
                 showLoader();
                 statisticsPresenter.goToDetailsActivity(true);
-                break;
-            case R.id.statistics_best_game_row :
+        } else if (view.getId() == R.id.statistics_best_game_row) {
                 showLoader();
                 statisticsPresenter.goToDetailsActivity(false);
-                break;
         }
     }
 

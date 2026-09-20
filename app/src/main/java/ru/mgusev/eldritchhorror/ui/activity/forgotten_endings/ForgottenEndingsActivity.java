@@ -24,13 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityForgottenEndingsBinding;
 import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.presenter.forgotten_endings.ForgottenEndingsPresenter;
@@ -39,26 +36,19 @@ import timber.log.Timber;
 
 public class ForgottenEndingsActivity extends MvpAppCompatActivity implements ForgottenEndingsView, CompoundButton.OnCheckedChangeListener, MaterialSpinner.OnItemSelectedListener {
 
+    private ActivityForgottenEndingsBinding binding;
+
     @InjectPresenter
     ForgottenEndingsPresenter forgottenEndingsPresenter;
 
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.forgotten_endings_scroll_view)
     NestedScrollView scrollView;
-    @BindView(R.id.forgotten_endings_ancient_one_spinner)
     MaterialSpinner ancientOneSpinner;
-    @BindView(R.id.image_ancient_one)
     AppCompatImageView imageAncientOne;
-    @BindView(R.id.forgotten_endings_result_switch)
     Switch resultSwitch;
-    @BindView(R.id.forgotten_endings_switch_container)
     LinearLayout conditionsContainer;
-    @BindView(R.id.forgotten_endings_read_text_btn)
     Button readTextBtn;
-    @BindView(R.id.forgotten_endings_header_tv)
     TextView headerTV;
-    @BindView(R.id.forgotten_endings_text_tv)
     TextView textTV;
 
     private ArrayAdapter<String> ancientOneAdapter;
@@ -67,9 +57,20 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgotten_endings);
-        ButterKnife.bind(this);
-        EdgeToEdge.apply(this, toolbar, findViewById(R.id.forgotten_endings_content));
+        binding = ActivityForgottenEndingsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        toolbar = binding.toolbar;
+        scrollView = binding.forgottenEndingsScrollView;
+        ancientOneSpinner = binding.forgottenEndingsAncientOneSpinner;
+        imageAncientOne = binding.imageAncientOne;
+        resultSwitch = binding.forgottenEndingsResultSwitch;
+        conditionsContainer = binding.forgottenEndingsSwitchContainer;
+        readTextBtn = binding.forgottenEndingsReadTextBtn;
+        headerTV = binding.forgottenEndingsHeaderTv;
+        textTV = binding.forgottenEndingsTextTv;
+        resultSwitch.setOnCheckedChangeListener(this::onCheckedChanged);
+        readTextBtn.setOnClickListener(v -> onClick());
+        EdgeToEdge.apply(this, toolbar, binding.forgottenEndingsContent);
 
         initToolbar();
         initAncientOneSpinner();
@@ -126,7 +127,6 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         Timber.d(String.valueOf(position));
     }
 
-    @OnCheckedChanged({R.id.forgotten_endings_result_switch})
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (compoundButton.getId() == R.id.forgotten_endings_result_switch) {
             Timber.d("Article checked %b", b);
@@ -136,7 +136,6 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         Timber.d("OnChecked id %s, value %b, text %s", compoundButton.getId(), b, compoundButton.getText());
     }
 
-    @OnClick({R.id.forgotten_endings_read_text_btn})
     public void onClick() {
         forgottenEndingsPresenter.onReadTextBtnClick();
     }

@@ -22,9 +22,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ItemFaqBinding;
+import ru.mgusev.eldritchhorror.databinding.ItemFaqErrataBinding;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
@@ -35,28 +35,18 @@ import static androidx.core.util.Preconditions.checkNotNull;
 public class FaqAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class FaqViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_faq_card_view)
-        CardView faqCardView;
-        @BindView(R.id.item_faq_question)
-        TextView faqQuestion;
-        @BindView(R.id.item_faq_answer)
-        TextView faqAnswer;
+        final CardView faqCardView; final TextView faqQuestion; final TextView faqAnswer;
 
-        FaqViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        FaqViewHolder(ItemFaqBinding binding) {
+            super(binding.getRoot()); faqCardView = binding.itemFaqCardView; faqQuestion = binding.itemFaqQuestion; faqAnswer = binding.itemFaqAnswer;
         }
     }
 
     static class ErrataViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_faq_errata_card_view)
-        CardView errataCardView;
-        @BindView(R.id.item_faq_errata_text)
-        TextView errataText;
+        final CardView errataCardView; final TextView errataText;
 
-        ErrataViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        ErrataViewHolder(ItemFaqErrataBinding binding) {
+            super(binding.getRoot()); errataCardView = binding.itemFaqErrataCardView; errataText = binding.itemFaqErrataText;
         }
     }
 
@@ -92,9 +82,9 @@ public class FaqAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == 1) {
-            return new ErrataViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq_errata, parent, false));
+            return new ErrataViewHolder(ItemFaqErrataBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         }
-        return new FaqViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_faq, parent, false));
+        return new FaqViewHolder(ItemFaqBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override

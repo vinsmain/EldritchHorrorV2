@@ -1,10 +1,10 @@
 [versions]
-agp = "8.13.0"
+agp = "9.4.0"
 kotlin = "2.2.0"
 google-services = "4.5.0"
 crashlytics-plugin = "3.0.6"
 appcompat = "1.8.0"
-core = "1.18.0"
+core = "1.19.0"
 legacy-support = "1.0.0"
 material = "1.14.0"
 constraintlayout = "2.2.2"
@@ -22,7 +22,6 @@ rxandroid = "2.1.1"
 dagger = "2.59.2"
 room = "2.8.5"
 asset-sqlite-open-helper = "1.0"
-butterknife = "10.2.3"
 swipelayout = "1.2.0"
 mpandroidchart = "3.1.0"
 firebase-bom = "34.19.0"
@@ -66,8 +65,6 @@ dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = 
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 asset-sqlite-open-helper = { module = "com.github.daolq3012:AssetSQLiteOpenHelper", version.ref = "asset-sqlite-open-helper" }
-butterknife = { module = "com.jakewharton:butterknife", version.ref = "butterknife" }
-butterknife-compiler = { module = "com.jakewharton:butterknife-compiler", version.ref = "butterknife" }
 swipelayout = { module = "com.daimajia.swipelayout:library", version.ref = "swipelayout" }
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }

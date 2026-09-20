@@ -100,7 +100,9 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <include layout="@layout/view_audio_player" />
+                    <include
+                        android:id="@+id/audio_player"
+                        layout="@layout/view_audio_player" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -24,12 +24,10 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityDetailsBinding;
 import ru.mgusev.eldritchhorror.ui.adapter.details.DetailsAdapter;
 import ru.mgusev.eldritchhorror.utils.gallery.GalleryAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
@@ -49,56 +47,58 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @InjectPresenter
     DetailsPresenter detailsPresenter;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.details_header_background) ImageView background;
-    @BindView(R.id.details_expansion_icon) ImageView expansionIcon;
-    @BindView(R.id.details_victory_icon) ImageView victoryIcon;
-    @BindView(R.id.details_score) TextView score;
+    private ActivityDetailsBinding binding;
 
-    @BindView(R.id.start_data_result_date) TextView date;
-    @BindView(R.id.start_data_result_ancient_one) TextView ancientOne;
-    @BindView(R.id.start_data_result_prelude) TextView prelude;
-    @BindView(R.id.start_data_result_players_count) TextView playersCount;
-    @BindView(R.id.start_data_result_simple_myths_row) TableRow simpleMyths;
-    @BindView(R.id.start_data_result_normal_myths_row) TableRow normalMyths;
-    @BindView(R.id.start_data_result_hard_myths_row) TableRow hardMyths;
-    @BindView(R.id.start_data_result_starting_rumor_row) TableRow startingRumor;
+    private Toolbar toolbar;
+    private ImageView background;
+    private ImageView expansionIcon;
+    private ImageView victoryIcon;
+    private TextView score;
 
-    @BindView(R.id.investigator_result_not_selected) TextView investigatorsNotSelected;
-    @BindView(R.id.investigator_result_recycle_view) RecyclerView investigatorsRV;
+    private TextView date;
+    private TextView ancientOne;
+    private TextView prelude;
+    private TextView playersCount;
+    private TableRow simpleMyths;
+    private TableRow normalMyths;
+    private TableRow hardMyths;
+    private TableRow startingRumor;
 
-    @BindView(R.id.victory_result_card) View includedVictoryResultCard;
-    @BindView(R.id.victory_result_time) TextView victoryTime;
-    @BindView(R.id.victory_result_mysteries_count) TextView victoryMysteriesCount;
-    @BindView(R.id.victory_result_gates_count) TextView gatesCount;
-    @BindView(R.id.victory_result_monsters_count) TextView monstersCount;
-    @BindView(R.id.victory_result_curse_count) TextView curseCount;
-    @BindView(R.id.victory_result_rumors_count) TextView rumorsCount;
-    @BindView(R.id.victory_result_clues_count) TextView cluesCount;
-    @BindView(R.id.victory_result_blessed_count) TextView blessedCount;
-    @BindView(R.id.victory_result_doom_count) TextView doomCount;
+    private TextView investigatorsNotSelected;
+    private RecyclerView investigatorsRV;
 
-    @BindView(R.id.defeat_reason_card) View includedDefeatReasonCard;
-    @BindView(R.id.defeat_reason_time) TextView defeatTime;
-    @BindView(R.id.defeat_reason_mysteries_count) TextView defeatMysteriesCount;
-    @BindView(R.id.defeat_reason_by_elimination_row) TableRow defeatReasonByElimination;
-    @BindView(R.id.defeat_reason_by_mythos_depletion_row) TableRow defeatReasonByMythosDepletion;
-    @BindView(R.id.defeat_reason_by_awakened_ancient_one_row) TableRow defeatReasonByAwakenedAncientOne;
-    @BindView(R.id.defeat_reason_by_surrender_row) TableRow defeatReasonBySurrender;
-    @BindView(R.id.defeat_reason_by_rumor_row) TableRow defeatReasonByRumor;
-    @BindView(R.id.defeat_reason_by_rumor_name_tv) TextView rumorName;
-    @BindView(R.id.defeat_reason_by_prelude_row) TableRow defeatReasonByPrelude;
-    @BindView(R.id.defeat_reason_by_prelude_name_tv) TextView preludeName;
+    private View includedVictoryResultCard;
+    private TextView victoryTime;
+    private TextView victoryMysteriesCount;
+    private TextView gatesCount;
+    private TextView monstersCount;
+    private TextView curseCount;
+    private TextView rumorsCount;
+    private TextView cluesCount;
+    private TextView blessedCount;
+    private TextView doomCount;
 
-    @BindView(R.id.photo_details_recycle_view) RecyclerView photoRV;
-    @BindView(R.id.photo_details_none) TextView photoNoneMessage;
+    private View includedDefeatReasonCard;
+    private TextView defeatTime;
+    private TextView defeatMysteriesCount;
+    private TableRow defeatReasonByElimination;
+    private TableRow defeatReasonByMythosDepletion;
+    private TableRow defeatReasonByAwakenedAncientOne;
+    private TableRow defeatReasonBySurrender;
+    private TableRow defeatReasonByRumor;
+    private TextView rumorName;
+    private TableRow defeatReasonByPrelude;
+    private TextView preludeName;
 
-    @BindView(R.id.comment_tv) TextView commentTV;
-    @BindView(R.id.loader) LinearLayout loader;
+    private RecyclerView photoRV;
+    private TextView photoNoneMessage;
 
-    @BindView(R.id.photo_details_select_all) ImageButton selectAllBtn;
-    @BindView(R.id.photo_details_select_cancel) ImageButton selectCancelBtn;
-    @BindView(R.id.photo_details_share_image) ImageButton shareImageBtn;
+    private TextView commentTV;
+    private LinearLayout loader;
+
+    private ImageButton selectAllBtn;
+    private ImageButton selectCancelBtn;
+    private ImageButton shareImageBtn;
 
     private DetailsAdapter adapter;
     private GalleryAdapter galleryAdapter;
@@ -110,9 +110,11 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
-        ButterKnife.bind(this);
-        EdgeToEdge.applyCollapsingHeader(this, findViewById(R.id.main_content));
+        binding = ActivityDetailsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        bindViews();
+        bindClickListeners();
+        EdgeToEdge.applyCollapsingHeader(this, binding.mainContent);
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);
@@ -124,6 +126,69 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         initInvestigatorRV();
         initPhotoRV();
         setVisibilityIcons();
+    }
+
+    private void bindViews() {
+        toolbar = binding.toolbar;
+        background = binding.detailsHeaderBackground;
+        expansionIcon = binding.detailsExpansionIcon;
+        victoryIcon = binding.detailsVictoryIcon;
+        score = binding.detailsScore;
+
+        date = binding.startDataResultCard.startDataResultDate;
+        ancientOne = binding.startDataResultCard.startDataResultAncientOne;
+        prelude = binding.startDataResultCard.startDataResultPrelude;
+        playersCount = binding.startDataResultCard.startDataResultPlayersCount;
+        simpleMyths = binding.startDataResultCard.startDataResultSimpleMythsRow;
+        normalMyths = binding.startDataResultCard.startDataResultNormalMythsRow;
+        hardMyths = binding.startDataResultCard.startDataResultHardMythsRow;
+        startingRumor = binding.startDataResultCard.startDataResultStartingRumorRow;
+
+        investigatorsNotSelected = binding.investigatorResultCard.investigatorResultNotSelected;
+        investigatorsRV = binding.investigatorResultCard.investigatorResultRecycleView;
+
+        includedVictoryResultCard = binding.victoryResultCard.getRoot();
+        victoryTime = binding.victoryResultCard.victoryResultTime;
+        victoryMysteriesCount = binding.victoryResultCard.victoryResultMysteriesCount;
+        gatesCount = binding.victoryResultCard.victoryResultGatesCount;
+        monstersCount = binding.victoryResultCard.victoryResultMonstersCount;
+        curseCount = binding.victoryResultCard.victoryResultCurseCount;
+        rumorsCount = binding.victoryResultCard.victoryResultRumorsCount;
+        cluesCount = binding.victoryResultCard.victoryResultCluesCount;
+        blessedCount = binding.victoryResultCard.victoryResultBlessedCount;
+        doomCount = binding.victoryResultCard.victoryResultDoomCount;
+
+        includedDefeatReasonCard = binding.defeatReasonCard.getRoot();
+        defeatTime = binding.defeatReasonCard.defeatReasonTime;
+        defeatMysteriesCount = binding.defeatReasonCard.defeatReasonMysteriesCount;
+        defeatReasonByElimination = binding.defeatReasonCard.defeatReasonByEliminationRow;
+        defeatReasonByMythosDepletion = binding.defeatReasonCard.defeatReasonByMythosDepletionRow;
+        defeatReasonByAwakenedAncientOne = binding.defeatReasonCard.defeatReasonByAwakenedAncientOneRow;
+        defeatReasonBySurrender = binding.defeatReasonCard.defeatReasonBySurrenderRow;
+        defeatReasonByRumor = binding.defeatReasonCard.defeatReasonByRumorRow;
+        rumorName = binding.defeatReasonCard.defeatReasonByRumorNameTv;
+        defeatReasonByPrelude = binding.defeatReasonCard.defeatReasonByPreludeRow;
+        preludeName = binding.defeatReasonCard.defeatReasonByPreludeNameTv;
+
+        photoRV = binding.photoDetailsCard.photoDetailsRecycleView;
+        photoNoneMessage = binding.photoDetailsCard.photoDetailsNone;
+        commentTV = binding.commentCard.commentTv;
+        loader = (LinearLayout) binding.loader.getRoot();
+        selectAllBtn = binding.photoDetailsCard.photoDetailsSelectAll;
+        selectCancelBtn = binding.photoDetailsCard.photoDetailsSelectCancel;
+        shareImageBtn = binding.photoDetailsCard.photoDetailsShareImage;
+    }
+
+    private void bindClickListeners() {
+        binding.startDataResultCard.startDataResultEditButton.setOnClickListener(v -> startIntent(0));
+        binding.investigatorResultCard.investigatorResultEditButton.setOnClickListener(v -> startIntent(1));
+        binding.victoryResultCard.victoryResultEditButton.setOnClickListener(v -> startIntent(2));
+        binding.defeatReasonCard.defeatReasonEditButton.setOnClickListener(v -> startIntent(2));
+        binding.commentCard.commentEditButton.setOnClickListener(v -> startIntent(2));
+        binding.photoDetailsCard.photoDetailsEditButton.setOnClickListener(v -> startIntent(3));
+        selectAllBtn.setOnClickListener(v -> detailsPresenter.selectAllPhoto(true));
+        selectCancelBtn.setOnClickListener(v -> detailsPresenter.selectAllPhoto(false));
+        shareImageBtn.setOnClickListener(v -> detailsPresenter.shareImage());
     }
 
     @Override
@@ -187,34 +252,15 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_delete:
-                detailsPresenter.showDeleteDialog();
-                return true;
-            case R.id.action_edit:
-                startIntent(0);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_delete) {
+            detailsPresenter.showDeleteDialog();
+            return true;
         }
-    }
-
-    @OnClick({R.id.start_data_result_edit_button, R.id.investigator_result_edit_button, R.id.victory_result_edit_button, R.id.defeat_reason_edit_button, R.id.comment_edit_button, R.id.photo_details_edit_button})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.start_data_result_edit_button:
-                startIntent(0);
-                break;
-            case R.id.investigator_result_edit_button:
-                startIntent(1);
-                break;
-            case R.id.photo_details_edit_button:
-                startIntent(3);
-                break;
-            default:
-                startIntent(2);
-                break;
+        if (item.getItemId() == R.id.action_edit) {
+            startIntent(0);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -452,21 +498,6 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         galleryAdapter.addGalleryItems(imagesUrlList);
         imagePathList = imagesUrlList;
         setVisibilityIcons();
-    }
-
-    @OnClick({R.id.photo_details_select_all, R.id.photo_details_select_cancel, R.id.photo_details_share_image})
-    public void onClickImageHandleButtons(View view) {
-        switch (view.getId()) {
-            case R.id.photo_details_select_all:
-                detailsPresenter.selectAllPhoto(true);
-                break;
-            case R.id.photo_details_select_cancel:
-                detailsPresenter.selectAllPhoto(false);
-                break;
-            case R.id.photo_details_share_image:
-                detailsPresenter.shareImage();
-                break;
-        }
     }
 
     private void setVisibilityIcons() {

@@ -20,14 +20,12 @@ import android.widget.Toast;
 
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityGamesPagerBinding;
 import ru.mgusev.eldritchhorror.ui.adapter.pager.PagerAdapter;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
@@ -42,15 +40,8 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @InjectPresenter
     PagerPresenter pagerPresenter;
 
-    @BindView(R.id.games_pager_head_background) ImageView headBackground;
-    @BindView(R.id.games_pager_expansion_icon) ImageView expansionIcon;
-    @BindView(R.id.games_pager_score) TextView scoreTV;
-    @BindView(R.id.games_pager_win_icon) ImageView winIcon;
-    @BindView(R.id.games_pager_toolbar) Toolbar toolbar;
-    @BindView(R.id.games_pager_viewpager) ViewPager pager;
-    @BindView(R.id.games_pager_add_image) FabSpeedDial addImageFab;
-    @BindView(R.id.games_pager_delete_image) FloatingActionButton deleteImageFab;
-    @BindView(R.id.loader) LinearLayout loader;
+    private ActivityGamesPagerBinding binding;
+    private ImageView headBackground; private ImageView expansionIcon; private TextView scoreTV; private ImageView winIcon; private Toolbar toolbar; private ViewPager pager; private FabSpeedDial addImageFab; private FloatingActionButton deleteImageFab; private LinearLayout loader;
 
     private PagerAdapter pagerAdapter;
     private AlertDialog backDialog;
@@ -66,9 +57,11 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_games_pager);
-        ButterKnife.bind(this);
-        EdgeToEdge.applyCollapsingHeader(this, findViewById(R.id.main_content));
+        binding = ActivityGamesPagerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        headBackground = binding.gamesPagerHeadBackground; expansionIcon = binding.gamesPagerExpansionIcon; scoreTV = binding.gamesPagerScore; winIcon = binding.gamesPagerWinIcon; toolbar = binding.gamesPagerToolbar; pager = binding.gamesPagerViewpager; addImageFab = binding.gamesPagerAddImage; deleteImageFab = binding.gamesPagerDeleteImage; loader = (LinearLayout) binding.loader.getRoot();
+        EdgeToEdge.applyCollapsingHeader(this, binding.mainContent);
+        deleteImageFab.setOnClickListener(this::onClick);
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);
@@ -106,12 +99,10 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         addImageFab.setMenuListener(new SimpleMenuListenerAdapter() {
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                switch (menuItem.getItemId()) {
-                    case R.id.action_camera:
+                if (menuItem.getItemId() == R.id.action_camera) {
                         pagerPresenter.clickOnAddPhotoButton(true);
                         return false;
-                    case R.id.action_gallery:
+                } else if (menuItem.getItemId() == R.id.action_gallery) {
                         pagerPresenter.clickOnAddPhotoButton(false);
                         return false;
                 }
@@ -239,7 +230,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         showActionShareImageButton();
     }
 
-    @OnClick({R.id.games_pager_delete_image})
     public void onClick(View view) {
         pagerPresenter.clickOnDeletePhotoButton();
     }
@@ -260,38 +250,37 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_save:
+        int id = item.getItemId();
+        if (id == R.id.action_save) {
                 pagerPresenter.actionSave();
                 return true;
-            case R.id.action_clear:
+        } else if (id == R.id.action_clear) {
                 pagerPresenter.actionClear(pagerPresenter.getCurrentPosition());
                 return true;
-            case R.id.action_random:
+        } else if (id == R.id.action_random) {
                 pagerPresenter.actionRandom(pagerPresenter.getCurrentPosition());
                 return true;
-            case R.id.action_random_settings:
+        } else if (id == R.id.action_random_settings) {
                 showLoader();
                 Intent randomSettingsIntent = new Intent(this, SpecializationChoiceActivity.class);
                 startActivity(randomSettingsIntent);
                 return true;
-            case R.id.action_edit_expansion:
+        } else if (id == R.id.action_edit_expansion) {
                 showLoader();
                 Intent expansionChoiceIntent = new Intent(this, ExpansionChoiceActivity.class);
                 startActivity(expansionChoiceIntent);
                 return true;
-            case R.id.action_select_all:
+        } else if (id == R.id.action_select_all) {
                 pagerPresenter.clickSelectPhoto(true);
                 return true;
-            case R.id.action_select_cancel:
+        } else if (id == R.id.action_select_cancel) {
                 pagerPresenter.clickSelectPhoto(false);
                 return true;
-            case R.id.action_share_image:
+        } else if (id == R.id.action_share_image) {
                 pagerPresenter.clickShareImageButton();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void showLoader() {

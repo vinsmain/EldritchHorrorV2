@@ -29,23 +29,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityAboutBinding;
 import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import timber.log.Timber;
 
 public class AboutActivity extends AppCompatActivity implements PurchasesUpdatedListener {
 
-    @BindView(R.id.about_version) TextView version;
-    @BindView(R.id.about_toolbar) Toolbar toolbar;
-    @BindView(R.id.about_donate_1_btn) Button button1;
-    @BindView(R.id.about_donate_2_btn) Button button2;
-    @BindView(R.id.about_donate_5_btn) Button button5;
-    @BindView(R.id.about_donate_10_btn) Button button10;
-    @BindView(R.id.about_donate_50_btn) Button button50;
-    @BindView(R.id.about_donate_100_btn) Button button100;
+    private ActivityAboutBinding binding;
 
     private final Map<String, ProductDetails> donationProducts = new HashMap<>();
     private BillingClient billingClient;
@@ -53,11 +44,17 @@ public class AboutActivity extends AppCompatActivity implements PurchasesUpdated
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
-        ButterKnife.bind(this);
-        EdgeToEdge.apply(this, toolbar, findViewById(R.id.about_content));
+        binding = ActivityAboutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        EdgeToEdge.apply(this, binding.aboutToolbar, binding.aboutContent);
         initToolbar();
-        version.setText(getString(R.string.version_header) + getVersionName());
+        binding.aboutVersion.setText(getString(R.string.version_header) + getVersionName());
+        binding.aboutDonate1Btn.setOnClickListener(this::onDonationClick);
+        binding.aboutDonate2Btn.setOnClickListener(this::onDonationClick);
+        binding.aboutDonate5Btn.setOnClickListener(this::onDonationClick);
+        binding.aboutDonate10Btn.setOnClickListener(this::onDonationClick);
+        binding.aboutDonate50Btn.setOnClickListener(this::onDonationClick);
+        binding.aboutDonate100Btn.setOnClickListener(this::onDonationClick);
         setDonationButtonsEnabled(false);
 
         billingClient = BillingClient.newBuilder(this)
@@ -83,12 +80,12 @@ public class AboutActivity extends AppCompatActivity implements PurchasesUpdated
     }
 
     private void initToolbar() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.aboutToolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.about);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(view -> finish());
+        binding.aboutToolbar.setNavigationOnClickListener(view -> finish());
     }
 
     private void loadDonationProducts() {
@@ -116,19 +113,15 @@ public class AboutActivity extends AppCompatActivity implements PurchasesUpdated
                 .build();
     }
 
-    @OnClick({R.id.about_donate_1_btn, R.id.about_donate_2_btn, R.id.about_donate_5_btn,
-            R.id.about_donate_10_btn, R.id.about_donate_50_btn, R.id.about_donate_100_btn})
     public void onDonationClick(View view) {
         String productId;
-        switch (view.getId()) {
-            case R.id.about_donate_1_btn: productId = "donate_1_usd"; break;
-            case R.id.about_donate_2_btn: productId = "donate_2_usd"; break;
-            case R.id.about_donate_5_btn: productId = "donate_5_usd"; break;
-            case R.id.about_donate_10_btn: productId = "donate_10_usd"; break;
-            case R.id.about_donate_50_btn: productId = "donate_50_usd"; break;
-            case R.id.about_donate_100_btn: productId = "donate_100_usd"; break;
-            default: return;
-        }
+        if (view.getId() == R.id.about_donate_1_btn) productId = "donate_1_usd";
+        else if (view.getId() == R.id.about_donate_2_btn) productId = "donate_2_usd";
+        else if (view.getId() == R.id.about_donate_5_btn) productId = "donate_5_usd";
+        else if (view.getId() == R.id.about_donate_10_btn) productId = "donate_10_usd";
+        else if (view.getId() == R.id.about_donate_50_btn) productId = "donate_50_usd";
+        else if (view.getId() == R.id.about_donate_100_btn) productId = "donate_100_usd";
+        else return;
         ProductDetails product = donationProducts.get(productId);
         if (product == null) {
             Toast.makeText(this, R.string.donate_error_header, Toast.LENGTH_SHORT).show();
@@ -169,12 +162,7 @@ public class AboutActivity extends AppCompatActivity implements PurchasesUpdated
     }
 
     private void setDonationButtonsEnabled(boolean enabled) {
-        button1.setEnabled(enabled);
-        button2.setEnabled(enabled);
-        button5.setEnabled(enabled);
-        button10.setEnabled(enabled);
-        button50.setEnabled(enabled);
-        button100.setEnabled(enabled);
+        binding.aboutDonate1Btn.setEnabled(enabled); binding.aboutDonate2Btn.setEnabled(enabled); binding.aboutDonate5Btn.setEnabled(enabled); binding.aboutDonate10Btn.setEnabled(enabled); binding.aboutDonate50Btn.setEnabled(enabled); binding.aboutDonate100Btn.setEnabled(enabled);
     }
 
     private void showBillingUnavailable(BillingResult result) {

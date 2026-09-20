@@ -32,11 +32,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityAncientOneInfoBinding;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.api.json_model.Files;
 import ru.mgusev.eldritchhorror.di.App;
@@ -54,6 +52,8 @@ import timber.log.Timber;
  */
 public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivity implements AncientOneInfoView, MaterialSpinner.OnItemSelectedListener, AppCompatSeekBar.OnSeekBarChangeListener {
 
+    private ActivityAncientOneInfoBinding binding;
+
     /**
      * Presenter
      */
@@ -62,46 +62,28 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
     /**
      * Toolbar
      */
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.forgotten_endings_ancient_one_spinner)
     MaterialSpinner ancientOneSpinner;
-    @BindView(R.id.image_ancient_one)
     AppCompatImageView imageAncientOne;
-    @BindView(R.id.expandable_info)
     DropdownTextView expandableInfo;
-    @BindView(R.id.expandable_story)
     DropdownTextView expandableStory;
-    @BindView(R.id.ancient_one_info_scroll_view)
     NestedScrollView scrollView;
-    @BindView(R.id.noneResultsTV)
     AppCompatTextView noneResultsTV;
 
-    @BindView(R.id.btn_audio_info)
     AppCompatImageView btnAudioInfo;
-    @BindView(R.id.btn_audio_story)
     AppCompatImageView btnAudioStory;
 
-    @BindView(R.id.audio_card)
     CardView audioPlayerContainer;
-    @BindView(R.id.textAudioTitle)
     AppCompatTextView textAudioTitle;
-    @BindView(R.id.audioProgressBar)
     AppCompatSeekBar audioProgressBar;
-    @BindView(R.id.textAudioCurrentDuration)
     AppCompatTextView audioCurrentDuration;
-    @BindView(R.id.textAudioTotalDuration)
     AppCompatTextView audioTotalDuration;
-    @BindView(R.id.btnAudioControl)
     FloatingActionButton audioControlButton;
-    @BindView(R.id.textAudioCopyright)
     AppCompatTextView textAudioCopyright;
 
     /**
      * Сообщение, выводимое если список {@link Article} пуст
      */
-//    @BindView(R.id.faq_none_results)
-//    TextView noneResultsTV;
     /**
      * Пункт меню "Обновить данные"
      */
@@ -121,9 +103,30 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ancient_one_info);
-        ButterKnife.bind(this);
-        EdgeToEdge.apply(this, toolbar, findViewById(R.id.ancient_one_info_content));
+        binding = ActivityAncientOneInfoBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        toolbar = binding.toolbar;
+        ancientOneSpinner = binding.forgottenEndingsAncientOneSpinner;
+        imageAncientOne = binding.imageAncientOne;
+        expandableInfo = binding.expandableInfo;
+        expandableStory = binding.expandableStory;
+        scrollView = binding.ancientOneInfoScrollView;
+        noneResultsTV = binding.noneResultsTV;
+        btnAudioInfo = binding.btnAudioInfo;
+        btnAudioStory = binding.btnAudioStory;
+        audioPlayerContainer = binding.audioCard;
+        textAudioTitle = binding.audioPlayer.textAudioTitle;
+        audioProgressBar = binding.audioPlayer.audioProgressBar;
+        audioCurrentDuration = binding.audioPlayer.textAudioCurrentDuration;
+        audioTotalDuration = binding.audioPlayer.textAudioTotalDuration;
+        audioControlButton = binding.audioPlayer.btnAudioControl;
+        textAudioCopyright = binding.audioPlayer.textAudioCopyright;
+        binding.viewClickableInfo.setOnClickListener(this::onClick);
+        binding.viewClickableStory.setOnClickListener(this::onClick);
+        audioControlButton.setOnClickListener(this::onClickAudioBtn);
+        btnAudioInfo.setOnClickListener(this::onClickAudioBtn);
+        btnAudioStory.setOnClickListener(this::onClickAudioBtn);
+        EdgeToEdge.apply(this, toolbar, binding.ancientOneInfoContent);
 
         initToolbar();
         initAncientOneSpinner();
@@ -210,13 +213,11 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.refresh:
+        if (item.getItemId() == R.id.refresh) {
                 presenter.clickRefresh();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -292,30 +293,21 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
         imageAncientOne.setImageResource(getResources().getIdentifier(ancientOne.getImageResource(), "drawable", getPackageName()));
     }
 
-    @OnClick({R.id.view_clickable_info, R.id.view_clickable_story})
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.view_clickable_info:
+        if (view.getId() == R.id.view_clickable_info) {
                 presenter.expandableInfoOnClick();
-                break;
-            case R.id.view_clickable_story:
+        } else if (view.getId() == R.id.view_clickable_story) {
                 presenter.expandableStoryOnClick();
-                break;
         }
     }
 
-    @OnClick({R.id.btnAudioControl, R.id.btn_audio_info, R.id.btn_audio_story})
     public void onClickAudioBtn(View view) {
-        switch (view.getId()) {
-            case R.id.btnAudioControl:
+        if (view.getId() == R.id.btnAudioControl) {
                 presenter.onAudioControlButtonClicked();
-                break;
-            case R.id.btn_audio_info:
+        } else if (view.getId() == R.id.btn_audio_info) {
                 presenter.onAudioInfoButtonClicked();
-                break;
-            case R.id.btn_audio_story:
+        } else if (view.getId() == R.id.btn_audio_story) {
                 presenter.onAudioStoryButtonClicked();
-                break;
         }
     }
 

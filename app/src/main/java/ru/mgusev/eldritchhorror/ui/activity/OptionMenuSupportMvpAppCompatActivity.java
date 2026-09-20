@@ -1,6 +1,5 @@
 package ru.mgusev.eldritchhorror.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,7 +21,6 @@ import moxy.MvpDelegate;
  * в onCreateOptionsMenu(Menu menu) перед return true;
  */
 
-@SuppressLint("Registered")
 public class OptionMenuSupportMvpAppCompatActivity extends AppCompatActivity {
     private MvpDelegate<? extends OptionMenuSupportMvpAppCompatActivity> mMvpDelegate;
 

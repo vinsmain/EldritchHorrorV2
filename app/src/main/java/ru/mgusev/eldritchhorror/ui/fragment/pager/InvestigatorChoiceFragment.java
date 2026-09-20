@@ -17,12 +17,10 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.FragmentInvestigatorChoiceBinding;
 import ru.mgusev.eldritchhorror.ui.adapter.pager.InvestigatorChoiceAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Investigator;
@@ -38,9 +36,7 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
     @InjectPresenter
     InvestigatorChoicePresenter investigatorChoicePresenter;
 
-    @BindView(R.id.inv_choice_recycler_view) RecyclerView invRecycleView;
-
-    private Unbinder unbinder;
+    private FragmentInvestigatorChoiceBinding binding;
     private InvestigatorChoiceAdapter adapter;
     private AlertDialog clearDialog;
     private int columnsCount = 3;
@@ -70,21 +66,19 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
             startActivity(firstIntent);
         }
 
-        View view = inflater.inflate(R.layout.fragment_investigator_choice, null);
-
-        unbinder = ButterKnife.bind(this, view);
+        binding = FragmentInvestigatorChoiceBinding.inflate(inflater, container, false);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             columnsCount = 5;
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), columnsCount);
-        invRecycleView.setLayoutManager(gridLayoutManager);
-        invRecycleView.setHasFixedSize(true);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(binding.getRoot().getContext(), columnsCount);
+        binding.invChoiceRecyclerView.setLayoutManager(gridLayoutManager);
+        binding.invChoiceRecyclerView.setHasFixedSize(true);
 
         adapter = new InvestigatorChoiceAdapter();
-        invRecycleView.setAdapter(adapter);
+        binding.invChoiceRecyclerView.setAdapter(adapter);
         adapter.setOnClick(this);
-        return view;
+        return binding.getRoot();
     }
 
     @Override
@@ -153,8 +147,8 @@ public class InvestigatorChoiceFragment extends MvpAppCompatFragment implements 
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         if(clearDialog != null && clearDialog.isShowing()) clearDialog.dismiss();
-        unbinder.unbind();
+        binding = null;
+        super.onDestroyView();
     }
 }

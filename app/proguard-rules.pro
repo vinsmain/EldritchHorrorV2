@@ -1,4 +1,25 @@
-# Add project specific ProGuard rules here.
+# Правила R8 для релизной сборки. Базовая оптимизация задаётся
+# proguard-android-optimize.txt в app/build.gradle.
+
+# Сохраняем читаемые стектрейсы для Crashlytics после обфускации.
+-keepattributes SourceFile,LineNumberTable,Signature,*Annotation*
+-renamesourcefileattribute SourceFile
+
+# Gson использует поля моделей JSON через отражение.
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+# Moxy загружает сгенерированные binder/factory-классы по соглашению об имени.
+-keep class **$$PresentersBinder { *; }
+-keep class **$$PresentersFactory { *; }
+-keep class **$$State { *; }
+-keep class **$$ViewCommands { *; }
+
+# Dagger-компонент создаётся в Application напрямую; сохраняем точку входа DI.
+-keep class ru.mgusev.eldritchhorror.di.component.DaggerAppComponent { *; }
+
+# ORMLite читает аннотации и поля моделей через отражение.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
 #

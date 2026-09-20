@@ -20,12 +20,10 @@ import android.widget.TextView;
 
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityDiceBinding;
 import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 
 import ru.mgusev.eldritchhorror.ui.adapter.dice.DiceAdapter;
@@ -38,16 +36,7 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
     @InjectPresenter
     DicePresenter dicePresenter;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.dice_rv)
-    RecyclerView diceListRV;
-    @BindView(R.id.dice_count_seekbar)
-    SeekBar diceCountSeekBar;
-    @BindView(R.id.dice_reroll_all_fab)
-    FloatingActionButton rerollAllFAB;
-    @BindView(R.id.dice_success_count)
-    TextView successCountTV;
+    private ActivityDiceBinding binding;
 
     private DiceAdapter adapter;
     private int minDiceCount = 1;
@@ -65,32 +54,33 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dice);
-        ButterKnife.bind(this);
-        EdgeToEdge.apply(this, toolbar, findViewById(R.id.dice_content));
+        binding = ActivityDiceBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        EdgeToEdge.apply(this, binding.toolbar, binding.diceContent);
+        binding.diceRerollAllFab.setOnClickListener(view -> onClick());
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnNumber = 5;
 
         initToolbar();
 
-        diceCountSeekBar.setOnSeekBarChangeListener(this);
+        binding.diceCountSeekbar.setOnSeekBarChangeListener(this);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, columnNumber);
 
-        diceListRV.setLayoutManager(gridLayoutManager);
-        diceListRV.setHasFixedSize(true);
+        binding.diceRv.setLayoutManager(gridLayoutManager);
+        binding.diceRv.setHasFixedSize(true);
 
         adapter = new DiceAdapter(getMvpDelegate());
-        diceListRV.setAdapter(adapter);
+        binding.diceRv.setAdapter(adapter);
 
-        diceListRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.diceRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0 && rerollAllFAB.getVisibility() == View.VISIBLE) {
-                    rerollAllFAB.hide();
-                } else if (dy < 0 && rerollAllFAB.getVisibility() != View.VISIBLE) {
-                    rerollAllFAB.show();
+                if (dy > 0 && binding.diceRerollAllFab.getVisibility() == View.VISIBLE) {
+                    binding.diceRerollAllFab.hide();
+                } else if (dy < 0 && binding.diceRerollAllFab.getVisibility() != View.VISIBLE) {
+                    binding.diceRerollAllFab.show();
                 }
             }});
 
@@ -98,12 +88,12 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
     }
 
     private void initToolbar() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.dice_header);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> finish());
+        binding.toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     @Override
@@ -117,7 +107,7 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
         successMode6 = menu.findItem(R.id.action_success_mode_6);
         successMode5 = menu.findItem(R.id.action_success_mode_5);
         successMode4 = menu.findItem(R.id.action_success_mode_4);
-        setDiceCountValue(String.valueOf(minDiceCount + diceCountSeekBar.getProgress()));
+        setDiceCountValue(String.valueOf(minDiceCount + binding.diceCountSeekbar.getProgress()));
         setVisibilityScreenLightButtons();
         setVisibilityAnimationModeButtons();
         setVisibilitySuccessModeButtons();
@@ -126,31 +116,15 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_screen_light_on:
-                dicePresenter.onScreenLightClick(false);
-                return true;
-            case R.id.action_screen_light_off:
-                dicePresenter.onScreenLightClick(true);
-                return true;
-            case R.id.action_2d_animation:
-                dicePresenter.onAnimationModeClick(true);
-                return true;
-            case R.id.action_3d_animation:
-                dicePresenter.onAnimationModeClick(false);
-                return true;
-            case R.id.action_success_mode_6:
-                dicePresenter.onSuccessModeClick(4);
-                return true;
-            case R.id.action_success_mode_5:
-                dicePresenter.onSuccessModeClick(6);
-                return true;
-            case R.id.action_success_mode_4:
-                dicePresenter.onSuccessModeClick(5);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        int id = item.getItemId();
+        if (id == R.id.action_screen_light_on) { dicePresenter.onScreenLightClick(false); return true; }
+        if (id == R.id.action_screen_light_off) { dicePresenter.onScreenLightClick(true); return true; }
+        if (id == R.id.action_2d_animation) { dicePresenter.onAnimationModeClick(true); return true; }
+        if (id == R.id.action_3d_animation) { dicePresenter.onAnimationModeClick(false); return true; }
+        if (id == R.id.action_success_mode_6) { dicePresenter.onSuccessModeClick(4); return true; }
+        if (id == R.id.action_success_mode_5) { dicePresenter.onSuccessModeClick(6); return true; }
+        if (id == R.id.action_success_mode_4) { dicePresenter.onSuccessModeClick(5); return true; }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -205,7 +179,7 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
 
     @Override
     public void setInitialValueForSeekBar(int value) {
-        diceCountSeekBar.setProgress(value - minDiceCount);
+        binding.diceCountSeekbar.setProgress(value - minDiceCount);
     }
 
     @Override
@@ -222,10 +196,9 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
     @Override
     public void setSuccessCount(String count) {
         String result = successCountHeader + count;
-        successCountTV.setText(result);
+        binding.diceSuccessCount.setText(result);
     }
 
-    @OnClick(R.id.dice_reroll_all_fab)
     public void onClick() {
         dicePresenter.onClickRerollAllBtn();
     }

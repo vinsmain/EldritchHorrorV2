@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.text.Editable;
+import android.text.TextWatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -31,16 +33,10 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
-import butterknife.OnItemSelected;
-import butterknife.OnTextChanged;
-import butterknife.Unbinder;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.FragmentResultGameBinding;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ResultGamePresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.ResultGameView;
@@ -55,32 +51,32 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
     @InjectPresenter
     ResultGamePresenter resultGamePresenter;
 
-    @BindView(R.id.result_game_result_switch) Switch resultSwitch;
-    @BindView(R.id.result_game_mysteries_radio_group) RadioGroup mysteriesRadioGroup;
-    @BindView(R.id.result_game_defeat_by_elimination_switch) Switch defeatByEliminationSwitch;
-    @BindView(R.id.result_game_defeat_by_mythos_deplition_switch) Switch defeatByMythosDepletionSwitch;
-    @BindView(R.id.result_game_defeat_by_awakened_ancient_one_switch) Switch defeatByAwakenedAncientOneSwitch;
-    @BindView(R.id.result_game_defeat_by_surrender_switch) Switch defeatBySurrenderSwitch;
-    @BindView(R.id.result_game_defeat_by_rumor_switch) Switch defeatByRumorSwitch;
-    @BindView(R.id.result_game_defeat_by_prelude_switch) Switch defeatByPreludeSwitch;
-    @BindView(R.id.result_game_defeat_table) TableLayout defeatTable;
-    @BindView(R.id.result_game_gates_count) EditText gatesCountTV;
-    @BindView(R.id.result_game_monsters_count) EditText monstersCountTV;
-    @BindView(R.id.result_game_curse_count) EditText curseCountTV;
-    @BindView(R.id.result_game_rumors_count) EditText rumorsCountTV;
-    @BindView(R.id.result_game_clues_count) EditText cluesCountTV;
-    @BindView(R.id.result_game_blessed_count) EditText blessedCountTV;
-    @BindView(R.id.result_game_doom_count) EditText doomCountTV;
-    @BindView(R.id.result_game_victory_table) TableLayout victoryTable;
-    @BindView(R.id.result_game_comment_tiet) FixedTextInputEditText commentTIED;
-    @BindView(R.id.result_game_defeat_rumor_spinner) Spinner rumorSpinner;
-    @BindView(R.id.result_game_defeat_rumor_spinner_row) TableRow rumorSpinnerTR;
-    @BindView(R.id.result_game_defeat_prelude_spinner) Spinner preludeSpinner;
-    @BindView(R.id.result_game_defeat_prelude_spinner_row) TableRow preludeSpinnerTR;
-    @BindView(R.id.result_game_time_tv) TextView timeTV;
+    private FragmentResultGameBinding binding;
+    private Switch resultSwitch;
+    private RadioGroup mysteriesRadioGroup;
+    private Switch defeatByEliminationSwitch;
+    private Switch defeatByMythosDepletionSwitch;
+    private Switch defeatByAwakenedAncientOneSwitch;
+    private Switch defeatBySurrenderSwitch;
+    private Switch defeatByRumorSwitch;
+    private Switch defeatByPreludeSwitch;
+    private TableLayout defeatTable;
+    private EditText gatesCountTV;
+    private EditText monstersCountTV;
+    private EditText curseCountTV;
+    private EditText rumorsCountTV;
+    private EditText cluesCountTV;
+    private EditText blessedCountTV;
+    private EditText doomCountTV;
+    private TableLayout victoryTable;
+    private FixedTextInputEditText commentTIED;
+    private Spinner rumorSpinner;
+    private TableRow rumorSpinnerTR;
+    private Spinner preludeSpinner;
+    private TableRow preludeSpinnerTR;
+    private TextView timeTV;
 
     private static final int EDIT_TEXT_INDEX = 1; //Индекс EditText в строке TableRow
-    private Unbinder unbinder;
     private Switch[] switchArray;
     private int[] idArray;
     private ArrayAdapter<String> rumorAdapter;
@@ -113,8 +109,8 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
             startActivity(firstIntent);
         }
 
-        View view = inflater.inflate(R.layout.fragment_result_game, null);
-        unbinder = ButterKnife.bind(this, view);
+        binding = FragmentResultGameBinding.inflate(inflater, container, false);
+        bindViews();
         rumorAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.spinner);
         rumorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         rumorSpinner.setAdapter(rumorAdapter);
@@ -125,7 +121,89 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
 
         switchArray = new Switch[]{defeatByEliminationSwitch, defeatByMythosDepletionSwitch, defeatByAwakenedAncientOneSwitch, defeatBySurrenderSwitch, defeatByRumorSwitch, defeatByPreludeSwitch};
         idArray = new int[]{R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch, R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_surrender_switch, R.id.result_game_defeat_by_rumor_switch, R.id.result_game_defeat_by_prelude_switch};
-        return view;
+        return binding.getRoot();
+    }
+
+    private void bindViews() {
+        resultSwitch = binding.resultGameResultSwitch;
+        mysteriesRadioGroup = binding.resultGameMysteriesRadioGroup;
+        defeatByEliminationSwitch = binding.resultGameDefeatByEliminationSwitch;
+        defeatByMythosDepletionSwitch = binding.resultGameDefeatByMythosDeplitionSwitch;
+        defeatByAwakenedAncientOneSwitch = binding.resultGameDefeatByAwakenedAncientOneSwitch;
+        defeatBySurrenderSwitch = binding.resultGameDefeatBySurrenderSwitch;
+        defeatByRumorSwitch = binding.resultGameDefeatByRumorSwitch;
+        defeatByPreludeSwitch = binding.resultGameDefeatByPreludeSwitch;
+        defeatTable = binding.resultGameDefeatTable;
+        gatesCountTV = binding.resultGameGatesCount;
+        monstersCountTV = binding.resultGameMonstersCount;
+        curseCountTV = binding.resultGameCurseCount;
+        rumorsCountTV = binding.resultGameRumorsCount;
+        cluesCountTV = binding.resultGameCluesCount;
+        blessedCountTV = binding.resultGameBlessedCount;
+        doomCountTV = binding.resultGameDoomCount;
+        victoryTable = binding.resultGameVictoryTable;
+        commentTIED = binding.resultGameCommentTiet;
+        rumorSpinner = binding.resultGameDefeatRumorSpinner;
+        rumorSpinnerTR = binding.resultGameDefeatRumorSpinnerRow;
+        preludeSpinner = binding.resultGameDefeatPreludeSpinner;
+        preludeSpinnerTR = binding.resultGameDefeatPreludeSpinnerRow;
+        timeTV = binding.resultGameTimeTv;
+
+        CompoundButton.OnCheckedChangeListener checkedChangeListener = this::onCheckedChanged;
+        resultSwitch.setOnCheckedChangeListener(checkedChangeListener);
+        defeatByEliminationSwitch.setOnCheckedChangeListener(checkedChangeListener);
+        defeatByMythosDepletionSwitch.setOnCheckedChangeListener(checkedChangeListener);
+        defeatByAwakenedAncientOneSwitch.setOnCheckedChangeListener(checkedChangeListener);
+        defeatBySurrenderSwitch.setOnCheckedChangeListener(checkedChangeListener);
+        defeatByRumorSwitch.setOnCheckedChangeListener(checkedChangeListener);
+        defeatByPreludeSwitch.setOnCheckedChangeListener(checkedChangeListener);
+        binding.resultGameMystery0.setOnCheckedChangeListener(this::onCheckedChangedMysteries);
+        binding.resultGameMystery1.setOnCheckedChangeListener(this::onCheckedChangedMysteries);
+        binding.resultGameMystery2.setOnCheckedChangeListener(this::onCheckedChangedMysteries);
+        binding.resultGameMystery3.setOnCheckedChangeListener(this::onCheckedChangedMysteries);
+        binding.resultGameMystery4.setOnCheckedChangeListener(this::onCheckedChangedMysteries);
+        binding.resultGameMystery5.setOnCheckedChangeListener(this::onCheckedChangedMysteries);
+        TextWatcher resultTextWatcher = new SimpleTextWatcher(this::onTextChanged);
+        gatesCountTV.addTextChangedListener(resultTextWatcher);
+        monstersCountTV.addTextChangedListener(resultTextWatcher);
+        curseCountTV.addTextChangedListener(resultTextWatcher);
+        rumorsCountTV.addTextChangedListener(resultTextWatcher);
+        cluesCountTV.addTextChangedListener(resultTextWatcher);
+        blessedCountTV.addTextChangedListener(resultTextWatcher);
+        doomCountTV.addTextChangedListener(resultTextWatcher);
+        commentTIED.addTextChangedListener(new SimpleTextWatcher(this::onCommentTextChanged));
+        android.widget.AdapterView.OnItemSelectedListener rumorListener = new android.widget.AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) { ResultGameFragment.this.onItemSelected(); }
+            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) { }
+        };
+        rumorSpinner.setOnItemSelectedListener(rumorListener);
+        preludeSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) { onItemPreludeSelected(); }
+            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) { }
+        });
+        rumorSpinnerTR.setOnClickListener(view -> onRumorRowClick());
+        preludeSpinnerTR.setOnClickListener(view -> onPreludeRowClick());
+        binding.gatesCountRow.setOnClickListener(this::inClick);
+        binding.monstersCountRow.setOnClickListener(this::inClick);
+        binding.curseCountRow.setOnClickListener(this::inClick);
+        binding.rumorsCountRow.setOnClickListener(this::inClick);
+        binding.cluesCountRow.setOnClickListener(this::inClick);
+        binding.blessedCountRow.setOnClickListener(this::inClick);
+        binding.doomCountRow.setOnClickListener(this::inClick);
+        binding.resultGameTimeRow.setOnClickListener(view -> onTimeRowClick());
+        binding.btnScoreInfo.setOnClickListener(view -> onBtnScoreInfoClick());
+    }
+
+    private static class SimpleTextWatcher implements TextWatcher {
+        private final Runnable callback;
+
+        SimpleTextWatcher(Runnable callback) {
+            this.callback = callback;
+        }
+
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+        @Override public void onTextChanged(CharSequence s, int start, int before, int count) { callback.run(); }
+        @Override public void afterTextChanged(Editable s) { }
     }
 
     @Override
@@ -197,17 +275,9 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         resultSwitch.setText(R.string.defeat_header);
     }
 
-    @OnCheckedChanged({R.id.result_game_result_switch, R.id.result_game_defeat_by_elimination_switch, R.id.result_game_defeat_by_mythos_deplition_switch,
-            R.id.result_game_defeat_by_awakened_ancient_one_switch, R.id.result_game_defeat_by_surrender_switch, R.id.result_game_defeat_by_rumor_switch, R.id.result_game_defeat_by_prelude_switch})
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        switch (compoundButton.getId()) {
-            case R.id.result_game_result_switch:
-                resultGamePresenter.setResultSwitch(b);
-                break;
-            default:
-                if (b) setDefeatReasonSwitchesChecked(compoundButton.getId());
-                break;
-        }
+        if (compoundButton.getId() == R.id.result_game_result_switch) resultGamePresenter.setResultSwitch(b);
+        else if (b) setDefeatReasonSwitchesChecked(compoundButton.getId());
     }
 
     private void setDefeatReasonSwitchesChecked(int currentId) {
@@ -234,7 +304,6 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         }
     }
 
-    @OnCheckedChanged({R.id.result_game_mystery_0, R.id.result_game_mystery_1, R.id.result_game_mystery_2, R.id.result_game_mystery_3, R.id.result_game_mystery_4, R.id.result_game_mystery_5})
     public void onCheckedChangedMysteries(CompoundButton compoundButton, boolean b) {
         if (b) resultGamePresenter.setSolvedMysteriesCount(Integer.parseInt((String) compoundButton.getText()));
     }
@@ -254,25 +323,20 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         ((RadioButton) mysteriesRadioGroup.getChildAt(i)).setChecked(true);
     }
 
-    @OnTextChanged({R.id.result_game_gates_count, R.id.result_game_monsters_count, R.id.result_game_curse_count,
-            R.id.result_game_rumors_count, R.id.result_game_clues_count, R.id.result_game_blessed_count, R.id.result_game_doom_count})
     public void onTextChanged() {
         resultGamePresenter.setResult(getResultFromField(gatesCountTV), getResultFromField(monstersCountTV), getResultFromField(curseCountTV), getResultFromField(rumorsCountTV),
                 getResultFromField(cluesCountTV), getResultFromField(blessedCountTV), getResultFromField(doomCountTV));
     }
 
-    @OnTextChanged(R.id.result_game_comment_tiet)
     public void onCommentTextChanged() {
         resultGamePresenter.setComment(String.valueOf(commentTIED.getText()));
     }
 
-    @OnItemSelected(R.id.result_game_defeat_rumor_spinner)
     public void onItemSelected() {
         resultGamePresenter.setCurrentRumor((String) rumorSpinner.getSelectedItem());
         resultGamePresenter.setRumorSpinnerPosition();
     }
 
-    @OnItemSelected(R.id.result_game_defeat_prelude_spinner)
     public void onItemPreludeSelected() {
         resultGamePresenter.setCurrentPrelude((String) preludeSpinner.getSelectedItem());
         resultGamePresenter.setPreludeSpinnerPosition();
@@ -288,22 +352,18 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         preludeSpinnerTR.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    @OnClick(R.id.result_game_defeat_rumor_spinner_row)
     public void onRumorRowClick() {
         rumorSpinner.performClick();
     }
 
-    @OnClick(R.id.result_game_defeat_prelude_spinner_row)
     public void onPreludeRowClick() {
         preludeSpinner.performClick();
     }
 
-    @OnClick({R.id.gatesCountRow, R.id.monstersCountRow, R.id.curseCountRow, R.id.rumorsCountRow, R.id.cluesCountRow, R.id.blessedCountRow, R.id.doomCountRow})
     public void inClick(View view) {
         showSoftKeyboardOnView(view);
     }
 
-    @OnClick({R.id.result_game_time_row})
     public void onTimeRowClick() {
         resultGamePresenter.onTimeRowClick();
     }
@@ -363,7 +423,6 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
         resultGamePresenter.dismissTimePicker();
     }
 
-    @OnClick(R.id.btnScoreInfo)
     public void onBtnScoreInfoClick() {
         resultGamePresenter.showScoreInfoDialog();
     }
@@ -392,7 +451,6 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         if (timePickerDialog != null) {
             try {
                 Class<?> timePickerDialogClass = timePickerDialog.getClass();
@@ -408,6 +466,7 @@ public class ResultGameFragment extends MvpAppCompatFragment implements ResultGa
             timePickerDialog.dismiss();
         }
         if(scoreInfoDialog != null && scoreInfoDialog.isShowing()) scoreInfoDialog.dismiss();
-        unbinder.unbind();
+        binding = null;
+        super.onDestroyView();
     }
 }

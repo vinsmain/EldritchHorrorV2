@@ -3,11 +3,10 @@ package ru.mgusev.eldritchhorror.utils.gallery;
 import android.content.Context;
 
 import android.net.Uri;
+import android.view.LayoutInflater;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -19,21 +18,21 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ItemGalleryBinding;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryItemHolder> {
 
 
     static class GalleryItemHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_gallery_card_view) CardView cardView;
-        @BindView(R.id.item_gallery_photo) SimpleDraweeView photo;
+        final CardView cardView;
+        final SimpleDraweeView photo;
 
-        GalleryItemHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        GalleryItemHolder(ItemGalleryBinding binding) {
+            super(binding.getRoot());
+            cardView = binding.itemGalleryCardView;
+            photo = binding.itemGalleryPhoto;
         }
     }
 
@@ -62,8 +61,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryI
     @NonNull
     @Override
     public GalleryItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery, parent, false);
-        return new GalleryItemHolder(view);
+        return new GalleryItemHolder(ItemGalleryBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override

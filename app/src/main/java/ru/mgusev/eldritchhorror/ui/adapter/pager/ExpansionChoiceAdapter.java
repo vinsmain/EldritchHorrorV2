@@ -4,7 +4,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -12,20 +11,19 @@ import android.widget.Switch;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ItemExpansionBinding;
 import ru.mgusev.eldritchhorror.model.Expansion;
 
 public class ExpansionChoiceAdapter extends RecyclerView.Adapter<ExpansionChoiceAdapter.ExpansionViewHolder> implements CompoundButton.OnCheckedChangeListener {
 
     static class ExpansionViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_expansion_image) ImageView itemExpansionImage;
-        @BindView(R.id.item_expansion_switch) Switch itemExpansionSwitch;
+        final ImageView itemExpansionImage;
+        final Switch itemExpansionSwitch;
 
-        ExpansionViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        ExpansionViewHolder(ItemExpansionBinding binding) {
+            super(binding.getRoot());
+            itemExpansionImage = binding.itemExpansionImage;
+            itemExpansionSwitch = binding.itemExpansionSwitch;
         }
     }
 
@@ -38,8 +36,7 @@ public class ExpansionChoiceAdapter extends RecyclerView.Adapter<ExpansionChoice
     @NonNull
     @Override
     public ExpansionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_expansion, parent, false);
-        return new ExpansionViewHolder(view);
+        return new ExpansionViewHolder(ItemExpansionBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override

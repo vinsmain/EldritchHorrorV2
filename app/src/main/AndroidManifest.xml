@@ -25,7 +25,9 @@
         <activity
             android:name=".ui.activity.random_card.RandomCardActivity"
             android:theme="@style/DialogTheme" />
-        <activity android:name=".ui.activity.faq.FaqActivity" />
+        <activity
+            android:name=".ui.activity.faq.FaqActivity"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".ui.activity.main.MainActivity"
             android:exported="true"
@@ -69,7 +71,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.ancient_one_info.AncientOneInfoActivity"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask"
+            tools:ignore="Instantiatable" />
 
         <service
             android:name=".ui.audio_player.AudioPlayerService"

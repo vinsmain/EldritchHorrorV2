@@ -19,10 +19,9 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityFaqBinding;
 import ru.mgusev.eldritchhorror.ui.adapter.faq.FaqAdapter;
 import ru.mgusev.eldritchhorror.api.json_model.Article;
 import ru.mgusev.eldritchhorror.presentation.presenter.faq.FaqPresenter;
@@ -37,6 +36,8 @@ import timber.log.Timber;
  */
 public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implements FaqView, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
+    private ActivityFaqBinding binding;
+
     /**
      * Репозиторий для работы с данными
      */
@@ -45,17 +46,14 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
     /**
      * RecyclerView для вывода списка {@link Article}
      */
-    @BindView(R.id.faq_rv)
     RecyclerView articleListRV;
     /**
      * Toolbar
      */
-    @BindView(R.id.faq_toolbar)
     Toolbar toolbar;
     /**
      * Сообщение, выводимое если список {@link Article} пуст
      */
-    @BindView(R.id.faq_none_results)
     TextView noneResultsTV;
     /**
      * Адаптер для {@link #articleListRV}
@@ -85,9 +83,12 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_faq);
-        ButterKnife.bind(this);
-        EdgeToEdge.apply(this, toolbar, findViewById(R.id.faq_content));
+        binding = ActivityFaqBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        articleListRV = binding.faqRv;
+        toolbar = binding.faqToolbar;
+        noneResultsTV = binding.faqNoneResults;
+        EdgeToEdge.apply(this, toolbar, binding.faqContent);
 
         initToolbar();
 
@@ -164,13 +165,11 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.refresh:
+        if (item.getItemId() == R.id.refresh) {
                 faqPresenter.clickRefresh();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
