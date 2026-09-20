@@ -92,8 +92,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         setContentView(binding.getRoot());
         startMessageTV = binding.mainStartMessage; gameCount = binding.mainGameCount; bestScore = binding.mainBestScore; worstScore = binding.mainWorstScore; gameListRV = binding.mainGameList; toolbar = binding.mainToolbar; addGameFAB = binding.mainAddGame; drawer = binding.mainDrawer; navigationView = binding.mainNavView; loader = (LinearLayout) binding.loader.getRoot();
         addGameFAB.setOnClickListener(this::onClick);
-        EdgeToEdge.apply(this, toolbar, drawer);
-        EdgeToEdge.applyVerticalInsets(navigationView);
+        EdgeToEdge.apply(this, toolbar, binding.mainContent);
+        EdgeToEdge.applyHorizontalInsets(binding.mainSummary);
+        EdgeToEdge.applyHorizontalInsets(gameListRV);
+        EdgeToEdge.applyHorizontalInsets(startMessageTV);
+        EdgeToEdge.applyHorizontalMarginInsets(addGameFAB);
+        EdgeToEdge.applyNavigationMenuInsets(navigationView);
         initialized = true;
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 2;
@@ -116,7 +120,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        headerViewHolder = new HeaderViewHolder(navigationView.getHeaderView(0));
+        View navigationHeader = navigationView.getHeaderView(0);
+        EdgeToEdge.applyTopAndHorizontalInsets(navigationHeader);
+        headerViewHolder = new HeaderViewHolder(navigationHeader);
         navigationView.setNavigationItemSelectedListener(this);
 
         initDrawerMenu();

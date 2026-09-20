@@ -127,6 +127,9 @@ public class AncientOneInfoActivity extends OptionMenuSupportMvpAppCompatActivit
         btnAudioInfo.setOnClickListener(this::onClickAudioBtn);
         btnAudioStory.setOnClickListener(this::onClickAudioBtn);
         EdgeToEdge.apply(this, toolbar, binding.ancientOneInfoContent);
+        EdgeToEdge.applyHorizontalInsets(ancientOneSpinner);
+        EdgeToEdge.applyHorizontalInsets(scrollView);
+        EdgeToEdge.applyHorizontalInsets(noneResultsTV);
 
         initToolbar();
         initAncientOneSpinner();

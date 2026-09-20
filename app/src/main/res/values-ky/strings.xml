@@ -399,4 +399,8 @@
     <string name="audio_copyright">Описание Древних озвучено студией GRIP Sound Lab.  Текст читали Максим Граут и Юлия Граут</string>
     <string name="audio_copyright_land">Описание Древних озвучено студией GRIP Sound Lab. Текст читали Максим Граут и Юлия Граут</string>
 
+    <string name="camera_app_unavailable">Приложение «Камера» недоступно. Установите или включите его в настройках устройства.</string>
+    <string name="camera_file_unavailable">Не удалось подготовить файл для фотографии. Проверьте доступность хранилища.</string>
+    <string name="camera_open_error">Не удалось открыть камеру. Проверьте разрешение «Камера» в настройках устройства.</string>
+    <string name="camera_permission_denied">Для добавления фотографии с камеры предоставьте разрешение «Камера».</string>
 </resources>

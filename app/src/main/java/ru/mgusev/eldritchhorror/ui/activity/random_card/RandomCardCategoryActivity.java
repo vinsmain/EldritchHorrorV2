@@ -48,6 +48,8 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
         binding = ActivityRandomCardCategoryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         EdgeToEdge.apply(this, binding.toolbar, binding.randomCardCategoryContent);
+        EdgeToEdge.applyHorizontalInsets(binding.randomCardCategoryRv);
+        EdgeToEdge.applyHorizontalInsets(binding.randomCardCategoryCopyright);
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);

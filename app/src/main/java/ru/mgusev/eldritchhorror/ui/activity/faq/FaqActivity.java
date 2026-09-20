@@ -1,6 +1,7 @@
 package ru.mgusev.eldritchhorror.ui.activity.faq;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -89,6 +90,8 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         toolbar = binding.faqToolbar;
         noneResultsTV = binding.faqNoneResults;
         EdgeToEdge.apply(this, toolbar, binding.faqContent);
+        EdgeToEdge.applyHorizontalInsets(articleListRV);
+        EdgeToEdge.applyHorizontalInsets(noneResultsTV);
 
         initToolbar();
 
@@ -123,6 +126,10 @@ public class FaqActivity extends OptionMenuSupportMvpAppCompatActivity implement
         searchItem = menu.findItem(R.id.search);
         searchView = (SearchView) searchItem.getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
+        SearchView.SearchAutoComplete searchText = searchView.findViewById(
+                androidx.appcompat.R.id.search_src_text);
+        searchText.setTextColor(Color.WHITE);
+        searchText.setHintTextColor(Color.WHITE);
         searchView.setOnQueryTextListener(this);
         searchItem.setOnActionExpandListener(this);
 

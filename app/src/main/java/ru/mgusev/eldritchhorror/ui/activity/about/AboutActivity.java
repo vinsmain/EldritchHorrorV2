@@ -47,6 +47,8 @@ public class AboutActivity extends AppCompatActivity implements PurchasesUpdated
         binding = ActivityAboutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         EdgeToEdge.apply(this, binding.aboutToolbar, binding.aboutContent);
+        EdgeToEdge.applyHorizontalInsets(binding.linearLayout6);
+        EdgeToEdge.applyHorizontalInsets(binding.linearLayout7);
         initToolbar();
         binding.aboutVersion.setText(getString(R.string.version_header) + getVersionName());
         binding.aboutDonate1Btn.setOnClickListener(this::onDonationClick);

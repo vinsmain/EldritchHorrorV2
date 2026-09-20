@@ -145,10 +145,10 @@
     <string name="select_image_header">Tap to select</string>
     <string name="folders_header">Folders</string>
     <string name="camera_header">Camera</string>
-    <string name="camera_app_unavailable">Приложение «Камера» недоступно. Установите или включите его в настройках устройства.</string>
-    <string name="camera_file_unavailable">Не удалось подготовить файл для фотографии. Проверьте доступность хранилища.</string>
-    <string name="camera_open_error">Не удалось открыть камеру. Проверьте разрешение «Камера» в настройках устройства.</string>
-    <string name="camera_permission_denied">Для добавления фотографии с камеры предоставьте разрешение «Камера».</string>
+    <string name="camera_app_unavailable">The Camera app is unavailable. Install or enable it in the device settings.</string>
+    <string name="camera_file_unavailable">Unable to prepare a photo file. Check that storage is available.</string>
+    <string name="camera_open_error">Unable to open the camera. Check the Camera permission in the device settings.</string>
+    <string name="camera_permission_denied">Grant the Camera permission to add a photo from the camera.</string>
     <string name="gallery_header">Gallery</string>
     <string name="comment_header">Comment</string>
     <string name="comment_none">None</string>

@@ -60,7 +60,11 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         binding = ActivityGamesPagerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         headBackground = binding.gamesPagerHeadBackground; expansionIcon = binding.gamesPagerExpansionIcon; scoreTV = binding.gamesPagerScore; winIcon = binding.gamesPagerWinIcon; toolbar = binding.gamesPagerToolbar; pager = binding.gamesPagerViewpager; addImageFab = binding.gamesPagerAddImage; deleteImageFab = binding.gamesPagerDeleteImage; loader = (LinearLayout) binding.loader.getRoot();
-        EdgeToEdge.applyCollapsingHeader(this, binding.mainContent);
+        EdgeToEdge.applyCollapsingHeader(
+                this, toolbar, binding.mainContent, expansionIcon, binding.linearLayout2);
+        EdgeToEdge.applyHorizontalInsets(pager);
+        EdgeToEdge.applyFloatingActionButtonInsets(addImageFab);
+        EdgeToEdge.applyFloatingActionButtonInsets(deleteImageFab);
         deleteImageFab.setOnClickListener(this::onClick);
 
         if (!MainActivity.initialized) {

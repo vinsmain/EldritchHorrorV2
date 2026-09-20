@@ -81,6 +81,8 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         bestGameTV = binding.statisticsBestGame;
         loader = (LinearLayout) binding.loader.getRoot();
         EdgeToEdge.apply(this, toolbarStatistics, binding.statisticsContent);
+        EdgeToEdge.applyHorizontalInsets(ancientOneSpinner);
+        EdgeToEdge.applyHorizontalInsets(binding.statisticsScrollView);
         binding.statisticsLastGameRow.setOnClickListener(this::OnClick);
         binding.statisticsBestGameRow.setOnClickListener(this::OnClick);
         initToolbar();

@@ -57,6 +57,10 @@ public class DiceActivity extends MvpAppCompatActivity implements DiceView, Seek
         binding = ActivityDiceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         EdgeToEdge.apply(this, binding.toolbar, binding.diceContent);
+        EdgeToEdge.applyHorizontalInsets(binding.diceCountSeekbar);
+        EdgeToEdge.applyHorizontalInsets(binding.diceSuccessCount);
+        EdgeToEdge.applyHorizontalInsets(binding.diceRv);
+        EdgeToEdge.applyFloatingActionButtonInsets(binding.diceRerollAllFab);
         binding.diceRerollAllFab.setOnClickListener(view -> onClick());
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnNumber = 5;

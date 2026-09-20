@@ -114,7 +114,9 @@ public class DetailsActivity extends MvpAppCompatActivity implements DetailsView
         setContentView(binding.getRoot());
         bindViews();
         bindClickListeners();
-        EdgeToEdge.applyCollapsingHeader(this, binding.mainContent);
+        EdgeToEdge.applyCollapsingHeader(
+                this, toolbar, binding.mainContent, expansionIcon, binding.linearLayout2);
+        EdgeToEdge.applyHorizontalInsets(binding.scrollView2);
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);

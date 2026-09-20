@@ -71,6 +71,8 @@ public class ForgottenEndingsActivity extends MvpAppCompatActivity implements Fo
         resultSwitch.setOnCheckedChangeListener(this::onCheckedChanged);
         readTextBtn.setOnClickListener(v -> onClick());
         EdgeToEdge.apply(this, toolbar, binding.forgottenEndingsContent);
+        EdgeToEdge.applyHorizontalInsets(ancientOneSpinner);
+        EdgeToEdge.applyHorizontalInsets(scrollView);
 
         initToolbar();
         initAncientOneSpinner();
