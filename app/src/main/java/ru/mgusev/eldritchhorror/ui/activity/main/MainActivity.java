@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.databinding.ActivityMainBinding;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
 import ru.mgusev.eldritchhorror.ui.activity.ancient_one_info.AncientOneInfoActivity;
@@ -68,6 +69,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     private static final int RC_SIGN_IN = 9001;
     private static final String MUSIC_URL = "https://melodice.org/playlist/eldritch-horror-2013/";
+    private static final String VK_URL = "https://vk.ru/ehinvcard";
     private static final String GOOGLE_PLAY_URL = "market://details?id=";
 
     private MenuItem sortItem;
@@ -136,6 +138,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     private void initDrawerMenu() {
+        MenuItem donateItem = navigationView.getMenu().findItem(R.id.action_donate);
+        if (donateItem != null) donateItem.setVisible(BuildConfig.PAYMENTS_ENABLED);
         infoAncientOneItem = navigationView.getMenu().getItem(1);
         forgottenEndingsItem = navigationView.getMenu().getItem(2);
         statItem = navigationView.getMenu().getItem(0);
@@ -168,9 +172,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
                 mainPresenter.changeSortMode();
                 return true;
         }
-        if (item.getItemId() == R.id.action_donate) {
-            Intent intent = new Intent(this, AboutActivity.class);
-            startActivity(intent);
+        if (item.getItemId() == R.id.action_vk) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(VK_URL)));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -180,7 +183,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         closeDrawer();
-        if (itemId == R.id.action_about || itemId == R.id.action_donate) {
+        if (itemId == R.id.action_about || (BuildConfig.PAYMENTS_ENABLED && itemId == R.id.action_donate)) {
             startActivity(new Intent(this, AboutActivity.class));
         } else if (itemId == R.id.action_faq) {
             startActivity(new Intent(this, FaqActivity.class));

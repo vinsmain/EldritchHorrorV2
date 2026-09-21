@@ -1,6 +1,8 @@
 package ru.mgusev.eldritchhorror.ui.activity.about;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,11 +32,14 @@ import java.util.Map;
 import java.util.Objects;
 
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.databinding.ActivityAboutBinding;
 import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import timber.log.Timber;
 
 public class AboutActivity extends AppCompatActivity implements PurchasesUpdatedListener {
+
+    private static final String VK_URL = "https://vk.ru/ehinvcard";
 
     private ActivityAboutBinding binding;
 
@@ -48,37 +53,43 @@ public class AboutActivity extends AppCompatActivity implements PurchasesUpdated
         setContentView(binding.getRoot());
         EdgeToEdge.apply(this, binding.aboutToolbar, binding.aboutContent);
         EdgeToEdge.applyHorizontalInsets(binding.linearLayout6);
-        EdgeToEdge.applyHorizontalInsets(binding.linearLayout7);
+        EdgeToEdge.applyHorizontalInsets(binding.aboutDonateContainer);
         initToolbar();
         binding.aboutVersion.setText(getString(R.string.version_header) + getVersionName());
-        binding.aboutDonate1Btn.setOnClickListener(this::onDonationClick);
-        binding.aboutDonate2Btn.setOnClickListener(this::onDonationClick);
-        binding.aboutDonate5Btn.setOnClickListener(this::onDonationClick);
-        binding.aboutDonate10Btn.setOnClickListener(this::onDonationClick);
-        binding.aboutDonate50Btn.setOnClickListener(this::onDonationClick);
-        binding.aboutDonate100Btn.setOnClickListener(this::onDonationClick);
-        setDonationButtonsEnabled(false);
+        binding.aboutVkLink.setOnClickListener(view ->
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(VK_URL))));
+        if (BuildConfig.PAYMENTS_ENABLED) {
+            binding.aboutDonate1Btn.setOnClickListener(this::onDonationClick);
+            binding.aboutDonate2Btn.setOnClickListener(this::onDonationClick);
+            binding.aboutDonate5Btn.setOnClickListener(this::onDonationClick);
+            binding.aboutDonate10Btn.setOnClickListener(this::onDonationClick);
+            binding.aboutDonate50Btn.setOnClickListener(this::onDonationClick);
+            binding.aboutDonate100Btn.setOnClickListener(this::onDonationClick);
+            setDonationButtonsEnabled(false);
 
-        billingClient = BillingClient.newBuilder(this)
-                .setListener(this)
-                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
-                .enableAutoServiceReconnection()
-                .build();
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult result) {
-                if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    loadDonationProducts();
-                } else {
-                    showBillingUnavailable(result);
+            billingClient = BillingClient.newBuilder(this)
+                    .setListener(this)
+                    .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+                    .enableAutoServiceReconnection()
+                    .build();
+            billingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingSetupFinished(@NonNull BillingResult result) {
+                    if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        loadDonationProducts();
+                    } else {
+                        showBillingUnavailable(result);
+                    }
                 }
-            }
 
-            @Override
-            public void onBillingServiceDisconnected() {
-                setDonationButtonsEnabled(false);
-            }
-        });
+                @Override
+                public void onBillingServiceDisconnected() {
+                    setDonationButtonsEnabled(false);
+                }
+            });
+        } else {
+            binding.aboutDonateContainer.setVisibility(View.GONE);
+        }
     }
 
     private void initToolbar() {
@@ -116,6 +127,7 @@ public class AboutActivity extends AppCompatActivity implements PurchasesUpdated
     }
 
     public void onDonationClick(View view) {
+        if (!BuildConfig.PAYMENTS_ENABLED || billingClient == null) return;
         String productId;
         if (view.getId() == R.id.about_donate_1_btn) productId = "donate_1_usd";
         else if (view.getId() == R.id.about_donate_2_btn) productId = "donate_2_usd";

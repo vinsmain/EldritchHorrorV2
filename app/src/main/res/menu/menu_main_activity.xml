@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_donate"
-        android:icon="@drawable/coin"
-        android:title="@string/donate"
+        android:id="@+id/action_vk"
+        android:icon="@drawable/vk"
+        android:title="@string/vk_community"
         app:showAsAction="always|collapseActionView" />
 
     <item
