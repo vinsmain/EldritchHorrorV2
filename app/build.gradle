@@ -1,6 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.crashlytics'
 
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+}
+
 android {
     namespace 'ru.mgusev.eldritchhorror'
     compileSdk 37
@@ -10,15 +16,26 @@ android {
         targetSdk 37
         versionCode 58
         versionName "2.5.5"
+        buildConfigField "boolean", "PAYMENTS_ENABLED", "false"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        mgusevstudio {
+            storeFile rootProject.file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.mgusevstudio
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "FileBaseUrl", '"https://mgusevstudio.ru/images/files"'
         }
         debug {
+            signingConfig signingConfigs.mgusevstudio
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
             buildConfigField "String", "FileBaseUrl", '"https://mgusevstudio.ru/images/files"'
