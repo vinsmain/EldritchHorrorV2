@@ -10,11 +10,25 @@
     @com.google.gson.annotations.SerializedName <fields>;
 }
 
+# Firebase Realtime Database сопоставляет свойства игр по именам JavaBean-методов.
+-keep class ru.mgusev.eldritchhorror.model.Game { *; }
+-keep class ru.mgusev.eldritchhorror.model.ImageFile { *; }
+-keep class ru.mgusev.eldritchhorror.model.Investigator { *; }
+
+# DTO Retrofit/Gson создаются и заполняются через reflection.
+-keep class ru.mgusev.eldritchhorror.api.json_model.** { *; }
+
 # Moxy загружает сгенерированные binder/factory-классы по соглашению об имени.
 -keep class **$$PresentersBinder { *; }
 -keep class **$$PresentersFactory { *; }
 -keep class **$$State { *; }
 -keep class **$$ViewCommands { *; }
+
+# Moxy создаёт пользовательские стратегии состояния через reflection.
+-keep class ru.mgusev.eldritchhorror.strategy.** { *; }
+
+# ORMLite использует аннотации и поля старой БД при миграции данных пользователя.
+-keep class ru.mgusev.eldritchhorror.database.oldDB.** { *; }
 
 # Dagger-компонент создаётся в Application напрямую; сохраняем точку входа DI.
 -keep class ru.mgusev.eldritchhorror.di.component.DaggerAppComponent { *; }

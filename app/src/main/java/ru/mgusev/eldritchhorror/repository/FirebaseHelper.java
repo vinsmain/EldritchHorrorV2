@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 import durdinapps.rxfirebase2.RxFirebaseChildEvent;
 import durdinapps.rxfirebase2.RxFirebaseDatabase;
-import durdinapps.rxfirebase2.RxFirebaseStorage;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -106,16 +105,16 @@ public class FirebaseHelper {
     }
 
     public void getFileFromFirebaseStorage(ImageFile imageFile, File localFile) {
-        if (fileReference != null) {
+        if (fileReference != null && localFile != null) {
             StorageReference fileReference = storageReference.child(String.valueOf(imageFile.getGameId())).child(imageFile.getName());
 
-            RxFirebaseStorage.getFile(fileReference, localFile)
-                    .subscribe(taskSnapshot -> {
+            fileReference.getFile(localFile)
+                    .addOnSuccessListener(taskSnapshot -> {
                         downloadFileDisposable.onNext(imageFile);
-                        Timber.tag("RxFirebaseSample").i(String.format("transferred: %d, bytes %s", taskSnapshot.getBytesTransferred(), localFile.getAbsolutePath()));
-                    }, throwable -> {
-                        Timber.tag("RxFirebaseSample").e(throwable.toString());
-                    });
+                        Timber.tag("FIREBASE_STORAGE").i("Фотография загружена из Firebase Storage");
+                    })
+                    .addOnFailureListener(exception ->
+                            Timber.tag("FIREBASE_STORAGE").e(exception, "Не удалось загрузить фотографию из Firebase Storage"));
         }
     }
 

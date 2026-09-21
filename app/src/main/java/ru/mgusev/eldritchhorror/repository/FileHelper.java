@@ -52,7 +52,7 @@ public class FileHelper {
 
     public List<String> getImages(long gameId) {
         uriFileList = new ArrayList<>();
-        File dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + gameId);
+        File dir = getImageDirectory(gameId);
 
         if (dir != null && dir.isDirectory()) {
             for (File file : dir.listFiles()) {
@@ -65,7 +65,12 @@ public class FileHelper {
     }
 
     public File getImageFile(String imageFileName, long gameId) {
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + gameId);
+        if (imageFileName == null || imageFileName.trim().isEmpty()) {
+            Timber.e("Не удалось получить файл фотографии: имя отсутствует");
+            return null;
+        }
+
+        File storageDir = getImageDirectory(gameId);
         if (storageDir == null) {
             Timber.e("Хранилище для фотографий недоступно");
             return null;
@@ -75,6 +80,11 @@ public class FileHelper {
             return null;
         }
         return new File(storageDir, imageFileName);
+    }
+
+    private File getImageDirectory(long gameId) {
+        File picturesDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return picturesDirectory == null ? null : new File(picturesDirectory, Long.toString(gameId));
     }
 
     public void copyFile(File source, File dest) throws IOException {

@@ -6,6 +6,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,11 +58,16 @@ public class MainPresenter extends MvpPresenter<MainView> {
         importOldUserData();
         gameList = repository.getGameList(0, 0);
         repository.gameListOnNext();
-        if (googleAuth.getCurrentUser() != null) signIn();
+        if (googleAuth.getCurrentUser() != null) googleAuth.restoreSession();
         else authStatusChange(false);
     }
 
     private void importOldUserData() {
+        File oldUserDatabase = repository.getContext().getDatabasePath("eldritchHorrorDB.db");
+        if (oldUserDatabase == null || !oldUserDatabase.exists()) {
+            return;
+        }
+
         new DatabaseHelperOld(repository.getContext()); //import data from old version User DB
         repository.getContext().deleteDatabase("eldritchHorrorDB.db"); //delete old version User DB
         repository.getContext().deleteDatabase("EHLocalDB.db"); //delete old version Static DB

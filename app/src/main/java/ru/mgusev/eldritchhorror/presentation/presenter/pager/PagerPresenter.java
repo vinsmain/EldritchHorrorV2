@@ -134,7 +134,10 @@ public class PagerPresenter extends MvpPresenter<PagerView> {
     public void deleteFilesIfGameNotCreated() {
         if (repository.getGame(repository.getGame().getId()) == null) {
             repository.removeImageFile(repository.getGame().getId());
-            repository.deleteRecursiveFiles(repository.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + repository.getGame().getId()));
+            File picturesDirectory = repository.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            if (picturesDirectory != null) {
+                repository.deleteRecursiveFiles(new File(picturesDirectory, Long.toString(repository.getGame().getId())));
+            }
         }
     }
 

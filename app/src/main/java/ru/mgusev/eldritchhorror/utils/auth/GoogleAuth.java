@@ -54,6 +54,15 @@ public class GoogleAuth {
         return googleSignInClient;
     }
 
+    public void restoreSession() {
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) return;
+
+        repository.setUser(currentUser);
+        repository.initFirebaseHelper();
+        repository.authOnNext(true);
+    }
+
     public void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {

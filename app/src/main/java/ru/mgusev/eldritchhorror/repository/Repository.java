@@ -453,8 +453,14 @@ public class Repository {
                 file.setUserID(user.getUid());
                 addImageFile(file);
             }
-            if (file.getMd5Hash() == null)
-                sendFileToStorage(Uri.fromFile(fileHelper.getImageFile(file.getName(), file.getGameId())), file.getGameId());
+            if (file.getMd5Hash() == null) {
+                File localFile = fileHelper.getImageFile(file.getName(), file.getGameId());
+                if (localFile != null && localFile.isFile()) {
+                    sendFileToStorage(Uri.fromFile(localFile), file.getGameId());
+                } else {
+                    Timber.tag("FIREBASE_STORAGE").w("Пропущена загрузка фотографии без локального файла: %s", file.getName());
+                }
+            }
         }
     }
 
@@ -508,6 +514,7 @@ public class Repository {
             insertGameToDB(game);
             //gameListOnNext();
         }
+        downloadImageFilesForGame(game.getId());
     }
 
     private void removeGame(Game game) {
@@ -518,9 +525,23 @@ public class Repository {
     }
 
     private void changeImageFile(ImageFile file) {
-        if (file != null && getGame(file.getGameId()) != null) {
-            if (getImageFile(file.getName()) == null)
-                userDataDB.imageFileDAO().insertImageFile(file);
+        if (file == null || file.getName() == null || file.getName().trim().isEmpty()) {
+            Timber.tag("FIREBASE_STORAGE").w("Пропущена запись фотографии из Firebase без имени файла");
+            return;
+        }
+
+        ImageFile localFile = getImageFile(file.getName());
+        if (localFile == null || file.getLastModified() >= localFile.getLastModified()) {
+            userDataDB.imageFileDAO().insertImageFile(file);
+            if (getGame(file.getGameId()) != null && file.getMd5Hash() != null) {
+                getFileFromStorage(file);
+            }
+            gameListOnNext();
+        }
+    }
+
+    private void downloadImageFilesForGame(long gameId) {
+        for (ImageFile file : getImageFileListByGameId(gameId)) {
             if (file.getMd5Hash() != null) getFileFromStorage(file);
         }
     }
@@ -548,7 +569,10 @@ public class Repository {
     public void deleteGame(Game game, boolean showToast) {
         deleteGameFromDB(game);
         removeImageFile(game.getId());
-        deleteRecursiveFiles(Objects.requireNonNull(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + game.getId())));
+        File picturesDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (picturesDirectory != null) {
+            deleteRecursiveFiles(new File(picturesDirectory, Long.toString(game.getId())));
+        }
         if (showToast) {
             Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
         }
@@ -797,6 +821,11 @@ public class Repository {
     }
 
     private void getFileFromStorage(ImageFile imageFile) {
+        if (imageFile == null || imageFile.getName() == null || imageFile.getName().trim().isEmpty()) {
+            Timber.tag("FIREBASE_STORAGE").w("Пропущена загрузка фотографии без имени файла");
+            return;
+        }
+
         boolean exist = false;
         for (String filePath : fileHelper.getImages(imageFile.getGameId())) {
             if (filePath.contains(imageFile.getName())) exist = true;
