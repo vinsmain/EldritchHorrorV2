@@ -72,7 +72,9 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     }
 
     private void changeGallery(boolean value) {
-        getViewState().updatePhotoGallery(repository.getImages());
+        List<String> images = repository.getImages();
+        getViewState().showPhotoNoneMessage(images.isEmpty());
+        getViewState().updatePhotoGallery(images);
     }
 
     public void addImageFile() {

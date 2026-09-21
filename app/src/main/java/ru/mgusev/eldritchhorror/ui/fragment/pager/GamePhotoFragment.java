@@ -108,6 +108,25 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
     }
 
     @Override
+    public void showPhotoNoneMessage(boolean isShow) {
+        binding.gamePhotoEmptyScroll.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        binding.recyclerViewGallery.setVisibility(isShow ? View.GONE : View.VISIBLE);
+        if (isShow) updatePhotoNoneMessageHeight();
+    }
+
+    private void updatePhotoNoneMessageHeight() {
+        binding.gamePhotoNone.post(() -> {
+            if (binding == null) return;
+            ViewGroup.LayoutParams layoutParams = binding.gamePhotoNone.getLayoutParams();
+            int itemHeight = binding.gamePhotoNone.getWidth() / columnsCount;
+            if (layoutParams.height != itemHeight) {
+                layoutParams.height = itemHeight;
+                binding.gamePhotoNone.setLayoutParams(layoutParams);
+            }
+        });
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         

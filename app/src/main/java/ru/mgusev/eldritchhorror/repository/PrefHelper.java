@@ -16,6 +16,7 @@ public class PrefHelper {
     private static final String SETTINGS_ANIMATION_MODE = "settings_animation_mode";
     private static final String SETTINGS_DICE_COUNT = "settings_dice_count";
     private static final String SETTINGS_SUCCESS_MODE = "settings_success_mode";
+    private static final String SETTINGS_IS_GAME_PAGER_HINT_SHOWN = "settings_is_game_pager_hint_shown";
 
     public PrefHelper(Context context) {
         this.context = context;
@@ -132,5 +133,15 @@ public class PrefHelper {
     public int loadSuccessMode() {
         sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
         return sPref.getInt(SETTINGS_SUCCESS_MODE, 5);
+    }
+
+    public void saveGamePagerHintShown() {
+        sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+        sPref.edit().putBoolean(SETTINGS_IS_GAME_PAGER_HINT_SHOWN, true).apply();
+    }
+
+    public boolean loadGamePagerHintShown() {
+        sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+        return sPref.getBoolean(SETTINGS_IS_GAME_PAGER_HINT_SHOWN, false);
     }
 }

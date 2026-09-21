@@ -3,6 +3,7 @@ package ru.mgusev.eldritchhorror.ui.activity.pager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.viewpager.widget.ViewPager;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,11 +33,19 @@ import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
+import ru.mgusev.eldritchhorror.repository.PrefHelper;
 import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import timber.log.Timber;
 
 public class PagerActivity extends MvpAppCompatActivity implements PagerView {
+
+    private static final long PAGER_SWIPE_HINT_DELAY_MS = 500L;
+    private static final long PAGER_SWIPE_HINT_OUT_DURATION_MS = 600L;
+    private static final long PAGER_SWIPE_HINT_PAUSE_DURATION_MS = 500L;
+    private static final long PAGER_SWIPE_HINT_RETURN_DURATION_MS = 700L;
+    private static final long PAGER_SWIPE_HINT_DURATION_MS = PAGER_SWIPE_HINT_OUT_DURATION_MS + PAGER_SWIPE_HINT_PAUSE_DURATION_MS + PAGER_SWIPE_HINT_RETURN_DURATION_MS;
+    private static final float PAGER_SWIPE_HINT_OFFSET = 0.5f;
 
     @InjectPresenter
     PagerPresenter pagerPresenter;
@@ -52,6 +62,8 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private MenuItem actionSelectAll;
     private MenuItem actionSelectCancel;
     private MenuItem actionShareImage;
+    private Runnable pagerSwipeHintRunnable;
+    private ValueAnimator pagerSwipeHintAnimator;
 
 
     @Override
@@ -113,12 +125,52 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
                 return false;
             }
         });
+        showPagerSwipeHintIfNeeded();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         hideLoader();
+    }
+
+    private void showPagerSwipeHintIfNeeded() {
+        PrefHelper prefHelper = new PrefHelper(this);
+        if (prefHelper.loadGamePagerHintShown()) return;
+
+        prefHelper.saveGamePagerHintShown();
+        pagerSwipeHintRunnable = () -> {
+            if (isFinishing() || pager.getCurrentItem() != 0 || pager.getWidth() == 0) return;
+            if (pager.beginFakeDrag()) {
+                float[] previousOffset = {0f};
+                float maxOffset = pager.getWidth() * PAGER_SWIPE_HINT_OFFSET;
+                pagerSwipeHintAnimator = ValueAnimator.ofFloat(0f, PAGER_SWIPE_HINT_DURATION_MS);
+                pagerSwipeHintAnimator.setDuration(PAGER_SWIPE_HINT_DURATION_MS);
+                pagerSwipeHintAnimator.setInterpolator(new LinearInterpolator());
+                pagerSwipeHintAnimator.addUpdateListener(animation -> {
+                    float elapsed = (float) animation.getAnimatedValue();
+                    float offset;
+                    if (elapsed < PAGER_SWIPE_HINT_OUT_DURATION_MS) {
+                        offset = -maxOffset * elapsed / PAGER_SWIPE_HINT_OUT_DURATION_MS;
+                    } else if (elapsed < PAGER_SWIPE_HINT_OUT_DURATION_MS + PAGER_SWIPE_HINT_PAUSE_DURATION_MS) {
+                        offset = -maxOffset;
+                    } else {
+                        float returnProgress = (elapsed - PAGER_SWIPE_HINT_OUT_DURATION_MS - PAGER_SWIPE_HINT_PAUSE_DURATION_MS) / PAGER_SWIPE_HINT_RETURN_DURATION_MS;
+                        offset = -maxOffset * (1f - returnProgress);
+                    }
+                    pager.fakeDragBy(offset - previousOffset[0]);
+                    previousOffset[0] = offset;
+                });
+                pagerSwipeHintAnimator.addListener(new android.animation.AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(android.animation.Animator animation) {
+                        if (pager.isFakeDragging()) pager.endFakeDrag();
+                    }
+                });
+                pagerSwipeHintAnimator.start();
+            }
+        };
+        pager.postDelayed(pagerSwipeHintRunnable, PAGER_SWIPE_HINT_DELAY_MS);
     }
 
     private void initToolbar() {
@@ -360,6 +412,8 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     protected void onDestroy() {
+        if (pagerSwipeHintRunnable != null) pager.removeCallbacks(pagerSwipeHintRunnable);
+        if (pagerSwipeHintAnimator != null) pagerSwipeHintAnimator.cancel();
         super.onDestroy();
         if(backDialog != null && backDialog.isShowing()) backDialog.dismiss();
     }
