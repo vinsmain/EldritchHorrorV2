@@ -1,10 +1,13 @@
 package ru.mgusev.eldritchhorror.ui.activity.main;
 
 import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +49,7 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
+import ru.mgusev.eldritchhorror.repository.PrefHelper;
 import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import ru.mgusev.eldritchhorror.utils.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
@@ -71,6 +76,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private static final String MUSIC_URL = "https://melodice.org/playlist/eldritch-horror-2013/";
     private static final String VK_URL = "https://vk.ru/ehinvcard";
     private static final String GOOGLE_PLAY_URL = "market://details?id=";
+    private static final int REQUEST_GALLERY_STORAGE_PERMISSION = 9102;
 
     private MenuItem sortItem;
     private MenuItem authItem;
@@ -85,6 +91,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private AlertDialog rateDialog;
     private ActionBarDrawerToggle toggle;
     private HeaderViewHolder headerViewHolder;
+    private PrefHelper prefHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +99,16 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        prefHelper = new PrefHelper(this);
         startMessageTV = binding.mainStartMessage; gameCount = binding.mainGameCount; bestScore = binding.mainBestScore; worstScore = binding.mainWorstScore; gameListRV = binding.mainGameList; toolbar = binding.mainToolbar; addGameFAB = binding.mainAddGame; drawer = binding.mainDrawer; navigationView = binding.mainNavView; loader = (LinearLayout) binding.loader.getRoot();
+        binding.mainImageBackupBanner.setVisibility(prefHelper.loadImageBackupNoticeDismissed() ? View.GONE : View.VISIBLE);
+        binding.mainImageBackupExport.setOnClickListener(view -> requestImageExport());
+        binding.mainImageBackupDetails.setOnClickListener(view -> openImageBackupDetails());
+        binding.mainImageBackupClose.setOnClickListener(view -> dismissImageBackupNotice());
         addGameFAB.setOnClickListener(this::onClick);
         EdgeToEdge.apply(this, toolbar, binding.mainContent);
         EdgeToEdge.applyHorizontalInsets(binding.mainSummary);
+        EdgeToEdge.applyHorizontalInsets(binding.mainImageBackupBanner);
         EdgeToEdge.applyHorizontalInsets(gameListRV);
         EdgeToEdge.applyHorizontalInsets(startMessageTV);
         EdgeToEdge.applyHorizontalMarginInsets(addGameFAB);
@@ -168,6 +181,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_image_backup_notice) {
+            prefHelper.saveImageBackupNoticeDismissed(false);
+            binding.mainImageBackupBanner.setVisibility(View.VISIBLE);
+            return true;
+        }
         if (item.getItemId() == R.id.action_sort) {
                 mainPresenter.changeSortMode();
                 return true;
@@ -233,7 +251,43 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     protected void onResume() {
         super.onResume();
+        mainPresenter.refreshGameList();
         hideLoader();
+    }
+
+    private void requestImageExport() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+                && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_GALLERY_STORAGE_PERMISSION);
+            return;
+        }
+        mainPresenter.saveLocalImagesToGallery();
+    }
+
+    private void openImageBackupDetails() {
+        String infoUrl = getString(R.string.image_backup_info_url).trim();
+        if (infoUrl.isEmpty()) {
+            Snackbar.make(drawer, R.string.image_backup_link_pending, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(infoUrl)));
+    }
+
+    private void dismissImageBackupNotice() {
+        prefHelper.saveImageBackupNoticeDismissed(true);
+        binding.mainImageBackupBanner.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode != REQUEST_GALLERY_STORAGE_PERMISSION) return;
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mainPresenter.saveLocalImagesToGallery();
+        } else {
+            Snackbar.make(drawer, R.string.image_backup_permission_denied, Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -322,6 +376,31 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     public void hideEmptyListMessage() {
         startMessageTV.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setImageExportInProgress(boolean inProgress) {
+        binding.mainImageBackupExport.setEnabled(!inProgress);
+        ProgressBar progress = binding.mainImageBackupProgress;
+        progress.setVisibility(inProgress ? View.VISIBLE : View.GONE);
+        binding.mainImageBackupExport.setText(inProgress
+                ? R.string.image_backup_progress : R.string.image_backup_save_button);
+    }
+
+    @Override
+    public void showImageExportResult(int saved, int alreadyExists, int missing, int failed) {
+        if (saved == 0 && alreadyExists == 0 && missing == 0 && failed == 0) {
+            Snackbar.make(drawer, R.string.image_backup_no_files, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        Snackbar.make(drawer, getString(R.string.image_backup_result,
+                saved, alreadyExists, missing, failed), Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showImageExportError() {
+        Snackbar.make(drawer, getString(R.string.image_backup_result, 0, 0, 0, 1),
+                Snackbar.LENGTH_LONG).show();
     }
 
     @Override

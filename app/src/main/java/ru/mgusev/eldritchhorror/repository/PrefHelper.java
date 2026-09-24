@@ -17,6 +17,7 @@ public class PrefHelper {
     private static final String SETTINGS_DICE_COUNT = "settings_dice_count";
     private static final String SETTINGS_SUCCESS_MODE = "settings_success_mode";
     private static final String SETTINGS_IS_GAME_PAGER_HINT_SHOWN = "settings_is_game_pager_hint_shown";
+    private static final String SETTINGS_IS_IMAGE_BACKUP_NOTICE_DISMISSED = "settings_is_image_backup_notice_dismissed";
 
     public PrefHelper(Context context) {
         this.context = context;
@@ -143,5 +144,15 @@ public class PrefHelper {
     public boolean loadGamePagerHintShown() {
         sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
         return sPref.getBoolean(SETTINGS_IS_GAME_PAGER_HINT_SHOWN, false);
+    }
+
+    public void saveImageBackupNoticeDismissed(boolean dismissed) {
+        sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+        sPref.edit().putBoolean(SETTINGS_IS_IMAGE_BACKUP_NOTICE_DISMISSED, dismissed).apply();
+    }
+
+    public boolean loadImageBackupNoticeDismissed() {
+        sPref = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+        return sPref.getBoolean(SETTINGS_IS_IMAGE_BACKUP_NOTICE_DISMISSED, false);
     }
 }

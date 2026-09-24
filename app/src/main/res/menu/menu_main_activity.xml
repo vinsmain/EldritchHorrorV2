@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_image_backup_notice"
+        android:icon="@drawable/image_backup_warning"
+        android:title="@string/image_backup_notice_title"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_vk"
         android:icon="@drawable/vk"
         android:title="@string/vk_community"

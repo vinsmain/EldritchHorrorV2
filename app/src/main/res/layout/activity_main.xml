@@ -109,6 +109,76 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/main_image_backup_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorPrimaryLight"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/main_image_backup_notice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_backup_notice"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end|center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp">
+
+                    <Button
+                        android:id="@+id/main_image_backup_details"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorPrimaryLight"
+                        android:minHeight="48dp"
+                        android:text="@string/image_backup_details_button"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary" />
+
+                    <Button
+                        android:id="@+id/main_image_backup_export"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorAccent"
+                        android:minHeight="48dp"
+                        android:text="@string/image_backup_save_button"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorText" />
+
+                    <Button
+                        android:id="@+id/main_image_backup_close"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorPrimaryLight"
+                        android:minHeight="48dp"
+                        android:text="@string/image_backup_close_button"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary" />
+
+                    <ProgressBar
+                        android:id="@+id/main_image_backup_progress"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -128,6 +198,7 @@
         android:padding="16dp"
         android:text="@string/message_starting"
         android:textColor="@color/colorPrimaryText"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
