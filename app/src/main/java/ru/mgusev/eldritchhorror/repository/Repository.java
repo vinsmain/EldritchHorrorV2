@@ -11,10 +11,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -729,6 +731,65 @@ public class Repository {
 
     public List<String> getImages(long id) {
         return fileHelper.getImages(id);
+    }
+
+    public GalleryExportResult saveLocalImagesToGallery() {
+        GalleryExportResult result = new GalleryExportResult();
+        SimpleDateFormat gameDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+        for (Game game : getGameList(0, 0)) {
+            AncientOne ancientOne = getAncientOne(game.getAncientOneID());
+            String ancientName = ancientOne == null ? "unknown-ancient" : ancientOne.getNameEN();
+            String ancientSlug = toFileNamePart(ancientName);
+
+            for (File localImage : fileHelper.getLocalImageFiles(game.getId())) {
+                String displayName = createGalleryImageName(game, localImage, gameDateFormat, ancientSlug);
+                int exportStatus = fileHelper.saveImageToGallery(localImage, displayName);
+                switch (exportStatus) {
+                    case FileHelper.GALLERY_EXPORT_SAVED:
+                        result.saved++;
+                        break;
+                    case FileHelper.GALLERY_EXPORT_ALREADY_EXISTS:
+                        result.alreadyExists++;
+                        break;
+                    case FileHelper.GALLERY_EXPORT_MISSING:
+                        result.missing++;
+                        break;
+                    default:
+                        result.failed++;
+                        break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private String createGalleryImageName(Game game, File image, SimpleDateFormat dateFormat, String ancientName) {
+        String sourceName = image.getName();
+        String extension = fileHelper.getImageExtension(image);
+        int extensionSeparator = sourceName.lastIndexOf('.');
+        String baseName = extensionSeparator < 0 ? sourceName : sourceName.substring(0, extensionSeparator);
+        return dateFormat.format(new Date(game.getDate())) + "_" + ancientName
+                + "_g" + game.getId() + "_" + image.lastModified()
+                + "_" + toFileNamePart(baseName) + extension;
+    }
+
+    private String toFileNamePart(String value) {
+        if (value == null || value.trim().isEmpty()) return "unknown";
+        return value.trim().replaceAll("[^A-Za-z0-9_-]+", "-")
+                .replaceAll("-+", "-").replaceAll("^-|-$", "").toLowerCase(Locale.ROOT);
+    }
+
+    public static class GalleryExportResult {
+        private int saved;
+        private int alreadyExists;
+        private int missing;
+        private int failed;
+
+        public int getSaved() { return saved; }
+        public int getAlreadyExists() { return alreadyExists; }
+        public int getMissing() { return missing; }
+        public int getFailed() { return failed; }
     }
 
     public PublishSubject<Boolean> getClickPhotoButtonPublish() {

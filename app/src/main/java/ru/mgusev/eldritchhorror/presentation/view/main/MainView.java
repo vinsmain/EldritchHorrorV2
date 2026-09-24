@@ -57,6 +57,15 @@ public interface MainView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void hideEmptyListMessage();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setImageExportInProgress(boolean inProgress);
+
+    @StateStrategyType(OneExecutionStateStrategy.class)
+    void showImageExportResult(int saved, int alreadyExists, int missing, int failed);
+
+    @StateStrategyType(OneExecutionStateStrategy.class)
+    void showImageExportError();
+
     @StateStrategyType(OneExecutionStateStrategy.class)
     void intentToGooglePlay();
 
