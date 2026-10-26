@@ -1,4 +1,6 @@
 <resources>
+    <string name="other_projects">Другие проекты</string>
+    <string name="external_link_error">Не удалось открыть ссылку.</string>
     <string name="app_name">Древний ужас Ассистент</string>
     <string name="main_header">Мои игры</string>
     <string name="choose_date">Выберите дату</string>

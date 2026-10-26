@@ -1,5 +1,6 @@
 package ru.mgusev.eldritchhorror.ui.activity.about;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -57,7 +58,11 @@ public class AboutActivity extends AppCompatActivity implements PurchasesUpdated
         initToolbar();
         binding.aboutVersion.setText(getString(R.string.version_header) + getVersionName());
         binding.aboutVkLink.setOnClickListener(view ->
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(VK_URL))));
+                openExternalLink(VK_URL));
+        binding.aboutGooglePlayLink.setOnClickListener(view ->
+                openExternalLink(getString(R.string.google_play_developer_url)));
+        binding.aboutRustoreLink.setOnClickListener(view ->
+                openExternalLink(getString(R.string.rustore_developer_url)));
         if (BuildConfig.PAYMENTS_ENABLED) {
             binding.aboutDonate1Btn.setOnClickListener(this::onDonationClick);
             binding.aboutDonate2Btn.setOnClickListener(this::onDonationClick);
@@ -99,6 +104,15 @@ public class AboutActivity extends AppCompatActivity implements PurchasesUpdated
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         binding.aboutToolbar.setNavigationOnClickListener(view -> finish());
+    }
+
+    private void openExternalLink(String url) {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        } catch (ActivityNotFoundException exception) {
+            Timber.w(exception, "No application can open external link: %s", url);
+            Toast.makeText(this, R.string.external_link_error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadDonationProducts() {
