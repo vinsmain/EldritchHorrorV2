@@ -87,14 +87,9 @@ public class App extends Application {
                 playerServiceBinder = (AudioPlayerService.PlayerServiceBinder) service;
                 audioPlayerService = playerServiceBinder.getService();
                 System.out.println(audioPlayerService);
-                try {
-                    mediaController = new MediaControllerCompat(App.this, playerServiceBinder.getMediaSessionToken());
-                    mediaController.registerCallback(callback);
-                    callback.onPlaybackStateChanged(mediaController.getPlaybackState());
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                    mediaController = null;
-                }
+                mediaController = new MediaControllerCompat(App.this, playerServiceBinder.getMediaSessionToken());
+                mediaController.registerCallback(callback);
+                callback.onPlaybackStateChanged(mediaController.getPlaybackState());
             }
 
             @Override

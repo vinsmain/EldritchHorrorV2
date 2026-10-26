@@ -1,10 +1,13 @@
 package ru.mgusev.eldritchhorror.ui.activity.main;
 
 import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,12 +37,11 @@ import com.jakewharton.rxbinding3.view.RxView;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.BuildConfig;
+import ru.mgusev.eldritchhorror.databinding.ActivityMainBinding;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
 import ru.mgusev.eldritchhorror.ui.activity.ancient_one_info.AncientOneInfoActivity;
 import ru.mgusev.eldritchhorror.ui.adapter.main.MainAdapter;
@@ -46,6 +49,8 @@ import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Localization;
 import ru.mgusev.eldritchhorror.presentation.presenter.main.MainPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.main.MainView;
+import ru.mgusev.eldritchhorror.repository.PrefHelper;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import ru.mgusev.eldritchhorror.utils.ScrollListener;
 import ru.mgusev.eldritchhorror.ui.activity.about.AboutActivity;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
@@ -64,20 +69,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @InjectPresenter
     MainPresenter mainPresenter;
 
-    @BindView(R.id.main_start_message) TextView startMessageTV;
-    @BindView(R.id.main_game_count) TextView gameCount;
-    @BindView(R.id.main_best_score) TextView bestScore;
-    @BindView(R.id.main_worst_score) TextView worstScore;
-    @BindView(R.id.main_game_list) RecyclerView gameListRV;
-    @BindView(R.id.main_toolbar) Toolbar toolbar;
-    @BindView(R.id.main_add_game) FloatingActionButton addGameFAB;
-    @BindView(R.id.main_drawer) DrawerLayout drawer;
-    @BindView(R.id.main_nav_view) NavigationView navigationView;
-    @BindView(R.id.loader) LinearLayout loader;
+    private ActivityMainBinding binding;
+    private TextView startMessageTV; private TextView gameCount; private TextView bestScore; private TextView worstScore; private RecyclerView gameListRV; private Toolbar toolbar; private FloatingActionButton addGameFAB; private DrawerLayout drawer; private NavigationView navigationView; private LinearLayout loader;
 
     private static final int RC_SIGN_IN = 9001;
     private static final String MUSIC_URL = "https://melodice.org/playlist/eldritch-horror-2013/";
+    private static final String VK_URL = "https://vk.ru/ehinvcard";
     private static final String GOOGLE_PLAY_URL = "market://details?id=";
+    private static final int REQUEST_GALLERY_STORAGE_PERMISSION = 9102;
 
     private MenuItem sortItem;
     private MenuItem authItem;
@@ -92,13 +91,28 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     private AlertDialog rateDialog;
     private ActionBarDrawerToggle toggle;
     private HeaderViewHolder headerViewHolder;
+    private PrefHelper prefHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        prefHelper = new PrefHelper(this);
+        startMessageTV = binding.mainStartMessage; gameCount = binding.mainGameCount; bestScore = binding.mainBestScore; worstScore = binding.mainWorstScore; gameListRV = binding.mainGameList; toolbar = binding.mainToolbar; addGameFAB = binding.mainAddGame; drawer = binding.mainDrawer; navigationView = binding.mainNavView; loader = (LinearLayout) binding.loader.getRoot();
+        binding.mainImageBackupBanner.setVisibility(prefHelper.loadImageBackupNoticeDismissed() ? View.GONE : View.VISIBLE);
+        binding.mainImageBackupExport.setOnClickListener(view -> requestImageExport());
+        binding.mainImageBackupDetails.setOnClickListener(view -> openImageBackupDetails());
+        binding.mainImageBackupClose.setOnClickListener(view -> dismissImageBackupNotice());
+        addGameFAB.setOnClickListener(this::onClick);
+        EdgeToEdge.apply(this, toolbar, binding.mainContent);
+        EdgeToEdge.applyHorizontalInsets(binding.mainSummary);
+        EdgeToEdge.applyHorizontalInsets(binding.mainImageBackupBanner);
+        EdgeToEdge.applyHorizontalInsets(gameListRV);
+        EdgeToEdge.applyHorizontalInsets(startMessageTV);
+        EdgeToEdge.applyHorizontalMarginInsets(addGameFAB);
+        EdgeToEdge.applyNavigationMenuInsets(navigationView);
         initialized = true;
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 2;
@@ -121,7 +135,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        headerViewHolder = new HeaderViewHolder(navigationView.getHeaderView(0));
+        View navigationHeader = navigationView.getHeaderView(0);
+        EdgeToEdge.applyTopAndHorizontalInsets(navigationHeader);
+        headerViewHolder = new HeaderViewHolder(navigationHeader);
         navigationView.setNavigationItemSelectedListener(this);
 
         initDrawerMenu();
@@ -135,6 +151,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     private void initDrawerMenu() {
+        MenuItem donateItem = navigationView.getMenu().findItem(R.id.action_donate);
+        if (donateItem != null) donateItem.setVisible(BuildConfig.PAYMENTS_ENABLED);
         infoAncientOneItem = navigationView.getMenu().getItem(1);
         forgottenEndingsItem = navigationView.getMenu().getItem(2);
         statItem = navigationView.getMenu().getItem(0);
@@ -163,70 +181,46 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_sort:
+        if (item.getItemId() == R.id.action_image_backup_notice) {
+            prefHelper.saveImageBackupNoticeDismissed(false);
+            binding.mainImageBackupBanner.setVisibility(View.VISIBLE);
+            return true;
+        }
+        if (item.getItemId() == R.id.action_sort) {
                 mainPresenter.changeSortMode();
                 return true;
-            case R.id.action_donate:
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        if (item.getItemId() == R.id.action_vk) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(VK_URL)));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_about:
-            case R.id.action_donate:
-                closeDrawer();
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_faq:
-                closeDrawer();
-                Intent faqIntent = new Intent(this, FaqActivity.class);
-                startActivity(faqIntent);
-                return true;
-            case R.id.action_auth:
-                closeDrawer();
-                mainPresenter.actionAuth();
-                return true;
-            case R.id.action_statistics:
-                closeDrawer();
-                Intent intentStatistics = new Intent(this, StatisticsActivity.class);
-                startActivity(intentStatistics);
-                return true;
-            case R.id.action_music:
-                closeDrawer();
-                Intent musicIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MUSIC_URL));
-                startActivity(musicIntent);
-                return true;
-            case R.id.action_forgotten_endings:
-                closeDrawer();
-                Intent forgottenEndingsIntent = new Intent(this, ForgottenEndingsActivity.class);
-                startActivity(forgottenEndingsIntent);
-                return true;
-            case R.id.action_random_card:
-                closeDrawer();
-                Intent randomCardIntent = new Intent(this, RandomCardCategoryActivity.class);
-                startActivity(randomCardIntent);
-                return true;
-            case R.id.action_dice:
-                closeDrawer();
-                Intent diceIntent = new Intent(this, DiceActivity.class);
-                startActivity(diceIntent);
-                return true;
-            case R.id.action_ancient_one_info:
-                closeDrawer();
-                Intent ancientOneInfoIntent = new Intent(this, AncientOneInfoActivity.class);
-                startActivity(ancientOneInfoIntent);
-                return true;
-            default:
-                return true;
+        int itemId = item.getItemId();
+        closeDrawer();
+        if (itemId == R.id.action_about || (BuildConfig.PAYMENTS_ENABLED && itemId == R.id.action_donate)) {
+            startActivity(new Intent(this, AboutActivity.class));
+        } else if (itemId == R.id.action_faq) {
+            startActivity(new Intent(this, FaqActivity.class));
+        } else if (itemId == R.id.action_auth) {
+            mainPresenter.actionAuth();
+        } else if (itemId == R.id.action_statistics) {
+            startActivity(new Intent(this, StatisticsActivity.class));
+        } else if (itemId == R.id.action_music) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(MUSIC_URL)));
+        } else if (itemId == R.id.action_forgotten_endings) {
+            startActivity(new Intent(this, ForgottenEndingsActivity.class));
+        } else if (itemId == R.id.action_random_card) {
+            startActivity(new Intent(this, RandomCardCategoryActivity.class));
+        } else if (itemId == R.id.action_dice) {
+            startActivity(new Intent(this, DiceActivity.class));
+        } else if (itemId == R.id.action_ancient_one_info) {
+            startActivity(new Intent(this, AncientOneInfoActivity.class));
         }
+        return true;
     }
 
     @Override
@@ -257,7 +251,43 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     @Override
     protected void onResume() {
         super.onResume();
+        mainPresenter.refreshGameList();
         hideLoader();
+    }
+
+    private void requestImageExport() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+                && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_GALLERY_STORAGE_PERMISSION);
+            return;
+        }
+        mainPresenter.saveLocalImagesToGallery();
+    }
+
+    private void openImageBackupDetails() {
+        String infoUrl = getString(R.string.image_backup_info_url).trim();
+        if (infoUrl.isEmpty()) {
+            Snackbar.make(drawer, R.string.image_backup_link_pending, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(infoUrl)));
+    }
+
+    private void dismissImageBackupNotice() {
+        prefHelper.saveImageBackupNoticeDismissed(true);
+        binding.mainImageBackupBanner.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode != REQUEST_GALLERY_STORAGE_PERMISSION) return;
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mainPresenter.saveLocalImagesToGallery();
+        } else {
+            Snackbar.make(drawer, R.string.image_backup_permission_denied, Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -349,6 +379,31 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
     }
 
     @Override
+    public void setImageExportInProgress(boolean inProgress) {
+        binding.mainImageBackupExport.setEnabled(!inProgress);
+        ProgressBar progress = binding.mainImageBackupProgress;
+        progress.setVisibility(inProgress ? View.VISIBLE : View.GONE);
+        binding.mainImageBackupExport.setText(inProgress
+                ? R.string.image_backup_progress : R.string.image_backup_save_button);
+    }
+
+    @Override
+    public void showImageExportResult(int saved, int alreadyExists, int missing, int failed) {
+        if (saved == 0 && alreadyExists == 0 && missing == 0 && failed == 0) {
+            Snackbar.make(drawer, R.string.image_backup_no_files, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        Snackbar.make(drawer, getString(R.string.image_backup_result,
+                saved, alreadyExists, missing, failed), Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showImageExportError() {
+        Snackbar.make(drawer, getString(R.string.image_backup_result, 0, 0, 0, 1),
+                Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
     public void showStatisticsMenuItem() {
         if (statItem != null) statItem.setVisible(true);
     }
@@ -379,12 +434,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainView, OnIt
         startActivity(googlePlayIntent);
     }
 
-    @OnClick({R.id.main_add_game})
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.main_add_game:
-                mainPresenter.addGame();
-                break;
+        if (view.getId() == R.id.main_add_game) {
+            mainPresenter.addGame();
         }
     }
 

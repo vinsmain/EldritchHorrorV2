@@ -1,4 +1,10 @@
 <resources>
+    <string name="other_projects">Other projects</string>
+    <string name="google_play" translatable="false">Google Play</string>
+    <string name="rustore" translatable="false">RuStore</string>
+    <string name="google_play_developer_url" translatable="false">https://play.google.com/store/apps/developer?id=mGusev</string>
+    <string name="rustore_developer_url" translatable="false">https://www.rustore.ru/catalog/developer/c2aazf</string>
+    <string name="external_link_error">Unable to open the link.</string>
     <string name="app_name">Eldritch Horror Assistant</string>
     <string name="main_header">My games</string>
     <string name="choose_date">Choose a date</string>
@@ -145,6 +151,10 @@
     <string name="select_image_header">Tap to select</string>
     <string name="folders_header">Folders</string>
     <string name="camera_header">Camera</string>
+    <string name="camera_app_unavailable">The Camera app is unavailable. Install or enable it in the device settings.</string>
+    <string name="camera_file_unavailable">Unable to prepare a photo file. Check that storage is available.</string>
+    <string name="camera_open_error">Unable to open the camera. Check the Camera permission in the device settings.</string>
+    <string name="camera_permission_denied">Grant the Camera permission to add a photo from the camera.</string>
     <string name="gallery_header">Gallery</string>
     <string name="comment_header">Comment</string>
     <string name="comment_none">None</string>
@@ -430,4 +440,5 @@
             (reference guide, page 14)</string>
     <string name="audio_copyright">Description of the Ancients provided by GRIP Sound Lab. \\nThe text was read by Maxim Graut and Julia Graut</string>
     <string name="audio_copyright_land">Description of the Ancients provided by GRIP Sound Lab. The text was read by Maxim Graut and Julia Graut</string>
+    <string name="vk_community">VK community</string>
 </resources>

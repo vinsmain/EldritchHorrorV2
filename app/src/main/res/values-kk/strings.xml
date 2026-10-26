@@ -1,4 +1,6 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="other_projects">Другие проекты</string>
+    <string name="external_link_error">Не удалось открыть ссылку.</string>
     <string name="app_name">Древний ужас Ассистент</string>
     <string name="main_header">Мои игры</string>
     <string name="choose_date">Выберите дату</string>
@@ -399,4 +401,21 @@
     <string name="audio_copyright">Описание Древних озвучено студией GRIP Sound Lab.  Текст читали Максим Граут и Юлия Граут</string>
     <string name="audio_copyright_land">Описание Древних озвучено студией GRIP Sound Lab. Текст читали Максим Граут и Юлия Граут</string>
 
+    <string name="camera_app_unavailable">Приложение «Камера» недоступно. Установите или включите его в настройках устройства.</string>
+    <string name="camera_file_unavailable">Не удалось подготовить файл для фотографии. Проверьте доступность хранилища.</string>
+    <string name="camera_open_error">Не удалось открыть камеру. Проверьте разрешение «Камера» в настройках устройства.</string>
+    <string name="camera_permission_denied">Для добавления фотографии с камеры предоставьте разрешение «Камера».</string>
+    <plurals name="pick_multi" tools:ignore="UnusedQuantity">
+        <item quantity="one">Выбрано одно изображение</item>
+        <item quantity="few">Выбрано %1$d изображения</item>
+        <item quantity="many">Выбрано %1$d изображений</item>
+        <item quantity="other">Выбрано %1$d изображений</item>
+    </plurals>
+    <plurals name="pick_multi_more" tools:ignore="UnusedQuantity">
+        <item quantity="one">Выберите ещё одно изображение…</item>
+        <item quantity="few">Выберите ещё %1$d изображения…</item>
+        <item quantity="many">Выберите ещё %1$d изображений…</item>
+        <item quantity="other">Выберите ещё %1$d изображений…</item>
+    </plurals>
+    <string name="vk_community">Сообщество ВКонтакте</string>
 </resources>

@@ -11,10 +11,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -453,8 +455,14 @@ public class Repository {
                 file.setUserID(user.getUid());
                 addImageFile(file);
             }
-            if (file.getMd5Hash() == null)
-                sendFileToStorage(Uri.fromFile(fileHelper.getImageFile(file.getName(), file.getGameId())), file.getGameId());
+            if (file.getMd5Hash() == null) {
+                File localFile = fileHelper.getImageFile(file.getName(), file.getGameId());
+                if (localFile != null && localFile.isFile()) {
+                    sendFileToStorage(Uri.fromFile(localFile), file.getGameId());
+                } else {
+                    Timber.tag("FIREBASE_STORAGE").w("Пропущена загрузка фотографии без локального файла: %s", file.getName());
+                }
+            }
         }
     }
 
@@ -508,6 +516,7 @@ public class Repository {
             insertGameToDB(game);
             //gameListOnNext();
         }
+        downloadImageFilesForGame(game.getId());
     }
 
     private void removeGame(Game game) {
@@ -518,9 +527,23 @@ public class Repository {
     }
 
     private void changeImageFile(ImageFile file) {
-        if (file != null && getGame(file.getGameId()) != null) {
-            if (getImageFile(file.getName()) == null)
-                userDataDB.imageFileDAO().insertImageFile(file);
+        if (file == null || file.getName() == null || file.getName().trim().isEmpty()) {
+            Timber.tag("FIREBASE_STORAGE").w("Пропущена запись фотографии из Firebase без имени файла");
+            return;
+        }
+
+        ImageFile localFile = getImageFile(file.getName());
+        if (localFile == null || file.getLastModified() >= localFile.getLastModified()) {
+            userDataDB.imageFileDAO().insertImageFile(file);
+            if (getGame(file.getGameId()) != null && file.getMd5Hash() != null) {
+                getFileFromStorage(file);
+            }
+            gameListOnNext();
+        }
+    }
+
+    private void downloadImageFilesForGame(long gameId) {
+        for (ImageFile file : getImageFileListByGameId(gameId)) {
             if (file.getMd5Hash() != null) getFileFromStorage(file);
         }
     }
@@ -548,7 +571,10 @@ public class Repository {
     public void deleteGame(Game game, boolean showToast) {
         deleteGameFromDB(game);
         removeImageFile(game.getId());
-        deleteRecursiveFiles(Objects.requireNonNull(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES + File.separator + game.getId())));
+        File picturesDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (picturesDirectory != null) {
+            deleteRecursiveFiles(new File(picturesDirectory, Long.toString(game.getId())));
+        }
         if (showToast) {
             Toast.makeText(context, R.string.success_deleting_message, Toast.LENGTH_SHORT).show();
         }
@@ -707,6 +733,65 @@ public class Repository {
         return fileHelper.getImages(id);
     }
 
+    public GalleryExportResult saveLocalImagesToGallery() {
+        GalleryExportResult result = new GalleryExportResult();
+        SimpleDateFormat gameDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+        for (Game game : getGameList(0, 0)) {
+            AncientOne ancientOne = getAncientOne(game.getAncientOneID());
+            String ancientName = ancientOne == null ? "unknown-ancient" : ancientOne.getNameEN();
+            String ancientSlug = toFileNamePart(ancientName);
+
+            for (File localImage : fileHelper.getLocalImageFiles(game.getId())) {
+                String displayName = createGalleryImageName(game, localImage, gameDateFormat, ancientSlug);
+                int exportStatus = fileHelper.saveImageToGallery(localImage, displayName);
+                switch (exportStatus) {
+                    case FileHelper.GALLERY_EXPORT_SAVED:
+                        result.saved++;
+                        break;
+                    case FileHelper.GALLERY_EXPORT_ALREADY_EXISTS:
+                        result.alreadyExists++;
+                        break;
+                    case FileHelper.GALLERY_EXPORT_MISSING:
+                        result.missing++;
+                        break;
+                    default:
+                        result.failed++;
+                        break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private String createGalleryImageName(Game game, File image, SimpleDateFormat dateFormat, String ancientName) {
+        String sourceName = image.getName();
+        String extension = fileHelper.getImageExtension(image);
+        int extensionSeparator = sourceName.lastIndexOf('.');
+        String baseName = extensionSeparator < 0 ? sourceName : sourceName.substring(0, extensionSeparator);
+        return dateFormat.format(new Date(game.getDate())) + "_" + ancientName
+                + "_g" + game.getId() + "_" + image.lastModified()
+                + "_" + toFileNamePart(baseName) + extension;
+    }
+
+    private String toFileNamePart(String value) {
+        if (value == null || value.trim().isEmpty()) return "unknown";
+        return value.trim().replaceAll("[^A-Za-z0-9_-]+", "-")
+                .replaceAll("-+", "-").replaceAll("^-|-$", "").toLowerCase(Locale.ROOT);
+    }
+
+    public static class GalleryExportResult {
+        private int saved;
+        private int alreadyExists;
+        private int missing;
+        private int failed;
+
+        public int getSaved() { return saved; }
+        public int getAlreadyExists() { return alreadyExists; }
+        public int getMissing() { return missing; }
+        public int getFailed() { return failed; }
+    }
+
     public PublishSubject<Boolean> getClickPhotoButtonPublish() {
         return clickPhotoButtonPublish;
     }
@@ -755,6 +840,10 @@ public class Repository {
         fileHelper.copyFile(source, dest);
     }
 
+    public void copyUriToFile(Uri source, File dest) throws IOException {
+        fileHelper.copyUriToFile(source, dest);
+    }
+
     public void addImageFile(ImageFile file) {
         userDataDB.imageFileDAO().insertImageFile(file);
         firebaseHelper.addFile(file);
@@ -793,6 +882,11 @@ public class Repository {
     }
 
     private void getFileFromStorage(ImageFile imageFile) {
+        if (imageFile == null || imageFile.getName() == null || imageFile.getName().trim().isEmpty()) {
+            Timber.tag("FIREBASE_STORAGE").w("Пропущена загрузка фотографии без имени файла");
+            return;
+        }
+
         boolean exist = false;
         for (String filePath : fileHelper.getImages(imageFile.getGameId())) {
             if (filePath.contains(imageFile.getName())) exist = true;

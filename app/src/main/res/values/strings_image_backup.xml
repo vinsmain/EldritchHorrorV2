@@ -1,0 +1,13 @@
+<resources>
+    <string name="image_backup_notice">Photos uploaded to Firebase are currently unavailable for download to this device. Photos already stored on this device are still available, but will become unavailable in the app after you sign out. Save them to your phone’s gallery and stay signed in.</string>
+    <string name="image_backup_save_button">Save photos</string>
+    <string name="image_backup_details_button">More</string>
+    <string name="image_backup_close_button">Close</string>
+    <string name="image_backup_notice_title">Photo availability warning</string>
+    <string name="image_backup_link_pending">The information link will be added later.</string>
+    <string name="image_backup_no_files">No local photos were found to save.</string>
+    <string name="image_backup_result">Saved: %1$d; already in gallery: %2$d; missing locally: %3$d; errors: %4$d.</string>
+    <string name="image_backup_permission_denied">Allow storage access to save photos to the shared gallery.</string>
+    <string name="image_backup_progress">Saving…</string>
+    <string name="image_backup_info_url">https://mgusevstudio.ru/index.php/2-uncategorised/271-image-sync-en</string>
+</resources>

@@ -7,11 +7,10 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityInvestigatorBinding;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.InvestigatorPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.InvestigatorView;
@@ -22,20 +21,13 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
     @InjectPresenter
     InvestigatorPresenter investigatorPresenter;
 
-    @BindView(R.id.investigator_photo) ImageView photoImage;
-    @BindView(R.id.investigator_expansion_icon) ImageView expansionIcon;
-    @BindView(R.id.investigator_specialization_icon) ImageView specializationIcon;
-    @BindView(R.id.investigator_name) TextView nameTV;
-    @BindView(R.id.investigator_occupation) TextView occupationTV;
-    @BindView(R.id.investigator_starting_game_switch) Switch startingGameSwitch;
-    @BindView(R.id.investigator_replacement_switch) Switch replacementSwitch;
-    @BindView(R.id.investigator_dead_switch) Switch deadSwitch;
+    private ActivityInvestigatorBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_investigator);
-        ButterKnife.bind(this);
+        binding = ActivityInvestigatorBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);
@@ -46,60 +38,55 @@ public class InvestigatorActivity extends MvpAppCompatActivity implements Invest
 
     @Override
     public void setListeners() {
-        startingGameSwitch.setOnCheckedChangeListener(this);
-        replacementSwitch.setOnCheckedChangeListener(this);
-        deadSwitch.setOnCheckedChangeListener(this);
+        binding.investigatorStartingGameSwitch.setOnCheckedChangeListener(this);
+        binding.investigatorReplacementSwitch.setOnCheckedChangeListener(this);
+        binding.investigatorDeadSwitch.setOnCheckedChangeListener(this);
     }
 
     @Override
     public void setMaleOrFemale(boolean isMale) {
         if (isMale) {
-            startingGameSwitch.setText(R.string.starting_game);
-            replacementSwitch.setText(R.string.replacement);
-            deadSwitch.setText(R.string.dead);
+            binding.investigatorStartingGameSwitch.setText(R.string.starting_game);
+            binding.investigatorReplacementSwitch.setText(R.string.replacement);
+            binding.investigatorDeadSwitch.setText(R.string.dead);
         } else {
-            startingGameSwitch.setText(R.string.starting_game_female);
-            replacementSwitch.setText(R.string.replacement_female);
-            deadSwitch.setText(R.string.dead_female);
+            binding.investigatorStartingGameSwitch.setText(R.string.starting_game_female);
+            binding.investigatorReplacementSwitch.setText(R.string.replacement_female);
+            binding.investigatorDeadSwitch.setText(R.string.dead_female);
         }
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        switch (compoundButton.getId()) {
-            case R.id.investigator_starting_game_switch:
-                if (b) replacementSwitch.setChecked(false);
-                break;
-            case R.id.investigator_replacement_switch:
-                if (b) startingGameSwitch.setChecked(false);
-                break;
-            default:
-                break;
+        if (compoundButton.getId() == R.id.investigator_starting_game_switch && b) {
+            binding.investigatorReplacementSwitch.setChecked(false);
+        } else if (compoundButton.getId() == R.id.investigator_replacement_switch && b) {
+            binding.investigatorStartingGameSwitch.setChecked(false);
         }
         saveInvestigatorChange();
     }
 
     private void saveInvestigatorChange() {
-        investigatorPresenter.setInvestigator(startingGameSwitch.isChecked(), replacementSwitch.isChecked(), deadSwitch.isChecked());
+        investigatorPresenter.setInvestigator(binding.investigatorStartingGameSwitch.isChecked(), binding.investigatorReplacementSwitch.isChecked(), binding.investigatorDeadSwitch.isChecked());
     }
 
     @Override
     public void showInvestigatorCard(Investigator investigator) {
-        photoImage.setImageResource(getResources().getIdentifier(investigator.getImageResource(), "drawable", getPackageName()));
-        nameTV.setText(investigator.getName());
-        occupationTV.setText(investigator.getOccupation());
-        startingGameSwitch.setChecked(investigator.getIsStarting());
-        replacementSwitch.setChecked(investigator.getIsReplacement());
-        deadSwitch.setChecked(investigator.getIsDead());
+        binding.investigatorPhoto.setImageResource(getResources().getIdentifier(investigator.getImageResource(), "drawable", getPackageName()));
+        binding.investigatorName.setText(investigator.getName());
+        binding.investigatorOccupation.setText(investigator.getOccupation());
+        binding.investigatorStartingGameSwitch.setChecked(investigator.getIsStarting());
+        binding.investigatorReplacementSwitch.setChecked(investigator.getIsReplacement());
+        binding.investigatorDeadSwitch.setChecked(investigator.getIsDead());
     }
 
     @Override
     public void showExpansionIcon(String iconName) {
-        expansionIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        binding.investigatorExpansionIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", getPackageName()));
     }
 
     @Override
     public void showSpecializationIcon(String iconName) {
-        specializationIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        binding.investigatorSpecializationIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", getPackageName()));
     }
 }

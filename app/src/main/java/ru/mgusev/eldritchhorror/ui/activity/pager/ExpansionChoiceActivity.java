@@ -6,11 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
-import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityExpansionChoiceBinding;
 import ru.mgusev.eldritchhorror.ui.adapter.pager.ExpansionChoiceAdapter;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.ExpansionChoicePresenter;
@@ -21,7 +19,7 @@ public class ExpansionChoiceActivity extends MvpAppCompatActivity implements Exp
     @InjectPresenter
     ExpansionChoicePresenter pagerPresenter;
 
-    @BindView(R.id.expansion_choice_recycler_view) RecyclerView expansionRV;
+    private ActivityExpansionChoiceBinding binding;
 
     private static int columnsCount = 1;
     private ExpansionChoiceAdapter adapter;
@@ -29,17 +27,17 @@ public class ExpansionChoiceActivity extends MvpAppCompatActivity implements Exp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_expansion_choice);
-        ButterKnife.bind(this);
+        binding = ActivityExpansionChoiceBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
     }
 
     @Override
     public void initExpansionList(List<Expansion> list) {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, columnsCount);
-        expansionRV.setLayoutManager(gridLayoutManager);
-        expansionRV.setHasFixedSize(true);
+        binding.expansionChoiceRecyclerView.setLayoutManager(gridLayoutManager);
+        binding.expansionChoiceRecyclerView.setHasFixedSize(true);
         adapter = new ExpansionChoiceAdapter(list);
-        expansionRV.setAdapter(adapter);
+        binding.expansionChoiceRecyclerView.setAdapter(adapter);
     }
 
     @Override

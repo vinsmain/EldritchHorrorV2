@@ -26,12 +26,10 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityRandomCardBinding;
 import ru.mgusev.eldritchhorror.model.Card;
 import ru.mgusev.eldritchhorror.presentation.presenter.random_card.RandomCardPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.random_card.RandomCardView;
@@ -40,27 +38,20 @@ import timber.log.Timber;
 
 public class RandomCardActivity extends MvpAppCompatActivity implements RandomCardView {
 
+    private ActivityRandomCardBinding binding;
+
     @InjectPresenter
     RandomCardPresenter randomCardPresenter;
 
-    @BindView(R.id.random_card_image)
     SimpleDraweeView image;
     @Nullable
-    @BindView(R.id.random_card_linear)
     LinearLayout imageContainer;
-    @BindView(R.id.random_card_text_block)
     LinearLayout textBlock;
-    @BindView(R.id.random_card_category)
     TextView category;
-    @BindView(R.id.random_card_type)
     TextView type;
-    @BindView(R.id.random_card_title)
     TextView title;
-    @BindView(R.id.random_card_log_btn)
     ImageButton logBtn;
-    @BindView(R.id.random_card_other_btn)
     Button otherCardBtn;
-    @BindView(R.id.random_card_ok_btn)
     Button okBtn;
 
     private AlertDialog logDialog;
@@ -68,9 +59,21 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_random_card);
+        binding = ActivityRandomCardBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        ButterKnife.bind(this);
+        image = binding.randomCardImage;
+        imageContainer = binding.randomCardLinear;
+        textBlock = binding.randomCardTextBlock;
+        category = binding.randomCardCategory;
+        type = binding.randomCardType;
+        title = binding.randomCardTitle;
+        logBtn = binding.randomCardLogBtn;
+        otherCardBtn = binding.randomCardOtherBtn;
+        okBtn = binding.randomCardOkBtn;
+        logBtn.setOnClickListener(this::onClick);
+        otherCardBtn.setOnClickListener(this::onClick);
+        okBtn.setOnClickListener(this::onClick);
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);
@@ -129,18 +132,13 @@ public class RandomCardActivity extends MvpAppCompatActivity implements RandomCa
         type.setText(getResources().getIdentifier(resource_id, "string", getPackageName()));
     }
 
-    @OnClick ({R.id.random_card_log_btn, R.id.random_card_other_btn, R.id.random_card_ok_btn})
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.random_card_log_btn :
+        if (view.getId() == R.id.random_card_log_btn) {
                 randomCardPresenter.onClickLogBtn();
-                break;
-            case R.id.random_card_other_btn :
+        } else if (view.getId() == R.id.random_card_other_btn) {
                 randomCardPresenter.onClickOtherBtn();
-                break;
-            case R.id.random_card_ok_btn :
+        } else if (view.getId() == R.id.random_card_ok_btn) {
                 finish();
-                break;
         }
     }
 

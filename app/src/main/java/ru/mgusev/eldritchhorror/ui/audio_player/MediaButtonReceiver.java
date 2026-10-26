@@ -136,14 +136,10 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 
         @Override
         public void onConnected() {
-            try {
-                MediaControllerCompat mediaController = new MediaControllerCompat(mContext,
-                        mMediaBrowser.getSessionToken());
-                KeyEvent ke = mIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-                mediaController.dispatchMediaButtonEvent(ke);
-            } catch (RemoteException e) {
-                Log.e(TAG, "Failed to create a media controller", e);
-            }
+            MediaControllerCompat mediaController = new MediaControllerCompat(mContext,
+                    mMediaBrowser.getSessionToken());
+            KeyEvent ke = mIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+            mediaController.dispatchMediaButtonEvent(ke);
             finish();
         }
 
@@ -255,7 +251,7 @@ public class MediaButtonReceiver extends BroadcastReceiver {
         Intent intent = new Intent(Intent.ACTION_MEDIA_BUTTON);
         intent.setComponent(mbrComponent);
         intent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, keyCode));
-        return PendingIntent.getBroadcast(context, keyCode, intent, 0);
+        return PendingIntent.getBroadcast(context, keyCode, intent, PendingIntent.FLAG_IMMUTABLE);
     }
 
     /**

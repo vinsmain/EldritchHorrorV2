@@ -16,11 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityRandomCardCategoryBinding;
 import ru.mgusev.eldritchhorror.ui.adapter.random_card.RandomCardCategoryAdapter;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClickedReturnObj;
 import ru.mgusev.eldritchhorror.model.CardType;
@@ -28,18 +27,14 @@ import ru.mgusev.eldritchhorror.presentation.presenter.random_card.RandomCardCat
 import ru.mgusev.eldritchhorror.presentation.view.random_card.RandomCardCategoryView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import ru.mgusev.eldritchhorror.ui.activity.pager.ExpansionChoiceActivity;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 
 public class RandomCardCategoryActivity extends MvpAppCompatActivity implements RandomCardCategoryView, OnItemClickedReturnObj {
 
     @InjectPresenter
     RandomCardCategoryPresenter randomCardCategoryPresenter;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.random_card_category_rv)
-    RecyclerView categoryListRV;
-    @BindView(R.id.loader)
-    LinearLayout loader;
+    private ActivityRandomCardCategoryBinding binding;
 
     private RandomCardCategoryAdapter adapter;
     private List<CardType> cardTypeList;
@@ -50,9 +45,11 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_random_card_category);
-
-        ButterKnife.bind(this);
+        binding = ActivityRandomCardCategoryBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        EdgeToEdge.apply(this, binding.toolbar, binding.randomCardCategoryContent);
+        EdgeToEdge.applyHorizontalInsets(binding.randomCardCategoryRv);
+        EdgeToEdge.applyHorizontalInsets(binding.randomCardCategoryCopyright);
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);
@@ -73,12 +70,12 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
             }
         });
 
-        categoryListRV.setLayoutManager(gridLayoutManager);
-        categoryListRV.setHasFixedSize(true);
+        binding.randomCardCategoryRv.setLayoutManager(gridLayoutManager);
+        binding.randomCardCategoryRv.setHasFixedSize(true);
 
         adapter = new RandomCardCategoryAdapter(this);
         adapter.setOnClick(this);
-        categoryListRV.setAdapter(adapter);
+        binding.randomCardCategoryRv.setAdapter(adapter);
     }
 
     @Override
@@ -88,21 +85,21 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
     }
 
     private void initToolbar() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.random_card_header);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> finish());
+        binding.toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     private void showLoader() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        loader.setVisibility(View.VISIBLE);
+        binding.loader.getRoot().setVisibility(View.VISIBLE);
     }
 
     private void hideLoader() {
-        loader.setVisibility(View.GONE);
+        binding.loader.getRoot().setVisibility(View.GONE);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
@@ -117,21 +114,19 @@ public class RandomCardCategoryActivity extends MvpAppCompatActivity implements 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_edit_expansion:
+        if (item.getItemId() == R.id.action_edit_expansion) {
                 showLoader();
                 Intent expansionChoiceIntent = new Intent(this, ExpansionChoiceActivity.class);
                 startActivity(expansionChoiceIntent);
                 return true;
-            case R.id.action_screen_light_on:
+        } else if (item.getItemId() == R.id.action_screen_light_on) {
                 randomCardCategoryPresenter.onScreenLightClick(false);
                 return true;
-            case R.id.action_screen_light_off:
+        } else if (item.getItemId() == R.id.action_screen_light_off) {
                 randomCardCategoryPresenter.onScreenLightClick(true);
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

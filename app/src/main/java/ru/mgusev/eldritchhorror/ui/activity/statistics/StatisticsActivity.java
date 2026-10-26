@@ -3,8 +3,6 @@ package ru.mgusev.eldritchhorror.ui.activity.statistics;
 import android.content.Intent;
 import android.content.res.Configuration;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.data.PieEntry;
 import com.tiper.MaterialSpinner;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,50 +24,60 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityStatisticsBinding;
+import ru.mgusev.eldritchhorror.presentation.model.statistics.StatisticsChart;
+import ru.mgusev.eldritchhorror.ui.adapter.statistics.ChartAdapter;
 import ru.mgusev.eldritchhorror.ui.adapter.statistics.StatisticsAdapter;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.presentation.presenter.statistics.StatisticsPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.statistics.StatisticsView;
 import ru.mgusev.eldritchhorror.ui.activity.details.DetailsActivity;
-import ru.mgusev.eldritchhorror.ui.fragment.statistics.ChartFragment;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import timber.log.Timber;
 
 public class StatisticsActivity extends MvpAppCompatActivity implements StatisticsView, MaterialSpinner.OnItemSelectedListener {
 
-    @BindView(R.id.statistics_toolbar) Toolbar toolbarStatistics;
-    //@BindView(R.id.statistics_scroll_view) NestedScrollView scrollView;
-    @BindView(R.id.statistics_chart_container) LinearLayout chartContainer;
-    @BindView(R.id.statistics_ancient_one_spinner) MaterialSpinner ancientOneSpinner;
-    @BindView(R.id.statistics_popular_investigator_container) LinearLayout investigatorLL;
-    @BindView(R.id.statistics_popular_investigators_recycler_view) RecyclerView investigatorsRV;
-    @BindView(R.id.statistics_background) ImageView background;
-    @BindView(R.id.statistics_last_game) TextView lastGameTV;
-    @BindView(R.id.statistics_best_game) TextView bestGameTV;
-    @BindView(R.id.loader) LinearLayout loader;
+    private ActivityStatisticsBinding binding;
+
+    Toolbar toolbarStatistics;
+    RecyclerView chartContainer;
+    MaterialSpinner ancientOneSpinner;
+    LinearLayout investigatorLL;
+    RecyclerView investigatorsRV;
+    ImageView background;
+    TextView lastGameTV;
+    TextView bestGameTV;
+    LinearLayout loader;
 
     @InjectPresenter
     StatisticsPresenter statisticsPresenter;
     private ArrayAdapter<String> ancientOneAdapter;
     private int columnsCount = 3;
     private StatisticsAdapter statisticsAdapter;
-    private ChartFragment resultChartFragment;
-    private ChartFragment ancientOneChartFragment;
-    private ChartFragment scoreChartFragment;
-    private ChartFragment defeatReasonChartFragment;
-    private ChartFragment investigatorChartFragment;
-    private FragmentTransaction fragmentTransaction;
+    private ChartAdapter chartAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
-        ButterKnife.bind(this);
+        binding = ActivityStatisticsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        toolbarStatistics = binding.statisticsToolbar;
+        chartContainer = binding.statisticsChartContainer;
+        ancientOneSpinner = binding.statisticsAncientOneSpinner;
+        investigatorLL = binding.statisticsPopularInvestigatorContainer;
+        investigatorsRV = binding.statisticsPopularInvestigatorsRecyclerView;
+        background = binding.statisticsBackground;
+        lastGameTV = binding.statisticsLastGame;
+        bestGameTV = binding.statisticsBestGame;
+        loader = (LinearLayout) binding.loader.getRoot();
+        EdgeToEdge.apply(this, toolbarStatistics, binding.statisticsContent);
+        EdgeToEdge.applyHorizontalInsets(ancientOneSpinner);
+        EdgeToEdge.applyHorizontalInsets(binding.statisticsScrollView);
+        binding.statisticsLastGameRow.setOnClickListener(this::OnClick);
+        binding.statisticsBestGameRow.setOnClickListener(this::OnClick);
         initToolbar();
 
         ancientOneAdapter = new ArrayAdapter<>(this, R.layout.spinner);
@@ -85,8 +92,10 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
 
         statisticsAdapter = new StatisticsAdapter();
         investigatorsRV.setAdapter(statisticsAdapter);
-
-        initFragments();
+        chartContainer.setLayoutManager(new GridLayoutManager(this, getResources().getInteger(R.integer.statistics_chart_columns)));
+        chartContainer.setNestedScrollingEnabled(false);
+        chartAdapter = new ChartAdapter();
+        chartContainer.setAdapter(chartAdapter);
     }
 
     @Override
@@ -144,22 +153,7 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         List<Investigator> investigatorList = new ArrayList<>();
         for (int i = 0; i < list.size() && i < columnsCount; i++) investigatorList.add(list.get(i));
         statisticsAdapter.updateAllInvCards(investigatorList);
-    }
-
-    @Override
-    public void initFragments() {
-        removeAllFragments();
-        initResultChartFragment();
-        initAncientOneFragment();
-        initScoreChartFragment();
-        initDefeatReasonChartFragment();
-        initInvestigatorChartFragment();
-    }
-
-    private void removeAllFragments() {
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-        }
+        investigatorLL.setVisibility(investigatorList.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
     private void showLoader() {
@@ -182,17 +176,13 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         lastGameTV.setText(value);
     }
 
-    @OnClick({R.id.statistics_last_game_row, R.id.statistics_best_game_row})
     public void OnClick(View view) {
-        switch (view.getId()) {
-            case R.id.statistics_last_game_row :
+        if (view.getId() == R.id.statistics_last_game_row) {
                 showLoader();
                 statisticsPresenter.goToDetailsActivity(true);
-                break;
-            case R.id.statistics_best_game_row :
+        } else if (view.getId() == R.id.statistics_best_game_row) {
                 showLoader();
                 statisticsPresenter.goToDetailsActivity(false);
-                break;
         }
     }
 
@@ -202,99 +192,9 @@ public class StatisticsActivity extends MvpAppCompatActivity implements Statisti
         startActivity(detailsIntent);
     }
 
-    public void initResultChartFragment() {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        resultChartFragment = new ChartFragment();
-        fragmentTransaction.add(R.id.statistics_chart_container, resultChartFragment);
-        fragmentTransaction.commit();
-    }
-
     @Override
-    public void setDataToResultChart(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum) {
-        resultChartFragment.setData(entries, description, labels, values, sum);
-    }
-
-    public void initAncientOneFragment() {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        ancientOneChartFragment = new ChartFragment();
-        fragmentTransaction.add(R.id.statistics_chart_container, ancientOneChartFragment);
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    public void setDataToAncientOneChart(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum) {
-        ancientOneChartFragment.setData(entries, description, labels, values, sum);
-    }
-
-    @Override
-    public void setVisibilityAncientOneChart(boolean isVisible) {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (isVisible) fragmentTransaction.show(ancientOneChartFragment);
-        else fragmentTransaction.hide(ancientOneChartFragment);
-        fragmentTransaction.commit();
-    }
-
-    public void initScoreChartFragment() {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        scoreChartFragment = new ChartFragment();
-        fragmentTransaction.add(R.id.statistics_chart_container, scoreChartFragment);
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    public void setDataToScoreChart(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum) {
-        scoreChartFragment.setData(entries, description, labels, values, sum);
-    }
-
-    @Override
-    public void setVisibilityScoreChart(boolean isVisible) {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (isVisible) fragmentTransaction.show(scoreChartFragment);
-        else fragmentTransaction.hide(scoreChartFragment);
-        fragmentTransaction.commit();
-    }
-
-
-    public void initDefeatReasonChartFragment() {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        defeatReasonChartFragment = new ChartFragment();
-        fragmentTransaction.add(R.id.statistics_chart_container, defeatReasonChartFragment);
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    public void setDataToDefeatReasonChart(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum) {
-        defeatReasonChartFragment.setData(entries, description, labels, values, sum);
-    }
-
-    @Override
-    public void setVisibilityDefeatReasonChart(boolean isVisible) {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (isVisible) fragmentTransaction.show(defeatReasonChartFragment);
-        else fragmentTransaction.hide(defeatReasonChartFragment);
-        fragmentTransaction.commit();
-    }
-
-
-    public void initInvestigatorChartFragment() {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        investigatorChartFragment = new ChartFragment();
-        fragmentTransaction.add(R.id.statistics_chart_container, investigatorChartFragment);
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    public void setDataToInvestigatorChart(List<PieEntry> entries, String description, List<String> labels, List<Float> values, int sum) {
-        investigatorChartFragment.setData(entries, description, labels, values, sum);
-    }
-
-    @Override
-    public void setVisibilityInvestigatorChart(boolean isVisible) {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (isVisible) fragmentTransaction.show(investigatorChartFragment);
-        else fragmentTransaction.hide(investigatorChartFragment);
-        fragmentTransaction.commit();
-        investigatorLL.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    public void setCharts(List<StatisticsChart> charts) {
+        chartAdapter.setCharts(charts);
     }
 
     @Override

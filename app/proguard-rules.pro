@@ -1,4 +1,39 @@
-# Add project specific ProGuard rules here.
+# Правила R8 для релизной сборки. Базовая оптимизация задаётся
+# proguard-android-optimize.txt в app/build.gradle.
+
+# Сохраняем читаемые стектрейсы для Crashlytics после обфускации.
+-keepattributes SourceFile,LineNumberTable,Signature,*Annotation*
+-renamesourcefileattribute SourceFile
+
+# Gson использует поля моделей JSON через отражение.
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+# Firebase Realtime Database сопоставляет свойства игр по именам JavaBean-методов.
+-keep class ru.mgusev.eldritchhorror.model.Game { *; }
+-keep class ru.mgusev.eldritchhorror.model.ImageFile { *; }
+-keep class ru.mgusev.eldritchhorror.model.Investigator { *; }
+
+# DTO Retrofit/Gson создаются и заполняются через reflection.
+-keep class ru.mgusev.eldritchhorror.api.json_model.** { *; }
+
+# Moxy загружает сгенерированные binder/factory-классы по соглашению об имени.
+-keep class **$$PresentersBinder { *; }
+-keep class **$$PresentersFactory { *; }
+-keep class **$$State { *; }
+-keep class **$$ViewCommands { *; }
+
+# Moxy создаёт пользовательские стратегии состояния через reflection.
+-keep class ru.mgusev.eldritchhorror.strategy.** { *; }
+
+# ORMLite использует аннотации и поля старой БД при миграции данных пользователя.
+-keep class ru.mgusev.eldritchhorror.database.oldDB.** { *; }
+
+# Dagger-компонент создаётся в Application напрямую; сохраняем точку входа DI.
+-keep class ru.mgusev.eldritchhorror.di.component.DaggerAppComponent { *; }
+
+# ORMLite читает аннотации и поля моделей через отражение.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
 #

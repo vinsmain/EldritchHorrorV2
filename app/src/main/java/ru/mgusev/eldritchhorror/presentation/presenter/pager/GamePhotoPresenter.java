@@ -4,8 +4,6 @@ import android.net.Uri;
 
 import androidx.core.content.FileProvider;
 
-import com.esafirm.imagepicker.model.Image;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -74,7 +72,9 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
     }
 
     private void changeGallery(boolean value) {
-        getViewState().updatePhotoGallery(repository.getImages());
+        List<String> images = repository.getImages();
+        getViewState().showPhotoNoneMessage(images.isEmpty());
+        getViewState().updatePhotoGallery(images);
     }
 
     public void addImageFile() {
@@ -104,18 +104,18 @@ public class GamePhotoPresenter extends MvpPresenter<GamePhotoView> {
         return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()) + "_" + new Date().getTime() + ".jpg";
     }
 
-    public void onSelectImagesFromImagePicker(List<Image> images) {
-        for (Image image : images) {
+    public void onSelectImageUris(List<Uri> imageUris) {
+        for (Uri imageUri : imageUris) {
             try {
                 File dest = repository.getPhotoFile(getNewImageFileName());
-                repository.copyFile(new File(image.getPath().replace("/" + image.getName(), ""), image.getName()), dest);
+                repository.copyUriToFile(imageUri, dest);
                 currentPhotoURI = Uri.fromFile(dest);
                 addImageFile();
             } catch (IOException e) {
-                e.printStackTrace();
+                Timber.e(e, "Не удалось импортировать выбранное изображение");
             }
         }
-        if (images.size() > 0) repository.updatePhotoGalleryOnNext(true);
+        if (!imageUris.isEmpty()) repository.updatePhotoGalleryOnNext(true);
     }
 
     public void dismissDeleteDialog() {

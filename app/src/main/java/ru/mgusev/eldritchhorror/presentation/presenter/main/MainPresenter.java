@@ -6,12 +6,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.mgusev.eldritchhorror.R;
@@ -37,6 +40,8 @@ public class MainPresenter extends MvpPresenter<MainView> {
     private CompositeDisposable gameListSubscribe;
     private CompositeDisposable authSubscribe;
     private CompositeDisposable rateSubscribe;
+    private CompositeDisposable imageExportSubscribe;
+    private boolean imageExportInProgress;
 
     private Game deletingGame;
 
@@ -46,6 +51,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
         gameListSubscribe = new CompositeDisposable();
         authSubscribe = new CompositeDisposable();
         rateSubscribe = new CompositeDisposable();
+        imageExportSubscribe = new CompositeDisposable();
         gameListSubscribe.add(repository.getGameListPublish().subscribe(this::updateGameList, Timber::d));
         authSubscribe.add(repository.getAuthPublish().subscribe(this::authStatusChange, Timber::d));
         rateSubscribe.add(repository.getRatePublish().subscribe(this::showRateDialog, Timber::d));
@@ -57,11 +63,16 @@ public class MainPresenter extends MvpPresenter<MainView> {
         importOldUserData();
         gameList = repository.getGameList(0, 0);
         repository.gameListOnNext();
-        if (googleAuth.getCurrentUser() != null) signIn();
+        if (googleAuth.getCurrentUser() != null) googleAuth.restoreSession();
         else authStatusChange(false);
     }
 
     private void importOldUserData() {
+        File oldUserDatabase = repository.getContext().getDatabasePath("eldritchHorrorDB.db");
+        if (oldUserDatabase == null || !oldUserDatabase.exists()) {
+            return;
+        }
+
         new DatabaseHelperOld(repository.getContext()); //import data from old version User DB
         repository.getContext().deleteDatabase("eldritchHorrorDB.db"); //delete old version User DB
         repository.getContext().deleteDatabase("EHLocalDB.db"); //delete old version Static DB
@@ -94,6 +105,31 @@ public class MainPresenter extends MvpPresenter<MainView> {
             game.setImageFileList(repository.getImageFileListByGameId(game.getId()));
         }
         getViewState().setDataToAdapter(this.gameList);
+    }
+
+    public void refreshGameList() {
+        updateGameList(repository.getGameList(0, 0));
+    }
+
+    public void saveLocalImagesToGallery() {
+        if (imageExportInProgress) return;
+        imageExportInProgress = true;
+        getViewState().setImageExportInProgress(true);
+        imageExportSubscribe.clear();
+        imageExportSubscribe.add(io.reactivex.Observable.fromCallable(repository::saveLocalImagesToGallery)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    imageExportInProgress = false;
+                    getViewState().setImageExportInProgress(false);
+                    getViewState().showImageExportResult(result.getSaved(), result.getAlreadyExists(),
+                            result.getMissing(), result.getFailed());
+                }, error -> {
+                    imageExportInProgress = false;
+                    Timber.tag("GALLERY_EXPORT").e(error, "Не удалось сохранить фотографии в галерею");
+                    getViewState().setImageExportInProgress(false);
+                    getViewState().showImageExportError();
+                }));
     }
 
     private void showEmptyListMessage() {
@@ -195,5 +231,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
         gameListSubscribe.dispose();
         authSubscribe.dispose();
         rateSubscribe.dispose();
+        imageExportSubscribe.dispose();
     }
 }

@@ -6,13 +6,11 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import moxy.MvpDelegate;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ItemDiceBinding;
 import ru.mgusev.eldritchhorror.model.Dice;
 import ru.mgusev.eldritchhorror.presentation.presenter.dice.DiceItemPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.dice.DiceItemView;
@@ -32,8 +30,7 @@ public class DiceItemHolder extends RecyclerView.ViewHolder implements DiceItemV
     private int successColorId;
     private int defaultColorId;
 
-    @BindView(R.id.item_dice_dlv)
-    DiceLoadingView diceDLV;
+    private final DiceLoadingView diceDLV;
 
     @ProvidePresenter
     DiceItemPresenter provideDiceItemPresenter() {
@@ -42,8 +39,9 @@ public class DiceItemHolder extends RecyclerView.ViewHolder implements DiceItemV
 
     DiceItemHolder(View view, MvpDelegate parentDelegate) {
         super(view);
-
-        ButterKnife.bind(this, view);
+        ItemDiceBinding binding = ItemDiceBinding.bind(view);
+        diceDLV = binding.itemDiceDlv;
+        diceDLV.setOnClickListener(v -> presenter.onClickDice());
 
         mParentDelegate = parentDelegate;
         rotation = AnimationUtils.loadAnimation(view.getContext(), R.anim.rotate);
@@ -117,8 +115,4 @@ public class DiceItemHolder extends RecyclerView.ViewHolder implements DiceItemV
         return mMvpDelegate;
     }
 
-    @OnClick(R.id.item_dice_dlv)
-    public void onClick() {
-        presenter.onClickDice();
-    }
 }

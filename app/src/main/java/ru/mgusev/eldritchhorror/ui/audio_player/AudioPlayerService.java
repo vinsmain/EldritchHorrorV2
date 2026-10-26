@@ -33,7 +33,8 @@ import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.database.ExoDatabaseProvider;
@@ -47,7 +48,6 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Util;
@@ -125,17 +125,23 @@ public class AudioPlayerService extends MediaBrowserServiceCompat {
         Context appContext = getApplicationContext();
 
         Intent activityIntent = new Intent(appContext, App.class);
-        mediaSession.setSessionActivity(PendingIntent.getActivity(appContext, 0, activityIntent, 0));
+        mediaSession.setSessionActivity(PendingIntent.getActivity(appContext, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE));
 
         Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON, null, appContext, MediaButtonReceiver.class);
-        mediaSession.setMediaButtonReceiver(PendingIntent.getBroadcast(appContext, 0, mediaButtonIntent, 0));
+        mediaSession.setMediaButtonReceiver(PendingIntent.getBroadcast(appContext, 0, mediaButtonIntent, PendingIntent.FLAG_IMMUTABLE));
 
-        exoPlayer = ExoPlayerFactory.newSimpleInstance(this, new DefaultRenderersFactory(this), new DefaultTrackSelector(), new DefaultLoadControl());
+        exoPlayer = new SimpleExoPlayer.Builder(this, new DefaultRenderersFactory(this))
+                .setTrackSelector(new DefaultTrackSelector(this))
+                .setLoadControl(new DefaultLoadControl())
+                .build();
         exoPlayer.addListener(exoPlayerListener);
 
         DataSource.Factory httpDataSourceFactory = new OkHttpDataSourceFactory(new OkHttpClient(), Util.getUserAgent(this, "Eldritch Horror Assistant"));
         cache = new SimpleCache(new File(this.getCacheDir().getAbsolutePath() + "/exoplayer"), new LeastRecentlyUsedCacheEvictor(1024 * 1024 * 100), new ExoDatabaseProvider(this)); // 100 Mb max
-        this.dataSourceFactory = new CacheDataSourceFactory(cache, httpDataSourceFactory, CacheDataSource.FLAG_BLOCK_ON_CACHE | CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+        this.dataSourceFactory = new CacheDataSource.Factory()
+                .setCache(cache)
+                .setUpstreamDataSourceFactory(httpDataSourceFactory)
+                .setFlags(CacheDataSource.FLAG_BLOCK_ON_CACHE | CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
         this.extractorsFactory = new DefaultExtractorsFactory();
     }
 
@@ -218,7 +224,8 @@ public class AudioPlayerService extends MediaBrowserServiceCompat {
                 }
 
                 mediaSession.setActive(true); // Сразу после получения фокуса
-                registerReceiver(becomingNoisyReceiver, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+                ContextCompat.registerReceiver(AudioPlayerService.this, becomingNoisyReceiver,
+                        new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), ContextCompat.RECEIVER_NOT_EXPORTED);
 
                 exoPlayer.setPlayWhenReady(true);
             }
@@ -307,7 +314,7 @@ public class AudioPlayerService extends MediaBrowserServiceCompat {
             if (!uri.equals(currentUri)) {
                 currentUri = uri;
                 ProgressiveMediaSource.Factory mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory);
-                exoPlayer.prepare(mediaSource.createMediaSource(uri));
+                exoPlayer.prepare(mediaSource.createMediaSource(MediaItem.fromUri(uri)));
             }
         }
 
@@ -349,29 +356,12 @@ public class AudioPlayerService extends MediaBrowserServiceCompat {
         }
     };
 
-    private ExoPlayer.EventListener exoPlayerListener = new ExoPlayer.EventListener() {
-
+    private final Player.Listener exoPlayerListener = new Player.Listener() {
         @Override
-        public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-        }
-
-        @Override
-        public void onLoadingChanged(boolean isLoading) {
-        }
-
-        @Override
-        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            if (playWhenReady && playbackState == ExoPlayer.STATE_ENDED) {
+        public void onPlaybackStateChanged(int playbackState) {
+            if (exoPlayer.getPlayWhenReady() && playbackState == Player.STATE_ENDED) {
                 mediaSessionCallback.onStop();
             }
-        }
-
-        @Override
-        public void onPlayerError(ExoPlaybackException error) {
-        }
-
-        @Override
-        public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
         }
     };
 
@@ -425,7 +415,8 @@ public class AudioPlayerService extends MediaBrowserServiceCompat {
         Intent resultIntent = new Intent(this, AncientOneInfoActivity.class);
         resultIntent.setData(Uri.parse(mediaSession.getController().getMetadata().getDescription().getMediaId()));
 
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = MediaStyleHelper.from(this, mediaSession, resultPendingIntent);
 

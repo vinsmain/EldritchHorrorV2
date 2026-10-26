@@ -16,9 +16,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ItemInvestigatorDetailsBinding;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.model.Investigator;
@@ -27,15 +26,11 @@ import ru.mgusev.eldritchhorror.model.Specialization;
 public class DetailsAdapter  extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
 
     static class DetailsViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_investigator_card) CardView investigatorCard;
-        @BindView(R.id.item_investigator_photo) ImageView photo;
-        @BindView(R.id.item_investigator_expansion_icon) ImageView expansionIcon;
-        @BindView(R.id.item_investigator_specialization_icon) ImageView specializationIcon;
-        @BindView(R.id.item_investigator_dead_icon) ImageView deadIcon;
+        final CardView investigatorCard; final ImageView photo; final ImageView expansionIcon; final ImageView specializationIcon; final ImageView deadIcon;
 
-        DetailsViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        DetailsViewHolder(ItemInvestigatorDetailsBinding binding) {
+            super(binding.getRoot());
+            investigatorCard = binding.itemInvestigatorCard; photo = binding.itemInvestigatorPhoto; expansionIcon = binding.itemInvestigatorExpansionIcon; specializationIcon = binding.itemInvestigatorSpecializationIcon; deadIcon = binding.itemInvestigatorDeadIcon;
         }
     }
 
@@ -61,8 +56,7 @@ public class DetailsAdapter  extends RecyclerView.Adapter<DetailsAdapter.Details
     @NonNull
     @Override
     public DetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_investigator_details, parent, false);
-        return new DetailsViewHolder(view);
+        return new DetailsViewHolder(ItemInvestigatorDetailsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override

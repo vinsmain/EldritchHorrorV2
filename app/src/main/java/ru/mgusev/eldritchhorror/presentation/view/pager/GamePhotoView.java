@@ -16,6 +16,9 @@ public interface GamePhotoView extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void updatePhotoGallery(List<String> imagesUrlList);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showPhotoNoneMessage(boolean isShow);
+
     @StateStrategyType(value = AddToEndSingleStrategy.class, tag = DELETE_DIALOG_TAG)
     void showDeleteDialog();
 

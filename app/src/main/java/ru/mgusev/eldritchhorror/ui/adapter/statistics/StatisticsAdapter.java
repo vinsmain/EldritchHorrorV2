@@ -16,9 +16,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ItemInvestigatorBinding;
 import ru.mgusev.eldritchhorror.di.App;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.model.Expansion;
@@ -28,16 +27,11 @@ import ru.mgusev.eldritchhorror.model.Specialization;
 public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.StatisticsViewHolder> {
 
     static class StatisticsViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_inv_card_view) CardView invCardView;
-        @BindView(R.id.item_inv_photo) ImageView invPhoto;
-        @BindView(R.id.item_inv_expansion) ImageView invExpansion;
-        @BindView(R.id.item_inv_specialization) ImageView invSpecialization;
-        @BindView(R.id.item_inv_name) TextView invName;
-        @BindView(R.id.item_inv_occupation) TextView invOccupation;
+        final CardView invCardView; final ImageView invPhoto; final ImageView invExpansion; final ImageView invSpecialization; final TextView invName; final TextView invOccupation;
 
-        StatisticsViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        StatisticsViewHolder(ItemInvestigatorBinding binding) {
+            super(binding.getRoot());
+            invCardView = binding.itemInvCardView; invPhoto = binding.itemInvPhoto; invExpansion = binding.itemInvExpansion; invSpecialization = binding.itemInvSpecialization; invName = binding.itemInvName; invOccupation = binding.itemInvOccupation;
         }
     }
 
@@ -61,8 +55,7 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.St
     @NonNull
     @Override
     public StatisticsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_investigator, parent, false);
-        return new StatisticsViewHolder(view);
+        return new StatisticsViewHolder(ItemInvestigatorBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override

@@ -122,6 +122,7 @@ public class Chart extends PieChart implements OnChartValueSelectedListener {
     }
 
     public void setData(List<PieEntry> entries, List<String> labels, List<Float> values, int sum) {
+        setMinimumHeight(0);
         this.labels = labels;
         this.values = values;
         this.count = sum;
@@ -137,7 +138,19 @@ public class Chart extends PieChart implements OnChartValueSelectedListener {
         setCenterTextSize(16);
         setDrawEntryLabels(false);
         if (!entries.isEmpty()) highlightValue(0f, 0, true);
-        this.setMinimumHeight((int) (1000 + legend.mNeededHeight));
+        updateHeightForLegend();
+    }
+
+    private void updateHeightForLegend() {
+        post(() -> {
+            if (getWidth() == 0) return;
+            notifyDataSetChanged();
+            int chartHeight = getWidth() + (int) Math.ceil(legend.mNeededHeight);
+            if (getMinimumHeight() != chartHeight) {
+                setMinimumHeight(chartHeight);
+                requestLayout();
+            }
+        });
     }
 
     @Override

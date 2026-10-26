@@ -6,11 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
-import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivitySpecializationChoiceBinding;
 import ru.mgusev.eldritchhorror.ui.adapter.pager.SpecializationChoiceAdapter;
 import ru.mgusev.eldritchhorror.model.Specialization;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.SpecializationChoicePresenter;
@@ -21,7 +19,7 @@ public class SpecializationChoiceActivity extends MvpAppCompatActivity implement
     @InjectPresenter
     SpecializationChoicePresenter specializationChoicePresenter;
 
-    @BindView(R.id.specialization_choice_recycler_view) RecyclerView specializationRV;
+    private ActivitySpecializationChoiceBinding binding;
 
     private static int columnsCount = 1;
     private SpecializationChoiceAdapter adapter;
@@ -29,17 +27,17 @@ public class SpecializationChoiceActivity extends MvpAppCompatActivity implement
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_specialization_choice);
-        ButterKnife.bind(this);
+        binding = ActivitySpecializationChoiceBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
     }
 
     @Override
     public void initSpecializationList(List<Specialization> list) {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, columnsCount);
-        specializationRV.setLayoutManager(gridLayoutManager);
-        specializationRV.setHasFixedSize(true);
+        binding.specializationChoiceRecyclerView.setLayoutManager(gridLayoutManager);
+        binding.specializationChoiceRecyclerView.setHasFixedSize(true);
         adapter = new SpecializationChoiceAdapter(list);
-        specializationRV.setAdapter(adapter);
+        binding.specializationChoiceRecyclerView.setAdapter(adapter);
     }
 
     @Override

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ancient_one_info_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight">
@@ -99,7 +100,9 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <include layout="@layout/view_audio_player" />
+                    <include
+                        android:id="@+id/audio_player"
+                        layout="@layout/view_audio_player" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 

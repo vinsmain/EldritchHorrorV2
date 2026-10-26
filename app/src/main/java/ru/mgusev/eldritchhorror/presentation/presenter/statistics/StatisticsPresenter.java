@@ -19,6 +19,7 @@ import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Game;
 import ru.mgusev.eldritchhorror.model.Investigator;
 import ru.mgusev.eldritchhorror.model.StatisticsInvestigator;
+import ru.mgusev.eldritchhorror.presentation.model.statistics.StatisticsChart;
 import ru.mgusev.eldritchhorror.presentation.view.statistics.StatisticsView;
 import ru.mgusev.eldritchhorror.repository.Repository;
 import timber.log.Timber;
@@ -83,15 +84,14 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
         getViewState().setLastResult(getGameScoreAndDate(lastGame));
         getViewState().setBestResult(getGameScoreAndDate(bestGame));
-        getViewState().setVisibilityAncientOneChart(currentAncientOneId == ALL_ANCIENT_ONES_ID);
-        getViewState().setVisibilityScoreChart(repository.getVictoryGameCount(currentAncientOneId) != 0);
-        getViewState().setVisibilityDefeatReasonChart(repository.getDefeatGameCount(currentAncientOneId) != 0);
-        getViewState().setVisibilityInvestigatorChart(repository.getStatisticsInvestigatorList(currentAncientOneId).size() != 0);
-        initResultChart();
-        initAncientOneChart();
-        initScoreChart();
-        initDefeatReasonChart();
-        initInvestigatorChart();
+        List<StatisticsChart> charts = new ArrayList<>();
+        charts.add(initResultChart());
+        if (currentAncientOneId == ALL_ANCIENT_ONES_ID) charts.add(initAncientOneChart());
+        if (repository.getVictoryGameCount(currentAncientOneId) != 0) charts.add(initScoreChart());
+        if (repository.getDefeatGameCount(currentAncientOneId) != 0) charts.add(initDefeatReasonChart());
+        if (!repository.getStatisticsInvestigatorList(currentAncientOneId).isEmpty()) charts.add(initInvestigatorChart());
+        else getViewState().setInvestigatorList(new ArrayList<>());
+        getViewState().setCharts(charts);
 
         getViewState().invalidateView();
     }
@@ -113,13 +113,13 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         return ancientOneNameList;
     }
 
-    private void initResultChart() {
+    private StatisticsChart initResultChart() {
         initResultValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
             entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getGameCount(currentAncientOneId), DEN), chartLabels.get(i)));
         }
-        getViewState().setDataToResultChart(entries, repository.getContext().getResources().getString(R.string.win_defeat_stat_description), chartLabels, chartValues, repository.getGameCount(currentAncientOneId));
+        return new StatisticsChart(entries, repository.getContext().getResources().getString(R.string.win_defeat_stat_description), chartLabels, chartValues, repository.getGameCount(currentAncientOneId));
     }
 
     private void initResultValues() {
@@ -136,13 +136,13 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
     }
 
-    private void initAncientOneChart() {
+    private StatisticsChart initAncientOneChart() {
         initAncientOneValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
             entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getGameCount(ALL_ANCIENT_ONES_ID), DEN), chartLabels.get(i)));
         }
-        getViewState().setDataToAncientOneChart(entries, repository.getContext().getResources().getString(R.string.ancientOne), chartLabels, chartValues, repository.getGameCount(ALL_ANCIENT_ONES_ID));
+        return new StatisticsChart(entries, repository.getContext().getResources().getString(R.string.ancientOne), chartLabels, chartValues, repository.getGameCount(ALL_ANCIENT_ONES_ID));
     }
 
     private void initAncientOneValues() {
@@ -155,13 +155,13 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
     }
 
-    private void initScoreChart() {
+    private StatisticsChart initScoreChart() {
         initScoreValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
             entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getVictoryGameCount(currentAncientOneId), DEN), chartLabels.get(i)));
         }
-        getViewState().setDataToScoreChart(entries, repository.getContext().getResources().getString(R.string.totalScore), chartLabels, chartValues, repository.getVictoryGameCount(currentAncientOneId));
+        return new StatisticsChart(entries, repository.getContext().getResources().getString(R.string.totalScore), chartLabels, chartValues, repository.getVictoryGameCount(currentAncientOneId));
     }
 
     private void initScoreValues() {
@@ -182,13 +182,13 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
     }
 
-    private void initDefeatReasonChart() {
+    private StatisticsChart initDefeatReasonChart() {
         initDefeatReasonValues();
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < chartValues.size(); i++) {
             entries.add(new PieEntry(getPercent(chartValues.get(i), repository.getDefeatGameCount(currentAncientOneId), DEN), chartLabels.get(i)));
         }
-        getViewState().setDataToDefeatReasonChart(entries, repository.getContext().getResources().getString(R.string.defeat_table_header), chartLabels, chartValues, repository.getDefeatGameCount(currentAncientOneId));
+        return new StatisticsChart(entries, repository.getContext().getResources().getString(R.string.defeat_table_header), chartLabels, chartValues, repository.getDefeatGameCount(currentAncientOneId));
     }
 
     private void initDefeatReasonValues() {
@@ -221,7 +221,7 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
         }
     }
 
-    private void initInvestigatorChart() {
+    private StatisticsChart initInvestigatorChart() {
         List<Investigator> investigatorList = new ArrayList<>();
         initInvestigatorValues();
         List<PieEntry> entries = new ArrayList<>();
@@ -233,8 +233,8 @@ public class StatisticsPresenter extends MvpPresenter<StatisticsView> {
                 investigatorList.add(investigator);
             }
         }
-        getViewState().setDataToInvestigatorChart(entries, repository.getContext().getResources().getString(R.string.investigators), chartLabels, chartValues, investigatorCountSum);
         getViewState().setInvestigatorList(investigatorList);
+        return new StatisticsChart(entries, repository.getContext().getResources().getString(R.string.investigators), chartLabels, chartValues, investigatorCountSum);
     }
 
     private void initInvestigatorValues() {

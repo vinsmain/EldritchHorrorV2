@@ -3,6 +3,7 @@ package ru.mgusev.eldritchhorror.ui.activity.pager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.viewpager.widget.ViewPager;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,37 +22,36 @@ import android.widget.Toast;
 
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.ActivityGamesPagerBinding;
 import ru.mgusev.eldritchhorror.ui.adapter.pager.PagerAdapter;
 import ru.mgusev.eldritchhorror.model.AncientOne;
 import ru.mgusev.eldritchhorror.model.Expansion;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.PagerPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.PagerView;
-import ru.mgusev.eldritchhorror.utils.AndroidBug5497Workaround;
+import ru.mgusev.eldritchhorror.repository.PrefHelper;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
 import timber.log.Timber;
 
 public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
+    private static final long PAGER_SWIPE_HINT_DELAY_MS = 500L;
+    private static final long PAGER_SWIPE_HINT_OUT_DURATION_MS = 600L;
+    private static final long PAGER_SWIPE_HINT_PAUSE_DURATION_MS = 500L;
+    private static final long PAGER_SWIPE_HINT_RETURN_DURATION_MS = 700L;
+    private static final long PAGER_SWIPE_HINT_DURATION_MS = PAGER_SWIPE_HINT_OUT_DURATION_MS + PAGER_SWIPE_HINT_PAUSE_DURATION_MS + PAGER_SWIPE_HINT_RETURN_DURATION_MS;
+    private static final float PAGER_SWIPE_HINT_OFFSET = 0.5f;
+
     @InjectPresenter
     PagerPresenter pagerPresenter;
 
-    @BindView(R.id.games_pager_head_background) ImageView headBackground;
-    @BindView(R.id.games_pager_expansion_icon) ImageView expansionIcon;
-    @BindView(R.id.games_pager_score) TextView scoreTV;
-    @BindView(R.id.games_pager_win_icon) ImageView winIcon;
-    @BindView(R.id.games_pager_toolbar) Toolbar toolbar;
-    @BindView(R.id.games_pager_viewpager) ViewPager pager;
-    @BindView(R.id.games_pager_add_image) FabSpeedDial addImageFab;
-    @BindView(R.id.games_pager_delete_image) FloatingActionButton deleteImageFab;
-    @BindView(R.id.loader) LinearLayout loader;
+    private ActivityGamesPagerBinding binding;
+    private ImageView headBackground; private ImageView expansionIcon; private TextView scoreTV; private ImageView winIcon; private Toolbar toolbar; private ViewPager pager; private FabSpeedDial addImageFab; private FloatingActionButton deleteImageFab; private LinearLayout loader;
 
     private PagerAdapter pagerAdapter;
     private AlertDialog backDialog;
@@ -61,14 +62,22 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
     private MenuItem actionSelectAll;
     private MenuItem actionSelectCancel;
     private MenuItem actionShareImage;
+    private Runnable pagerSwipeHintRunnable;
+    private ValueAnimator pagerSwipeHintAnimator;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_games_pager);
-        ButterKnife.bind(this);
-        AndroidBug5497Workaround.assistActivity(this);
+        binding = ActivityGamesPagerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        headBackground = binding.gamesPagerHeadBackground; expansionIcon = binding.gamesPagerExpansionIcon; scoreTV = binding.gamesPagerScore; winIcon = binding.gamesPagerWinIcon; toolbar = binding.gamesPagerToolbar; pager = binding.gamesPagerViewpager; addImageFab = binding.gamesPagerAddImage; deleteImageFab = binding.gamesPagerDeleteImage; loader = (LinearLayout) binding.loader.getRoot();
+        EdgeToEdge.applyCollapsingHeader(
+                this, toolbar, binding.mainContent, expansionIcon, binding.linearLayout2);
+        EdgeToEdge.applyHorizontalInsets(pager);
+        EdgeToEdge.applyFloatingActionButtonInsets(addImageFab);
+        EdgeToEdge.applyFloatingActionButtonInsets(deleteImageFab);
+        deleteImageFab.setOnClickListener(this::onClick);
 
         if (!MainActivity.initialized) {
             Intent firstIntent = new Intent(this, MainActivity.class);
@@ -106,24 +115,62 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         addImageFab.setMenuListener(new SimpleMenuListenerAdapter() {
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                switch (menuItem.getItemId()) {
-                    case R.id.action_camera:
+                if (menuItem.getItemId() == R.id.action_camera) {
                         pagerPresenter.clickOnAddPhotoButton(true);
                         return false;
-                    case R.id.action_gallery:
+                } else if (menuItem.getItemId() == R.id.action_gallery) {
                         pagerPresenter.clickOnAddPhotoButton(false);
                         return false;
                 }
                 return false;
             }
         });
+        showPagerSwipeHintIfNeeded();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         hideLoader();
+    }
+
+    private void showPagerSwipeHintIfNeeded() {
+        PrefHelper prefHelper = new PrefHelper(this);
+        if (prefHelper.loadGamePagerHintShown()) return;
+
+        prefHelper.saveGamePagerHintShown();
+        pagerSwipeHintRunnable = () -> {
+            if (isFinishing() || pager.getCurrentItem() != 0 || pager.getWidth() == 0) return;
+            if (pager.beginFakeDrag()) {
+                float[] previousOffset = {0f};
+                float maxOffset = pager.getWidth() * PAGER_SWIPE_HINT_OFFSET;
+                pagerSwipeHintAnimator = ValueAnimator.ofFloat(0f, PAGER_SWIPE_HINT_DURATION_MS);
+                pagerSwipeHintAnimator.setDuration(PAGER_SWIPE_HINT_DURATION_MS);
+                pagerSwipeHintAnimator.setInterpolator(new LinearInterpolator());
+                pagerSwipeHintAnimator.addUpdateListener(animation -> {
+                    float elapsed = (float) animation.getAnimatedValue();
+                    float offset;
+                    if (elapsed < PAGER_SWIPE_HINT_OUT_DURATION_MS) {
+                        offset = -maxOffset * elapsed / PAGER_SWIPE_HINT_OUT_DURATION_MS;
+                    } else if (elapsed < PAGER_SWIPE_HINT_OUT_DURATION_MS + PAGER_SWIPE_HINT_PAUSE_DURATION_MS) {
+                        offset = -maxOffset;
+                    } else {
+                        float returnProgress = (elapsed - PAGER_SWIPE_HINT_OUT_DURATION_MS - PAGER_SWIPE_HINT_PAUSE_DURATION_MS) / PAGER_SWIPE_HINT_RETURN_DURATION_MS;
+                        offset = -maxOffset * (1f - returnProgress);
+                    }
+                    pager.fakeDragBy(offset - previousOffset[0]);
+                    previousOffset[0] = offset;
+                });
+                pagerSwipeHintAnimator.addListener(new android.animation.AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(android.animation.Animator animation) {
+                        if (pager.isFakeDragging()) pager.endFakeDrag();
+                    }
+                });
+                pagerSwipeHintAnimator.start();
+            }
+        };
+        pager.postDelayed(pagerSwipeHintRunnable, PAGER_SWIPE_HINT_DELAY_MS);
     }
 
     private void initToolbar() {
@@ -239,7 +286,6 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
         showActionShareImageButton();
     }
 
-    @OnClick({R.id.games_pager_delete_image})
     public void onClick(View view) {
         pagerPresenter.clickOnDeletePhotoButton();
     }
@@ -260,38 +306,37 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_save:
+        int id = item.getItemId();
+        if (id == R.id.action_save) {
                 pagerPresenter.actionSave();
                 return true;
-            case R.id.action_clear:
+        } else if (id == R.id.action_clear) {
                 pagerPresenter.actionClear(pagerPresenter.getCurrentPosition());
                 return true;
-            case R.id.action_random:
+        } else if (id == R.id.action_random) {
                 pagerPresenter.actionRandom(pagerPresenter.getCurrentPosition());
                 return true;
-            case R.id.action_random_settings:
+        } else if (id == R.id.action_random_settings) {
                 showLoader();
                 Intent randomSettingsIntent = new Intent(this, SpecializationChoiceActivity.class);
                 startActivity(randomSettingsIntent);
                 return true;
-            case R.id.action_edit_expansion:
+        } else if (id == R.id.action_edit_expansion) {
                 showLoader();
                 Intent expansionChoiceIntent = new Intent(this, ExpansionChoiceActivity.class);
                 startActivity(expansionChoiceIntent);
                 return true;
-            case R.id.action_select_all:
+        } else if (id == R.id.action_select_all) {
                 pagerPresenter.clickSelectPhoto(true);
                 return true;
-            case R.id.action_select_cancel:
+        } else if (id == R.id.action_select_cancel) {
                 pagerPresenter.clickSelectPhoto(false);
                 return true;
-            case R.id.action_share_image:
+        } else if (id == R.id.action_share_image) {
                 pagerPresenter.clickShareImageButton();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void showLoader() {
@@ -367,6 +412,8 @@ public class PagerActivity extends MvpAppCompatActivity implements PagerView {
 
     @Override
     protected void onDestroy() {
+        if (pagerSwipeHintRunnable != null) pager.removeCallbacks(pagerSwipeHintRunnable);
+        if (pagerSwipeHintAnimator != null) pagerSwipeHintAnimator.cancel();
         super.onDestroy();
         if(backDialog != null && backDialog.isShowing()) backDialog.dismiss();
     }

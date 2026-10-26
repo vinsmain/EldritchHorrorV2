@@ -1,20 +1,23 @@
 package ru.mgusev.eldritchhorror.ui.fragment.pager;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
+import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Build;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,51 +25,44 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.features.ReturnMode;
-import com.stfalcon.frescoimageviewer.ImageViewer;
-
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import ru.mgusev.eldritchhorror.BuildConfig;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.utils.FrescoImageLoader;
+import ru.mgusev.eldritchhorror.databinding.FragmentGamePhotoBinding;
+import ru.mgusev.eldritchhorror.utils.PhotoViewerDialog;
 import ru.mgusev.eldritchhorror.utils.gallery.GalleryAdapter;
-import ru.mgusev.eldritchhorror.utils.gallery.ImageOverlayView;
 import ru.mgusev.eldritchhorror.interfaces.OnItemClicked;
 import ru.mgusev.eldritchhorror.interfaces.OnShareImageClick;
 import ru.mgusev.eldritchhorror.presentation.presenter.pager.GamePhotoPresenter;
 import ru.mgusev.eldritchhorror.presentation.view.pager.GamePhotoView;
 import ru.mgusev.eldritchhorror.ui.activity.main.MainActivity;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static ru.mgusev.eldritchhorror.presentation.presenter.pager.StartDataPresenter.ARGUMENT_PAGE_NUMBER;
 
-public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhotoView, OnItemClicked, ImageViewer.OnDismissListener, ImageViewer.OnImageChangeListener, OnShareImageClick {
+public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhotoView, OnItemClicked, OnShareImageClick {
 
     @InjectPresenter
     GamePhotoPresenter gamePhotoPresenter;
 
-    @BindView(R.id.recyclerViewGallery) RecyclerView recyclerViewGallery;
+    private FragmentGamePhotoBinding binding;
 
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int REQUEST_TAKE_PHOTO_FROM_GALLERY = 553;
-    private static final int RC_READ_STORAGE = 5;
+    static final int REQUEST_CAMERA_PERMISSION = 554;
 
-    private Unbinder unbinder;
     private int columnsCount = 2;
     private GalleryAdapter galleryAdapter;
     private List<String> urlList;
-    private ImageViewer imageViewer;
-    private boolean imageViewerIsOpen;
+    private Dialog imageDialog;
     private AlertDialog deleteDialog;
 
     public static GamePhotoFragment newInstance(int page) {
@@ -93,23 +89,41 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
             startActivity(firstIntent);
         }
 
-        View view = inflater.inflate(R.layout.fragment_game_photo, null);
-        unbinder = ButterKnife.bind(this, view);
+        binding = FragmentGamePhotoBinding.inflate(inflater, container, false);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columnsCount = 3;
 
-        recyclerViewGallery.setLayoutManager(new GridLayoutManager(getContext(), columnsCount));
+        binding.recyclerViewGallery.setLayoutManager(new GridLayoutManager(getContext(), columnsCount));
         galleryAdapter = new GalleryAdapter(getContext());
-        recyclerViewGallery.setAdapter(galleryAdapter);
+        binding.recyclerViewGallery.setAdapter(galleryAdapter);
         galleryAdapter.setOnClick(this);
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override
     public void updatePhotoGallery(List<String> imagesUrlList) {
         galleryAdapter.addGalleryItems(imagesUrlList);
         urlList = imagesUrlList;
+    }
+
+    @Override
+    public void showPhotoNoneMessage(boolean isShow) {
+        binding.gamePhotoEmptyScroll.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        binding.recyclerViewGallery.setVisibility(isShow ? View.GONE : View.VISIBLE);
+        if (isShow) updatePhotoNoneMessageHeight();
+    }
+
+    private void updatePhotoNoneMessageHeight() {
+        binding.gamePhotoNone.post(() -> {
+            if (binding == null) return;
+            ViewGroup.LayoutParams layoutParams = binding.gamePhotoNone.getLayoutParams();
+            int itemHeight = binding.gamePhotoNone.getWidth() / columnsCount;
+            if (layoutParams.height != itemHeight) {
+                layoutParams.height = itemHeight;
+                binding.gamePhotoNone.setLayoutParams(layoutParams);
+            }
+        });
     }
 
     @Override
@@ -120,7 +134,15 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
             gamePhotoPresenter.changeGallery();
             gamePhotoPresenter.addImageFile();
         } else if (requestCode == REQUEST_TAKE_PHOTO_FROM_GALLERY && resultCode == RESULT_OK) {
-            gamePhotoPresenter.onSelectImagesFromImagePicker(ImagePicker.getImages(data));
+            List<Uri> selectedUris = new ArrayList<>();
+            if (data != null && data.getClipData() != null) {
+                for (int index = 0; index < data.getClipData().getItemCount(); index++) {
+                    selectedUris.add(data.getClipData().getItemAt(index).getUri());
+                }
+            } else if (data != null && data.getData() != null) {
+                selectedUris.add(data.getData());
+            }
+            gamePhotoPresenter.onSelectImageUris(selectedUris);
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
             gamePhotoPresenter.deleteFile(new File(gamePhotoPresenter.getCurrentPhotoURI().getPath()));
         }
@@ -151,51 +173,67 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
 
     @Override
     public void dispatchTakePictureIntent() {
-        //check for read storage permission
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            startCameraIntent();
-        } else {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, RC_READ_STORAGE);
-        }
-    }
+        Context context = getContext();
+        if (context == null) return;
 
-    private void startCameraIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
-            // Continue only if the File was successfully created
-            File file = gamePhotoPresenter.getNewImageFile();
-            if (file != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID  + ".provider", file));
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(file));
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+            return;
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-        if (imageViewer != null) {
-            imageViewerIsOpen = true;
-            imageViewer.onDismiss();
-        }
-        if(deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
+        startCameraIntent();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == RC_READ_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
-                startCameraIntent();
-            } else {
-                Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+        if (requestCode != REQUEST_CAMERA_PERMISSION) return;
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startCameraIntent();
+        } else {
+            Context context = getContext();
+            if (context != null) {
+                Toast.makeText(context, R.string.camera_permission_denied, Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void startCameraIntent() {
+        Context context = getContext();
+        if (context == null) return;
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(context.getPackageManager()) == null) {
+            Toast.makeText(context, R.string.camera_app_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        File file = gamePhotoPresenter.getNewImageFile();
+        if (file == null) {
+            Toast.makeText(context, R.string.camera_file_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        try {
+            Uri outputUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
+            takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            takePictureIntent.setClipData(ClipData.newRawUri("output", outputUri));
+            gamePhotoPresenter.setCurrentPhotoURI(Uri.fromFile(file));
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+        } catch (ActivityNotFoundException | IllegalArgumentException | SecurityException exception) {
+            Timber.e(exception, "Не удалось открыть камеру");
+            Toast.makeText(context, R.string.camera_open_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (imageDialog != null && imageDialog.isShowing()) imageDialog.dismiss();
+        if(deleteDialog != null && deleteDialog.isShowing()) deleteDialog.dismiss();
+        binding = null;
+        super.onDestroyView();
     }
 
     @Override
@@ -222,45 +260,24 @@ public class GamePhotoFragment extends MvpAppCompatFragment implements GamePhoto
 
     @Override
     public void openFullScreenPhotoViewer() {
-        imageViewer = new ImageViewer.Builder(getContext(), urlList)
-                .setImageChangeListener(this)
-                .setOnDismissListener(this)
-                .setStartPosition(gamePhotoPresenter.getCurrentPosition())
-                .setOverlayView(new ImageOverlayView(getContext(), this))
-                .show();
+        imageDialog = PhotoViewerDialog.show(
+                requireContext(),
+                Uri.parse(urlList.get(gamePhotoPresenter.getCurrentPosition())),
+                dialog -> gamePhotoPresenter.closeFullScreenPhotoViewer());
     }
 
     @Override
     public void closeFullScreenPhotoViewer() {
-        if (imageViewer != null) imageViewer.onDismiss();
-    }
-
-    @Override
-    public void onDismiss() {
-        if (!imageViewerIsOpen) gamePhotoPresenter.closeFullScreenPhotoViewer();
-    }
-
-    @Override
-    public void onImageChange(int position) {
-        gamePhotoPresenter.setCurrentPosition(position);
+        if (imageDialog != null && imageDialog.isShowing()) imageDialog.dismiss();
     }
 
     @Override
     public void openImagePicker() {
-        ImagePicker.create(this) // Activity or Fragment
-                .returnMode(ReturnMode.NONE) // set whether pick and / or camera action should return immediate result or not.
-                .folderMode(true) // folder mode (false by default)
-                .toolbarFolderTitle(getString(R.string.folders_header)) // folder selection title
-                .toolbarImageTitle(getString(R.string.select_image_header)) // image selection title
-                .toolbarArrowColor(Color.WHITE) // Toolbar 'up' arrow color
-                .includeVideo(false) // Show video on image picker
-                .limit(10) // max images can be selected (99 by default)
-                .showCamera(false) // show camera or not (true by default)
-                .imageDirectory(Environment.DIRECTORY_PICTURES) // directory name for captured image  ("Camera" folder by default)
-                .theme(R.style.AppTheme) // must inherit ef_BaseTheme. please refer to sample
-                .enableLog(false) // disabling log
-                .imageLoader(new FrescoImageLoader()) // custom image loader, must be serializeable
-                .start(); // start image picker activity with request code
+        Intent selectImagesIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        selectImagesIntent.setType("image/*");
+        selectImagesIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        selectImagesIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(selectImagesIntent, REQUEST_TAKE_PHOTO_FROM_GALLERY);
     }
 
     @Override

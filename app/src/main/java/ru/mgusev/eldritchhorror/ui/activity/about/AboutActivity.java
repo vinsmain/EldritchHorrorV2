@@ -1,161 +1,216 @@
 package ru.mgusev.eldritchhorror.ui.activity.about;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import androidx.appcompat.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.PendingPurchasesParams;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import ru.mgusev.eldritchhorror.R;
-import ru.mgusev.eldritchhorror.utils.billing.IabHelper;
+import ru.mgusev.eldritchhorror.BuildConfig;
+import ru.mgusev.eldritchhorror.databinding.ActivityAboutBinding;
+import ru.mgusev.eldritchhorror.utils.EdgeToEdge;
 import timber.log.Timber;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends AppCompatActivity implements PurchasesUpdatedListener {
 
-    // Индефикатор нашего товара
-    static final String SKU_DONATE_1 = "donate_1_usd";
-    static final String SKU_DONATE_2 = "donate_2_usd";
-    static final String SKU_DONATE_5 = "donate_5_usd";
-    static final String SKU_DONATE_10 = "donate_10_usd";
-    static final String SKU_DONATE_50 = "donate_50_usd";
-    static final String SKU_DONATE_100 = "donate_100_usd";
+    private static final String VK_URL = "https://vk.ru/ehinvcard";
 
-    // Код для обратного вызова
-    static final int REQUEST_CODE = 505;
-    // Код при отмене пользователем
-    static final int USER_CANCELED_CODE = -1005;
-    // Экземпляр класса для работы с магазином
-    private IabHelper helper;
-    private IabHelper.OnIabPurchaseFinishedListener purchaseFinishedListener;
+    private ActivityAboutBinding binding;
 
-
-    @BindView(R.id.about_version) TextView version;
-    @BindView(R.id.about_toolbar) Toolbar toolbar;
-    @BindView(R.id.about_donate_1_btn) Button button1;
-    @BindView(R.id.about_donate_2_btn) Button button2;
-    @BindView(R.id.about_donate_5_btn) Button button5;
-    @BindView(R.id.about_donate_10_btn) Button button10;
-    @BindView(R.id.about_donate_50_btn) Button button50;
-    @BindView(R.id.about_donate_100_btn) Button button100;
+    private final Map<String, ProductDetails> donationProducts = new HashMap<>();
+    private BillingClient billingClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
-        ButterKnife.bind(this);
-
+        binding = ActivityAboutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        EdgeToEdge.apply(this, binding.aboutToolbar, binding.aboutContent);
+        EdgeToEdge.applyHorizontalInsets(binding.linearLayout6);
+        EdgeToEdge.applyHorizontalInsets(binding.aboutDonateContainer);
         initToolbar();
+        binding.aboutVersion.setText(getString(R.string.version_header) + getVersionName());
+        binding.aboutVkLink.setOnClickListener(view ->
+                openExternalLink(VK_URL));
+        binding.aboutGooglePlayLink.setOnClickListener(view ->
+                openExternalLink(getString(R.string.google_play_developer_url)));
+        binding.aboutRustoreLink.setOnClickListener(view ->
+                openExternalLink(getString(R.string.rustore_developer_url)));
+        if (BuildConfig.PAYMENTS_ENABLED) {
+            binding.aboutDonate1Btn.setOnClickListener(this::onDonationClick);
+            binding.aboutDonate2Btn.setOnClickListener(this::onDonationClick);
+            binding.aboutDonate5Btn.setOnClickListener(this::onDonationClick);
+            binding.aboutDonate10Btn.setOnClickListener(this::onDonationClick);
+            binding.aboutDonate50Btn.setOnClickListener(this::onDonationClick);
+            binding.aboutDonate100Btn.setOnClickListener(this::onDonationClick);
+            setDonationButtonsEnabled(false);
 
-        String versionText = getResources().getString(R.string.version_header) + getVersionName();
-        version.setText(versionText);
+            billingClient = BillingClient.newBuilder(this)
+                    .setListener(this)
+                    .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+                    .enableAutoServiceReconnection()
+                    .build();
+            billingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingSetupFinished(@NonNull BillingResult result) {
+                    if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        loadDonationProducts();
+                    } else {
+                        showBillingUnavailable(result);
+                    }
+                }
 
-        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgCRIeI/aoP1rB2NflmIq4ZCegk1AbvcMl4S99puq" +
-                "LOVUEgVpcUH4K1G+j5G4bSrWVQJY/qApp0T2hy3CanIYjv1Jub1X26C5ZwyNUN3TU8T71EY4YVwy1n3JGRRR6RFKYd8VngECBthjNdeZ3pLA3" +
-                "5adDsJuf+OzGhf8LDTto1Ex6ynToPgL3vgGVf+ShOemQXTZaaaqYByiiAIwTYnF3ttbxR9MG17CgfsgMt+45Vq+YfH/m/Cj+3mXMrDUBFYEfI" +
-                "j1Pz2VlNpyZuYqneE+xnfZu7+frazoT4U1BdieqXh4VXYdPy37rNcnuc+MTt/UlJ8wm9YtYf3Y9GJWJohwtwIDAQAB";
-        helper = new IabHelper(this, base64EncodedPublicKey);
-        helper.enableDebugLogging(false);
-        helper.startSetup(result -> {
-            if (!result.isSuccess()) {
-                // Произошла ошибка авторизации библиотеки, скрываем кнопку от пользователя
-                button1.setVisibility(View.GONE);
-                button2.setVisibility(View.GONE);
-                button5.setVisibility(View.GONE);
-                button10.setVisibility(View.GONE);
-                button50.setVisibility(View.GONE);
-                button100.setVisibility(View.GONE);
-            }
-        });
-
-        purchaseFinishedListener = (result, purchase) -> {
-            Timber.tag("DONATE_ANSWER").d(result.getMessage() + " " + result.getResponse() + " " + purchase);
-            if (result.isFailure() && result.getResponse() != USER_CANCELED_CODE) {
-                // Обработка произошедшей ошибки покупки
-                Toast.makeText(this, R.string.donate_error_header, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (purchase != null) {
-                // Говорим пользователю спасибо за перечисление средств
-                Toast.makeText(this, R.string.donate_success_header, Toast.LENGTH_SHORT).show();
-            }
-        };
+                @Override
+                public void onBillingServiceDisconnected() {
+                    setDonationButtonsEnabled(false);
+                }
+            });
+        } else {
+            binding.aboutDonateContainer.setVisibility(View.GONE);
+        }
     }
 
     private void initToolbar() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.aboutToolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.about);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> finish());
+        binding.aboutToolbar.setNavigationOnClickListener(view -> finish());
     }
 
-    private String getVersionName() {
-        String versionName = "";
+    private void openExternalLink(String url) {
         try {
-            versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        } catch (ActivityNotFoundException exception) {
+            Timber.w(exception, "No application can open external link: %s", url);
+            Toast.makeText(this, R.string.external_link_error, Toast.LENGTH_SHORT).show();
         }
-        return versionName;
     }
 
-    @OnClick({R.id.about_donate_1_btn, R.id.about_donate_2_btn, R.id.about_donate_5_btn, R.id.about_donate_10_btn, R.id.about_donate_50_btn, R.id.about_donate_100_btn})
-    public void onClick(View view) {
-        try {
-            switch (view.getId()) {
-                case R.id.about_donate_1_btn:
-                    helper.launchPurchaseFlow(this, SKU_DONATE_1, REQUEST_CODE, purchaseFinishedListener);
-                    break;
-                case R.id.about_donate_2_btn:
-                    helper.launchPurchaseFlow(this, SKU_DONATE_2, REQUEST_CODE, purchaseFinishedListener);
-                    break;
-                case R.id.about_donate_5_btn:
-                    helper.launchPurchaseFlow(this, SKU_DONATE_5, REQUEST_CODE, purchaseFinishedListener);
-                    break;
-                case R.id.about_donate_10_btn:
-                    helper.launchPurchaseFlow(this, SKU_DONATE_10, REQUEST_CODE, purchaseFinishedListener);
-                    break;
-                case R.id.about_donate_50_btn:
-                    helper.launchPurchaseFlow(this, SKU_DONATE_50, REQUEST_CODE, purchaseFinishedListener);
-                    break;
-                case R.id.about_donate_100_btn:
-                    helper.launchPurchaseFlow(this, SKU_DONATE_100, REQUEST_CODE, purchaseFinishedListener);
-                    break;
-                default:
-                    break;
+    private void loadDonationProducts() {
+        List<QueryProductDetailsParams.Product> products = Arrays.asList(
+                product("donate_1_usd"), product("donate_2_usd"), product("donate_5_usd"),
+                product("donate_10_usd"), product("donate_50_usd"), product("donate_100_usd")
+        );
+        QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder().setProductList(products).build();
+        billingClient.queryProductDetailsAsync(params, (result, queryResult) -> {
+            donationProducts.clear();
+            for (ProductDetails product : queryResult.getProductDetailsList()) {
+                donationProducts.put(product.getProductId(), product);
             }
-        } catch (IabHelper.IabAsyncInProgressException e) {
-            e.printStackTrace();
+            setDonationButtonsEnabled(!donationProducts.isEmpty());
+            if (donationProducts.isEmpty()) {
+                showBillingUnavailable(result);
+            }
+        });
+    }
+
+    private QueryProductDetailsParams.Product product(String productId) {
+        return QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(productId)
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build();
+    }
+
+    public void onDonationClick(View view) {
+        if (!BuildConfig.PAYMENTS_ENABLED || billingClient == null) return;
+        String productId;
+        if (view.getId() == R.id.about_donate_1_btn) productId = "donate_1_usd";
+        else if (view.getId() == R.id.about_donate_2_btn) productId = "donate_2_usd";
+        else if (view.getId() == R.id.about_donate_5_btn) productId = "donate_5_usd";
+        else if (view.getId() == R.id.about_donate_10_btn) productId = "donate_10_usd";
+        else if (view.getId() == R.id.about_donate_50_btn) productId = "donate_50_usd";
+        else if (view.getId() == R.id.about_donate_100_btn) productId = "donate_100_usd";
+        else return;
+        ProductDetails product = donationProducts.get(productId);
+        if (product == null) {
+            Toast.makeText(this, R.string.donate_error_header, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        BillingFlowParams.ProductDetailsParams.Builder productParams = BillingFlowParams.ProductDetailsParams.newBuilder()
+                .setProductDetails(product);
+        List<ProductDetails.OneTimePurchaseOfferDetails> offers = product.getOneTimePurchaseOfferDetailsList();
+        if (offers != null && !offers.isEmpty()) {
+            productParams.setOfferToken(offers.get(0).getOfferToken());
+        }
+        BillingResult result = billingClient.launchBillingFlow(this, BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(Collections.singletonList(productParams.build()))
+                .build());
+        if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) {
+            showBillingUnavailable(result);
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (!helper.handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data);
+    public void onPurchasesUpdated(@NonNull BillingResult result, List<Purchase> purchases) {
+        if (result.getResponseCode() != BillingClient.BillingResponseCode.OK || purchases == null) {
+            if (result.getResponseCode() != BillingClient.BillingResponseCode.USER_CANCELED) showBillingUnavailable(result);
+            return;
+        }
+        for (Purchase purchase : purchases) {
+            if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                billingClient.consumeAsync(ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build(),
+                        (consumeResult, token) -> {
+                            if (consumeResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                                Toast.makeText(this, R.string.donate_success_header, Toast.LENGTH_SHORT).show();
+                            } else {
+                                showBillingUnavailable(consumeResult);
+                            }
+                        });
+            }
+        }
+    }
+
+    private void setDonationButtonsEnabled(boolean enabled) {
+        binding.aboutDonate1Btn.setEnabled(enabled); binding.aboutDonate2Btn.setEnabled(enabled); binding.aboutDonate5Btn.setEnabled(enabled); binding.aboutDonate10Btn.setEnabled(enabled); binding.aboutDonate50Btn.setEnabled(enabled); binding.aboutDonate100Btn.setEnabled(enabled);
+    }
+
+    private void showBillingUnavailable(BillingResult result) {
+        Timber.w("Google Play Billing недоступен: %s", result.getDebugMessage());
+        setDonationButtonsEnabled(false);
+        Toast.makeText(this, R.string.donate_error_header, Toast.LENGTH_SHORT).show();
+    }
+
+    private String getVersionName() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException exception) {
+            Timber.e(exception, "Не удалось получить версию приложения");
+            return "";
         }
     }
 
     @Override
     protected void onDestroy() {
+        if (billingClient != null) billingClient.endConnection();
         super.onDestroy();
-        if (helper != null) {
-            try {
-                helper.dispose();
-            } catch (IabHelper.IabAsyncInProgressException e) {
-                e.printStackTrace();
-            }
-            helper = null;
-        }
     }
 }

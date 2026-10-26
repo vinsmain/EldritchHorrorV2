@@ -6,17 +6,18 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import ru.mgusev.eldritchhorror.R;
+import ru.mgusev.eldritchhorror.databinding.NavHeaderMainBinding;
 
 class HeaderViewHolder {
 
-    @BindView(R.id.nav_header_auth_icon) protected SimpleDraweeView iconImage;
-    @BindView(R.id.nav_header_auth_name) protected TextView nameTV;
-    @BindView(R.id.nav_header_auth_email) protected TextView emailTV;
+    protected SimpleDraweeView iconImage;
+    protected TextView nameTV;
+    protected TextView emailTV;
 
     HeaderViewHolder(View view) {
-        ButterKnife.bind(this, view);
+        NavHeaderMainBinding binding = NavHeaderMainBinding.bind(view);
+        iconImage = binding.navHeaderAuthIcon;
+        nameTV = binding.navHeaderAuthName;
+        emailTV = binding.navHeaderAuthEmail;
     }
 }

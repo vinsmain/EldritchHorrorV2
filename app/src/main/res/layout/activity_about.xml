@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/about_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight"
@@ -20,19 +21,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:theme="@style/aboutTheme" />
 
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
     <LinearLayout
         android:id="@+id/linearLayout6"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="24dp"
         android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/about_toolbar">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imageView8"
@@ -93,17 +103,75 @@
             android:layout_weight="1"
             android:text="@string/translator" />
 
+        <Button
+            android:id="@+id/about_vk_link"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/image_button_border"
+            android:backgroundTint="@color/colorPrimary"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/vk"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/vk_community"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/other_projects"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/about_google_play_link"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/image_button_border"
+                android:backgroundTint="@color/cardview_light_background"
+                android:foreground="@drawable/about_market_button_ripple"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="@string/google_play"
+                android:textAllCaps="false"
+                android:theme="@style/AppTheme.ColorHighlight" />
+
+            <Button
+                android:id="@+id/about_rustore_link"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/image_button_border"
+                android:backgroundTint="@color/cardview_light_background"
+                android:foreground="@drawable/about_market_button_ripple"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="@string/rustore"
+                android:textAllCaps="false"
+                android:theme="@style/AppTheme.ColorHighlight" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout7"
+        android:id="@+id/about_donate_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:layout_weight="1"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView9"
@@ -221,5 +289,8 @@
         </LinearLayout>
 
     </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

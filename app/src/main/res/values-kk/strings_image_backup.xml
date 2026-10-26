@@ -1,0 +1,13 @@
+<resources>
+    <string name="image_backup_notice">Фотографии, загруженные в Firebase, сейчас недоступны для скачивания на устройство. Фото, уже сохранённые на устройстве, пока доступны, но после выхода из аккаунта станут недоступны в приложении. Сохраните их в галерею телефона и не выходите из аккаунта.</string>
+    <string name="image_backup_save_button">Сохранить фото</string>
+    <string name="image_backup_details_button">Подробнее</string>
+    <string name="image_backup_close_button">Закрыть</string>
+    <string name="image_backup_notice_title">Предупреждение о фотографиях</string>
+    <string name="image_backup_link_pending">Ссылка на информацию появится позже.</string>
+    <string name="image_backup_no_files">Локальные фотографии для сохранения не найдены.</string>
+    <string name="image_backup_result">Сохранено: %1$d; уже было в галерее: %2$d; не найдено на устройстве: %3$d; ошибок: %4$d.</string>
+    <string name="image_backup_permission_denied">Разрешите доступ к хранилищу, чтобы сохранять фото в общую галерею.</string>
+    <string name="image_backup_progress">Сохранение…</string>
+    <string name="image_backup_info_url">https://mgusevstudio.ru/index.php/2-uncategorised/270-image-sync-ru</string>
+</resources>
